@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Effort branch lifecycle on bairf. An effort is a project, task or sidequest; its branch is <kind>/<name>.
+#   effort start <kind> <name> [dir]  orphan branch + worktree (default dir: <bairf parent>/bairf-<name>)
+#   effort path <kind>/<name>         print the worktree path
+#   effort list                       live effort branches and archived tags
+#   effort close <kind>/<name>        tag <kind>-archive/<name>, delete branch (local + origin), remove worktree
+set -euo pipefail
+root=$(cat "$HOME/.claude/bairf-root" 2>/dev/null || git rev-parse --show-toplevel)
+cmd=${1:-}
+kinds='project|task|sidequest'
+
+case "$cmd" in
+  start)
+    kind=${2:-}; name=${3:-}
+    printf '%s' "$kind" | grep -Eqx "$kinds" || { echo "usage: effort start <$kinds> <name> [dir]" >&2; exit 1; }
+    [ -n "$name" ] || { echo "usage: effort start <$kinds> <name> [dir]" >&2; exit 1; }
+    branch="$kind/$name"; dir=${4:-"$(dirname "$root")/bairf-$name"}
+    if git -C "$root" show-ref --verify --quiet "refs/heads/$branch"; then
+      git -C "$root" worktree add "$dir" "$branch" >&2
+    else
+      git -C "$root" worktree add --detach "$dir" >&2
+      git -C "$dir" checkout --orphan "$branch" >&2 2>&1
+      git -C "$dir" rm -rfq --cached . 2>/dev/null || true
+      find "$dir" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+      printf '# %s\n\nWorking docs for this %s. Nothing here is linked from a project repo.\n' "$name" "$kind" > "$dir/README.md"
+      git -C "$dir" add README.md && git -C "$dir" commit -qm "start $kind $name"
+    fi
+    echo "$dir"
+    ;;
+  path)
+    branch=${2:-}; [ -n "$branch" ] || { echo "usage: effort path <kind>/<name>" >&2; exit 1; }
+    git -C "$root" worktree list --porcelain | awk -v b="refs/heads/$branch" '
+      /^worktree /{wt=$2} /^branch /{if($2==b){print wt; found=1}} END{exit !found}'
+    ;;
+  list)
+    echo "branches:"; git -C "$root" for-each-ref --format='%(refname)' refs/heads refs/remotes/origin | sed -E 's#^refs/(heads|remotes/origin)/##' | grep -E "^($kinds)/" | sort -u | sed 's/^/  /'
+    echo "archived:"; git -C "$root" tag -l '*-archive/*' | sed 's/^/  /'
+    ;;
+  close)
+    branch=${2:-}; printf '%s' "$branch" | grep -Eq "^($kinds)/." || { echo "usage: effort close <kind>/<name>" >&2; exit 1; }
+    kind=${branch%%/*}; name=${branch#*/}
+    dir=$("$0" path "$branch" || true)
+    if [ -n "$dir" ] && [ -n "$(git -C "$dir" status --porcelain)" ]; then
+      echo "worktree $dir has uncommitted changes" >&2; exit 1
+    fi
+    sha=$(git -C "$root" rev-parse "$branch")
+    git -C "$root" tag "$kind-archive/$name" "$sha"
+    git -C "$root" push origin "$kind-archive/$name"
+    git -C "$root" push origin --delete "$branch" 2>/dev/null || true
+    [ -n "$dir" ] && git -C "$root" worktree remove "$dir"
+    git -C "$root" branch -D "$branch"
+    echo "closed $branch at $sha (tag $kind-archive/$name)"
+    ;;
+  *)
+    sed -n '2,7p' "$0" >&2; exit 1 ;;
+esac
