@@ -42,6 +42,21 @@ Settled while turning the React Query epic's learnings into a reusable Claude Co
 
 20. **Manual-testing guidance lives with the body templates**, since it is about writing the doc that a PR embeds, not about code.
 
-21. **The user-level CLAUDE.md was pruned line by line.** Dropped: bug-provenance attribution, local `git log --grep` discovery, the lookup-object rule, the review-reply comment template. Reworded for plainness: literal test conditions, settled decisions in bodies, discussion diffs (no "once it becomes a PR" condition), non-blocking review comments (report provenance and size, Brian chooses), second rejection ends the guessing, review-thread replies.
+21. **The user-level CLAUDE.md was pruned line by line.** Dropped: bug-provenance attribution, local `git log --grep` discovery, the lookup-object rule, the destructuring rule, WIP checkpoints, batching dependency removals, the tarball-to-registry rule, the stay-inside-one-directory rule (machine-specific; it stays in auto-memory). Reworded for plainness: literal test conditions, settled decisions in bodies, discussion diffs (no "once it becomes a PR" condition), non-blocking review comments (report provenance and size, Brian chooses), second rejection ends the guessing, review-thread replies, `as any` as an absolute last resort, minimal diffs and faithful conversions as two rules with justification written where the change is proposed, PR branches as a plain checkout by default with uncommitted work a question for Brian. Moved: deep-or-wide to Deciding as a work-splitting rule, diff `+`/`-` lines to GitHub, bisect into a renamed Investigating section, layer-commit rules into `openedx/stacked-prs.md`.
 
 22. **Legacy from the epic:** the 207 scratch files moved from the frontend-app-learning checkout onto `project/learning-react-query`, to be closed with an archive tag once pushed. An accidental commit of those files on `bsmith/special-exams-v5` (f16c34dc, unpushed) is reset to a6442722 on Brian's word.
+
+23. **Nothing assumes a default branch name.** `gh repo view --json defaultBranchRef` reads it; a fork's can differ from upstream's. The stacked-PR doc says "default branch" everywhere it said `master`.
+
+24. **Node rules were split.** nvm is on PATH through the session hook and is never sourced by the agent; setup verifies `nvm --version` runs rather than that the file exists. Checks go through `package.json` scripts. The lockfile rule is three lines: regenerate from scratch, pin a transitive dependency by adding it as a direct or dev dependency (never `overrides`), and lock-only commits before `package.json` changes. `npm dedupe` was a fix for react-intl 10 hoisting in frontend-app-learning, not a rule; it moved to that repo's file.
+
+25. **A repo's docs are a directory.** `openedx/repos/<repo>/README.md` for facts that outlive any effort, `openedx/repos/<repo>/GLOSSARY.md` for its terms. A glossary has three levels: ecosystem, repo, effort; `agents/domain.md` names where a resolved term lands.
+
+26. **Worktree location is a convention.** `bin/effort path` resolves through `git worktree list`, so a worktree can live anywhere. A task's takes the default beside the bairf checkout (the directory holding the repo checkouts); a project's is passed as `[dir]` so it sits inside the project directory beside the code.
+
+27. **A subdirectory `CLAUDE.local.md` loads on demand.** Claude Code discovers `CLAUDE.md` and `CLAUDE.local.md` under the launch directory and loads each when a file in that subdirectory is first read, written or edited, so a session started in a project directory above the repo checkout still picks up the repo's bairf branch on first touch.
+
+28. **Body templates for every shape.** `openedx/github-bodies.md` opens by naming the worktree docs a body is built from, then gives a full template for a new issue and a PR description. The review-reply comment shape was dropped; the doc covers issues and PR bodies only.
+
+29. **Glossary corrections from review:** frontend-app-authoring is the term (Studio and Authoring are nicknames); a frontend-base *slot* and a frontend-plugin-framework *plugin slot* are distinct and the agent says which; it is *tutor dev*, since `tutor local` is a different mode; *upstream* is the fork's parent as a concept, with push-to-fork preferred and the `bsmith/` prefix only on branches pushed to upstream itself.
+
