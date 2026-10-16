@@ -1,0 +1,28 @@
+Part of #1946 — Redux → React Query migration (Stage 1). Peeled out of #2087 (layer C of the model-store dissolution, #1977), the way #2091 was peeled out of #2083: a structural change first, so the conversion layer's diff stays about the data source.
+
+**Goal:** convert `SidebarContextProvider` to TypeScript and give the sidebar widget contract named types — the widget config object and the context object its `isAvailable` / `prefetch` functions receive — so #2087 changes the type of one field (`unit`) instead of re-describing the contract in a README comment.
+
+**Context.** The courseware sidebar has its own widget registry, separate from `frontend-plugin-framework`: `getEnabledWidgets` (`courseware/course/sidebar/defaultWidgets.js`) merges the built-in widgets (discussions, upgrade) with a `SIDEBAR_WIDGETS` array from the app config. Each widget is a plain object — `id`, `priority`, `Sidebar`, `Trigger`, `Provider?`, `enabled`, and two optional functions, `isAvailable(context)` and `prefetch(context)`. `SidebarContextProvider.jsx` builds the context object once per render (`{ courseId, unitId, course, unit }`, `:50-56`) and calls every widget's `isAvailable` with it (`:59`, the only caller); the `prefetch` effect (`:93-100`) passes `{ courseId, course, queryClient }`. The contract is documented for operators in `sidebar/README.md` (*Widget Structure*, *Context Object*, *The `prefetch` field*) as JavaScript object literals with comments, and `SidebarContext.js` carries a JSDoc `@typedef` for the context value.
+
+**Tasks**
+- `courseware/course/sidebar/SidebarContextProvider.jsx` → `.tsx`; `propTypes` + `defaultProps` → a `Props` interface with destructuring defaults, the shape `UnitButton` uses (#2065).
+- Name the contract: a widget config type (the *Widget Structure* block), the `isAvailable` context type (the *Context Object* block) and the `prefetch` context type — exported from a module widget authors can import, with the `SidebarContext` JSDoc typedef becoming the real type of the context value. Where the file lives (beside `defaultWidgets`, or a `types.ts` in the sidebar directory) is decided in the plan.
+- Type `course` as what the provider actually merges today: `CourseHomeMeta` (`course-home/data/apiHooks.ts`, typed in #2085) spread over the `coursewareMeta` model. The model side stays loose until #2089 (D3) converts that read; the type firms up there.
+- Type `unit` as what `useModel('discussionTopics', unitId)` returns today; #2087 changes it to the query hook's result.
+- `sidebar/README.md`: the three contract blocks point at the named types instead of restating them; the `unit` line's description comes from the type. Wording for code review.
+- No behaviour change; only what TypeScript forces.
+
+**Not in scope:** `Sidebar.jsx`, `SidebarTriggers.jsx`, `defaultWidgets.js` and the `hooks/*.js` files stay JavaScript unless typing the provider forces a change in one of them (a JS module can import a TS type through JSDoc, and the hooks take the provider's callbacks as plain functions). The `coursewareMeta` read (#2089). The `unit` data source (#2087).
+
+**Verify:** no behaviour change; the provider still reads `useModel('coursewareMeta', courseId)` and `useModel('discussionTopics', unitId)`; `npm run types`, `npm run lint` and the full suite green; `SidebarContextProvider.test.jsx` unchanged.
+
+> [!NOTE]
+> This issue was authored by Claude (Claude Code) and reviewed before posting.
+
+**Findings that shape the task list**
+
+- **The `unit` argument is why this is peeled now.** #2087 converts the provider's `useModel('discussionTopics', unitId)` read to a query hook whose `select` returns the unit's topic or `undefined`; `useModel` returned `{}` for a unit with no topic. Inside the repo every read is an optional chain, so the difference is invisible — but `unit` is also handed to operator-supplied `isAvailable` functions, and the README types it only as `unit: object`. Deciding "`undefined` or a stable `{}`" in a README comment was the wrong place; as a declared type, `unit?: …`, the decision is visible to a widget author's editor and enforced against the built-in widgets' own `isAvailable` functions.
+- **The contract has already broken once without a type.** #2016 (PR #2068) changed `prefetch`'s argument from `{ courseId, course, dispatch }` to `{ courseId, course, queryClient }`, updating three docs by hand. A named type makes the next such change a diff on one declaration.
+- **`course` is a merge of a typed and an untyped source.** `CourseHomeMeta` is typed with an index signature (`[key: string]: unknown`, #2085 decision 3); the `coursewareMeta` model is a `useModel` read returning `any` from a JavaScript module. The upgrade widget's `upgradeIsAvailable` reads `course?.verifiedMode`, which `CourseHomeMeta` names; the discussions widget's `discussionsPrefetch` reads `course?.tabs`, also named. So the built-in widgets type-check against `CourseHomeMeta`'s fields alone, and the merged type can be `CourseHomeMeta`-shaped with the model's fields reachable as `unknown` until D3.
+- **`getConfig()` has no `SIDEBAR_WIDGETS` key in frontend-platform's `ConfigDocument`.** `getEnabledWidgets` reads it as `getConfig()[WIDGET_CONFIG.EXTERNAL_WIDGETS_KEY]`. That read stays in `defaultWidgets.js` (JavaScript) in this layer, so the question of how a custom config key is typed does not arise here; it is noted for whoever converts that file.
+- **`SidebarContextProvider.test.jsx` needs no change.** It renders the provider with mocked widgets, mocked storage and a plain `QueryClientProvider`; nothing it asserts depends on prop types or on the shape of `course` / `unit`.

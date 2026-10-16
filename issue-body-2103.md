@@ -1,0 +1,350 @@
+Part of #1946 — Redux → React Query migration (Stage 1). Found while working on #2098; the same defect #2083 fixed for the outline and dates tabs and #2098 fixed for the courseware gate. Layer on top of #2104.
+
+**Goal:** fetch `/api/course_home/progress/` once per progress-tab load, from `ProgressTab`, instead of once more when the components under it mount.
+
+**Context.** One hard reload of `/course/:courseId/progress` requests `/api/course_home/progress/` **twice** (measured on tutor dev). `ProgressTab` (`progress-tab/ProgressTab.jsx:52`) fetches it with `useProgressTabData(courseId, targetUserId)` and passes it to `TabPage` as `courseStatus`. The rest of the tab reads it through `useProgressData()` (`progress-tab/hooks.jsx:5-8`), which is also a fetching observer of that query:
+
+```js
+export function useProgressData() {
+  const { courseId, targetUserId } = useParams();
+  return useProgressTabData(courseId, targetUserId).data;
+}
+```
+
+Its 22 call sites (21 files in `course-home/progress-tab/`, including `useExamsData` in `hooks.jsx`, plus `plugin-slots/ProgressTabGradeBreakdownSlot/index.jsx`) all render under `TabPage`'s gate, so they mount after the data has landed, find it stale at the default `staleTime` of 0, and refetch. React Query dedupes the readers against each other, which is why the count is two and not twenty-two.
+
+**Tasks**
+- Add `{ enabled }` to `useProgressTabData` (the course-home `QueryOptions`, in the two-positional-plus-options shape `useProctoringInfoData` has); plain `enabled`, no `!!courseId` guard, since the hook has never had one.
+- Make `useProgressData()` non-fetching, as #2098 did for `useIsCourseLoaded`: it passes `{ enabled: false }` and takes no option. `useExamsData()` reads through it and inherits that. `ProgressTab` keeps fetching.
+- Add one sentence to `progress-tab/README.md` under `useExamsData()`: it reads the progress tab's own data, so it is for widgets in progress-tab slots; outside the tab it returns `null` unless something rendered on the page fetches that data (for example a widget calling `useProgressTabData(courseId)`).
+- Tests: a disabled case for `useProgressTabData` in the course-home hook suite; a `useProgressData` describe in `progress-tab/hooks.test.jsx` with the two cases `useIsCourseLoaded` has (*fetches nothing on its own*, *reads the owner's result without fetching again*); and a request-count assertion in `ProgressTab.test.jsx` that waits for the client to go idle and then counts one progress request. No standalone-component suites to repair — the progress tab has only two suites and both render the owner.
+- Commit as `refactor!:` with a `BREAKING CHANGE` footer (below) and a "Plugins" section in the PR description carrying the migration snippet.
+- Re-count with the protocol below.
+
+**Verify:** hard reload the progress tab, wait for the network to go idle, and count `/api/course_home/progress/`: 1. Repeat via client-side navigation from the outline: 1. The grade summary, detailed grades, completion chart, certificate status, credit information and the grade-breakdown slot render as before, including when viewing another learner's progress (`/progress/:targetUserId`). A `useExamsData` widget inserted into `progress_tab_course_grade.v1` via `env.config.jsx` (the README example) still renders exam attempts.
+
+**Plugins — breaking.** `useExamsData()` (`progress-tab/hooks.jsx:11`, documented in `progress-tab/README.md`) and `useProgressData()` were fetching observers and now only read what `ProgressTab` has fetched. In a progress-tab slot, the documented use, they return exactly what they did. Rendered anywhere else they return `null` / `undefined` unless something rendered on the page fetches the progress data — the query cache is shared, so one fetching observer populates it for every reader on that page. The simplest shape is the reader mounting the fetch alongside itself:
+
+```js
+import { useParams } from 'react-router-dom';
+import { useProgressTabData } from './src/course-home/data/apiHooks';
+import { useExamsData } from './src/course-home/progress-tab/hooks';
+
+RenderWidget: () => {
+  const { courseId } = useParams();
+  useProgressTabData(courseId); // fetches; useExamsData reads the result
+  const examsData = useExamsData();
+  // ...
+},
+```
+
+Both sides build the same key (`targetUserId` is undefined off the progress route), so the one-argument call lands on the entry the reader hooks use. With #2104 below this layer that fetch has no side effect: on a course whose MFE progress tab is disabled the widget's query errors and the page stays put. `useExamsData`'s own exam-attempts query (`useExamAttemptsData`) is unchanged.
+
+**Out of scope:** `staleTime`, for the reasons in #2098; the progress tab's other reads (`courseHomeMeta` in B2, #2085; `coursewareMeta` in `CertificateStatus`, D3, #2089); and a separate fetching hook for plugins that want exam attempts off the tab — not added speculatively.
+
+## Plan
+
+> [!NOTE]
+> The findings and plan below were generated by Claude (Claude Code) and reviewed before posting.
+
+Investigation findings that shape the task list above:
+
+- **It is the #2083 / #2098 defect, one level down.** `ProgressTab` owns the fetch and gates on it; `useProgressData()` is a fetching observer of the same key from 22 sites under the gate. They mount in one commit after the data lands, so React Query dedupes them against each other — two requests, not twenty-two — but not against the owner's settled fetch, which is stale at `staleTime` 0.
+- **Ownership, not `staleTime`.** The progress payload changes server-side with no app action (grades posted, certificate generated, gating lifted), and `useRequestCert`, which renders under this tab, is fire-and-forget and relies on refetch-on-mount to resync. A `staleTime` would hide the reader fetches without deciding who owns them and would change the owner's freshness too.
+- **`useProgressData()` never fetches and takes no option**, per `decisions-2098.md` entry 4 (`useIsCourseLoaded`'s shape). No caller wants it on: every site renders under `ProgressTab`, which fetches the same key from the same `useParams()` values. Misuse fails loudly (a reader with no owner reads `undefined` forever) rather than silently reintroducing the refetch.
+- **No default serves both plugin placements.** `useExamsData()` is built on `useProgressData()`, so a fetching default for the shared hook puts the duplicate request back into the documented use (a widget under the tab mounts after the gate and refetches), while a non-fetching one makes the undocumented off-tab use read `null`. The documented use stays exact; the off-tab use gets a migration path (mount `useProgressTabData` yourself), the same mechanism `src/tests/MountCourseQueryHooks.tsx` uses.
+- **This is `refactor!:`.** Nothing a learner sees changes, but plugins can observe the change through the import path the README gives, and #2075's footer told plugins to migrate onto `useExamsData`. Same line the epic's three earlier `refactor!:` commits drew.
+- **#2104 goes first.** `getProgressTabData`'s 404 branch redirects the whole page to the legacy progress page, so telling a plugin to mount the fetch itself would walk it into that redirect from another tab. #2104 moves the redirect into `ProgressTab`; with it below, the migration advice is side-effect free.
+- **No standalone-component test fallout.** The progress tab has two suites (`ProgressTab.test.jsx`, `hooks.test.jsx`); both render the owner or seed the cache, and `src/index.test.jsx` mocks `ProgressTab` out. The `MountCourseQueryHooks`-style repair #2098 needed does not arise.
+- **The component-level count needs an idle wait.** `fetchAndRender` returns when the gate opens, which is when the readers mount; any refetch reaches the mock adapter a few microtasks later, so asserting immediately could read one even today. Wait for `queryClient.isFetching()` to be 0, then count.
+- **Plain `enabled`, not `enabled && !!courseId`.** Every sibling hook with the option guards on `courseId`; this one never has, and an undefined `courseId` cannot happen on this route. Adding the guard would be a behaviour addition, not a faithful change.
+
+<details>
+<summary>Full plan</summary>
+
+# Plan: #2103 — Stop the progress tab data refetching from components under the tab
+
+Layer in the running stack on top of #2104, which sits on #2098 (PR #2102).
+#2104 goes first so that the plugin migration note below (mount
+`useProgressTabData` yourself) is side-effect free: it moves the 404 redirect to
+the legacy progress page out of the `queryFn` and into `ProgressTab`.
+Independent of the model-store reader layers (#2085 onward); it touches five
+progress-tab files B2 (#2085) also edits, but only their data hook, not the
+`courseHomeMeta` reads B2 converts.
+
+## Context
+
+#2103 was filed from #2098's "Not in scope": `useProgressData()` looked like the
+same defect #2083 fixed on the outline and dates tabs and #2098 fixed on the
+courseware gate, and one measurement confirmed it — a hard reload of
+`/course/:courseId/progress` requests `/api/course_home/progress/` **twice**
+(tutor dev).
+
+### How it works today
+
+`ProgressTab` (`progress-tab/ProgressTab.jsx:49-63`) is the owner. It fetches
+the progress query and hands it to the gate:
+
+```jsx
+const tabDataQuery = useProgressTabData(courseId, targetUserId);   // :52
+return (
+  <TabWithTimer activeTabSlug="progress" courseId={courseId}
+    courseStatus={{ metadataQuery, tabDataQuery }}>                 // :58
+    <ProgressTabContent />
+  </TabWithTimer>
+);
+```
+
+`TabPage` renders children only once that query has settled
+(`tab-page/TabPage.tsx:53`, `if (tabDataQuery?.isPending) { … isLoading: true }`).
+
+Everything under the gate reads through one hook (`progress-tab/hooks.jsx:5-8`):
+
+```js
+export function useProgressData() {
+  const { courseId, targetUserId } = useParams();
+  return useProgressTabData(courseId, targetUserId).data;
+}
+```
+
+It is a *fetching* observer of the same query. Its 22 call sites — 21 files under
+`course-home/progress-tab/` (including `ProgressTabContent` itself,
+`ProgressTab.jsx:17`, and `useExamsData` in `hooks.jsx:13`) plus
+`plugin-slots/ProgressTabGradeBreakdownSlot/index.jsx:8` — all render under the
+gate, so each mounts after the data has landed, finds it stale at the default
+`staleTime` of 0, and refetches on mount. React Query dedupes the readers against
+each other (they mount in one commit), which is why the count is two and not
+twenty-two.
+
+`useProgressTabData` (`course-home/data/apiHooks.ts:133-137`) has no `enabled`
+at all. As #2104 leaves it (the `logStatusAs` entry is #2104's):
+
+```ts
+export const useProgressTabData = (courseId: string, targetUserId?: string) => useQuery({
+  queryKey: courseHomeQueryKeys.progressTab(courseId, targetUserId),
+  queryFn: () => getProgressTabData(courseId, targetUserId),
+  meta: { modelType: 'progress', courseId, logStatusAs: { 404: 'silent' } },
+});
+```
+
+### Why the fix is ownership, not `staleTime`
+
+Same reasoning as `decisions-2083.md` entry 3 and `decisions-2098.md` entry 2:
+a `staleTime` would hide the reader fetches without deciding who owns them, and
+would also change freshness for the owner. The progress payload changes
+server-side with no app action (grades posted, certificate generated, gating
+lifted), and `useRequestCert` — which renders under this tab — is
+fire-and-forget and relies on refetch-on-mount to resync. The owner's
+on-navigation refetch stays; only the readers' duplicate goes.
+
+## The change
+
+1. **`{ enabled }` on `useProgressTabData`**, following the two-positional-plus-
+   options shape `useProctoringInfoData` already has
+   (`course-home/data/apiHooks.ts:154-158`):
+
+   ```ts
+   export const useProgressTabData = (
+     courseId: string,
+     targetUserId?: string,
+     { enabled = true }: QueryOptions = {},
+   ) => useQuery({
+     …
+     enabled,
+   ```
+
+   The module's local `QueryOptions` (`:28-30`) already exists. The hook has no
+   `!!courseId` guard today and this keeps it that way (see open question 1).
+
+2. **`useProgressData()` never fetches and takes no option**, per
+   `decisions-2098.md` entry 4 — the shape `useIsCourseLoaded` settled on:
+
+   ```js
+   return useProgressTabData(courseId, targetUserId, { enabled: false }).data;
+   ```
+
+   No caller wants it on: every one of the 22 sites renders under
+   `ProgressTab`, which fetches the same key from the same `useParams()`
+   values. Misuse fails loudly (a reader with no owner above it reads
+   `undefined` forever), which is the property entry 4 chose it for.
+
+3. **`ProgressTab` keeps fetching**, unchanged. `useExamsData` is unchanged
+   apart from reading through the now non-fetching `useProgressData()`; its
+   own `useExamAttemptsData` query still fetches.
+
+4. **The bridge entry `meta: { modelType: 'progress', courseId }` stays.** It
+   is the transitional write for the `useModel(tab, courseId)` read #1999
+   owns, and the bridge fires from the owner's fetch, not from disabled
+   observers, so nothing changes there.
+
+A disabled observer returns the query's current state and re-renders when the
+owner's fetch lands, so every reader sees the same value as before, including
+across the `targetUserId` change — `ProgressTab` and `useProgressData()` both
+key on `useParams()`, so they always agree on the cache entry.
+
+## Tests
+
+- **`course-home/data/apiHooks.test.tsx`**, in `describe('useProgressTabData')`
+  (`:238`): *stays idle with no request when disabled*, mirroring the
+  `useProctoringInfoData` case at `:398-404` (`fetchStatus === 'idle'`, zero
+  progress requests).
+
+- **`progress-tab/hooks.test.jsx`**: a new `describe('useProgressData')` with the
+  two cases `courseware/data/apiHooks.test.tsx:219-238` uses for
+  `useIsCourseLoaded` — *fetches nothing on its own* (renders under the
+  existing route wrapper, reads `undefined`, zero progress requests) and
+  *reads the owner's result without fetching again* (mount
+  `useProgressTabData(courseId, undefined)` on the same client, wait for it,
+  then mount the reader: same data object, request count unchanged). The
+  existing `useExamsData` cases seed the cache with `seedQueryData`
+  (`:42-46`) and should pass unchanged, since a disabled observer reads seeded
+  data and re-renders when `seedProgress` overwrites it.
+
+  Worth tightening while there: the first `useExamsData` case (`:62-67`)
+  renders with no progress mock, so on the #2104 baseline `useProgressData()`
+  fires an unmocked GET that `axios-mock-adapter` answers 404 and the query
+  errors (before #2104 that 404 also called `location.replace` in jsdom).
+  After this change no request fires at all. The case's *requests nothing*
+  claim currently counts only attempt requests; extend it to count progress
+  requests too.
+
+- **`progress-tab/ProgressTab.test.jsx`**: the suite renders the owner
+  (`fetchAndRender`, `:73-91`) against mocked endpoints, so every case should
+  pass unchanged. Add one assertion that pins the count this layer is about:
+  after a plain `fetchAndRender()`, exactly one request matching `progressUrl`
+  (`:57`) — the in-suite mirror of the manual count (open question 3).
+
+- **No standalone-component suites to fix.** The progress tab has only these
+  two suites, and `src/index.test.jsx:49` mocks `ProgressTab` out entirely, so
+  the `MountCourseQueryHooks`-style fallout #2098 had does not arise here.
+
+## Behaviour changes
+
+- One `/api/course_home/progress/` request per progress-tab load instead of
+  two, on hard reload and on client-side navigation onto the tab.
+- **Plugins:** `useExamsData()` is documented (`progress-tab/README.md:5-40`)
+  for widgets in progress-tab slots, which render under `ProgressTab`, so its
+  documented use is unchanged. A plugin calling it with no progress-tab owner
+  above it now reads `null` forever instead of triggering a fetch. That use
+  was never documented and the hook's data is progress-tab data, so this is
+  the contract's edge, not a change to it (open question 2).
+- Nothing else: every reader reads the same query state it did before.
+
+## Commit type
+
+`refactor!:`, with a `BREAKING CHANGE` footer, as #2068, #2075 and #2017 did.
+The change is a refactor for the app (who fetches moves, nothing a learner sees
+changes), but plugins can observe it through the import path the README gives:
+both hooks in `progress-tab/hooks.jsx` were fetching observers and now only
+read. #2075's footer told plugins to migrate onto `useExamsData`, so the
+placement constraint this adds is a change to that advertised hook. Draft:
+
+```
+BREAKING CHANGE: `useExamsData` and `useProgressData`
+(./src/course-home/progress-tab/hooks) no longer fetch the progress data
+themselves; they read what `ProgressTab` has fetched. In a progress-tab slot,
+the documented use, they return exactly what they did. Rendered anywhere else
+they now return null / undefined unless something rendered on the page
+fetches the progress data — for example, a widget calling
+`useProgressTabData(courseId)` from ./src/course-home/data/apiHooks; see
+src/course-home/progress-tab/README.md.
+```
+
+### Migration note for plugins
+
+Goes in the PR description (a "Plugins" section, as #2077 and #2082 had) and,
+in short form, at the end of the README sentence in open question 2. The
+production shape is owner-fetches / reader-reads, so a widget outside the tab
+becomes its own owner. Both sides build the same key —
+`courseHomeQueryKeys.progressTab(courseId, targetUserId)`, with `targetUserId`
+undefined off the progress route — so a one-argument `useProgressTabData`
+call lands on the entry `useProgressData()` reads:
+
+```js
+import { useParams } from 'react-router-dom';
+import { useProgressTabData } from './src/course-home/data/apiHooks';
+import { useExamsData } from './src/course-home/progress-tab/hooks';
+
+RenderWidget: () => {
+  const { courseId } = useParams();
+  useProgressTabData(courseId); // fetches; useExamsData reads the result
+  const examsData = useExamsData();
+  // ...
+},
+```
+
+This is the same mechanism `src/tests/MountCourseQueryHooks.tsx` uses for the
+courseware readers. With #2104 below this layer, the fetch has no side effect:
+on a course whose MFE progress tab is disabled the widget's query errors with a
+404 and the page stays put, instead of the `queryFn` redirecting the learner to
+the legacy progress page.
+
+## Not in scope
+
+- **`staleTime`** on the progress query — see above.
+- **The progress tab's other reads.** `courseHomeMeta` in five progress-tab
+  files is B2 (#2085); `coursewareMeta` in `CertificateStatus` is D3 (#2089).
+- **`useLiveTabData`** has one caller (`LiveTab`), and outline and dates were
+  fixed in #2083, so no other tab has this shape.
+
+## Open questions
+
+1. **Settled: plain `enabled`, no `!!courseId` guard.** The hook has never
+   guarded on `courseId` and an undefined one cannot happen on this route, so
+   the guard would be a behaviour addition, not a faithful change.
+2. **README note for `useExamsData` — recommended.** The README is the hook's
+   only public contract and is example-only today. After this change a widget
+   calling it outside the progress tab reads `null` with no error and no log,
+   so the placement constraint should be stated where plugin authors read.
+   Proposed sentence under the `useExamsData()` heading: *"It reads the
+   progress tab's own data, so it is for widgets rendered in the progress
+   tab's slots, as above. Outside the progress tab it returns `null` unless
+   something rendered on the page fetches that data — for example, a widget
+   calling `useProgressTabData(courseId)` from
+   `./src/course-home/data/apiHooks`."*
+   `decisions-2098.md` entry 4's no-comment reasoning is about in-repo readers
+   whose owner is a few frames up, a different audience.
+
+   Rejected: keeping `useProgressData` on a fetching default so plugins work
+   anywhere. `useExamsData` inherits whatever default the shared hook has, so
+   that shape puts the duplicate request back into the documented use (a
+   widget under the tab mounts after the gate, finds the data stale, and
+   refetches). No default serves both placements; a separate fetching hook
+   would, and is not added speculatively.
+3. **`ProgressTab.test.jsx` count assertion — recommended, three lines.**
+   Neither #2083 nor #2098 pinned the count at component level, but this suite
+   already renders the owner against a mocked endpoint, and it is the only
+   place the number the manual protocol counts can live in code. It must wait
+   for the client to go idle first: `fetchAndRender` returns when the gate
+   opens, which is when the readers mount, and any refetch reaches the mock
+   adapter a few microtasks later, so asserting immediately could read one
+   even today.
+
+   ```js
+   const queryClient = await fetchAndRender();
+   await waitFor(() => expect(queryClient.isFetching()).toBe(0));
+   expect(axiosMock.history.get.filter((req) => progressUrl.test(req.url))).toHaveLength(1);
+   ```
+
+   Expected to read two before this change (the test client leaves
+   stale-on-mount refetching live); confirm that by running it against the
+   unchanged code while implementing.
+
+## Verification
+
+- `npm run types`, `npm run lint`, full suite.
+- Manual (tutor dev): hard reload `/course/:courseId/progress`, wait for the
+  network to go idle, count `/api/course_home/progress/`: **1**. Repeat via
+  client-side navigation from the outline tab: **1**. As staff, load
+  `/progress/:targetUserId`: **1**, header shows the other learner. Grade
+  summary, detailed grades, completion chart, certificate status, credit
+  information and the grade-breakdown slot render as before; a
+  `useExamsData` widget inserted into `progress_tab_course_grade.v1` via
+  `env.config.jsx` (the README example) still renders exam attempts.
+
+## Stack
+
+One layer on top of #2104, which is one layer on top of #2098 (PR #2102);
+closing #2103. B2 (#2085) follows.
+
+</details>
