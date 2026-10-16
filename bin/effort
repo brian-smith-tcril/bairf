@@ -33,7 +33,7 @@ case "$cmd" in
       /^worktree /{wt=$2} /^branch /{if($2==b){print wt; found=1}} END{exit !found}'
     ;;
   list)
-    echo "branches:"; git -C "$root" for-each-ref --format='%(refname)' refs/heads refs/remotes/origin | sed -E 's#^refs/(heads|remotes/origin)/##' | grep -E "^($kinds)/" | sort -u | sed 's/^/  /'
+    echo "branches:"; git -C "$root" for-each-ref --format='%(refname)' refs/heads refs/remotes/origin | sed -E 's#^refs/(heads|remotes/origin)/##' | { grep -E "^($kinds)/" || true; } | sort -u | sed 's/^/  /'
     echo "archived:"; git -C "$root" tag -l '*-archive/*' | sed 's/^/  /'
     ;;
   close)
