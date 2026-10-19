@@ -198,3 +198,14 @@ Settled 2026-10-19, while charting the wayfinder map.
     deviates says why in its PR. Profile's Pact test runs under
     frontend-base by pointing the provider at `mergeSiteConfig`, so Pact is
     a per-port check, not an open question.
+
+24. **Cross-app URLs are route roles.** `DISCUSSIONS_MFE_BASE_URL`,
+    `ENTERPRISE_LEARNER_PORTAL_URL` and `INSIGHTS_BASE_URL` become
+    consumer-named role ids that Learning resolves through
+    `getUrlByRouteRole` and a site supplies through `externalRoutes`, the
+    form the how-to prescribes and admin-console used for the authoring app
+    (`org.openedx.frontend.role.courseAuthoring`). Catalog's alternative,
+    a sibling app's URL as app config with `null` hiding the feature, was
+    rejected because an unresolved role already yields nothing. An iframe
+    `src` is no exception: the role resolves to a URL string. The role ids
+    are named in the config table review (wayfinder ticket 02).
