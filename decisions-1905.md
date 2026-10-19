@@ -314,3 +314,18 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     openedx/frontend-app-learning#2185 along with every other id.
     Published bodies and titles for #2196 and #2197 are updated to the terms;
     the tickets, spec and map keep the aliases they were written with.
+
+33. **The upgrade widget ports with the Slot API (#2185), not with the
+    auxiliary sidebar.** Its panel has been a plugin slot with no default
+    content since 14c662dc (2025-04-14): on a stock site it is a trigger
+    with a red dot that opens a titled, empty panel, available only on
+    verified-mode courses and never auto-opened since
+    openedx/frontend-app-learning#1923. Porting it without slots ports a
+    frame around nothing. The auxiliary sidebar issue ports the framework
+    and the discussions widget and keeps the several-registered-widgets
+    path working (one trigger per available widget, one panel open), which
+    the framework's mock-widget suites already pin. Whether the upgrade
+    widget stays registered by default is settled in #2185 in line with
+    DEPR openedx/frontend-app-learning#1902 (awais-ansari, 2026-04-20),
+    which lists the default-on registration for removal and has stalled
+    since July 2026.

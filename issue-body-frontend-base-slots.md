@@ -7,7 +7,7 @@ Together, #1905 and this issue are the "initial conversion" agreed at the 2026-0
 
 ### Scope
 
-- Port each placeholder under `src/plugin-slots/` to the Slot API, following the per-slot pattern of openedx/frontend-app-catalog#137: fragment to `<Slot id>`, a README with a site-config example, screenshots where the existing README has them. 34 slot directories on `master` today, plus the upgrade widget's slot (`src/widgets/upgrade/`, ADR 0010).
+- Port each placeholder under `src/plugin-slots/` to the Slot API, following the per-slot pattern of openedx/frontend-app-catalog#137: fragment to `<Slot id>`, a README with a site-config example, screenshots where the existing README has them. 34 slot directories on `master` today, plus the upgrade widget's slot (`src/widgets/upgrade/`, ADR 0010). The upgrade widget itself ports here rather than with the auxiliary sidebar, since its panel is that slot with no default content: its files, its registry entry, and the six props the slot passed (two of them aliases ADR 0010 deprecated). Whether it stays registered by default is settled here in line with #1902, which already lists the default-on registration for removal.
 - Restore the per-slot contracts the placeholders dropped: 29 files on `master` pass plugin props or slot options, 34 attributes in all. Each port decides what the Slot API equivalent is.
 - Decide the slot ID namespace against frontend-base's convention before the first port; Learning's current IDs (`org.openedx.frontend.learning.*.v1`) and catalog's (`org.openedx.frontend.slot.catalog.*.v1`) differ in shape.
 - Merge `frontend-base` into `master`.

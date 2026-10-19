@@ -20,7 +20,7 @@ Learning becomes a frontend-base app that a site installs like the others: an np
 5. As a learner, I want the outline sidebar to be my navigation in courseware, so that I can move between units and sections the way I do today.
 6. As a learner, I want previous and next, the bare course URL and the bare sequence URL to land me on the right unit, so that resume and deep links behave as today.
 7. As a learner in a timed exam, I want the timer, the exam access checks and exam submission to work, so that proctored and timed exams are unaffected by the conversion.
-8. As a learner, I want the right sidebar with discussions and the upgrade panel, the calculator and notes, bookmarks, and the celebration modals, so that no courseware feature I use today disappears.
+8. As a learner, I want the auxiliary sidebar with discussions (the upgrade panel follows in #2185, its content being a slot), the calculator and notes, bookmarks, and the celebration modals, so that no courseware feature I use today disappears.
 9. As a learner reaching the course end, I want the passing, in-progress and non-passing course exit pages, so that completion behaves as today.
 10. As a learner who follows an old discussion link into Learning, I want to arrive at the discussions app, so that the link still works.
 11. As a learner using a goal or preferences unsubscribe link from an email, I want the unsubscribe page to work under the new site, so that email preferences stay manageable.

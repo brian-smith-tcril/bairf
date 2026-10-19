@@ -12,7 +12,7 @@ Part of #1905. Depends on #2196.
 
 Files port from the legacy `src/` tree to the same relative path under `frontend-base/src/`, with their tests, and get a line each in `frontend-base/manifest.tsv`.
 
-- The sidebar framework under the course's [`sidebar/`](https://github.com/openedx/frontend-app-learning/tree/master/src/courseware/course/sidebar): the sidebar context, the sidebar and trigger shells, their base components, the hooks (initial state, responsive behavior, sync, unit-shift behavior), the storage utility, constants, and the widget registry with its defaults. Of the default widgets, only the navigation sidebar is live here; the auxiliary sidebar's widgets (discussions, upgrade) stay stubbed out of the registry until the auxiliary sidebar issue.
+- The sidebar framework under the course's [`sidebar/`](https://github.com/openedx/frontend-app-learning/tree/master/src/courseware/course/sidebar): the sidebar context, the sidebar and trigger shells, their base components, the hooks (initial state, responsive behavior, sync, unit-shift behavior), the storage utility, constants, and the widget registry with its defaults. Of the default widgets, only the navigation sidebar is live here; the discussions widget stays stubbed out of the registry until the auxiliary sidebar issue, and the upgrade widget until #2185.
 - The navigation sidebar itself under `sidebar/sidebars/course-outline/`: the tray, the trigger, the section, sequence and unit components, completion and unit icons, its hooks and messages. It reads the course outline structure and block completion through the courseware data module ported in #2195.
 - The three plugin slots that wrap it become placeholder slots, each rendering its default content in a bare fragment with no plugin-framework import: the navigation sidebar slot (`CourseOutlineSidebarSlot`; default: the tray), the desktop trigger slot and the mobile trigger slot (default: the trigger in each mode). Their stubs from #2196 are deleted.
 
@@ -25,7 +25,7 @@ The tests of the files that move here, the sidebar framework's and the navigatio
 - [ ] On desktop the sidebar opens and closes from its trigger; on a narrow viewport the mobile trigger opens it; the open state persists across navigation as on `master`
 - [ ] Sections and sequences expand and collapse; unit links navigate; the current unit is highlighted
 - [ ] Completion icons reflect completed units and update when a unit completes
-- [ ] The three slots are placeholder slots rendering their default content; the auxiliary sidebar's widgets are absent until their issue
+- [ ] The three slots are placeholder slots rendering their default content; the auxiliary sidebar's widgets are absent until their issues
 - [ ] Types, lint and tests of the new package pass; the legacy workflow stays green; `npm run dev` from the package serves courseware with the sidebar
 - [ ] Manifest lines added for every file moved; the sidebar directory's coverage compared against the `master` baseline
 
