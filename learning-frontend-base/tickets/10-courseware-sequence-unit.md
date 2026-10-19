@@ -7,7 +7,7 @@
 **Blocked by:** 09
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-courseware-sequence-unit.md`
+**Upstream:** openedx/frontend-app-learning#2196
 
 - [ ] Unit content renders; previous and next cross sequence boundaries; hidden-after-due shows its notice; license renders
 - [ ] The sequence container, sequence navigation, bottom navigation, unit title and content-iframe loader slots are placeholders
