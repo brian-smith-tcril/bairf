@@ -28,6 +28,6 @@ Used by `/wayfinder`. The **map** is a file with one **child** file per ticket.
 - **Frontier**: scan `issues/` for files that are open, unblocked and unclaimed; lowest number wins.
 - **Claim**: set `Status: claimed` and save before any work.
 - **Resolve**: append the answer under `## Answer`, set `Status: resolved`, then append a context pointer to the map's Decisions so far.
-- **Research branches**: `research/<name>` on the bairf effort branch's remote, never on the code repo.
+- **Research findings**: a research ticket's findings are a file at `<worktree>/wayfinder/<effort>/research/<slug>.md`, committed on the effort branch by the session that resolves the ticket. A research sub-agent writes the file and reports; it never commits, pushes or creates branches. No `research/<name>` branches, on bairf or on the code repo.
 
 A cleared map hands off to `/to-spec` and `/to-tickets`, which write into the worktree; `/upstream-issue` is the only step that creates GitHub issues.
