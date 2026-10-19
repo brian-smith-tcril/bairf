@@ -49,7 +49,7 @@ setup.sh
 bin/effort start <kind> <name> [dir]   orphan branch <kind>/<name> + worktree, default dir <parent of root>/bairf-<name>
 bin/effort path <kind>/<name>          the worktree path
 bin/effort list                        live effort branches and archived tags
-bin/effort close <kind>/<name>         tag <kind>-archive/<name>, delete the branch, remove the worktree
+bin/effort close <kind>/<name>         annotated tag <kind>-archive/<name> from TAG.md, delete the branch, remove the worktree
 ```
 
 Kinds: a **project** is a multi-session effort against a code repo, an epic's worth. A **task** is work that would make sense as one issue or PR: a bug fix, a one-commit feature. A **sidequest** is for Brian: exploring an idea, investigating something with no commitment to act on the findings, or this repo's own setup.
@@ -64,7 +64,17 @@ bairf branch: project/<name>
 
 Agents resolve the worktree with `bin/effort path` and write plans, decisions, manual-testing records and body drafts there. Files are named `plan-<issue>.md`, `decisions-<issue>.md`, `manual-testing-<issue>.md`, `issue-body-<slug>.md`, `pr-body-<n>.md`; `UPSTREAM.md` tracks exported issues; `wayfinder/<effort>/` holds a wayfinder map. Commit and push on the effort branch as they change.
 
-Closing: `bin/effort close <kind>/<name>` once the worktree is clean, then remove the line from the code repo's `CLAUDE.local.md`.
+`TAG.md` is the effort's index: the branch name, then its issues and PRs as `owner/repo#N` under `issues:` and `prs:`. `bin/effort start` creates it empty; a ref is added when the issue or PR is created, or when the effort takes up one that already exists. It becomes the archive tag's message, so it holds only refs, which stay true.
+
+Closing: `bin/effort close <kind>/<name>` once the worktree is clean, then remove the line from the code repo's `CLAUDE.local.md`. Close refuses when `TAG.md` is missing, when its first line is not the branch, or when a ref in `UPSTREAM.md` is absent from it.
+
+Finding an archived effort's context later, from a PR or issue number found through blame, or from a term:
+
+```
+for t in $(git tag -l '*-archive/*'); do git cat-file -p $t | grep -q 'owner/repo#N' && echo $t; done   # which effort
+git grep -l -i <term> $(git tag -l '*-archive/*')                                                     # which files
+git show <tag>:<file>
+```
 
 ## mattpocock skills in an Open edX checkout
 

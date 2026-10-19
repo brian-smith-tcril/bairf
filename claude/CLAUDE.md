@@ -81,3 +81,5 @@ Applies when the repo is under the `openedx` org or a fork of one.
 - Tutor dev facts: `openedx/tutor-dev.md`.
 - Repo facts that outlive any effort: `openedx/repos/<repo>/README.md`, and the repo's own terms in `openedx/repos/<repo>/GLOSSARY.md`, when they exist.
 - The repo's `CLAUDE.local.md` names its bairf branch (`project/<name>` or `task/<name>`); `bin/effort path <kind>/<name>` prints the worktree. Plans, decisions, manual-testing records and body drafts are written there, committed and pushed as they change.
+- The worktree's `TAG.md` lists the effort's issues and PRs as `owner/repo#N`. A ref is added when the issue or PR is created, or when the effort takes up one that already exists.
+- When a PR or issue reached through blame or a link doesn't explain a decision, the effort that made it may hold unpublished context: `for t in $(git tag -l '*-archive/*'); do git cat-file -p $t | grep -q '<owner/repo#N>' && echo $t; done` finds the effort, `git grep -l <term> $(git tag -l '*-archive/*')` finds the files, `git show <tag>:<file>` reads one.
