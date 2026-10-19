@@ -10,5 +10,6 @@ issues:
   openedx/frontend-app-learning#2190
   openedx/frontend-app-learning#2191
   openedx/frontend-app-learning#2192
+  openedx/frontend-app-learning#2193
 
 prs:

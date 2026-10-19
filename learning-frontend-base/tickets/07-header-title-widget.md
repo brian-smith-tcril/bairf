@@ -7,7 +7,7 @@
 **Blocked by:** 03
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-header-title-widget.md`
+**Upstream:** openedx/frontend-app-learning#2193 (in review)
 
 - [ ] The org and title line appears in the header on every course route and on no other route of the site
 - [ ] The widget does not fetch when the frame has already loaded the metadata; it reads the cache
