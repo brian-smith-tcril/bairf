@@ -209,3 +209,13 @@ Settled 2026-10-19, while charting the wayfinder map.
     rejected because an unresolved role already yields nothing. An iframe
     `src` is no exception: the role resolves to a URL string. The role ids
     are named in the config table review (wayfinder ticket 02).
+    A role is not a synonym for an external URL: `resolveRouteByRole` reads
+    both installed apps' routes and `externalRoutes`, so when the
+    discussions app is converted and installed in the same site, the same
+    role resolves to its in-site route and the site drops the external
+    entry, with no change in Learning. Two rules keep that path open: name
+    each role by destination (the id the destination app would itself
+    declare), never by mechanism; and treat the resolved value as a URL
+    only, never as a known-foreign origin. Learning's iframe is its current
+    rendering of the discussion tab, revisited by the discussions
+    conversion and #2186, not by epic 1.
