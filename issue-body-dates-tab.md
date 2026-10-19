@@ -31,7 +31,7 @@ Values the moved code read from the legacy environment config come from the fron
 
 ## Testing
 
-- The setup file calls frontend-base's `initializeMockApp` with an authenticated user and `addAppConfigs()` at top level, as frontend-app-profile and frontend-app-account do. A shared render helper supplies a query client, the intl provider and a memory router.
+- The setup file calls frontend-base's `initializeMockApp` with an authenticated user and `addAppConfigs()` at top level, as [frontend-app-profile](https://github.com/openedx/frontend-app-profile/blob/master/src/setupTest.ts) and [frontend-app-account](https://github.com/openedx/frontend-app-account/blob/master/src/setupTest.ts) do in their `setupTest.ts`. A shared render helper supplies a query client, the intl provider and a memory router.
 - Each test file mocks `@openedx/frontend-base` by spreading `jest.requireActual` and overriding what it needs; no shared mock module; no Mock Service Worker; the HTTP client is a per-file `jest.fn()` on `getAuthenticatedHttpClient`. Assertions that only test shell responsibilities are dropped.
 - The dates and tab-page tests port with their files and reach the page through the exported route array at the dates path.
 - These conventions are the template for every later page port; a port that deviates says why.

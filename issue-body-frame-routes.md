@@ -29,7 +29,7 @@ Part of #1905. Depends on #2187.
   | redirect landing | `redirect/*` | `org.openedx.frontend.role.learningRedirect` |
   | preferences unsubscribe | `preferences-unsubscribe/:userToken/:updatePatch?` | `org.openedx.frontend.role.preferencesUnsubscribe` |
 
-  Route ids are `org.openedx.frontend.route.learning.<page>`; role ids follow catalog's flat camelCase. The root role on the root route is what the shell's course bar checks; the per-page roles exist so another app can resolve a specific page by role.
+  Route ids are `org.openedx.frontend.route.learning.<page>`; role ids follow the flat camelCase of catalog's ([`src/constants.ts`](https://github.com/openedx/frontend-app-catalog/blob/master/src/constants.ts)). The root role on the root route is what the shell's course bar checks; the per-page roles exist so another app can resolve a specific page by role.
 - A stub element renders one line: the page's name and "not yet ported". It exists so a tester can tell an unported page from a broken one; each page's port replaces it.
 - No catch-all route: the shell renders its own not-found page for unmatched paths.
 - Not in this issue: the URL-decoding and path-fixing wrappers around the course routes (they come with the courseware container), providers, data fetching, the header widget, slots.
@@ -41,7 +41,7 @@ Part of #1905. Depends on #2187.
 
 ## Testing
 
-- Route tests render the exported route array under a memory router at each path above and assert the stub line for that page, following profile's route tests.
+- Route tests render the exported route array under a memory router at each path above and assert the stub line for that page, as profile's [`app.test.ts`](https://github.com/openedx/frontend-app-profile/blob/master/src/app.test.ts) exercises its routes through the app object.
 - No fetch is mocked because nothing fetches.
 
 ## Acceptance

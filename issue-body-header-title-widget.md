@@ -10,7 +10,7 @@ Part of #1905. Depends on #2189.
 
 ## What the legacy header is
 
-`LearningHeader` renders four things: the logo linking to the LMS dashboard; the course info lockup (org, number, title) from props the tab page passes out of course metadata; an actions area whose defaults are the header notifications slot and a Help link to the configured support URL; and, for a signed-in user, a dropdown with Dashboard, Profile, Account, Order History (when configured) and Sign out, or an anonymous menu otherwise. Nothing else: course tabs, masquerade controls and courseware search are Learning page components, not the header's.
+[`LearningHeader`](https://github.com/openedx/frontend-component-header/blob/v8.3.0/src/learning-header/LearningHeader.jsx) (at 8.3.0, the version Learning's lockfile resolves) renders four things: the logo linking to the LMS dashboard; the course info lockup (org, number, title) from props the tab page passes out of course metadata; an actions area whose defaults are the header notifications slot and a Help link to the configured support URL; and, for a signed-in user, a dropdown with Dashboard, Profile, Account, Order History (when configured) and Sign out, or an anonymous menu otherwise. Nothing else: course tabs, masquerade controls and courseware search are Learning page components, not the header's.
 
 ## Mapping onto the shell header
 
@@ -46,7 +46,7 @@ The widget is tested as a component: with a seeded query cache and route params 
 - [ ] The widget does not fetch; it reads the cache the frame fills
 - [ ] The Help link appears in the shell header on Learning's routes and points at the configured support URL
 - [ ] Dashboard and Order History: each either present in the shell's user menu on Learning's routes or recorded as a breaking change in the pull request
-- [ ] A README for the widget in the shape of instructor dashboard's, naming the widget id and the replace and remove operations
+- [ ] A README for the widget in the shape of [instructor dashboard's](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/slots/CourseInfoSlot/README.md), naming the widget id and the replace and remove operations
 - [ ] Screenshots at desktop and mobile widths in the pull request
 - [ ] Types, lint and tests of the new package pass; the legacy workflow stays green
 - [ ] Manifest lines added for any legacy file this moves (expected: none; the legacy header lived in a separate package)
