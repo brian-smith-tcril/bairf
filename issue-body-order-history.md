@@ -13,7 +13,7 @@ Found while planning openedx/frontend-app-learning#1905 (see openedx/frontend-ap
 
 ## After conversion
 
-- None of those six trees references `ORDER_HISTORY` today, and none of their conversion issues mentions the item (checked: profile #1246 and #1405, account #1316 and #1466, catalog #123, gradebook #497, authn #1498, admin console #149 and #211).
+- None of those six trees references `ORDER_HISTORY` today, and none of their conversion issues mentions the item (checked: openedx/frontend-app-profile#1246 and openedx/frontend-app-profile#1405, openedx/frontend-app-account#1316 and openedx/frontend-app-account#1466, openedx/frontend-app-catalog#123, openedx/frontend-app-gradebook#497, openedx/frontend-app-authn#1498, openedx/frontend-app-admin-console#149 and openedx/frontend-app-admin-console#211).
 - The shell header's authenticated menu is Profile, Account and Logout, each by role ([`shell/header/app.tsx`](https://github.com/openedx/frontend-base/blob/main/shell/header/app.tsx)).
 - Learner dashboard carries the item in its own header widget as [`OrderHistoryLinkMenuItem`](https://github.com/openedx/frontend-app-learner-dashboard/blob/master/src/widgets/LearnerDashboardHeader/OrderHistoryLinkMenuItem.jsx), reading `ORDER_HISTORY_URL` from app config.
 - Instructor dashboard went from the LMS's Django-rendered page straight to frontend-base; whether the platform header it had before showed an Order History item was not checked here.
