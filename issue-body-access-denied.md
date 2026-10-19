@@ -2,7 +2,7 @@ Part of #1905. Depends on #2189.
 
 **Goal:** an enterprise learner signed in under one enterprise who opens a course that belongs to another is denied access with the `incorrect_active_enterprise` code; they land on the access-denied page and see the LMS's message with a link to switch enterprise and return to the course home, as on `master`. A learner who does have access and reaches the URL is sent on to the course home. The access-denied stub from #2188 is replaced.
 
-**This is an enterprise-only page.** On `master` the access helper sends every other denial reason (audit expired, course not started, survey required, data-sharing consent, unfulfilled milestones) to the redirect landing page, not here. Only the enterprise code reaches it, so outside an enterprise deployment it is either a redirect or an empty page. This issue is a straight port.
+**This is an enterprise-only page.** On `master` the access helper ([`src/shared/access.js`](https://github.com/openedx/frontend-app-learning/blob/master/src/shared/access.js)) sends every other denial reason it handles (audit expired, course not started, course not started for an enterprise learner, survey required, data-sharing consent, unfulfilled milestones, and the default for authentication or enrollment required) to the redirect landing page or the course home, not here. Only the enterprise code reaches it, so outside an enterprise deployment it is either a redirect or an empty page. This issue is a straight port.
 
 **Open question, not for this issue:** should this page be deprecated or dropped? Nothing here decides that, or what would replace it; it is noted so the question is not lost.
 

@@ -18,7 +18,7 @@ Part of #1905. Depends on #2189.
 |---|---|
 | Logo | Shell's; links to the site's home role. Nothing to do. |
 | Course info lockup | A widget Learning appends to `org.openedx.frontend.slot.header.primaryLinks.v1`, the pattern below. |
-| Help link | The shell's `helpButtonSlotOperation({ appId, role })`, registered in Learning's `slots` with Learning's root role; it reads `SUPPORT_URL` from Learning's app config, which the config mapping keeps under that name. |
+| Help link | The shell's `helpButtonSlotOperation({ appId, role })`, registered in Learning's `slots` with Learning's root role, as [instructor dashboard registers it](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/slots.tsx); it reads `SUPPORT_URL` from Learning's app config, which the config mapping keeps under that name. |
 | Notifications slot | A plugin slot operators filled; under frontend-base an operator inserts the notifications widget into a shell header slot from site config. No Learning code. |
 | User menu: Profile, Account, Sign out | Shell's, by role. Nothing to do. |
 | User menu: Dashboard, Order History | The shell's authenticated menu is Profile, Account and Logout, each by role ([`shell/header/app.tsx`](https://github.com/openedx/frontend-base/blob/main/shell/header/app.tsx)); it has neither. Decided in the pull request: append a Dashboard item through the `authenticatedMenu` slot resolving the learner-dashboard role, and treat Order History as a possible breaking change. For context: Order History existed only in the legacy header package's dropdown, so every converted app lost it with that package; the one converted app that carries it is frontend-app-learner-dashboard, as [`OrderHistoryLinkMenuItem`](https://github.com/openedx/frontend-app-learner-dashboard/blob/master/src/widgets/LearnerDashboardHeader/OrderHistoryLinkMenuItem.jsx) in its own header widget, reading app config. A drop ships with a DEPR filed after merge. |
@@ -26,7 +26,7 @@ Part of #1905. Depends on #2189.
 
 ## Course info widget: the instructor-dashboard pattern
 
-frontend-app-instructor-dashboard's `CourseInfoSlot` is a widget appended to `primaryLinks.v1` through the app's `slots`; it reads the course id from the route params, loads course info through the app's own hook, renders org and course number on one line and the title beneath in bold, returns nothing while there is no data, and ships with a README naming the widget id so a site can `REPLACE` or `REMOVE` it. Learning follows it:
+frontend-app-instructor-dashboard's [`CourseInfoSlot`](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/slots/CourseInfoSlot/CourseInfoSlot.tsx) is a widget appended to `primaryLinks.v1` through the app's [`slots`](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/slots.tsx); it reads the course id from the route params, loads course info through the app's own hook, renders org and course number on one line and the title beneath in bold, returns nothing while there is no data, and ships with a README naming the widget id so a site can `REPLACE` or `REMOVE` it. Learning follows it:
 
 - A widget module under the package's slots directory, appended to `primaryLinks.v1`, id `org.openedx.frontend.widget.learning.courseInfo.v1`, README in the same shape.
 - It takes the course id from the route params and reads course metadata from the shared query cache under the key the tab-page frame owns (#2189), as a non-fetching reader; nothing renders until the frame has loaded it.

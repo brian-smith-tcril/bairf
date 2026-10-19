@@ -12,7 +12,7 @@ Part of #1905. Depends on #2187.
 
 ## Route tree
 
-- One root route, path `learning`, id `org.openedx.frontend.route.learning.main`, role `org.openedx.frontend.role.learning`, element a bare outlet. Every converted app keeps the first segment of its old URL as its root route (`catalog`, `gradebook/:courseId`, `profile`, `account`); the shell concatenates app routes as written under one site basename, so this is what keeps every existing `/learning/...` link resolving.
+- One root route, path `learning`, id `org.openedx.frontend.route.learning.main`, role `org.openedx.frontend.role.learning`, element a bare outlet. The converted apps checked each keep the first segment of their old URL as the root route: [catalog](https://github.com/openedx/frontend-app-catalog/blob/master/src/routes.tsx) `/catalog`, [gradebook](https://github.com/openedx/frontend-app-gradebook/blob/master/src/routes.tsx) `/gradebook/:courseId`, [profile](https://github.com/openedx/frontend-app-profile/blob/master/src/routes.tsx) `profile`, [account](https://github.com/openedx/frontend-app-account/blob/master/src/routes.tsx) `account`, [instructor dashboard](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/routes.tsx) `instructor-dashboard/:courseId`. The shell's [`getAppRoutes`](https://github.com/openedx/frontend-base/blob/main/shell/router/getAppRoutes.ts) concatenates app routes as written under one site basename, so this is what keeps every existing `/learning/...` link resolving.
 - Child routes, one per page Learning serves today, each with its own id and role and a stub element:
 
   | Page | Path(s) under `learning` | Role |
@@ -36,7 +36,7 @@ Part of #1905. Depends on #2187.
 
 ## `provides`
 
-- The root role is listed under both `providesCourseBarRolesId` and `providesCourseBarMasqueradeRolesId`, exactly as frontend-app-instructor-dashboard declares its single role. The course bar then renders on every route carrying the root role (ancestor roles count as active), and client-navigates to any tab whose URL prefix-matches a provided role's route, which `/learning` does for every tab.
+- The root role is listed under both `providesCourseBarRolesId` and `providesCourseBarMasqueradeRolesId`, exactly as frontend-app-instructor-dashboard declares its single role in [`src/provides.ts`](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/provides.ts). The course bar then renders on every route carrying the root role (ancestor roles count as active), and client-navigates to any tab whose URL prefix-matches a provided role's route, which `/learning` does for every tab.
 - Tabs the LMS lists that no installed app provides still appear and render as full-page links; that is the shell's behavior and is not changed here.
 
 ## Testing
