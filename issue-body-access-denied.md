@@ -1,6 +1,6 @@
 Part of #1905. Depends on #2189.
 
-**Goal:** a learner whose course access is denied because their active enterprise is the wrong one lands on the access-denied page and sees the active-enterprise alert with its switch link, as on `master`. A learner who does have access and reaches the URL is sent on to the course home. The access-denied stub from #2188 is replaced.
+**Goal:** an enterprise learner signed in under one enterprise who opens a course that belongs to another is denied access with the `incorrect_active_enterprise` code; they land on the access-denied page and see the LMS's message with a link to switch enterprise and return to the course home, as on `master`. A learner who does have access and reaches the URL is sent on to the course home. The access-denied stub from #2188 is replaced.
 
 **Scope note:** on `master` the access helper sends every other denial reason (audit expired, course not started, survey required, data-sharing consent, unfulfilled milestones) to the redirect landing page, not here. Those paths are the redirect landing page's issue. This page is one alert and one redirect.
 
@@ -28,7 +28,7 @@ The conventions #2189 set: tests reach the page through the exported route array
 
 ## Acceptance
 
-- [ ] With metadata reporting no access, the page renders the active-enterprise alert; with metadata reporting access, it navigates to the redirect landing route for the course home
+- [ ] With metadata reporting `incorrect_active_enterprise`, the page renders the LMS message and the switch-enterprise link; with metadata reporting access, it navigates to the redirect landing route for the course home
 - [ ] The loading state renders while metadata is pending
 - [ ] Types, lint and tests of the new package pass; the legacy workflow stays green; `npm run dev` from the package serves the page
 - [ ] Manifest lines added for every file moved; coverage for the moved files compared against the `master` baseline
