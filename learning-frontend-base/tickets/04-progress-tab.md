@@ -7,7 +7,7 @@
 **Blocked by:** 03
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-progress-tab.md`
+**Upstream:** openedx/frontend-app-learning#2190
 
 - [ ] Progress renders for a learner with and without grades; certificate status main body and side panel placeholders show default content
 - [ ] The exams-data hook survives as code with no in-app caller; a note in the PR records whether it is exported from the package index
