@@ -1,4 +1,4 @@
-Part of #1905. First layer on the `frontend-base` branch.
+Part of #1905.
 
 **Goal:** a new `frontend-base/` directory at the repository root holding Learning's frontend-base package, scaffolded from [frontend-template-application `main`](https://github.com/openedx/frontend-template-application), that runs the dev server, tests and build on its own, with CI and coverage wired for it and the rest of the repository untouched. No Learning code is ported in this layer.
 
@@ -16,7 +16,7 @@ Part of #1905. First layer on the `frontend-base` branch.
 - The legacy tree under `src/` is never edited on the branch. Later layers port files from it into `frontend-base/src/` at the same relative path, and record each move in `frontend-base/manifest.tsv`.
 - Node resolves modules upward, so a dependency missing from `frontend-base/` could resolve from a root `node_modules`. CI for the new package therefore runs with no root install present.
 
-## Steps, as commits inside this layer
+## Steps, as commits inside the PR
 
 1. Add `frontend-base/` as a copy of frontend-template-application `main`, unchanged apart from removing the template's own repository metadata.
 2. Add `.github/workflows/frontend-base.yml`, copied from the template's `ci.yml`, with `defaults.run.working-directory: frontend-base`, `node-version-file: frontend-base/.nvmrc`, and `paths` filters on `frontend-base/**` and the workflow file. The coverage step uploads with `flags: frontend-base` from `frontend-base/coverage`, configured by `frontend-base/codecov.yml` through the action's `codecov_yml_path` input. Add a throwaway test to prove the workflow and the flag run from the subdirectory.
@@ -24,17 +24,17 @@ Part of #1905. First layer on the `frontend-base` branch.
 4. Replace the template's names with Learning's: package name `@openedx/frontend-app-learning`; `appId` `org.openedx.frontend.app.learning`; route id prefix `org.openedx.frontend.route.learning.`; role id prefix `org.openedx.frontend.role.` with `learning` as the root role; site config with the required fields (`siteId`, `siteName`, `baseUrl`, `lmsBaseUrl`, `loginUrl`, `logoutUrl`) and Learning's app registered with an empty route array.
 5. Add `frontend-base/manifest.tsv`, empty apart from a header comment giving the format: one line per legacy path per target, tab separated, sorted by legacy path; several lines for a split or a merge; `dropped` as the target of a file that is not ported.
 
-Commits are squashed when the layer lands; the middle two exist to show the verification in review.
+Commits are squashed when the PR lands; the middle two exist to show the verification in review.
 
 ## Coverage policy
 
 - The flag's project target is a literal equal to `master`'s project coverage at branch creation, not `auto`, so every later layer is held to `master`'s bar and the eventual merge to `master` is not the first comparison.
 - The legacy upload from `validate.yml` stays unflagged; the PR comment's combined number is noise, the flag's status check is the number to read.
-- The manual-testing record of each later layer compares its ported directory's coverage against a `master` baseline captured in this layer.
+- The manual-testing record of each later PR compares its ported directory's coverage against a `master` baseline captured here.
 
-## Not in this layer
+## Not in this PR
 
-- Routes, roles, `provides`, providers, slots, header, any ported file. The next layer adds the route tree with a stub route per page.
+- Routes, roles, `provides`, providers, slots, header, any ported file. The route tree, with a stub route per page, is the next issue.
 - Any change to `validate.yml`, the root `package.json`, `codecov.yml` or any other `master`-owned file.
 - The template's `release.yml`; publishing is #2185's and would publish the branch.
 
@@ -45,6 +45,6 @@ Commits are squashed when the layer lands; the middle two exist to show the veri
 - [ ] Coverage uploads under the `frontend-base` flag with the absolute target set; verified by the throwaway-test commits, then removed
 - [ ] Learning's identity replaces the template's everywhere in the package; site config carries the required fields and registers the app
 - [ ] `frontend-base/manifest.tsv` exists with its format documented
-- [ ] The manual-testing record documents how a frontend-base site is run against a local Open edX stack, step by step, as the environment every later layer uses
+- [ ] The manual-testing record documents how a frontend-base site is run against a local Open edX stack, step by step, as the environment every later PR uses
 
 </details>
