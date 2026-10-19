@@ -10,4 +10,4 @@
 | access-denied | issue-body-access-denied.md | openedx/frontend-app-learning#2192 | settled |
 | header-title-widget | issue-body-header-title-widget.md | openedx/frontend-app-learning#2193 | settled |
 | order-history | issue-body-order-history.md | openedx/frontend-base#324 | in-review |
-| instructor-toolbar | issue-body-instructor-toolbar.md | openedx/frontend-app-learning#2194 | in-review |
+| instructor-toolbar | issue-body-instructor-toolbar.md | openedx/frontend-app-learning#2194 | settled |
