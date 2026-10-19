@@ -59,6 +59,10 @@ Settled 2026-10-19, while charting the wayfinder map.
    placeholder; and the package composes into a local
    frontend-template-site checkout. That composition is verification only;
    the default-config PR to frontend-template-site is #2185's.
+   A port PR is mergeable when, in addition, the ported route has been
+   exercised by hand in the verification environment and the observations
+   are in the PR's manual-testing record; a behavior the manual pass finds
+   untested gets its test in the same PR.
 
 9. **Breaking changes are decided in PRs, not on the map.** As in the React
    Query epic, a feature the branch stops carrying ships as a `refactor!:`
@@ -134,3 +138,41 @@ Settled 2026-10-19, while charting the wayfinder map.
     branch creation; this stays manual, since per-directory thresholds in
     codecov would be a maintenance burden across 34 slot directories and
     nine route areas.
+
+18. **Unit of a port.** One route-level page per PR, with what only it
+    uses; shared code moves with its first consumer. A page too big for one
+    reviewable layer splits further, courseware being the expected case;
+    split points are decided when that page's ticket is written.
+
+19. **Layers push to upstream.** gh-stack cannot target an upstream branch
+    from a fork, so the stack's layers are pushed to upstream as
+    `bsmith/<name>`, targeting `frontend-base`, and re-synced after each
+    rebase of the base.
+
+20. **Header and footer are the shell's.** Learning declares its course-bar
+    roles through `provides` (frontend-base ADR 0013) so the shell's course
+    bar handles tab navigation; Learning's own header component, its tabs
+    navigation, and the header and footer plugin slots are not ported. A
+    research ticket diffs what Learning's header renders today against the
+    shell header, and each gap becomes "shell provides it", "declared
+    through `provides`", or a possible-breaking-change note.
+
+21. **Root route is `learning`.** Every converted app keeps the first
+    segment of its old URL as its root route (`/catalog`,
+    `/gradebook/:courseId`, `profile`, `account`); the shell concatenates
+    app routes as written under one site basename, with no per-app mount
+    point. Learning's array therefore has one root route at `learning` with
+    the course routes and the three non-course routes as children, so every
+    existing deep link resolves. Learning's source already contains no
+    `/learning` literal; the per-port check is any absolute `<Link to>` or
+    `window.location` write the port touches.
+
+22. **Wrappers become layout routes; the catch-all is the shell's.**
+    `DecodePageRoute` and `PathFixesProvider` port verbatim as parent routes
+    with an `element` and `children`, as instructor dashboard structures
+    its tabs; the `/preview/course/...` paths port as extra patterns on the
+    courseware route. The shell's router renders its not-found page for any
+    unmatched path, so Learning's `*` route is not ported; Learning's 404
+    component stays for in-app cases such as a bad course id, as profile's
+    index child does. Whether either wrapper becomes a route loader later
+    is a ticket, not an epic-1 change.
