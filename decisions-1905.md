@@ -176,3 +176,19 @@ Settled 2026-10-19, while charting the wayfinder map.
     component stays for in-app cases such as a bad course id, as profile's
     index child does. Whether either wrapper becomes a route loader later
     is a ticket, not an epic-1 change.
+
+23. **Test-port conventions.** Learning starts from the rules the converted
+    apps share (catalog's `port-the-tests.md`, confirmed in profile #1408
+    and account #1470): each test file mocks `@openedx/frontend-base` by
+    spreading `jest.requireActual` and overriding what it needs; no shared
+    mock module for frontend-base; no Mock Service Worker; the HTTP client
+    is a per-file `jest.fn()` on `getAuthenticatedHttpClient`; assertions
+    that only test shell responsibilities are dropped. Two points follow the
+    recent conversions rather than catalog: the setup file calls
+    `initializeMockApp({ authenticatedUser })` and `addAppConfigs()` at top
+    level, as profile and account do, instead of merging site config by
+    hand; and a shared render helper (query client, intl provider, memory
+    router) is kept, as four of the five converted apps do. A port that
+    deviates says why in its PR. Profile's Pact test runs under
+    frontend-base by pointing the provider at `mergeSiteConfig`, so Pact is
+    a per-port check, not an open question.
