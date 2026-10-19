@@ -7,6 +7,7 @@
 **Blocked by:** 03
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-access-denied.md`
 
 - [ ] The page renders for each access-denied reason the course-metadata response produces
 - [ ] Courseware's redirect to it (ticket 09) has a real destination once this lands

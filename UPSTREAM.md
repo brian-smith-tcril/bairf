@@ -7,3 +7,4 @@
 | dates-tab | issue-body-dates-tab.md | openedx/frontend-app-learning#2189 | settled |
 | progress-tab | issue-body-progress-tab.md | openedx/frontend-app-learning#2190 | settled |
 | outline-tab | issue-body-outline-tab.md | openedx/frontend-app-learning#2191 | settled |
+| access-denied | issue-body-access-denied.md | | unpublished |
