@@ -16,7 +16,7 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 - The dates tab itself: the tab component, its timeline and utilities, messages.
 - The tab-page frame: the tab page and loaded tab page components, the course-tabs utilities the frame reads (not the tabs navigation component, which the shell's course bar replaces), the alerts module (enrollment, logistration, access expiration, course start, and the rest the loaded tab page mounts), and the generic pieces they need (page loading, user messages).
-- The course-home data layer: the course-metadata and dates queries, query keys, API functions and normalizers. The frame owns the course-metadata fetch; everything below it reads the cache without fetching, as on `master`.
+- The course-home data module: the course-metadata and dates queries, query keys, API functions and normalizers. The frame owns the course-metadata fetch; everything below it reads the cache without fetching, as on `master`.
 - The Learning-wide providers from the legacy app root: user messages, toast, notices, plugin overrides. They become the element of the root `learning` route, so they mount once, only under Learning's paths, and persist across client-side tab switches. Not `App.providers`, which frontend-base hoists above the whole site. The legacy query client provider is dropped; the shell owns one.
 
 ## What does not move with it
