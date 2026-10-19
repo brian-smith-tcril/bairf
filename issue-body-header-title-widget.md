@@ -8,15 +8,13 @@ Part of #1905. Depends on #2189.
 <details>
 <summary> Claude Plan </summary>
 
-## Mechanism
+## Pattern
 
-- Learning's `App.slots` carries a slot operation that inserts a widget into a shell header slot. frontend-app-learner-dashboard does this for its whole header: its header is a widget module whose slot operations are spread into the app's `slots`.
-- The widget mounts inside the shell header, outside Learning's route tree, so it cannot read anything Learning's root route provides. It takes the course id from the route params and reads course metadata from the shared query cache under the key the tab-page frame owns (#2189), as a non-fetching reader. If the frame has not loaded the metadata yet, the widget renders nothing until it has.
-- The operation carries a condition so the widget renders only on course routes. The shell's own masquerade bar is the precedent: a condition callback that checks the active route's roles against the roles Learning provides (#2188).
+frontend-app-instructor-dashboard already does this. Its `CourseInfoSlot` is a widget appended to the shell header's `org.openedx.frontend.slot.header.primaryLinks.v1` slot through the app's `slots`; it reads the course id from the route params, loads course info through the app's own hook, renders org and course number on one line and the title beneath in bold, returns nothing while there is no data, and ships with a README naming the widget id so a site can `REPLACE` or `REMOVE` it. Learning follows it:
 
-## Placement
-
-The shell header on `main` has these slots: `desktop`, `desktopLeft`, `desktopRight`, `mobile`, `mobileLeft`, `mobileCenter`, `mobileRight`, `mobileMenu`, `mobileMenuLinks`, `primaryLinks`, `secondaryLinks`, `anonymousMenu`, `authenticatedMenu`, `courseNavigationBar`, `courseNavigationBar.extraContent`, `courseNavigationBar.tabs.label`, `masqueradeBar`, all under `org.openedx.frontend.slot.header.<name>.v1`. Candidates for the title line: `desktopLeft` with `mobileCenter` for small screens, matching where the legacy header placed it beside the logo; or `courseNavigationBar.extraContent`, which puts it on the course bar row. The pull request picks one and records why, with screenshots at desktop and mobile widths.
+- A widget module under the package's slots directory, appended to `primaryLinks.v1` from Learning's `slots`, with id `org.openedx.frontend.widget.learning.courseInfo.v1` and a README in the same shape.
+- It takes the course id from the route params and reads course metadata from the shared query cache under the key the tab-page frame owns (#2189), as a non-fetching reader. It renders nothing until the frame has loaded the metadata.
+- One difference from the dashboard: its widget scopes itself because its hook has nothing to load without a course id, while Learning's would read a cache that can still hold a course after the learner has moved to another app's course page. The operation therefore carries a condition on Learning's root role from #2188, so it renders only under Learning's routes.
 
 ## Known duplication, not addressed here
 
@@ -31,7 +29,8 @@ The widget is tested as a component: rendered with a seeded query cache and rout
 - [ ] Org and number on one line and the title beneath appear in the shell header on every course route, at desktop and mobile widths
 - [ ] They appear on no non-course route of the site
 - [ ] The widget does not fetch; it reads the cache the frame fills
-- [ ] Placement chosen and recorded with screenshots
+- [ ] Screenshots at desktop and mobile widths in the pull request
+- [ ] A README for the widget in the shape of instructor dashboard's, naming the widget id and the replace and remove operations
 - [ ] Types, lint and tests of the new package pass; the legacy workflow stays green
 - [ ] Manifest lines added for any legacy file this moves (expected: none; the legacy header lived in a separate package)
 
