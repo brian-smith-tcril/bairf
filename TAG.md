@@ -8,5 +8,6 @@ issues:
   openedx/frontend-app-learning#2188
   openedx/frontend-app-learning#2189
   openedx/frontend-app-learning#2190
+  openedx/frontend-app-learning#2191
 
 prs:
