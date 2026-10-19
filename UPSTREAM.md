@@ -13,3 +13,4 @@
 | instructor-toolbar | issue-body-instructor-toolbar.md | openedx/frontend-app-learning#2194 | settled |
 | courseware-container | issue-body-courseware-container.md | openedx/frontend-app-learning#2195 | settled |
 | courseware-sequence-unit | issue-body-courseware-sequence-unit.md | openedx/frontend-app-learning#2196 | settled |
+| courseware-outline-sidebar | issue-body-courseware-outline-sidebar.md | | unpublished |

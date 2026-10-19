@@ -7,6 +7,7 @@
 **Blocked by:** 10
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-courseware-outline-sidebar.md`
 
 - [ ] Sidebar opens, closes, navigates, and shows completion icons on desktop and mobile
 - [ ] The sidebar context and widget registry land with no right-sidebar widgets yet
