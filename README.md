@@ -9,7 +9,7 @@ Brian's Claude Code setup and project working docs.
 
 Exactly one checkout is the installed one; `~/.claude/bairf-root` names it.
 
-1. Clone wherever the code lives (`/home/bsmith/code/claude/bairf` on Brian's machines) and run `./setup.sh --check` from it.
+1. Clone it anywhere and run `./setup.sh --check` from it.
 2. Show the report. Every row is `ok`, `missing`, or a conflict that needs a hand merge (an existing `~/.claude/CLAUDE.md` with other content, a pointer at another checkout).
 3. On Brian's word, `./setup.sh --apply`, then `--check` again until every row is `ok`.
 
@@ -22,7 +22,7 @@ What it installs, all derived from the pointer, no symlinks:
 | global git ignore | `CLAUDE.local.md`, `**/.claude/settings.local.json` |
 | `~/.claude/settings.json` | plugins and hooks from `claude/settings.fragment.json` merged in |
 | `~/.claude/skills/*` | copies of `skills/*`; re-run to refresh |
-| plugins, tools | `mattpocock-skills`; the official `gh-stack` extension and skill (`gh skill install github/gh-stack`); nvm |
+| plugins, tools | `mattpocock-skills`; the official `gh-stack` extension and skill (`gh skill install github/gh-stack --agent claude-code --scope user --all`); nvm |
 
 After a `git pull` on main, re-run `--check`; anything but the skill copies takes effect at the next session without it.
 

@@ -67,7 +67,7 @@ else apply && { claude plugin install mattpocock-skills@claude-plugins-official;
 fi
 gh extension list 2>/dev/null | grep -q 'github/gh-stack' && say "gh-stack ext" "ok" || { say "gh-stack ext" "missing: gh extension install github/gh-stack"; status=1; }
 if [ -f "$claude_dir/skills/gh-stack/SKILL.md" ]; then say "gh-stack skill" "ok (official, github/gh-stack)"
-else apply && { gh skill install github/gh-stack; say "gh-stack skill" "installed"; } || { say "gh-stack skill" "missing: gh skill install github/gh-stack"; status=1; }
+else apply && { gh skill install github/gh-stack --agent claude-code --scope user --all; say "gh-stack skill" "installed"; } || { say "gh-stack skill" "missing: gh skill install github/gh-stack --agent claude-code --scope user --all"; status=1; }
 fi
 if v=$(bash -c '. "$HOME/.nvm/nvm.sh" >/dev/null 2>&1 && nvm --version' 2>/dev/null); then say "nvm" "ok ($v)"
 else say "nvm" "missing or broken: install nvm, then re-check"; status=1; fi
