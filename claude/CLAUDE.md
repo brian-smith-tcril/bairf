@@ -43,6 +43,7 @@ Reach for `openedx/GLOSSARY.md` for the words in anything Open edX.
 - Cross-repo references are `owner/repo#N`. Work is named by PR number, not layer label.
 - Names: use the GitHub login or a verified name. A first name is never inferred from a handle.
 - Cite official docs (page and section anchor, quoted), separated from our own additions.
+- A claim about prior art in another repo ("X does it this way", "the other conversions dropped it") names the repo and the file, PR or issue, linked, and was checked against it in this session. "Every" and "none" are written only after the list was enumerated.
 - Implementation on a project-repo issue starts once its row in the effort worktree's `UPSTREAM.md` reads `settled` (`skills/upstream-issue`).
 
 ## Code
