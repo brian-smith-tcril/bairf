@@ -2,6 +2,9 @@ Epic 2 of 3 for the frontend-base conversion. Follows #1905 (epic 1), which land
 
 Together, #1905 and this issue are the "initial conversion" agreed at the 2026-09-24 Frontend Working Group (recorded on #1905): slots converted, everything renders and works.
 
+> [!NOTE]
+> This issue body was drafted by Claude (Claude Code) and reviewed before posting.
+
 ### Scope
 
 - Port each placeholder under `src/plugin-slots/` to the Slot API, following the per-slot pattern of openedx/frontend-app-catalog#137: fragment to `<Slot id>`, a README with a site-config example, screenshots where the existing README has them. 34 slot directories on `master` today, plus the upgrade widget's slot (`src/widgets/upgrade/`, ADR 0010).

@@ -6,6 +6,9 @@ The converted code will remain in a long-lived [`frontend-base`](https://github.
 
 ### Epics
 
+> [!NOTE]
+> This section and the TODO edits below were drafted by Claude (Claude Code) and reviewed before posting.
+
 The conversion is three sibling epics. This issue is epic 1.
 
 1. **#1905 (this issue):** Learning runs on frontend-base from the `frontend-base` branch. Every slot is reduced to a placeholder that renders its default content in a bare fragment, with `@openedx/frontend-plugin-framework` removed, following the pattern openedx/frontend-app-catalog#137 used before its per-slot port commits. Plugin contracts are broken on this branch until epic 2.
