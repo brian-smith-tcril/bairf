@@ -8,3 +8,4 @@
 | progress-tab | issue-body-progress-tab.md | openedx/frontend-app-learning#2190 | settled |
 | outline-tab | issue-body-outline-tab.md | openedx/frontend-app-learning#2191 | settled |
 | access-denied | issue-body-access-denied.md | openedx/frontend-app-learning#2192 | settled |
+| header-title-widget | issue-body-header-title-widget.md | | unpublished |
