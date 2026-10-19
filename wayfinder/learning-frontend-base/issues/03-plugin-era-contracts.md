@@ -1,7 +1,7 @@
 # Plugin-era contracts the placeholder step breaks
 
 Type: research
-Status: open
+Status: claimed
 
 ## Question
 

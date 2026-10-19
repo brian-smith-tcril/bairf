@@ -1,7 +1,7 @@
 # What Learning's header does that the shell's does not, and how `provides` reaches the course bar
 
 Type: research
-Status: open
+Status: claimed
 
 ## Question
 

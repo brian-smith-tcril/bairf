@@ -1,7 +1,7 @@
 # Config mapping table: env vars and bootstrap keys to frontend-base config
 
 Type: research
-Status: open
+Status: claimed
 
 ## Question
 
