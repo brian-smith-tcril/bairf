@@ -219,3 +219,15 @@ Settled 2026-10-19, while charting the wayfinder map.
     only, never as a known-foreign origin. Learning's iframe is its current
     rendering of the discussion tab, revisited by the discussions
     conversion and #2186, not by epic 1.
+
+25. **Config table reviewed; `SESSION_COOKIE_DOMAIN` is an app config key.**
+    The 52-row table in wayfinder ticket 02 stands with the precedents its
+    addendum records. `SESSION_COOKIE_DOMAIN` follows authn: an app config
+    key under the same name, set by the operator in the app's `config`, not
+    in `defaultConfig`; unset scopes the cookie to the serving host.
+    frontend-base has no cookie-domain field. Two conventions ride along:
+    flag keys keep their SCREAMING_SNAKE names so MFE config API values keep
+    flowing (account #1470), and only real defaults go in `defaultConfig`,
+    since a key in the app's own `config` cannot be overridden by the site's
+    `commonAppConfig` (catalog #156); `SUPPORT_URL` stays under that name
+    because the shell's help button reads it from the app's config.
