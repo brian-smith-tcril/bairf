@@ -1,4 +1,4 @@
-Part of #1905 (epic 1 of the frontend-base conversion). First layer on the `frontend-base` branch.
+Part of #1905. First layer on the `frontend-base` branch.
 
 **Goal:** a new `frontend-base/` directory at the repository root holding Learning's frontend-base package, scaffolded from [frontend-template-application `main`](https://github.com/openedx/frontend-template-application), that runs the dev server, tests and build on its own, with CI and coverage wired for it and the rest of the repository untouched. No Learning code is ported in this layer.
 
