@@ -23,6 +23,7 @@ case_ "cd local path, good body-file"     0 "cd /home/bsmith/code/claude/fronten
 case_ "bad body-file"                     2 "gh issue create --title t --body-file $tmp/bad.md"
 case_ "inline body, bairf url"            2 "gh pr comment 1 --body 'see https://github.com/brian-smith-tcril/bairf/blob/main/x.md'"
 case_ "inline body, local path"           2 "gh issue comment 1 --body 'file at /home/bsmith/code/x'"
+case_ "inline body, tmp path"             2 "gh issue comment 1 --body 'cloned at /tmp/claude-1000/x/scratchpad/ref/frontend-base'"
 case_ "heredoc inline body, scratch name" 2 "gh issue comment 1 --body \"\$(cat <<'EOF'
 settled in plan-2018.md
 EOF

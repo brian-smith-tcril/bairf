@@ -38,6 +38,8 @@ agents/issue-tracker.md      what mattpocock's skills read as "the issue tracker
 agents/domain.md             what they read as the domain docs
 hooks/no-scratch-refs.sh     blocks a GitHub write whose body names scratch files, bairf, or local paths
 hooks/test-no-scratch-refs.sh
+hooks/no-tmp-push.sh         blocks git push / gh pr create / gh stack submit from a clone under /tmp
+hooks/test-no-tmp-push.sh
 skills/upstream-issue        gated export of a local ticket to a project-repo issue
 bin/effort                   effort branch lifecycle (project, task, sidequest)
 setup.sh

@@ -22,6 +22,15 @@
             "command": "\"$(cat \"$HOME/.claude/bairf-root\")/hooks/no-scratch-refs.sh\""
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(cat \"$HOME/.claude/bairf-root\")/hooks/no-tmp-push.sh\""
+          }
+        ]
       }
     ]
   }

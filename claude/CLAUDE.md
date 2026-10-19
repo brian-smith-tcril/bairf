@@ -20,6 +20,7 @@ Reach for `openedx/GLOSSARY.md` for the words in anything Open edX.
 - Test assertions and expected results state the literal condition ("no `--pgn-*` declarations in `:root`"), not an approximation like "empty" or "clean".
 - A manual-test write-up records what was observed, and asks when something was not watched.
 - When two checkouts, or dev and a deploy, behave differently and the tracked code doesn't explain it, untracked local files (workspace config, env or site config) are on the suspect list.
+- Reading a repo through `gh api`, file reads or code search, is fine for a quick answer; once the calls pile up, clone it into the session scratchpad instead: `gh repo clone <owner>/<repo> <scratchpad>/ref/<repo> -- --filter=blob:none`. Blobless, not shallow: the current tree's files are checked out, the full history is there for `git log` and blame, and the download stays quick because old file contents are fetched only when a history command asks for them. Check out whatever branches the question needs, from upstream or a fork's remote. Nothing is pushed from a clone under `/tmp`; work that grows out of one starts from a fork clone in the project directory.
 
 ## Deciding
 

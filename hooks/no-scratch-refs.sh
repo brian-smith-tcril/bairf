@@ -12,7 +12,7 @@ seg='(^|[;&|][[:space:]]*)'
 printf '%s\n' "$cmd" | grep -Eq "${seg}gh[[:space:]]+(pr|issue)[[:space:]]+(create|edit|comment|review)\b|${seg}gh[[:space:]]+api\b.*(--method[[:space:]]+(POST|PATCH|PUT)|-X[[:space:]]*(POST|PATCH|PUT))" || exit 0
 
 root=$(cat "$HOME/.claude/bairf-root" 2>/dev/null || true)
-patterns='(decisions|plan|issue-body|pr-body|manual-testing|review-log|conversation)-[A-Za-z0-9._-]*\.md|github\.com/[A-Za-z0-9_-]+/bairf|/home/[a-z0-9_-]+/|UPSTREAM\.md|wayfinder/[a-z0-9-]+/(map|issues)'
+patterns='(decisions|plan|issue-body|pr-body|manual-testing|review-log|conversation)-[A-Za-z0-9._-]*\.md|github\.com/[A-Za-z0-9_-]+/bairf|/home/[a-z0-9_-]+/|/tmp/|UPSTREAM\.md|wayfinder/[a-z0-9-]+/(map|issues)'
 esc() { printf '%s' "$1" | sed 's/[.[\*^$/]/\\&/g'; }
 if [ -n "$root" ]; then
   patterns="$patterns|$(esc "$root")"
