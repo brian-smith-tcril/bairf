@@ -14,18 +14,6 @@ The conversion is three sibling epics. This issue is epic 1.
 
 Epics 1 and 2 together are the "initial conversion" from that FWG discussion. Epic 1 and 2 PRs target `frontend-base`; epic 3 PRs target `master`.
 
-### Dropped features
-
-The following features are removed as part of the conversion:
-
-- ...
-
-DEPR tickets will be created and linked above as necessary.
-
-### PRs
-
-- ...
-
 ### TODO
 
 - [ ] Convert internal app structure (site.config, routes, providers)
