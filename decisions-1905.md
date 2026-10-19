@@ -231,3 +231,62 @@ Settled 2026-10-19, while charting the wayfinder map.
     since a key in the app's own `config` cannot be overridden by the site's
     `commonAppConfig` (catalog #156); `SUPPORT_URL` stays under that name
     because the shell's help button reads it from the app's config.
+
+Settled 2026-10-19, wayfinder ticket 04 (port order).
+
+26. **The frame layer is routes and roles only, with a stub route per
+    page.** The layer after the scaffold adds the root `learning` layout
+    route with a bare outlet, a stub route for each of the eleven
+    route-level pages (an element rendering one line naming the page as not
+    yet ported), `handle.roles` per route, and `provides`. Nothing fetches
+    and no provider mounts. Its manual pass is tab switching in the shell
+    course bar. Everything else arrives with its first consumer or as its
+    own layer. A "stub route" is in the effort glossary; the bare word
+    "placeholder" stays ordinary usage, with "placeholder slot" the fixed
+    term.
+
+27. **Page order is by reachability, not size.** Dates first (it brings the
+    tab-page frame and the course-metadata fetch), then progress, outline
+    tab, access denied; then courseware; then the pages a tester can only
+    reach with setup or a typed URL: live, discussion, redirect landing,
+    goal unsubscribe, preferences unsubscribe, each with a recipe in its
+    manual-testing record. The header title widget, instructor toolbar and
+    product tours are their own layers any time after dates. "Outline tab"
+    is the canonical name for the course home tab (glossary), never bare
+    "outline", which collides with the courseware outline sidebar.
+
+28. **Discussion is ported as a redirect route.** No code path in
+    edx-platform builds Learning's `/discussion` URL (the LMS tab links
+    straight to the discussions app), but course content may, so the route
+    stays. Its port is a loader redirecting through the discussions role
+    (24) to the discussions app, replacing the 2022 iframe (#879) that
+    existed to keep the then-new discussions app inside Learning's chrome.
+    The sub-issue proposes the redirect; its review is where "as an iframe"
+    would win instead. The in-context discussions sidebar is unaffected.
+
+29. **Courseware stubs inward, in a fixed chain.** CW1 container and
+    redirects with the course component stubbed to print the resolved ids;
+    CW2 sequence and unit with the exams provider stubbed as a pass-through;
+    CW3 outline sidebar; CW4 exams; CW5 right sidebar and widgets; CW6 unit
+    extras; CW7 course exit. The sidebar precedes exams because exam test
+    cases need a way out to another section. CW5 and CW6 may swap; the rest
+    is a chain. Breadcrumbs and the unit tab strip are not rendered on the
+    branch: since #1716 and #1685 both are operator-inserted plugins with no
+    default content, so master out of the box has neither either.
+
+30. **Learning-wide providers go on the root route.** The user-messages,
+    toast, notices and plugin-overrides providers become the root `learning`
+    layout route's element, added by the first page that needs each, as the
+    faithful port of what `index.jsx` wraps today. Not `App.providers`,
+    which frontend-base hoists site-wide (ADR 0013's objection), and not per
+    page. The query client provider is dropped; the shell owns one. A
+    widget mounted in the shell header cannot read these and reads the
+    shared query cache instead (the title widget).
+
+31. **Roles: one on the root, one per tab.** Learning provides a single
+    `learning` role under both `providesCourseBarRolesId` and
+    `providesCourseBarMasqueradeRolesId`, exactly as instructor dashboard
+    does, which is all the shell course bar and masquerade bar need since
+    ancestor roles are active and `/learning` prefix-matches every tab. The
+    per-tab roles from the config table go on the child routes so other
+    apps can resolve a specific tab by role.

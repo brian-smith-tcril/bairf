@@ -6,7 +6,7 @@ Epic 1's implementation tickets exist as direct sub-issues of #1905 and read `ap
 
 ## Notes
 
-- Decisions already settled live in `decisions-1905.md` (entries 1–25); a ticket's answer that settles a decision is appended there as a new entry, and the map links it.
+- Decisions already settled live in `decisions-1905.md` (entries 1–31); a ticket's answer that settles a decision is appended there as a new entry, and the map links it.
 - Reference material every session reads first: the frontend-base migration how-to (`docs/how_tos/migrate-frontend-app.md` on `main`), frontend-base ADRs 0009, 0013, 0015, 0017, the catalog conversion gist (`78222db3b54b48132aa13018f7f5b371`: plan, worklog, port-the-tests), and the converted apps' `src/routes.tsx` and `src/setupTest.js` on their default branches (profile, account, catalog, gradebook, instructor dashboard).
 - Layout under decision: legacy tree untouched at `src/`, new package in `frontend-base/`, branch rebased on `master` (entries 11–14).
 - Breaking changes are decided in PRs, never on this map (entry 9). A ticket notes "may need a breaking change" and moves on.
@@ -20,6 +20,7 @@ Epic 1's implementation tickets exist as direct sub-issues of #1905 and read `ap
 - [Config mapping table](issues/02-config-mapping.md): 52 rows mapped (5 required, 9 optional SiteConfig; 4 roles/external routes, three without an existing role id; 22 app defaultConfig; 10 shell-managed and dropped; 1 unknown, `SESSION_COOKIE_DOMAIN`); identifiers proposed; reviewed 2026-10-19 (decisions 24, 25).
 - [Plugin-era contracts the placeholder step breaks](issues/03-plugin-era-contracts.md): seven contracts classified; `env.config.jsx` slot and sidebar-widget config and the runtime-config URL are the operator-facing notes; the override-registry plugin is already broken on master; prop-passing count corrected to 29 files / 34 attributes.
 - [Manifest format and rebase audit script](issues/05-manifest-and-audit.md): one plain-text `frontend-base/manifest.tsv`, tab separated, sorted by legacy path, `dropped` as a target; `bin/rebase-audit` in this worktree resolves master's changes through it (RE-PORT / UNMAPPED / DROPPED, exit 1 on the first two), proven on a synthetic repo.
+- [Port order and split points](issues/04-port-order.md): 21 layers in order (scaffold; frame with stub routes; dates, progress, outline tab, access denied; title widget, instructor toolbar, product tours; courseware CW1–CW7 stubbing inward; live, discussion-as-redirect and the three URL-only pages last); decisions 26–31.
 
 ## Not yet specified
 
