@@ -105,6 +105,10 @@ Settled 2026-10-19, while charting the wayfinder map.
     manifest is complete by construction because the reviewer sees it with
     the diff, and it is the deletion list for the swap: every `src/` file is
     mapped or dropped, or the swap does not proceed.
+    Format (wayfinder ticket 05): one plain-text `frontend-base/manifest.tsv`,
+    two tab-separated columns, sorted by legacy path so a port's lines sit
+    beside their directory instead of at a shared end of file; the audit
+    script is `bin/rebase-audit` in the effort worktree.
 
 14. **The rebase audit resolves master's changes through the manifest.**
     Before each rebase, a script in the effort worktree lists the files

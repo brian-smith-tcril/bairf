@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Before rebasing the frontend-base branch on master: which of master's changes under src/
+# touch files already ported to frontend-base/, per the provenance manifest.
+#
+#   rebase-audit <old-master> <new-master> [-C <repo>] [-m <manifest>]
+#
+# Manifest: one line per legacy path per target, tab separated, sorted by legacy path.
+#   src/courseware/course/Course.jsx<TAB>frontend-base/src/courseware/course/Course.jsx
+#   src/generic/model-store/index.js<TAB>dropped
+# A split is several lines with the same left side; a merge several lines with the same right side.
+#
+# Output, three groups; exit 1 when the first two are non-empty:
+#   RE-PORT   changed file is mapped to a ported target: file a re-port issue
+#   UNMAPPED  changed file has no manifest line but its directory has: look at it
+#   DROPPED   changed file is mapped to `dropped`: no action
+# Files in directories the manifest has never touched are not ported yet and are not listed.
+set -euo pipefail
+repo=.; manifest=frontend-base/manifest.tsv
+args=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -C) repo=$2; shift 2 ;;
+    -m) manifest=$2; shift 2 ;;
+    -h|--help) sed -n '2,19p' "$0"; exit 0 ;;
+    *) args+=("$1"); shift ;;
+  esac
+done
+[ ${#args[@]} -eq 2 ] || { echo "usage: rebase-audit <old-master> <new-master> [-C <repo>] [-m <manifest>]" >&2; exit 2; }
+old=${args[0]}; new=${args[1]}
+mpath="$repo/$manifest"
+[ -f "$mpath" ] || { echo "no manifest at $mpath" >&2; exit 2; }
+
+# Changed legacy paths, both names of a rename.
+changed=$(git -C "$repo" diff --name-status -M "$old" "$new" -- src/ \
+  | awk -F'\t' '{ for (i = 2; i <= NF; i++) print $i }' | sort -u)
+
+reports=""; unmapped=""; dropped=""
+while IFS= read -r f; do
+  [ -n "$f" ] || continue
+  targets=$(awk -F'\t' -v p="$f" '$1 == p { print $2 }' "$mpath")
+  if [ -n "$targets" ]; then
+    live=$(printf '%s\n' "$targets" | grep -vx dropped || true)
+    if [ -n "$live" ]; then
+      reports+="$f -> $(printf '%s\n' "$live" | paste -sd, -)"$'\n'
+    else
+      dropped+="$f"$'\n'
+    fi
+  else
+    dir=$(dirname "$f")
+    if awk -F'\t' -v d="$dir/" 'index($1, d) == 1 { found = 1 } END { exit !found }' "$mpath"; then
+      unmapped+="$f (directory has ported files)"$'\n'
+    fi
+  fi
+done <<< "$changed"
+
+status=0
+if [ -n "$reports" ]; then printf 'RE-PORT (file an issue per line):\n%s\n' "$reports"; status=1; fi
+if [ -n "$unmapped" ]; then printf 'UNMAPPED in a ported area (look at each):\n%s\n' "$unmapped"; status=1; fi
+if [ -n "$dropped" ]; then printf 'DROPPED (no action):\n%s\n' "$dropped"; fi
+[ $status -eq 0 ] && echo "nothing ported is affected by $old..$new"
+exit $status
