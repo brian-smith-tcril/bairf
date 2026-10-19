@@ -7,6 +7,7 @@
 **Blocked by:** 03
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-courseware-container.md`
 
 - [ ] The stub prints the resolved course, sequence and unit ids and they match the URL for each form in the redirect table
 - [ ] Redirect tests pass through the route array
