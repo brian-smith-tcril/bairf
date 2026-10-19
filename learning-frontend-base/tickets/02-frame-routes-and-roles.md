@@ -7,7 +7,7 @@
 **Blocked by:** 01
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-frame-routes.md`
+**Upstream:** openedx/frontend-app-learning#2188 (in review)
 
 - [ ] Every one of the eleven paths renders its stub line under the shell
 - [ ] The shell course bar lists the course's tabs and navigates to Learning's tabs without a full page load; the masquerade bar appears on course routes for staff
