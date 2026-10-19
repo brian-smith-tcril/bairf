@@ -16,7 +16,7 @@ Epic 1's implementation tickets exist as direct sub-issues of #1905 and read `ap
 ## Decisions so far
 
 <!-- one line per resolved ticket: [title](issues/NN-slug.md): gist -->
-- [Header and `provides`](issues/01-header-and-provides.md): six shell-header gaps (course title line, masquerade extras, courseware search, notifications tray, user-menu items, active-tab rule); `provides` wiring traced; a six-role declaration drafted, with two route facts for port order.
+- [Header and `provides`](issues/01-header-and-provides.md): six things Learning's header does that the shell's defaults do not (course title line, masquerade extras, courseware search, notifications tray, user-menu items), each re-homed into one of the shell header's 17 slots through `App.slots` by the port that owns it; the active-tab rule is a shell behaviour note; `provides` wiring traced; a six-role declaration drafted, with two route facts for port order.
 - [Config mapping table](issues/02-config-mapping.md): 52 rows mapped (5 required, 9 optional SiteConfig; 4 roles/external routes, three without an existing role id; 22 app defaultConfig; 10 shell-managed and dropped; 1 unknown, `SESSION_COOKIE_DOMAIN`); identifiers proposed; table awaits Brian's review.
 - [Plugin-era contracts the placeholder step breaks](issues/03-plugin-era-contracts.md): seven contracts classified; `env.config.jsx` slot and sidebar-widget config and the runtime-config URL are the operator-facing notes; the override-registry plugin is already broken on master; prop-passing count corrected to 29 files / 34 attributes.
 
