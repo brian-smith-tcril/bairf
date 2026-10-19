@@ -18,7 +18,7 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 ## Testing
 
-The sidebar and outline-sidebar tests port with their files and reach the page through the exported route array at a unit URL, with the outline structure and completion queries mocked per the conventions #2189 set.
+The tests of the files that move here, the sidebar framework's and the outline sidebar's, port with them and reach the page through the exported route array at a unit URL, with the outline structure and completion queries mocked per the conventions #2189 set.
 
 ## Acceptance
 
