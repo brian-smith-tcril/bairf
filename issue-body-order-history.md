@@ -1,6 +1,6 @@
 **Problem:** under frontend-platform, setting `ORDER_HISTORY_URL` put an Order History item in every app's header user menu. After conversion to frontend-base, one app shows it and six do not, and nothing decided that: no DEPR, no mention in any conversion issue. Whatever the answer is, it should be the same for every app.
 
-Found while planning openedx/frontend-app-learning#1905 (see openedx/frontend-app-learning#2193).
+Found while planning openedx/frontend-app-learning#2193, part of openedx/frontend-app-learning#1905.
 
 > [!NOTE]
 > The findings below were gathered by Claude (Claude Code) and reviewed before posting.
