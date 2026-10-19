@@ -1,6 +1,6 @@
 Part of #1905.
 
-**Goal:** a new `frontend-base/` directory at the repository root holding Learning's frontend-base package, scaffolded from [frontend-template-application `main`](https://github.com/openedx/frontend-template-application), that runs the dev server, tests and build on its own, with CI and coverage wired for it and the rest of the repository untouched. No Learning code is ported in this layer.
+**Goal:** a new `frontend-base/` directory at the repository root holding Learning's frontend-base package, scaffolded from [frontend-template-application `main`](https://github.com/openedx/frontend-template-application), that runs the dev server, tests and build on its own, with CI and coverage wired for it and the rest of the repository untouched. No Learning code is ported in this issue.
 
 **Why this shape:** the branch is rebased on `master` for the life of the conversion, and `master` moves weekly. Keeping the legacy tree at its paths and the new package in its own directory with its own `package.json`, lockfile and tool config means the branch's commits touch almost nothing `master` touches, so rebases are clean, including over renovate's root lockfile bumps, and the legacy test workflow keeps running unchanged. The new directory moves to the root in one commit at the end of #2185.
 
@@ -13,7 +13,7 @@ Part of #1905.
 ## Layout
 
 - `frontend-base/` is a self-contained npm package: its own `package.json`, `package-lock.json`, `jest.config.js`, `tsconfig.json`, `eslint.config.js`, `site.config.{dev,test,ci}.tsx`, `src/`. The root files stay `master`'s.
-- The legacy tree under `src/` is never edited on the branch. Later layers port files from it into `frontend-base/src/` at the same relative path, and record each move in `frontend-base/manifest.tsv`.
+- The legacy tree under `src/` is never edited on the branch. Later issues port files from it into `frontend-base/src/` at the same relative path, and record each move in `frontend-base/manifest.tsv`.
 - Node resolves modules upward, so a dependency missing from `frontend-base/` could resolve from a root `node_modules`. CI for the new package therefore runs with no root install present.
 
 ## Steps, as commits inside the PR
@@ -28,7 +28,7 @@ Commits are squashed when the PR lands; the middle two exist to show the verific
 
 ## Coverage policy
 
-- The flag's project target is a literal equal to `master`'s project coverage at branch creation, not `auto`, so every later layer is held to `master`'s bar and the eventual merge to `master` is not the first comparison.
+- The flag's project target is a literal equal to `master`'s project coverage at branch creation, not `auto`, so every later PR is held to `master`'s bar and the eventual merge to `master` is not the first comparison.
 - The legacy upload from `validate.yml` stays unflagged; the PR comment's combined number is noise, the flag's status check is the number to read.
 - The manual-testing record of each later PR compares its ported directory's coverage against a `master` baseline captured here.
 
