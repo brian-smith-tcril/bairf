@@ -219,6 +219,12 @@ Settled 2026-10-19, while charting the wayfinder map.
     only, never as a known-foreign origin. Learning's iframe is its current
     rendering of the discussion tab, revisited by the discussions
     conversion and #2186, not by epic 1.
+    Amended 2026-10-19: `INSIGHTS_BASE_URL` leaves this list. Insights is
+    deprecated platform-wide (openedx/public-engineering#221; repositories
+    moved to the unsupported org under #227), so the Insights button is
+    dropped under that DEPR and the variable has no frontend-base
+    equivalent. The two roles are discussions and the enterprise learner
+    portal.
 
 25. **Config table reviewed; `SESSION_COOKIE_DOMAIN` is an app config key.**
     The 52-row table in wayfinder ticket 02 stands with the precedents its
