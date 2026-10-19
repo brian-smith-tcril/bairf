@@ -12,7 +12,7 @@ Planning artifacts for a repo live as markdown in that repo's **bairf effort wor
 
 ## When a skill says "publish to the issue tracker"
 
-Write the file in the worktree. GitHub is reached only through `/upstream-issue`, which drafts a body, waits for Brian, creates the issue, and records approval in `<worktree>/UPSTREAM.md`. Implementation starts on an `approved` row.
+Write the file in the worktree. GitHub is reached only through `/upstream-issue`, which drafts a body, waits for Brian, creates the issue, and records approval in `<worktree>/UPSTREAM.md`. Implementation starts on a `settled` row.
 
 ## When a skill says "fetch the relevant ticket"
 
