@@ -66,6 +66,7 @@ Reach for `openedx/GLOSSARY.md` for the words in anything Open edX.
 - `nvm` is already on PATH (the setup's session hook loads it); never source `~/.nvm/nvm.sh`. Run `nvm use` before node or npm in a directory with a `.nvmrc`, and `nvm use <version>` elsewhere.
 - Checks go through `package.json` scripts: `npm run types`, `npm run lint`, `npm run test -- <args>`. Never a bare `npx`, `tsc` or `jest`.
 - Long test output goes to a file, read with grep; coverage comes from a full background run.
+- Install with `npm ci`. `npm install` is only for a `package.json` change or a lock regeneration.
 - A lockfile is regenerated from scratch: remove it and `node_modules`, then `npm install`.
 - To pin a transitive dependency, add it as a direct (or dev) dependency. Never `overrides`.
 - Regenerating the lock and changing `package.json` are separate commits, lock-only first, so each lock diff has one cause.

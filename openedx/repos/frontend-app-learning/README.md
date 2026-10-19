@@ -16,7 +16,7 @@ Repo facts that outlive any one effort. The repo's own terms are in `GLOSSARY.md
 
 ## Lockfile
 
-- A fresh `npm install` hoists an ESM-only react-intl 10 (Paragon's peer range allows it; frontend-platform pins 6.8.9) that breaks every Jest suite. `npm dedupe` after the install collapses it to 6.8.9 (#2042); it also removed a hoisted jest 30 on master in 2026-10.
+- Regenerating the lock (lockfile and `node_modules` removed, then `npm install`) hoists an ESM-only react-intl 10 (Paragon's peer range allows it; frontend-platform pins 6.8.9) that breaks every Jest suite. `npm dedupe` after the install collapses it to 6.8.9 (#2042); it also removed a hoisted jest 30 on master in 2026-10. A checkout with the committed lockfile installs with `npm ci` and never sees this.
 
 ## Local dev
 
