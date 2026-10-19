@@ -7,6 +7,7 @@
 **Blocked by:** 02
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-dates-tab.md`
 
 - [ ] The dates tab renders its timeline, upgrade banner slot as a placeholder, and the alerts the frame shows on every tab
 - [ ] The root route's element mounts the Learning-wide providers; no provider is registered in `App.providers`; the shell's query client is used
