@@ -14,7 +14,7 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 - The sidebar framework under the course's [`sidebar/`](https://github.com/openedx/frontend-app-learning/tree/master/src/courseware/course/sidebar): the sidebar context, the sidebar and trigger shells, their base components, the hooks (initial state, responsive behavior, sync, unit-shift behavior), the storage utility, constants, and the widget registry with its defaults. Of the default widgets, only the navigation sidebar is live here; the auxiliary sidebar's widgets (discussions, upgrade) stay stubbed out of the registry until the auxiliary sidebar issue.
 - The navigation sidebar itself under `sidebar/sidebars/course-outline/`: the tray, the trigger, the section, sequence and unit components, completion and unit icons, its hooks and messages. It reads the course outline structure and block completion through the courseware data module ported in #2195.
-- The three plugin slots that wrap it become placeholder slots, each rendering its default content in a bare fragment with no plugin-framework import: the navigation sidebar slot (`course_outline_sidebar`; default: the tray), the desktop trigger slot and the mobile trigger slot (default: the trigger in each mode). Their stubs from #2196 are deleted.
+- The three plugin slots that wrap it become placeholder slots, each rendering its default content in a bare fragment with no plugin-framework import: the navigation sidebar slot (`CourseOutlineSidebarSlot`; default: the tray), the desktop trigger slot and the mobile trigger slot (default: the trigger in each mode). Their stubs from #2196 are deleted.
 
 ## Testing
 

@@ -308,8 +308,9 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     `courseware.always_open_auxiliary_sidebar` (removed by
     openedx/frontend-app-learning#1713); the release notes and learner docs
     say "navigation sidebar", and openedx/frontend-app-learning#1923 uses
-    both. Everything else is an alias (GLOSSARY.md). Slot ids keep their
-    `right_sidebar` and `course_outline_sidebar` names; renaming an id is a
-    Slot API question for openedx/frontend-app-learning#2185, not this map.
+    both. Everything else is an alias (GLOSSARY.md). The placeholder slot
+    modules keep their legacy file and component names (`RightSidebarSlot`,
+    `CourseOutlineSidebarSlot`); the frontend-base slot ids are named in
+    openedx/frontend-app-learning#2185 along with every other id.
     Published bodies and titles for #2196 and #2197 are updated to the terms;
     the tickets, spec and map keep the aliases they were written with.
