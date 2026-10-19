@@ -28,7 +28,6 @@ Settled with Brian 2026-10-19 (decisions 26–31). Layers in order; each is one 
 3. **Dates.** Brings the tab-page frame and the course-metadata fetch.
 4. **Progress.**
 5. **Outline tab.**
-6. **Access denied.**
 
 **After the first tab, own layers, order free among themselves and relative to 4–6**
 
@@ -53,6 +52,7 @@ Settled with Brian 2026-10-19 (decisions 26–31). Layers in order; each is one 
 19. **Redirect landing page.**
 20. **Goal unsubscribe.**
 21. **Preferences unsubscribe.**
+22. **Access denied** (enterprise-only; moved to this group 2026-10-19).
 
 Not ported in epic 1 (placeholder-slot rule, matching master out of the box): breadcrumbs and the unit tab strip, both operator-inserted plugins since #1716 and #1685.
 

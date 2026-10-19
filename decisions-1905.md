@@ -247,9 +247,11 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
 
 27. **Page order is by reachability, not size.** Dates first (it brings the
     tab-page frame and the course-metadata fetch), then progress, outline
-    tab, access denied; then courseware; then the pages a tester can only
-    reach with setup or a typed URL: live, discussion, redirect landing,
-    goal unsubscribe, preferences unsubscribe, each with a recipe in its
+    tab; then courseware; then the pages a tester can only reach with
+    setup or a typed URL: live, discussion, redirect landing, goal
+    unsubscribe, preferences unsubscribe, and access denied (moved here
+    2026-10-19: only the `incorrect_active_enterprise` code reaches it, so
+    its content needs an enterprise learner), each with a recipe in its
     manual-testing record. The header title widget, instructor toolbar and
     product tours are their own layers any time after dates. "Outline tab"
     is the canonical name for the course home tab (glossary), never bare

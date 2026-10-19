@@ -7,7 +7,9 @@
 **Blocked by:** 03
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-access-denied.md`
+**Upstream:** openedx/frontend-app-learning#2192
+
+**Order:** end group, with the other URL-only pages (decision 27); enterprise-only, reached by one LMS denial code.
 
 - [ ] The page renders for each access-denied reason the course-metadata response produces
 - [ ] Courseware's redirect to it (ticket 09) has a real destination once this lands
