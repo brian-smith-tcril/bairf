@@ -26,8 +26,10 @@ Settled 2026-10-18, before implementation.
    per-slot port commits (fragment to `<Slot id>` plus README and site-config
    example). It removes `@openedx/frontend-plugin-framework`, the
    `env.config.jsx` slot configuration and the `setupTest.js` mock in one
-   step, and leaves epic 2 a mechanical per-slot replacement. The 45 sites
-   that pass plugin props or slot options lose that contract in epic 1; the
+   step, and leaves epic 2 a mechanical per-slot replacement. The sites
+   that pass plugin props or slot options (29 files, 34 attributes per
+   wayfinder ticket 03; "45" was a grep line count) lose that contract in
+   epic 1; the
    `frontend-base` branch absorbs the break until epic 2 restores each slot.
 
 4. **Header and footer are shell concerns, not ported slots.** The header
