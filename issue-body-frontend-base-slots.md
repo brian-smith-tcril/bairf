@@ -1,4 +1,4 @@
-Epic 2 of 3 for the frontend-base conversion. Follows #1905 (epic 1), which lands Learning on the long-lived `frontend-base` branch with every slot reduced to a placeholder that renders its default content in a bare fragment. This epic restores each slot on the frontend-base Slot API and merges the branch to `master`. The widget split is #<epic3>.
+Epic 2 of 3 for the frontend-base conversion. Follows #1905 (epic 1), which lands Learning on the long-lived `frontend-base` branch with every slot reduced to a placeholder that renders its default content in a bare fragment. This epic restores each slot on the frontend-base Slot API and merges the branch to `master`. The widget split is #2186.
 
 Together, #1905 and this issue are the "initial conversion" agreed at the 2026-09-24 Frontend Working Group (recorded on #1905): slots converted, everything renders and works.
 

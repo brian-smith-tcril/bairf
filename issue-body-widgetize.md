@@ -1,4 +1,4 @@
-Epic 3 of 3 for the frontend-base conversion, after #1905 (epic 1) and #<epic2> (epic 2) have merged the `frontend-base` branch to `master`.
+Epic 3 of 3 for the frontend-base conversion, after #1905 (epic 1) and #2185 (epic 2) have merged the `frontend-base` branch to `master`.
 
 Split the Learning tabs (outline, dates, progress, courseware, and the rest) into frontend-base widgets: self-contained pieces that insert into the app's own slots, can be exported for other apps' slots, and do not reach into context they do not own. Shape and precedents are recorded in the 2026-09-24 Frontend Working Group outcome on #1905: one Learning app, tabs as widgets, following `frontend-app-learner-dashboard`'s `src/widgets/` and openedx/frontend-app-gradebook#632.
 
