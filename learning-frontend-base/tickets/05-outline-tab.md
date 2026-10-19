@@ -7,7 +7,7 @@
 **Blocked by:** 03
 
 **Status:** ready-for-agent
-**Upstream:** openedx/frontend-app-learning#2191 (in review)
+**Upstream:** openedx/frontend-app-learning#2191
 
 - [ ] Course home renders for an enrolled learner, with the section-outline slot as a placeholder and the tab notifications slot rendering nothing
 - [ ] Effort estimate shared module ports here

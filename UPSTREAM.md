@@ -6,4 +6,4 @@
 | frame-routes | issue-body-frame-routes.md | openedx/frontend-app-learning#2188 | settled |
 | dates-tab | issue-body-dates-tab.md | openedx/frontend-app-learning#2189 | settled |
 | progress-tab | issue-body-progress-tab.md | openedx/frontend-app-learning#2190 | settled |
-| outline-tab | issue-body-outline-tab.md | openedx/frontend-app-learning#2191 | in-review |
+| outline-tab | issue-body-outline-tab.md | openedx/frontend-app-learning#2191 | settled |
