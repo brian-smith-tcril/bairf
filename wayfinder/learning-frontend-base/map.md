@@ -16,6 +16,7 @@ Epic 1's implementation tickets exist as direct sub-issues of #1905 and read `ap
 ## Decisions so far
 
 <!-- one line per resolved ticket: [title](issues/NN-slug.md): gist -->
+- [Config mapping table](issues/02-config-mapping.md): 52 rows mapped (5 required, 9 optional SiteConfig; 4 roles/external routes, three without an existing role id; 22 app defaultConfig; 10 shell-managed and dropped; 1 unknown, `SESSION_COOKIE_DOMAIN`); identifiers proposed; table awaits Brian's review.
 
 ## Not yet specified
 

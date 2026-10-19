@@ -1,7 +1,7 @@
 # Config mapping table: env vars and bootstrap keys to frontend-base config
 
 Type: research
-Status: claimed
+Status: resolved
 
 ## Question
 
@@ -14,3 +14,15 @@ Also propose, from the converted apps' conventions: Learning's `appId`, its rout
 Note any variable whose destination is "dropped" as a possible breaking change for operators, without deciding it.
 
 ## Answer
+
+Findings: `../research/config-mapping.md` (sources pinned: Learning master @ 7522f9c, frontend-base main @ 83a1752).
+
+52 rows (51 distinct `.env.development` variables plus `INSIGHTS_BASE_URL`, which only the `.env` file and the `mergeConfig` block carry). Destinations: 5 required `SiteConfig` fields, 9 optional (`NODE_ENV` → `environment`, `STUDIO_BASE_URL` → `cmsBaseUrl`, `REFRESH_ACCESS_TOKEN_ENDPOINT` → `refreshAccessTokenApiPath` as a path), 4 route-role or external-route (`SEARCH_CATALOG_URL` → the existing `org.openedx.frontend.role.courses`; `DISCUSSIONS_MFE_BASE_URL`, `ENTERPRISE_LEARNER_PORTAL_URL`, `INSIGHTS_BASE_URL` have no role id anywhere yet), 22 app `defaultConfig` keys, 10 shell-managed and dropped (logo, favicon, Paragon theme URLs, Optimizely key, `ORDER_HISTORY_URL`, `PRIVACY_POLICY_URL`, `ENTERPRISE_LEARNER_PORTAL_HOSTNAME`, `PORT`; all but `PORT` noted as possible operator-facing breaking changes), `APP_ID` → `appId`, and 1 unknown: `SESSION_COOKIE_DOMAIN`, read through `process.env` in `AccountActivationAlert.jsx` with no frontend-base field or precedent.
+
+Three keys Learning reads but no `.env` file lists: `ACCOUNT_SETTINGS_URL` and `ACCOUNT_PROFILE_URL` (map to the shell's `account` and `profile` roles) and `SIDEBAR_WIDGETS` (ticket 03's territory). frontend-base's runtime defaults equal Learning's dev values for the four cookie and path fields, which is why catalog left them unset.
+
+Proposed identifiers: `appId` `org.openedx.frontend.app.learning`; route ids `org.openedx.frontend.route.learning.main` with per-page children (`.outline`, `.dates`, `.progress`, `.discussion`, `.live`, `.courseware`, `.courseExit`, `.accessDenied`, `.goalUnsubscribe`, `.redirect`, `.preferencesUnsubscribe`); role ids flat camelCase after catalog's: `org.openedx.frontend.role.learning` (the shell's own course-bar docstring example) plus `courseHome`, `courseDates`, `courseProgress`, `courseDiscussion`, `courseLive`, `courseware`, `courseExit`, `courseAccessDenied`, `goalUnsubscribe`, `learningRedirect`, `preferencesUnsubscribe`.
+
+Unverified: which zero-reader keys the legacy header and footer packages consumed (`ORDER_HISTORY_URL`, `PRIVACY_POLICY_URL`); their source was not inspected.
+
+Brian reviews the table (grilling Q13); three rows need his call: the three URLs with no role id, and `SESSION_COOKIE_DOMAIN`.
