@@ -20,6 +20,5 @@ Epics 1 and 2 together are the "initial conversion" from that FWG discussion. Ep
 - [ ] Reduce every slot to a placeholder; remove `@openedx/frontend-plugin-framework` and the `env.config.jsx` slot configuration
 - [ ] Port header and footer customizations, if any (custom menus?); drop the direct `@edx/frontend-component-header` / `-footer` imports
 - [ ] Fix tests
-- [ ] ~~Publish to NPM~~ → #<epic2>
-- [ ] ~~Include in frontend-template-site~~ → #<epic2>
-- [ ] ~~Include in tutor-mfe as a frontend app~~ → #<epic2>
+
+Publishing to NPM and inclusion in frontend-template-site and tutor-mfe moved to #<epic2>, since they need the code on `master`.
