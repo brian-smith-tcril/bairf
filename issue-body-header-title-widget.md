@@ -22,7 +22,7 @@ Part of #1905. Depends on #2189.
 | Notifications slot | A plugin slot operators filled; under frontend-base an operator inserts the notifications widget into a shell header slot from site config. No Learning code. |
 | User menu: Profile, Account, Sign out | Shell's, by role. Nothing to do. |
 | User menu: Dashboard | The shell's authenticated menu is Profile, Account and Logout, each by role ([`shell/header/app.tsx`](https://github.com/openedx/frontend-base/blob/main/shell/header/app.tsx)); it has no Dashboard item. Decided in the pull request: append one through the `authenticatedMenu` slot, resolving the learner-dashboard role. |
-| User menu: Order History | Not in the shell's menu either. openedx/frontend-base#324 decides whether the item is kept or deprecated across the converted apps. If it is decided when the pull request lands, follow it; if not, drop the item here and file the DEPR after merge. |
+| User menu: Order History | Not in the shell's menu either. openedx/frontend-base#324 decides whether the item is kept or deprecated across the converted apps. If it is decided when the pull request lands, follow it; if not, leave the item out, to be added back if 324 keeps it. |
 | Anonymous menu | Shell's. Nothing to do. |
 
 ## Course info widget: the instructor-dashboard pattern
@@ -47,7 +47,7 @@ The widget is tested as a component: with a seeded query cache and route params 
 - [ ] The widget does not fetch; it reads the cache the frame fills
 - [ ] The Help link appears in the shell header on Learning's routes and points at the configured support URL
 - [ ] Dashboard is present in the shell's user menu on Learning's routes
-- [ ] Order History follows openedx/frontend-base#324 if decided, and is otherwise dropped with the DEPR filed after merge
+- [ ] Order History follows openedx/frontend-base#324 if decided, and is otherwise left out pending it
 - [ ] A README for the widget in the shape of [instructor dashboard's](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/slots/CourseInfoSlot/README.md), naming the widget id and the replace and remove operations
 - [ ] Screenshots at desktop and mobile widths in the pull request
 - [ ] Types, lint and tests of the new package pass; the legacy workflow stays green
