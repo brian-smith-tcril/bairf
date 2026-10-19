@@ -10,7 +10,7 @@
 
 - [ ] The new package's `dev`, `test`, `build` and `lint` scripts run from inside its directory with no root install present
 - [ ] A new CI workflow file runs the package's checks on changes under its directory; no master-owned workflow file is modified
-- [ ] Coverage uploads under a `frontend-base` flag configured from a file inside the package, with an absolute project target equal to master's project coverage at branch creation; verified by the throwaway-test commits described in decision 7d's replacement, then removed
+- [ ] Coverage uploads under a `frontend-base` flag configured from a file inside the package, with an absolute project target equal to master's project coverage at branch creation; verified by throwaway commits inside the layer that are removed before it lands
 - [ ] The package's site config declares the required site-config fields and Learning's app with its default config, from the reviewed config table
 - [ ] An empty `manifest.tsv` with a header comment describing the format
 - [ ] The manual-testing record describes the verification environment (how a frontend-base site is run against tutor dev) step by step

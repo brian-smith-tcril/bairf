@@ -4,7 +4,7 @@
 
 **What to build:** A new learner sees the course home tour and the courseware tour as on master, anchored to elements that exist in the ported pages.
 
-**Blocked by:** 05, 11
+**Blocked by:** 05, 10
 
 **Status:** ready-for-agent
 

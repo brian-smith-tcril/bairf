@@ -2,9 +2,9 @@
 
 **Parent:** openedx/frontend-app-learning#1905
 
-**What to build:** A learner in a timed exam sees the timer, is gated by exam access on the unit, and can submit; proctored states behave as the library mocks them locally. The pass-through stub from ticket 11 is replaced by the real provider wired to the host's config, HTTP client and auth state.
+**What to build:** A learner in a timed exam sees the timer, is gated by exam access on the unit, and can submit; proctored states behave as the library mocks them locally. The pass-through stub from ticket 10 is replaced by the real provider wired to the host's config, HTTP client and auth state.
 
-**Blocked by:** 12
+**Blocked by:** 11
 
 **Status:** ready-for-agent
 

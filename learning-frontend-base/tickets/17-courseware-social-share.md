@@ -4,7 +4,7 @@
 
 **What to build:** A learner sees the social share controls in a unit when the course enables them.
 
-**Blocked by:** 11
+**Blocked by:** 10
 
 **Status:** ready-for-agent
 
@@ -14,4 +14,4 @@
 - [ ] Manifest lines added for every legacy file this layer ports or drops
 - [ ] Coverage for the ported directory compared against the master baseline in the manual-testing record
 
-Notes: Course exit (ticket 19) reuses this; it is blocked on this ticket.
+Notes: Course exit (ticket 18) reuses this; it is blocked on this ticket.

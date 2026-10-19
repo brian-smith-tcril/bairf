@@ -4,7 +4,7 @@
 
 **What to build:** A learner toggles the calculator and the notes visibility in a unit, as on master.
 
-**Blocked by:** 11
+**Blocked by:** 10
 
 **Status:** ready-for-agent
 

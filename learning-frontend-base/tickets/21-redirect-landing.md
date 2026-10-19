@@ -4,7 +4,7 @@
 
 **What to build:** A learner sent through Learning's redirect landing page by the LMS arrives where the LMS intended.
 
-**Blocked by:** 10
+**Blocked by:** 09
 
 **Status:** ready-for-agent
 
@@ -14,4 +14,4 @@
 - [ ] Manifest lines added for every legacy file this layer ports or drops
 - [ ] Coverage for the ported directory compared against the master baseline in the manual-testing record
 
-Notes: Shares redirect code with ticket 10.
+Notes: Shares redirect code with ticket 09.

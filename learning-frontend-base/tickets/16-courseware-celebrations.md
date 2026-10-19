@@ -4,7 +4,7 @@
 
 **What to build:** A learner sees the first-section celebration and the weekly-goal celebration when the course and schedule call for them.
 
-**Blocked by:** 11
+**Blocked by:** 10
 
 **Status:** ready-for-agent
 

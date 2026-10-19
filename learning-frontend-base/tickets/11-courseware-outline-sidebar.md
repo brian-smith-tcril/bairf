@@ -4,7 +4,7 @@
 
 **What to build:** A learner navigates courseware with the outline sidebar as on master: open and close on desktop, the mobile trigger, section and unit navigation, completion icons that update.
 
-**Blocked by:** 11
+**Blocked by:** 10
 
 **Status:** ready-for-agent
 

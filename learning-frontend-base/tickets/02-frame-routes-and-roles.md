@@ -16,4 +16,4 @@
 - [ ] The layer's route or feature was exercised by hand in the verification environment and the observations are in the PR's manual-testing record; a behavior found untested got a test in the same PR
 - [ ] Manifest lines added for every legacy file this layer ports or drops
 
-Notes: Decisions 21, 22, 26, 31. The discussion route's stub is included; its port (ticket 21) proposes a redirect. No DEPR question arises here because no route is omitted.
+Notes: Decisions 21, 22, 26, 31. The discussion route's stub is included; its port (ticket 20) proposes a redirect. No DEPR question arises here because no route is omitted.

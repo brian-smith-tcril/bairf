@@ -4,7 +4,7 @@
 
 **What to build:** A learner opens a unit and sees its content in the content iframe, moves with previous and next across units and sequence boundaries, sees the hidden-after-due notice on a past-due sequence, the license line, and sequence alerts. The exams provider is a pass-through stub. No sidebar, no breadcrumbs, no unit tab strip (both are operator plugins on master).
 
-**Blocked by:** 10
+**Blocked by:** 09
 
 **Status:** ready-for-agent
 

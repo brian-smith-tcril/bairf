@@ -14,4 +14,4 @@
 - [ ] The layer's route or feature was exercised by hand in the verification environment and the observations are in the PR's manual-testing record; a behavior found untested got a test in the same PR
 - [ ] Manifest lines added for every legacy file this layer ports or drops
 
-Notes: Decisions 24, 28. The in-context discussions sidebar (ticket 14) is unaffected.
+Notes: Decisions 24, 28. The in-context discussions sidebar (ticket 13) is unaffected.

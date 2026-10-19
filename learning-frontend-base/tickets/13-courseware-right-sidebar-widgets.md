@@ -4,7 +4,7 @@
 
 **What to build:** A learner opens the right sidebar tray and sees the discussions panel for a course with discussions configured and the upgrade panel on a course with a verified mode.
 
-**Blocked by:** 12
+**Blocked by:** 11
 
 **Status:** ready-for-agent
 
