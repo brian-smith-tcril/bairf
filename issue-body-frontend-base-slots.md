@@ -19,7 +19,3 @@ Together, #1905 and this issue are the "initial conversion" agreed at the 2026-0
 - [ ] Publish to NPM
 - [ ] Include in frontend-template-site
 - [ ] Include in tutor-mfe as a frontend app
-
-### PRs
-
-- ...

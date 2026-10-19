@@ -10,7 +10,3 @@ Split the Learning tabs (outline, dates, progress, courseware, and the rest) int
 - One widget per tab, each working and tested standalone.
 - The shared-query-key and `provides` experiment from the FWG action item, tracked upstream as openedx/frontend-base#253. Shared keys must not be namespaced by a tab.
 - Move the outline payload's two off-tab readers (`useEnrollmentAlert`, `useLogistrationAlert` in `LoadedTabPage`) inside the outline widget, so nothing shared reads a tab's payload.
-
-### PRs
-
-- ...
