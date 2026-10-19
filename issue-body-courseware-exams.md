@@ -23,7 +23,7 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 ## Local verification
 
-The repository's local-development notes apply: without `EXAMS_BASE_URL` the library talks to the LMS's `edx_proctoring` endpoints; a real timed exam needs the special-exams feature enabled in the LMS and "Enable Timed Exams" on the course; proctored states are mocked, with no third-party proctoring software locally.
+Without `EXAMS_BASE_URL` the library talks to the LMS's `edx_proctoring` endpoints. A real timed exam needs the special-exams feature enabled in the LMS (`ENABLE_SPECIAL_EXAMS`, off by default) and "Enable Timed Exams" on the course. Proctored states are mocked; no third-party proctoring software runs locally.
 
 ## Acceptance
 
