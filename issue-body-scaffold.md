@@ -30,7 +30,7 @@ The pull request squashes on merge; the middle two commits exist to show the ver
 
 - The flag's project target is a literal equal to `master`'s project coverage at branch creation, not `auto`, so every later change is held to `master`'s bar and the eventual merge to `master` is not the first comparison.
 - The legacy upload from `validate.yml` stays unflagged; the PR comment's combined number is noise, the flag's status check is the number to read.
-- Each later issue's manual-testing record compares its ported directory's coverage against a `master` baseline captured here.
+- This issue also records `master`'s coverage per source directory at branch creation. A whole-tree number can hide a poorly covered port, so each later port compares its directory against that baseline.
 
 ## Not in scope
 
@@ -45,6 +45,7 @@ The pull request squashes on merge; the middle two commits exist to show the ver
 - [ ] Coverage uploads under the `frontend-base` flag with the absolute target set; verified by the throwaway-test commits, then removed
 - [ ] Learning's identity replaces the template's everywhere in the package; site config carries the required fields and registers the app
 - [ ] `frontend-base/manifest.tsv` exists with its format documented
+- [ ] `master`'s per-directory coverage at branch creation is recorded as the baseline for later ports
 - [ ] The manual-testing record documents how a frontend-base site is run against a local Open edX stack, step by step, as the environment every later issue uses
 
 </details>
