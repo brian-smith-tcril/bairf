@@ -42,3 +42,95 @@ Settled 2026-10-18, before implementation.
 
 6. **This effort covers epics 1 and 2.** Epic 3 gets its own effort once
    the branch has landed on `master`.
+
+Settled 2026-10-19, while charting the wayfinder map.
+
+7. **The map's destination is an approved ticket set, not code.** The map
+   is cleared when epic 1's sub-issues exist as direct sub-issues of #1905
+   and read `approved` in `UPSTREAM.md`. Implementation happens outside the
+   map, one issue per layer, as the React Query epic ran.
+
+8. **Done for epic 1.** A `frontend-base` branch on upstream where every
+   route Learning serves today renders under `npm run dev` in the
+   frontend-base shell; types, lint and tests are green;
+   `@edx/frontend-platform`, `@openedx/frontend-build`,
+   `@openedx/frontend-plugin-framework`, `@edx/frontend-component-header`
+   and `-footer` are gone from the new package; every plugin slot is a
+   placeholder; and the package composes into a local
+   frontend-template-site checkout. That composition is verification only;
+   the default-config PR to frontend-template-site is #2185's.
+
+9. **Breaking changes are decided in PRs, not on the map.** As in the React
+   Query epic, a feature the branch stops carrying ships as a `refactor!:`
+   PR with a DEPR filed after. The map notes "may need a breaking change"
+   on the ticket that touches the feature and never carries a ticket whose
+   resolution is "drop X".
+
+10. **Special exams is not a dependency decision.**
+    `@edx/frontend-lib-special-exams` 5.0.1, which master already uses, has
+    no frontend-platform, redux or plugin-framework peer; the host passes
+    config, HTTP client and auth state through `SpecialExamsProvider`.
+    Exams work at the end of epic 1 like any other runtime feature.
+
+11. **Layout: legacy stays put, the new app lives in `frontend-base/`.**
+    The inverse of catalog's overlay. The existing tree stays at its paths
+    under `src/` and is never edited on the branch; the new app is its own
+    package in `frontend-base/` with its own `package.json`, lockfile, jest,
+    tsconfig and eslint config, scaffolded from frontend-template-application
+    `main` (its `frontend-base` branch no longer exists). The root files stay
+    master's until the swap. Rationale: the branch is rebased on `master`,
+    and a branch whose commits touch only `frontend-base/**` and new files
+    rebases without conflicts, including over renovate's weekly root
+    `package.json` and lockfile bumps. The one consequence of two
+    `package.json` files is Node's upward module resolution: CI for the new
+    package runs with no root install present so a missing dependency cannot
+    resolve from the root `node_modules`.
+
+12. **Rebase, not merge.** `frontend-base` is rebased on `master` and
+    force-pushed; Brian is the only one pushing it and the open stack is
+    re-synced with gh-stack after each rebase. Gradebook and authn merged;
+    the layout in 11 is what makes rebase cheap here.
+
+13. **Ports keep relative paths; a manifest records provenance.**
+    `src/<path>` ports to `frontend-base/src/<path>`. Path-changing moves
+    (`plugin-slots/` to `slots/`) wait for #2185. Each port PR adds lines to
+    a manifest in `frontend-base/`: legacy path to new path(s), or
+    `dropped`; a split lists several targets, a merge several sources. The
+    manifest is complete by construction because the reviewer sees it with
+    the diff, and it is the deletion list for the swap: every `src/` file is
+    mapped or dropped, or the swap does not proceed.
+
+14. **The rebase audit resolves master's changes through the manifest.**
+    Before each rebase, a script in the effort worktree lists the files
+    master changed under `src/`, resolves each through the manifest, and
+    flags any unmapped file in a directory that has manifest entries (a new
+    file master added into a ported area). Each hit becomes a re-port issue
+    through the usual export. Master's edits to ported files therefore never
+    conflict; they become reviewed PRs.
+
+15. **The swap is the last commit of epic 2.** Delete `src/` and the root
+    config, move `frontend-base/` to the root, add the template's
+    `release.yml` with a `master` trigger. Nothing rebases after it.
+
+16. **CI is one new workflow file.** `.github/workflows/frontend-base.yml`,
+    copied from frontend-template-application's `ci.yml`, with
+    `defaults.run.working-directory: frontend-base`,
+    `node-version-file: frontend-base/.nvmrc`, and `paths` filters on
+    `frontend-base/**`. Master's `validate.yml` keeps running the legacy
+    suite unchanged and is never edited on the branch. The template's other
+    workflows are already identical to Learning's or act on the root package
+    until the swap; `release.yml` arrives with the swap.
+
+17. **Coverage: an absolute flag target plus a manual per-area check.** The
+    new workflow uploads with `flags: frontend-base` from
+    `frontend-base/coverage`, configured by `frontend-base/codecov.yml`
+    through the action's `codecov_yml_path` input (unverified; on the
+    prototype ticket). The flag's project target is a literal equal to
+    master's project coverage at branch creation, not `auto`, so the swap PR
+    is not the first comparison against master. The legacy upload stays
+    unflagged, so the PR comment's combined number is noise; the flag's
+    status check is the number read. Each port's manual-testing record
+    compares its directory's coverage against a master baseline captured at
+    branch creation; this stays manual, since per-directory thresholds in
+    codecov would be a maintenance burden across 34 slot directories and
+    nine route areas.
