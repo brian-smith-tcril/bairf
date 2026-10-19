@@ -298,3 +298,18 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     ancestor roles are active and `/learning` prefix-matches every tab. The
     per-tab roles from the config table go on the child routes so other
     apps can resolve a specific tab by role.
+
+32. **The two courseware sidebars are the navigation sidebar and the
+    auxiliary sidebar.** Direction names describe the left-to-right
+    rendering only (the layout is a flex row and flips under a right-to-left
+    locale), and content names ("discussions sidebar") name a plugin's
+    output rather than the panel. The platform's own names come from the
+    waffle flags `courseware.enable_navigation_sidebar` and
+    `courseware.always_open_auxiliary_sidebar` (removed by
+    openedx/frontend-app-learning#1713); the release notes and learner docs
+    say "navigation sidebar", and openedx/frontend-app-learning#1923 uses
+    both. Everything else is an alias (GLOSSARY.md). Slot ids keep their
+    `right_sidebar` and `course_outline_sidebar` names; renaming an id is a
+    Slot API question for openedx/frontend-app-learning#2185, not this map.
+    Published bodies and titles for #2196 and #2197 are updated to the terms;
+    the tickets, spec and map keep the aliases they were written with.

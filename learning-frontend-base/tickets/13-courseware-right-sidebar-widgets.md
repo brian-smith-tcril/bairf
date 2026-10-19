@@ -7,7 +7,7 @@
 **Blocked by:** 11
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-courseware-right-sidebar.md`
+**Upstream:** unpublished `issue-body-courseware-auxiliary-sidebar.md`
 
 - [ ] Tray opens and closes; discussions panel loads; upgrade panel appears when the course has a verified mode
 - [ ] Sidebar widget configuration is readable from app config under its existing key; the operator-facing change from the plugin config file is noted
