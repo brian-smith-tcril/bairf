@@ -7,7 +7,7 @@
 **Blocked by:** 11
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-courseware-exams.md`
+**Upstream:** openedx/frontend-app-learning#2198
 
 - [ ] A timed exam starts, counts down and submits under the tutor special-exams patch described in the repo facts
 - [ ] Exam access on the unit iframe uses the library's access token hook
