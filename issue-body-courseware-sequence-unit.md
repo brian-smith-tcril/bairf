@@ -24,7 +24,7 @@ The course and sequence components import these directly on `master`. Each is a 
 
 | Stub | Replaced by |
 |---|---|
-| Special exams provider (pass-through) and the unit's exam-access hook (returns "not an exam") | the exams issue |
+| Special exams: the host provider and the library's sequence exam wrapper (both pass children through, since the wrapper has no provider context to read) and the unit's exam-access hook (returns "not an exam"); the timer wrapper is already a pass-through since #2189 | the exams issue |
 | Outline sidebar slot and its desktop and mobile triggers; the sidebar context with no widgets | the outline sidebar issue |
 | Right sidebar slot and its trigger | the right sidebar issue |
 | Content tools; learner tools slot | the content tools issue |

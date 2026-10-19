@@ -23,6 +23,7 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 - On `master` the tab page itself renders the header slot, the course tabs navigation and the footer slot around its content. The ported tab page renders none of them: the shell owns header, course bar and footer. The org and title line the legacy header showed is its own issue.
 - The instructor toolbar and the product tour provider the tab page wraps: each is its own issue; until they land, the ported frame does not render them.
+- Special exams. Every tab renders through a timer wrapper that mounts the special-exams host provider and the outer exam timer. Exams are their own issue, so the wrapper ports as a pass-through to the tab page, with no provider and no timer, until that issue replaces it.
 - Any plugin slot the dates tab renders (the dates upgrade banner) becomes a placeholder slot: the slot module keeps its file and name and renders its default content in a bare fragment, with no plugin-framework import. Slot API ports are #2185.
 
 ## Configuration
