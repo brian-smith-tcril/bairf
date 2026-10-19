@@ -7,7 +7,7 @@
 **Blocked by:** 03
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-instructor-toolbar.md`
+**Upstream:** openedx/frontend-app-learning#2194 (in review)
 
 - [ ] On a course route, staff see one masquerade control, not two; which one and why is recorded
 - [ ] Insights link, Studio gate and the two banners are present (inserted into the shell's masquerade-bar slot or kept in-page) or each is recorded as a possible breaking change with the reasoning
