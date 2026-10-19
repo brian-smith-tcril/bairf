@@ -10,7 +10,7 @@ Epic 1's implementation tickets exist as direct sub-issues of #1905 and read `ap
 - Reference material every session reads first: the frontend-base migration how-to (`docs/how_tos/migrate-frontend-app.md` on `main`), frontend-base ADRs 0009, 0013, 0015, 0017, the catalog conversion gist (`78222db3b54b48132aa13018f7f5b371`: plan, worklog, port-the-tests), and the converted apps' `src/routes.tsx` and `src/setupTest.js` on their default branches (profile, account, catalog, gradebook, instructor dashboard).
 - Layout under decision: legacy tree untouched at `src/`, new package in `frontend-base/`, branch rebased on `master` (entries 11–14).
 - Breaking changes are decided in PRs, never on this map (entry 9). A ticket notes "may need a breaking change" and moves on.
-- Terms: ecosystem glossary distinguishes **slot** (frontend-base) from **plugin slot** (frontend-plugin-framework); **placeholder** is in the Learning glossary.
+- Terms: ecosystem glossary distinguishes **slot** (frontend-base) from **plugin slot** (frontend-plugin-framework); **placeholder** is in this effort's `GLOSSARY.md`.
 - Skills per ticket type: research → `mattpocock-skills:research`; grilling → `mattpocock-skills:grilling` + `mattpocock-skills:domain-modeling`.
 
 ## Decisions so far
