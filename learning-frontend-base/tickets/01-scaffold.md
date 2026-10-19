@@ -7,6 +7,7 @@
 **Blocked by:** None (can start immediately)
 
 **Status:** ready-for-agent
+**Upstream:** scaffold
 
 - [ ] The new package's `dev`, `test`, `build` and `lint` scripts run from inside its directory with no root install present
 - [ ] A new CI workflow file runs the package's checks on changes under its directory; no master-owned workflow file is modified
