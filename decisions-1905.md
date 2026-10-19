@@ -49,7 +49,7 @@ Settled 2026-10-19, while charting the wayfinder map.
 
 7. **The map's destination is an approved ticket set, not code.** The map
    is cleared when epic 1's sub-issues exist as direct sub-issues of #1905
-   and read `approved` in `UPSTREAM.md`. Implementation happens outside the
+   and read `settled` in `UPSTREAM.md`. Implementation happens outside the
    map, one issue per layer, as the React Query epic ran.
 
 8. **Done for epic 1.** A `frontend-base` branch on upstream where every

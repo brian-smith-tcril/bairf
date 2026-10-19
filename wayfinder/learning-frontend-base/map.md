@@ -2,7 +2,7 @@
 
 ## Destination
 
-Epic 1's implementation tickets exist as direct sub-issues of #1905 and read `approved` in `UPSTREAM.md`, with nothing left to decide before the first layer is written. Implementation happens outside this map.
+Epic 1's implementation tickets exist as direct sub-issues of #1905 and read `settled` in `UPSTREAM.md`, with nothing left to decide before the first layer is written. Implementation happens outside this map.
 
 ## Notes
 
