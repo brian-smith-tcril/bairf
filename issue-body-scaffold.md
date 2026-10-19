@@ -46,6 +46,5 @@ The pull request squashes on merge; the middle two commits exist to show the ver
 - [ ] Learning's identity replaces the template's everywhere in the package; site config carries the required fields and registers the app
 - [ ] `frontend-base/manifest.tsv` exists with its format documented
 - [ ] `master`'s per-directory coverage at branch creation is recorded as the baseline for later ports
-- [ ] The manual-testing record documents how a frontend-base site is run against a local Open edX stack, step by step, as the environment every later issue uses
 
 </details>
