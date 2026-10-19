@@ -1,0 +1,15 @@
+# 18: Port the course exit page
+
+**Parent:** openedx/frontend-app-learning#1905
+
+**What to build:** A learner reaching the end of a course lands on the course exit page in the state that applies, passing, in progress or non-passing, from the last unit's next button and by URL.
+
+**Blocked by:** 11, 18
+
+**Status:** ready-for-agent
+
+- [ ] All three states render; the course-exit plugin slots are placeholders
+- [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far
+- [ ] The layer's route or feature was exercised by hand in the verification environment and the observations are in the PR's manual-testing record; a behavior found untested got a test in the same PR
+- [ ] Manifest lines added for every legacy file this layer ports or drops
+- [ ] Coverage for the ported directory compared against the master baseline in the manual-testing record
