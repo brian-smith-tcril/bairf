@@ -31,7 +31,7 @@ Each checkpoint targets an element by id. When a tour starts, Paragon's `Product
 | course home: upgrade | `#courseHome-upgradeNotification`, inside the upgrade notification component | that component was the default content of the outline tab's notifications slot until 14c662dc removed it (2025-04-14), so on a stock site the step is skipped; where an operator's plugin in that slot renders the id, the step anchors to it. The react-query conversion's smoke test (#1968) did not cover this step. Ported as it is; the notifications slot is a placeholder until #2185, so the plugin case returns with the Slot API |
 | courseware | `#courseware-sequence-navigation`, in `SequenceNavigation` | dormant on stock `master`, as #1968 recorded: that component renders only through the sequence navigation slot, which has no default content, so the tour's one step is dropped and nothing renders; #1968 verified the tour by inserting the strip through the slot. Ported as it is; the slot is a placeholder until #2185 |
 
-Neither plugin-dependent step is changed by the port, and both are inert until #2185 makes the slots real; the manual test records them as skipped.
+Neither plugin-dependent step is changed by the port, and both are inert until #2185 makes the slots real; the manual test records them as skipped. The upgrade step is a deprecation candidate: a core tour step that only an operator's upsell plugin can give a target to. Deprecating it needs a clear way for an operator to put the step back, so a plugin can still add a checkpoint to the tour as it does today by rendering the id; that is looked at in #2185 with the notifications slot, not here.
 
 ## Testing
 

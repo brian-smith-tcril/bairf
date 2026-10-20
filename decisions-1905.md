@@ -437,3 +437,15 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     A faithful port that departs from frontend-base's own practice needs a
     justification, and the interstitial is not one. Decision 22's wrappers
     are untouched: they are not redirects.
+
+36. **The tour's upgrade step is a deprecation candidate, revisited with the
+    notifications slot in #2185.** The new-user course home tour has a
+    checkpoint on `#courseHome-upgradeNotification`, an id that lived inside
+    `UpgradeNotification`, the outline tab notifications slot's default
+    content until 14c662dc (2025-04-14); Paragon's `ProductTour` prunes a
+    checkpoint whose target is absent, so on a stock site the step is
+    skipped and only an operator's upsell plugin rendering that id brings it
+    back. #1968's smoke test did not cover the step. Deprecating a core
+    tour step that only a plugin can target needs a way for an operator to
+    add a step to the tour, so the question is parked with #2185's port of
+    that slot. The port carries the step as it is.
