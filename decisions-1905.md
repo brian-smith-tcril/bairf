@@ -287,7 +287,10 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     redirects with the course component stubbed to print the resolved ids;
     CW2 sequence and unit with the exams provider stubbed as a pass-through;
     CW3 outline sidebar; CW4 exams; CW5 right sidebar and widgets; CW6 unit
-    extras; CW7 course exit. The sidebar precedes exams because exam test
+    extras; CW7 course exit. Amended 2026-10-20: the bookmark leaves CW6
+    for CW2 (openedx/frontend-app-learning#2196), since the bookmark button
+    is the unit title slot's default content and ports with it; ticket 15
+    is folded. The sidebar precedes exams because exam test
     cases need a way out to another section. CW5 and CW6 may swap; the rest
     is a chain. Breadcrumbs and the unit tab strip are not rendered on the
     branch: since #1716 and #1685 both are operator-inserted plugins with no

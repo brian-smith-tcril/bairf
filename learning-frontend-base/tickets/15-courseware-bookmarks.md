@@ -6,7 +6,7 @@
 
 **Blocked by:** 10
 
-**Status:** ready-for-agent
+**Status:** folded into openedx/frontend-app-learning#2196 (the bookmark button is the unit title slot's default content)
 
 - [ ] Bookmark toggles and persists; the bookmarks list reflects it
 - [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far
