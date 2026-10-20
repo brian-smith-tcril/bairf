@@ -315,8 +315,15 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     Published bodies and titles for #2196 and #2197 are updated to the terms;
     the tickets, spec and map keep the aliases they were written with.
 
-33. **The upgrade widget ports with the Slot API (#2185), not with the
-    auxiliary sidebar.** Its panel has been a plugin slot with no default
+33. **The auxiliary sidebar ports with placeholder slots and the
+    discussions widget hard-registered; widget registration from config
+    and the upgrade widget port with the Slot API (#2185).** Registering
+    widgets from `SIDEBAR_WIDGETS` is a plugin mechanism of the same kind
+    as a slot, so it belongs with the slots; under frontend-base the slot
+    itself is the likely registry, with a Tutor plugin (tutor-forum, which
+    today only sets `ENABLE_DISCUSSION_SERVICE` on the LMS) inserting the
+    discussions widget. Revisited in #2186 when tabs become widgets. The
+    upgrade widget: Its panel has been a plugin slot with no default
     content since 14c662dc (2025-04-14): on a stock site it is a trigger
     with a red dot that opens a titled, empty panel, available only on
     verified-mode courses and never auto-opened since

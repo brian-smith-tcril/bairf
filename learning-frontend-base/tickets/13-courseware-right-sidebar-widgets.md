@@ -2,7 +2,7 @@
 
 **Parent:** openedx/frontend-app-learning#1905
 
-**What to build:** A learner opens the right sidebar tray and sees the discussions panel for a course with discussions configured; a second registered widget gets its own trigger. The upgrade widget moved to #2185 (its panel is a slot with no default content).
+**What to build:** A learner opens the right sidebar tray and sees the discussions panel for a course with discussions configured. Discussions is hard-registered; the multi-widget logic ports intact. Widget registration from config and the upgrade widget moved to #2185.
 
 **Blocked by:** 11
 
