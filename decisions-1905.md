@@ -410,3 +410,17 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     with the progress tab (openedx/frontend-app-learning#2190, first
     user), named there by amendment; the course exit page reuses it and
     its two slot defaults follow the same mapping.
+
+35. **Redirect-only routes port as route loaders.** A route whose only
+    job is to send the learner elsewhere (the five children of the
+    redirect landing page, the discussion redirect of
+    openedx/frontend-app-learning#2204) gets a `loader` returning
+    react-router's `redirect`, the mechanism frontend-base itself uses
+    (`authenticatedLoader` to the LMS login, the shell's home redirect in
+    `getAppRoutes.ts`), not a component calling `location.assign` during
+    render as `master`'s `RedirectPage` does. The landing page's
+    interstitial is dropped with it: its visible part is a spinner that
+    reads as loading, and its "Redirecting..." text is screen-reader only.
+    A faithful port that departs from frontend-base's own practice needs a
+    justification, and the interstitial is not one. Decision 22's wrappers
+    are untouched: they are not redirects.
