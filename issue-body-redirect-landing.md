@@ -29,7 +29,7 @@ Nothing in openedx-platform sends a learner to `/learning/redirect/...`. The lan
 
 ## Two notes for later, not for this issue
 
-- On `master` the `notlive` and `access_response_error` queries produce a banner only on the legacy LMS dashboard template. On a site with the learner home app enabled the LMS redirects to it before reading them, and frontend-app-learner-dashboard has never read them in its history. Resolving the role keeps the query on the URL, so a site whose external route is the LMS keeps its banner; a learner-dashboard site is as it is today.
+- On `master` the `notlive` and `access_response_error` queries produce a banner only on the legacy LMS dashboard template. On a site where the LMS's `learner_home` flag points it at the learner dashboard app, the LMS redirects there before reading them, and frontend-app-learner-dashboard has never read them in its history. Resolving the role keeps the query on the URL, so a site whose external route is the LMS keeps its banner; a learner-dashboard site is as it is today.
 - The enterprise child exists for a denial code that openedx-platform never emits: it comes from the edx-enterprise plugin's course-start filter ([`enterprise/filters/courseware.py`](https://github.com/openedx/edx-enterprise/blob/master/enterprise/filters/courseware.py)), as does the code behind the enterprise-only access-denied page (#2192). The two are Learning's branches for that one plugin and are deprecation candidates together; that is settled outside the port.
 
 ## Testing

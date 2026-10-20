@@ -413,8 +413,8 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     Amended 2026-10-20: the redirect landing page's `dashboard` child
     resolves the same role, with the query string kept, instead of
     building the LMS `/dashboard` URL and relying on the LMS to bounce to
-    the learner dashboard app (which it does without the query when the
-    learner home app is enabled). `notlive` and `access_response_error`
+    the learner dashboard app (which it does without the query when its
+    `learner_home` flag points at the learner dashboard app). `notlive` and `access_response_error`
     are read only by the legacy LMS dashboard template; frontend-app-
     learner-dashboard has never read them (full history, 815 commits since
     2021-09-16, checked 2026-10-20). A site that wants the LMS hop points
