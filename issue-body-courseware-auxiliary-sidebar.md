@@ -20,12 +20,12 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 The tests of the files that move here, the discussions widget's and the auxiliary sidebar slots', port with them, as do the framework's mock-widget suites (`SidebarTriggers.test.jsx`, `SidebarContext.test.jsx`) that pass two or more widgets to the provider, and reach the page through the exported route array at a unit URL, with the unit, course metadata and discussions-topic queries mocked per the conventions #2189 set.
 
-The role resolution is tested by hand with the real discussions app configured as an external route for the discussions role, checking the iframe URL the panel builds. The installed-app case has nothing to run against until the discussions app is converted; that conversion verifies it.
+The role resolution is tested by hand both ways, since the resolver returns an installed app's route path or an external route's URL depending on what the site config holds: once with the real discussions app configured as an external route for the discussions role, and once with a stub app in the dev site config that provides the role on a route, checking the iframe URL the panel builds and what the iframe loads in each case.
 
 ## Acceptance
 
 - [ ] The auxiliary sidebar opens and closes from its trigger; on a unit with in-context discussions enabled the discussions panel loads the discussions app for that unit
-- [ ] Manual test with the discussions app configured as an external route for the discussions role; the panel's iframe URL recorded
+- [ ] Manual test of the discussions role resolved both ways: the real discussions app as an external route, and a stub installed app providing the role; the panel's iframe URL and what it loads recorded for each
 - [ ] With a second widget passed to the provider in a test, each available widget has its own trigger, clicking one opens its panel and closes the other, and priority ordering holds (the framework's mock-widget suites)
 - [ ] The auxiliary sidebar slot and its trigger slot are placeholder slots rendering their default content
 - [ ] Types, lint and tests of the new package pass; the legacy workflow stays green; `npm run dev` from the package serves courseware with the discussions widget

@@ -234,7 +234,8 @@ Settled 2026-10-19, while charting the wayfinder map.
     iframe (the installed app rendering its own panel, plausibly by
     inserting a widget into the auxiliary sidebar slot) is for the
     discussions conversion or a follow-up to it, not this effort. The
-    manual test here covers the external-route case only.
+    manual test covers both resolutions: the real discussions app as an
+    external route, and a stub installed app providing the role.
 
 25. **Config table reviewed; `SESSION_COOKIE_DOMAIN` is an app config key.**
     The 52-row table in wayfinder ticket 02 stands with the precedents its
