@@ -23,6 +23,7 @@ issues:
   openedx/frontend-app-learning#2203
   openedx/frontend-app-learning#2204
   openedx/frontend-app-learning#2205
+  openedx/frontend-app-learning#2206
   openedx/frontend-base#324
 
 prs:
