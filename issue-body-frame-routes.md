@@ -13,23 +13,23 @@ Part of #1905. Depends on #2187.
 ## Route tree
 
 - One root route, path `learning`, id `org.openedx.frontend.route.learning.main`, role `org.openedx.frontend.role.learning`, element a bare outlet. The converted apps checked each keep the first segment of their old URL as the root route: [catalog](https://github.com/openedx/frontend-app-catalog/blob/master/src/routes.tsx) `/catalog`, [gradebook](https://github.com/openedx/frontend-app-gradebook/blob/master/src/routes.tsx) `/gradebook/:courseId`, [profile](https://github.com/openedx/frontend-app-profile/blob/master/src/routes.tsx) `profile`, [account](https://github.com/openedx/frontend-app-account/blob/master/src/routes.tsx) `account`, [instructor dashboard](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/routes.tsx) `instructor-dashboard/:courseId`. The shell's [`getAppRoutes`](https://github.com/openedx/frontend-base/blob/main/shell/router/getAppRoutes.ts) concatenates app routes as written under one site basename, so this is what keeps every existing `/learning/...` link resolving.
-- Child routes, one per page Learning serves today, each with its own id and role and a stub element:
+- Child routes, one per page Learning serves today, each with its own id and a stub element, and a role where another app would resolve it to link there:
 
   | Page | Path(s) under `learning` | Role |
   |---|---|---|
   | outline tab (course home) | `course/:courseId/home` | `org.openedx.frontend.role.courseHome` |
   | dates | `course/:courseId/dates` | `org.openedx.frontend.role.courseDates` |
   | progress | `course/:courseId/progress`, `course/:courseId/progress/:targetUserId` | `org.openedx.frontend.role.courseProgress` |
-  | discussion | `course/:courseId/discussion/:path/*` | `org.openedx.frontend.role.courseDiscussion` |
+  | discussion | `course/:courseId/discussion/:path/*` | none (a redirect; the destination role belongs to the discussions app) |
   | live | `course/:courseId/live` | `org.openedx.frontend.role.courseLive` |
   | courseware | `course/:courseId`, `course/:courseId/:sequenceId`, `course/:courseId/:sequenceId/:unitId`, `preview/course/:courseId/:sequenceId`, `preview/course/:courseId/:sequenceId/:unitId` | `org.openedx.frontend.role.courseware` |
   | course exit | `course/:courseId/course-end` | `org.openedx.frontend.role.courseExit` |
-  | access denied | `course/:courseId/access-denied` | `org.openedx.frontend.role.courseAccessDenied` |
-  | goal unsubscribe | `goal-unsubscribe/:token` | `org.openedx.frontend.role.goalUnsubscribe` |
-  | redirect landing | `redirect/*` | `org.openedx.frontend.role.learningRedirect` |
-  | preferences unsubscribe | `preferences-unsubscribe/:userToken/:updatePatch?` | `org.openedx.frontend.role.preferencesUnsubscribe` |
+  | access denied | `course/:courseId/access-denied` | none (an internal state) |
+  | goal unsubscribe | `goal-unsubscribe/:token` | none (reached from emailed URLs) |
+  | redirect landing | `redirect/*` | none (an internal state) |
+  | preferences unsubscribe | `preferences-unsubscribe/:userToken/:updatePatch?` | none (reached from emailed URLs) |
 
-  Route ids are `org.openedx.frontend.route.learning.<page>`; role ids follow the flat camelCase of catalog's ([`src/constants.ts`](https://github.com/openedx/frontend-app-catalog/blob/master/src/constants.ts)). The root role on the root route is what the shell's course bar checks; the per-page roles exist so another app can resolve a specific page by role.
+  Route ids are `org.openedx.frontend.route.learning.<page>`; role ids follow the flat camelCase of catalog's ([`src/constants.ts`](https://github.com/openedx/frontend-app-catalog/blob/master/src/constants.ts)). The root role on the root route is what the shell's course bar checks. A page role is a promise that another app may resolve it to link there, so only destination pages carry one; redirects, internal states and pages reached from emailed URLs carry none.
 - A stub element renders one line: the page's name and "not yet ported". It exists so a tester can tell an unported page from a broken one; each page's port replaces it.
 - No catch-all route: the shell renders its own not-found page for unmatched paths.
 - Not in this issue: the URL-decoding and path-fixing wrappers around the course routes (they come with the courseware container), providers, data fetching, the header widget, slots.

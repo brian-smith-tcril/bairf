@@ -224,7 +224,10 @@ Settled 2026-10-19, while charting the wayfinder map.
     moved to the unsupported org under #227), so the Insights button is
     dropped under that DEPR and the variable has no frontend-base
     equivalent. The two roles are discussions and the enterprise learner
-    portal.
+    portal. The discussions role id is `org.openedx.frontend.role.discussions`
+    (named 2026-10-20 with the discussion redirect; the destination-named
+    form of `dashboard`, `profile`, `courses`), used by #2199 and the
+    redirect route.
     Amended 2026-10-19 (auxiliary sidebar): the discussions widget keeps its
     iframe, built from the role-resolved URL plus `inContextSidebar`, the
     parameter that tells the discussions app it is in a sidebar. An
@@ -324,6 +327,13 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     ancestor roles are active and `/learning` prefix-matches every tab. The
     per-tab roles from the config table go on the child routes so other
     apps can resolve a specific tab by role.
+    Amended 2026-10-20: a route carries a role when another app would
+    resolve it to link there, and otherwise none. Redirects (discussion),
+    internal states (access denied, redirect landing) and pages reached
+    from emailed URLs (goal and preferences unsubscribe) lose theirs; the
+    six destination pages (course home, dates, progress, live, courseware,
+    course exit) keep theirs. A role on a redirect would send a resolving
+    app through Learning's hop instead of to the destination.
 
 32. **The two courseware sidebars are the navigation sidebar and the
     auxiliary sidebar.** Direction names describe the left-to-right
