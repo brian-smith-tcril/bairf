@@ -18,6 +18,7 @@ issues:
   openedx/frontend-app-learning#2198
   openedx/frontend-app-learning#2199
   openedx/frontend-app-learning#2200
+  openedx/frontend-app-learning#2201
   openedx/frontend-base#324
 
 prs:
