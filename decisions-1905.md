@@ -320,7 +320,8 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
 
 33. **The auxiliary sidebar ports with placeholder slots and the
     discussions widget hard-registered; widget registration from config
-    and the upgrade widget port with the Slot API (#2185).** Registering
+    waits for the Slot API (#2185), and the upgrade widget's fate is
+    settled there too.** Registering
     widgets from `SIDEBAR_WIDGETS` is a plugin mechanism of the same kind
     as a slot, so it belongs with the slots: `defaultWidgets.js` (the
     built-ins merged with the config) does not port before #2185, and the
@@ -343,7 +344,8 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     and the discussions widget and keeps the several-registered-widgets
     path working (one trigger per available widget, one panel open), which
     the framework's mock-widget suites already pin. Whether the upgrade
-    widget stays registered by default is settled in #2185 in line with
+    widget ports at all, and if so whether it stays registered by default,
+    is settled in #2185 in line with
     DEPR openedx/frontend-app-learning#1902 (awais-ansari, 2026-04-20),
     which lists the default-on registration for removal and has stalled
     since July 2026.
