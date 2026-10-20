@@ -7,7 +7,7 @@
 **Blocked by:** 11
 
 **Status:** ready-for-agent
-**Upstream:** openedx/frontend-app-learning#2199 (in review)
+**Upstream:** openedx/frontend-app-learning#2199
 
 - [ ] Tray opens and closes; discussions panel loads; a second registered widget gets a trigger and switching works
 - [ ] Sidebar widget configuration is readable from app config under its existing key; the operator-facing change from the plugin config file is noted
