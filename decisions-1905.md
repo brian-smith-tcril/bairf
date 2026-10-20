@@ -322,8 +322,11 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     discussions widget hard-registered; widget registration from config
     and the upgrade widget port with the Slot API (#2185).** Registering
     widgets from `SIDEBAR_WIDGETS` is a plugin mechanism of the same kind
-    as a slot, so it belongs with the slots; under frontend-base the slot
-    itself is the likely registry, with a Tutor plugin (tutor-forum, which
+    as a slot, so it belongs with the slots: `defaultWidgets.js` (the
+    built-ins merged with the config) does not port before #2185, and the
+    course component passes `[discussionsWidgetConfig]` to the provider
+    directly where `master` passes `getEnabledWidgets()`; under
+    frontend-base the slot itself is the likely registry, with a Tutor plugin (tutor-forum, which
     today only sets `ENABLE_DISCUSSION_SERVICE` on the LMS) inserting the
     discussions widget. Revisited in #2186 when tabs become widgets. The
     two slot modules are the one rename in the port, `RightSidebarSlot` →
@@ -331,7 +334,7 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     `AuxiliarySidebarTriggerSlot`, an exception to the placeholder-slot
     rule because the effort retires "right" for this panel (decision 32);
     the manifest carries the mapping and the legacy slot ids wait for
-    #2185. The upgrade widget: Its panel has been a plugin slot with no default
+    #2185. The upgrade widget's panel has been a plugin slot with no default
     content since 14c662dc (2025-04-14): on a stock site it is a trigger
     with a red dot that opens a titled, empty panel, available only on
     verified-mode courses and never auto-opened since
