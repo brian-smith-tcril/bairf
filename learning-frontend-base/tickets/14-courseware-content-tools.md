@@ -7,6 +7,7 @@
 **Blocked by:** 10
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-content-tools.md`
 
 - [ ] Calculator opens, computes and closes; notes toggle changes the unit's notes visibility
 - [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far
