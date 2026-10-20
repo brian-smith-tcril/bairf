@@ -22,28 +22,28 @@ The LMS creates a `UserTour` row for every new user, with the new-user course ho
 
 ## Anchors
 
-Each checkpoint targets an element by id. Paragon positions a checkpoint only when its target exists; a checkpoint whose target is missing never becomes visible, and the tour sits enabled with nothing shown.
+Each checkpoint targets an element by id. When a tour starts, Paragon's `ProductTour` drops every checkpoint whose target is not in the DOM, so a missing anchor skips a step; a tour whose only step is missing renders nothing.
 
 | Checkpoint | Target on `master` | Under frontend-base |
 |---|---|---|
 | course home: dates, outline, weekly goal, launch link | widgets of the outline tab | ported with #2191, unchanged |
 | course home: tabs | `#courseTabsNavigation`, Learning's tab strip | Learning's strip is not ported; the shell's course bar renders the tabs. The step is re-targeted at the shell's bar, which carries the class `course-tabs-navigation` and a collapse container `#course-nav` but no documented hook for this; the pull request picks the selector, the manual test confirms it, and a stable hook is a request on frontend-base |
-| course home: upgrade | `#courseHome-upgradeNotification` | missing on `master` since 14c662dc removed the upgrade notification from the outline tab; ported as it is, with what the tour does at that step recorded by the manual test |
-| courseware | `#courseware-sequence-navigation`, in `SequenceNavigation` | missing on stock `master`: that component renders only as the default content of the sequence navigation slot, which has none, so the anchor exists only where an operator plugin inserts the unit tab strip; ported as it is and recorded likewise |
+| course home: upgrade | `#courseHome-upgradeNotification`, inside the upgrade notification component | that component was the default content of the outline tab's notifications slot until 14c662dc removed it (2025-04-14), so on a stock site the step is skipped; where an operator's plugin in that slot renders the id, the step anchors to it. The react-query conversion's smoke test (#1968) did not cover this step. Ported as it is; the notifications slot is a placeholder until #2185, so the plugin case returns with the Slot API |
+| courseware | `#courseware-sequence-navigation`, in `SequenceNavigation` | dormant on stock `master`, as #1968 recorded: that component renders only through the sequence navigation slot, which has no default content, so the tour's one step is dropped and nothing renders; #1968 verified the tour by inserting the strip through the slot. Ported as it is; the slot is a placeholder until #2185 |
 
-The two `master` gaps are not changed by the port; whether to retarget or drop those steps is for the pull request, as a line in it, or a follow-up.
+Neither plugin-dependent step is changed by the port, and both are inert until #2185 makes the slots real; the manual test records them as skipped.
 
 ## Testing
 
 The tours tests port with the files and reach the pages through the exported route array: the new-user modal and tour on the course home, dismissal and completion with their mutations, the existing-user tour and its launch from the button, the non-eligible user, the courseware tour's completion, and the guards (no tour during a streak celebration, none on other tabs), with the tour, proctoring and metadata requests mocked per the conventions #2189 set; the context and data-module suites port as they are.
 
-The manual test uses a fresh learner account, whose tour row the LMS creates on sign-up: the welcome modal on the course home, the course home tour through its steps including the re-targeted tabs step and the upgrade step, the launch button for an existing learner, and the courseware tour on a unit, each recorded with what rendered.
+The manual test follows #1968's recipe: arm the learner's `UserTour` row in Django admin (`course_home_tour_status`, `show_courseware_tour`) and re-arm between runs, since finishing a tour patches it back. It records the welcome modal on the course home, the course home tour through its steps with the re-targeted tabs step and the upgrade step skipped on a stock site, the launch button for an existing learner, and the courseware tour on a unit, which renders nothing on a stock site; a fresh account covers the row the LMS creates on sign-up.
 
 ## Acceptance
 
 - [ ] A new learner sees the welcome modal on the course home and the tour runs through its anchored steps; dismissing or completing it is recorded and it does not return on reload
 - [ ] An existing learner launches the course home tour from the course tools button; the courseware tour runs on a unit and its completion is recorded
-- [ ] The tabs step anchors to the shell's course bar; the two `master` gaps are observed and recorded
+- [ ] The tabs step anchors to the shell's course bar; the upgrade step and the courseware tour are recorded as skipped on a stock site
 - [ ] Types, lint and tests of the new package pass; the legacy workflow stays green; `npm run dev` from the package serves the tours for a fresh account
 - [ ] Manifest lines added for every file moved; the directory's coverage compared against the `master` baseline
 
