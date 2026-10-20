@@ -20,7 +20,7 @@ The discussion tab ([`src/course-home/discussion-tab/`](https://github.com/opene
 
 ## Why a redirect
 
-The iframe exists to show the discussions app inside Learning's header and tabs. Under frontend-base the shell owns the header and the course bar on every app's pages, so the discussions app, installed or external, already sits in the same chrome, and the LMS's own discussion tab link goes straight to it. A redirect gives an old link the same destination the course bar gives a click, with no second copy of the discussions app inside a frame. The alternative, porting the iframe with the role-resolved URL as the auxiliary sidebar does, keeps a page Learning would otherwise not have; the review round decides.
+The iframe exists to show the discussions app inside Learning's header and tabs. An installed, converted discussions app is in the shell's header and course bar by construction, so framing it would put the shell inside the shell. An external route is wherever the site points the role: the legacy discussions app, a frontend-base build hosted elsewhere, or something else an operator chose; Learning knows nothing about its chrome and cannot promise a frame of it works. In both cases it is the destination the site's own navigation already uses: the LMS discussion tab links straight to the discussions app, and the course bar renders that link. A redirect sends an old link to the same place, with no copy of the destination inside a frame. The alternative, porting the iframe with the role-resolved URL as the auxiliary sidebar does, keeps a page Learning would otherwise not have; the review round decides.
 
 ## Testing
 
