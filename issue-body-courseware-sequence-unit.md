@@ -16,7 +16,7 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 - The course component ([`Course.jsx`](https://github.com/openedx/frontend-app-learning/blob/master/src/courseware/course/Course.jsx)) with its page title, and the sequence ([`Sequence.jsx`](https://github.com/openedx/frontend-app-learning/blob/master/src/courseware/course/sequence/Sequence.jsx)): sequence content, the unit with its content iframe, suspense and URL building, unit navigation (previous and next), hidden-after-due, the course license line, and the sequence alerts (banner text, entrance exam).
 - The unit computes its iframe URL through Learning's own override registry ([`plugin-overrides`](https://github.com/openedx/frontend-app-learning/blob/master/src/generic/plugin-overrides/PluginOverridesContext.tsx)): it runs the default computation and passes the result through any overrides a plugin registered, and it throws without the registry's provider above it. #2189 put that provider on the root route, so the ported unit finds it; with every slot a placeholder nothing registers an override, so the default URL is used, as on a stock `master` deployment.
-- Plugin slots rendered by these components become placeholder slots (file and name kept, default content in a bare fragment, no plugin-framework import): content-iframe loader (default content: the page loader), unit title, sequence container, sequence navigation, sequence bottom navigation, and the submitted-timed-exam instructions slot.
+- Plugin slots rendered by these components become placeholder slots (file and name kept, default content in a bare fragment, no plugin-framework import): content-iframe loader (default content: the page loader), unit title, sequence container, sequence navigation, sequence bottom navigation, the submitted-timed-exam instructions slot, and the course breadcrumbs slot. A slot with no default content (breadcrumbs, sequence container, sequence navigation) is a module rendering an empty fragment.
 
 ## Stubbed here, replaced by later issues
 
@@ -38,7 +38,7 @@ The sequence, unit and navigation tests port with their files and reach the page
 
 - [ ] A unit renders its content in the iframe; previous and next move across units and across a sequence boundary; the next-up and completion behavior from `master` holds
 - [ ] A past-due hidden sequence shows the hidden-after-due notice; the license line renders; sequence alerts render
-- [ ] The six slots above are placeholder slots; breadcrumbs and the unit tab strip are absent, as on stock `master`
+- [ ] The seven slots above are placeholder slots; breadcrumbs and the unit tab strip are absent from the page, as on stock `master`
 - [ ] Each stub in the table renders nothing or passes through, and is listed in the pull request so the later issue knows what to delete
 - [ ] Types, lint and tests of the new package pass; the legacy workflow stays green; `npm run dev` from the package serves units
 - [ ] Manifest lines added for every file moved; the sequence directory's coverage compared against the `master` baseline
