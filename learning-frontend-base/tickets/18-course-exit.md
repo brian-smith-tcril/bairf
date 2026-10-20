@@ -4,7 +4,7 @@
 
 **What to build:** A learner reaching the end of a course lands on the course exit page in the state that applies, passing, in progress or non-passing, from the last unit's next button and by URL.
 
-**Blocked by:** 10, 17
+**Blocked by:** 10, 16 (the share buttons)
 
 **Status:** ready-for-agent
 

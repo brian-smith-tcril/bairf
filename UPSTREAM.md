@@ -17,3 +17,4 @@
 | courseware-exams | issue-body-courseware-exams.md | openedx/frontend-app-learning#2198 | settled |
 | courseware-auxiliary-sidebar | issue-body-courseware-auxiliary-sidebar.md | openedx/frontend-app-learning#2199 | settled |
 | content-tools | issue-body-content-tools.md | openedx/frontend-app-learning#2200 | settled |
+| celebrations | issue-body-celebrations.md | | unpublished |

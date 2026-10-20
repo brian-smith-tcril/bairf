@@ -6,7 +6,7 @@
 
 **Blocked by:** 10
 
-**Status:** ready-for-agent
+**Status:** folded into 16 (the share buttons render only inside the first-section celebration modal and the course-exit celebration)
 
 - [ ] Share controls render with the configured hashtag and URLs from app config
 - [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far

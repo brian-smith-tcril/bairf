@@ -290,7 +290,16 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     extras; CW7 course exit. Amended 2026-10-20: the bookmark leaves CW6
     for CW2 (openedx/frontend-app-learning#2196), since the bookmark button
     is the unit title slot's default content and ports with it; ticket 15
-    is folded. The sidebar precedes exams because exam test
+    is folded. Amended 2026-10-20: the streak celebration modal joins CW6
+    celebrations (it is rendered by the tab-page frame, which #2189 ported
+    without naming it; #2189 now says the frame leaves it out until then),
+    and social share (ticket 17) folds into celebrations, since the share
+    buttons render only inside the first-section modal and the course-exit
+    celebration. The streak discount line is a deprecation candidate
+    (openedx/public-engineering#22 archived the ecommerce stack; #1763's
+    discount-code service is unnamed; neither URL key is set by
+    openedx-platform or tutor-mfe); the port carries it unless the pull
+    request decides otherwise. The sidebar precedes exams because exam test
     cases need a way out to another section. CW5 and CW6 may swap; the rest
     is a chain. Breadcrumbs and the unit tab strip are not rendered on the
     branch: since #1716 and #1685 both are operator-inserted plugins with no
