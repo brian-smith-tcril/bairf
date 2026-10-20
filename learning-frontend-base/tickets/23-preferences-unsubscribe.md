@@ -7,6 +7,7 @@
 **Blocked by:** 02
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-preferences-unsubscribe.md`
 
 - [ ] Valid and invalid tokens produce the right result; the plain header this page used is replaced by the shell's; recipe recorded
 - [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far
