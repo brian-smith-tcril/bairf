@@ -7,6 +7,7 @@
 **Blocked by:** 02
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-discussion-redirect.md`
 
 - [ ] A discussion URL redirects to the discussions app with the course id and path preserved; an unresolved role falls through to not found
 - [ ] The sub-issue body proposes the redirect and records that the review round decides between redirect and iframe
