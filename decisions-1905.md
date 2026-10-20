@@ -301,8 +301,11 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
 
 32. **The two courseware sidebars are the navigation sidebar and the
     auxiliary sidebar.** Direction names describe the left-to-right
-    rendering only (the layout is a flex row and flips under a right-to-left
-    locale), and content names ("discussions sidebar") name a plugin's
+    rendering only: both sidebars sit in one flex row in `Sequence.jsx`,
+    frontend-platform sets `dir="rtl"` on the document for an RTL locale,
+    and Brian observed the navigation sidebar on the right under an RTL
+    language on `master` (2026-10-19; the auxiliary side not yet observed,
+    no course with discussions at hand). Content names ("discussions sidebar") name a plugin's
     output rather than the panel. The platform's own names come from the
     waffle flags `courseware.enable_navigation_sidebar` and
     `courseware.always_open_auxiliary_sidebar` (removed by
