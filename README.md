@@ -54,7 +54,7 @@ bin/effort list                        live effort branches and archived tags
 bin/effort close <kind>/<name>         annotated tag <kind>-archive/<name> from TAG.md, delete the branch, remove the worktree
 ```
 
-Kinds: a **project** is a multi-session effort against a code repo, an epic's worth. A **task** is work that would make sense as one issue or PR: a bug fix, a one-commit feature. A **sidequest** is for Brian: exploring an idea, investigating something with no commitment to act on the findings, or this repo's own setup.
+Kinds: a **project** is a multi-session effort against one or more code repos, an epic's worth. A **task** is work that would make sense as one issue or PR: a bug fix, a one-commit feature. A **sidequest** is for Brian: exploring an idea, investigating something with no commitment to act on the findings, or this repo's own setup.
 
 Where a worktree lives is a convention, not a requirement: `bin/effort path` finds it through `git worktree list` wherever it is. A task's worktree takes the default, beside the bairf checkout in the directory that holds the repo checkouts. A project usually has a directory of its own holding the repo checkouts it works on; its worktree goes in there, passed as `[dir]`, so it sits beside the code.
 
