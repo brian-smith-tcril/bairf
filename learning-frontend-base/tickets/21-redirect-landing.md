@@ -7,6 +7,7 @@
 **Blocked by:** 09
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-redirect-landing.md`
 
 - [ ] Each redirect form the page handles resolves; the manual-testing record includes a recipe for triggering it
 - [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far

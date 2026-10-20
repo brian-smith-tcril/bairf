@@ -21,3 +21,4 @@
 | course-exit | issue-body-course-exit.md | openedx/frontend-app-learning#2202 | settled |
 | live-tab | issue-body-live-tab.md | openedx/frontend-app-learning#2203 | settled |
 | discussion-redirect | issue-body-discussion-redirect.md | openedx/frontend-app-learning#2204 | settled |
+| redirect-landing | issue-body-redirect-landing.md | | unpublished |

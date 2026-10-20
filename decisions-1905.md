@@ -410,6 +410,15 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     with the progress tab (openedx/frontend-app-learning#2190, first
     user), named there by amendment; the course exit page reuses it and
     its two slot defaults follow the same mapping.
+    Amended 2026-10-20: the redirect landing page's `dashboard` child
+    resolves the same role, with the query string kept, instead of
+    building the LMS `/dashboard` URL and relying on the LMS to bounce to
+    the learner dashboard app (which it does without the query when the
+    learner home app is enabled). `notlive` and `access_response_error`
+    are read only by the legacy LMS dashboard template; frontend-app-
+    learner-dashboard has never read them (full history, 815 commits since
+    2021-09-16, checked 2026-10-20). A site that wants the LMS hop points
+    the role at the LMS URL as an external route.
 
 35. **Redirect-only routes port as route loaders.** A route whose only
     job is to send the learner elsewhere (the five children of the
