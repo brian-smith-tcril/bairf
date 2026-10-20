@@ -20,4 +20,4 @@
 | celebrations | issue-body-celebrations.md | openedx/frontend-app-learning#2201 | settled |
 | course-exit | issue-body-course-exit.md | openedx/frontend-app-learning#2202 | settled |
 | live-tab | issue-body-live-tab.md | openedx/frontend-app-learning#2203 | settled |
-| discussion-redirect | issue-body-discussion-redirect.md | | unpublished |
+| discussion-redirect | issue-body-discussion-redirect.md | openedx/frontend-app-learning#2204 | settled |
