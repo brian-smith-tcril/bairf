@@ -323,7 +323,12 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     itself is the likely registry, with a Tutor plugin (tutor-forum, which
     today only sets `ENABLE_DISCUSSION_SERVICE` on the LMS) inserting the
     discussions widget. Revisited in #2186 when tabs become widgets. The
-    upgrade widget: Its panel has been a plugin slot with no default
+    two slot modules are the one rename in the port, `RightSidebarSlot` →
+    `AuxiliarySidebarSlot` and `RightSidebarTriggerSlot` →
+    `AuxiliarySidebarTriggerSlot`, an exception to the placeholder-slot
+    rule because the effort retires "right" for this panel (decision 32);
+    the manifest carries the mapping and the legacy slot ids wait for
+    #2185. The upgrade widget: Its panel has been a plugin slot with no default
     content since 14c662dc (2025-04-14): on a stock site it is a trigger
     with a red dot that opens a titled, empty panel, available only on
     verified-mode courses and never auto-opened since

@@ -4,7 +4,7 @@ Terms specific to this effort. Repo and ecosystem terms are on `main`.
 
 "Placeholder" on its own is the ordinary word; the qualified terms below are the ones with a fixed meaning.
 
-- **placeholder slot**: the epic-1 state of a plugin slot: the slot module keeps its file and name, renders its default content in a bare fragment, and is wired to neither mechanism; a slot with no default content renders nothing.
+- **placeholder slot**: the epic-1 state of a plugin slot: the slot module keeps its file and name (except where the name carries a term the effort retires: `RightSidebarSlot` moves as `AuxiliarySidebarSlot`), renders its default content in a bare fragment, and is wired to neither mechanism; a slot with no default content renders nothing.
 - **stub route**: a route in the ported tree whose element renders only a line naming the page as not yet ported; the page's port layer replaces it.
 - **outline tab**: the course home landing tab (`src/course-home/outline-tab/`). Aliases elsewhere: UI label "Course", route segment `home`, LMS tab type `courseware`, shell course-bar slug `outline`. Always with "tab": bare "outline" is ambiguous with the courseware **navigation sidebar**.
 - **navigation sidebar**: the courseware panel that renders the course outline for navigation (`src/courseware/course/sidebar/sidebars/course-outline/`), the default open panel on a wide viewport. The platform's name for it (waffle flag `courseware.enable_navigation_sidebar`, removed by openedx/frontend-app-learning#1713) and the one the release notes and learner docs use. Aliases: course outline sidebar, outline sidebar, course outline tray, left sidebar. Direction words describe the left-to-right rendering only; the layout flips under a right-to-left locale.
