@@ -411,14 +411,18 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     user), named there by amendment; the course exit page reuses it and
     its two slot defaults follow the same mapping.
     Amended 2026-10-20: the redirect landing page's `dashboard` child
-    resolves the same role, with the query string kept, instead of
+    resolves the same role, with no query string, instead of
     building the LMS `/dashboard` URL and relying on the LMS to bounce to
     the learner dashboard app (which it does without the query when its
     `learner_home` flag points at the learner dashboard app). `notlive` and `access_response_error`
     are read only by the legacy LMS dashboard template; frontend-app-
     learner-dashboard has never read them (full history, 815 commits since
-    2021-09-16, checked 2026-10-20). A site that wants the LMS hop points
-    the role at the LMS URL as an external route.
+    2021-09-16, checked 2026-10-20), and the legacy template is deprecated
+    (openedx/openedx-platform#35326, reopened 2026-07-31; umbrella
+    openedx/openedx-platform#38921). The access helper's two query-building
+    lines are dead under that DEPR; their removal is a pull-request call.
+    A site that wants the LMS hop points the role at the LMS URL as an
+    external route.
 
 35. **Redirect-only routes port as route loaders.** A route whose only
     job is to send the learner elsewhere (the five children of the
