@@ -375,3 +375,16 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     DEPR openedx/frontend-app-learning#1902 (awais-ansari, 2026-04-20),
     which lists the default-on registration for removal and has stalled
     since July 2026.
+
+34. **Dashboard and profile links resolve roles.** `master` links to the
+    learner dashboard as the LMS `/dashboard` URL (shared `DashboardLink`,
+    the course-exit view-courses and dashboard-footnote slot defaults) and
+    to the profile through `ACCOUNT_PROFILE_URL`. Both are cross-app
+    destinations with roles the destination apps declare,
+    `org.openedx.frontend.role.dashboard` (frontend-app-learner-dashboard
+    `src/constants.ts`) and `org.openedx.frontend.role.profile`
+    (frontend-app-profile `src/constants.ts`), so per decision 24 they
+    resolve through `resolveRouteByRole`. The shared links module ports
+    with the progress tab (openedx/frontend-app-learning#2190, first
+    user), named there by amendment; the course exit page reuses it and
+    its two slot defaults follow the same mapping.

@@ -7,6 +7,7 @@
 **Blocked by:** 10, 16 (the share buttons)
 
 **Status:** ready-for-agent
+**Upstream:** unpublished `issue-body-course-exit.md`
 
 - [ ] All three states render; the course-exit plugin slots are placeholders
 - [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far

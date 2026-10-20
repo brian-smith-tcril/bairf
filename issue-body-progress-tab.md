@@ -14,6 +14,7 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 - The progress tab: the tab component, course grade, grade breakdown and grade summary, course completion with its donut chart, certificate status, related links, messages.
 - The progress query, its key, API function and normalizer, into the course-home data module that #2189 established. The tab owns the fetch; readers below it read the cache without fetching, as on `master`.
+- The shared links module ([`src/shared/links.jsx`](https://github.com/openedx/frontend-app-learning/blob/master/src/shared/links.jsx)), which certificate status and credit information render: the dashboard link resolves the `org.openedx.frontend.role.dashboard` role and the profile link the `org.openedx.frontend.role.profile` role through frontend-base's route resolver, in place of the LMS `/dashboard` URL and `ACCOUNT_PROFILE_URL`; the ID-verification support link reads `SUPPORT_URL_ID_VERIFICATION` from Learning's app config. The course exit page reuses the module.
 - The exams-data hook the progress tab exposes for plugins. It has no caller inside Learning; it ports as code with the tab, and the pull request records whether the package's index exports it, since under frontend-base the app is a library and a plugin can no longer import it by source path.
 
 ## Placeholder slots
