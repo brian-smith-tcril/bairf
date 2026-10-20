@@ -7,7 +7,7 @@
 **Blocked by:** 05, 10
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-product-tours.md`
+**Upstream:** openedx/frontend-app-learning#2208
 
 - [ ] Both tours run end to end; the anchor that lived in the removed tab strip is re-targeted and recorded
 - [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far

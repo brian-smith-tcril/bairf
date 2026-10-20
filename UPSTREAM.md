@@ -24,4 +24,4 @@
 | redirect-landing | issue-body-redirect-landing.md | openedx/frontend-app-learning#2205 | settled |
 | goal-unsubscribe | issue-body-goal-unsubscribe.md | openedx/frontend-app-learning#2206 | settled |
 | preferences-unsubscribe | issue-body-preferences-unsubscribe.md | openedx/frontend-app-learning#2207 | settled |
-| product-tours | issue-body-product-tours.md | | unpublished |
+| product-tours | issue-body-product-tours.md | openedx/frontend-app-learning#2208 | settled |
