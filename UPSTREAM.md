@@ -19,3 +19,4 @@
 | content-tools | issue-body-content-tools.md | openedx/frontend-app-learning#2200 | settled |
 | celebrations | issue-body-celebrations.md | openedx/frontend-app-learning#2201 | settled |
 | course-exit | issue-body-course-exit.md | openedx/frontend-app-learning#2202 | settled |
+| live-tab | issue-body-live-tab.md | | unpublished |
