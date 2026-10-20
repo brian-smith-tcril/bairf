@@ -224,7 +224,19 @@ Settled 2026-10-19, while charting the wayfinder map.
     moved to the unsupported org under #227), so the Insights button is
     dropped under that DEPR and the variable has no frontend-base
     equivalent. The two roles are discussions and the enterprise learner
-    portal. The discussions role id is `org.openedx.frontend.role.discussions`
+    portal. Amended 2026-10-20: the enterprise learner portal is not a
+    role. Neither enterprise denial code is emitted by openedx-platform;
+    both come from the edx-enterprise plugin's `CourseStartDateValidationFailed`
+    filter (`enterprise/filters/courseware.py`), and the portal URL is that
+    plugin's deployment, not an Open edX destination. `ENTERPRISE_LEARNER_PORTAL_URL`
+    stays a plain URL key in Learning's app config, unset by default as the
+    `.env` ships it; when unset, the enterprise denial falls back to the
+    dashboard redirect the plain course-not-started case uses (on `master`
+    the unset case calls `location.assign('')` and reloads into the same
+    denial). The enterprise redirect and the enterprise-only access-denied
+    page (#2192) are the two branches Learning carries for that filter and
+    are deprecation candidates together, decided outside the port. The one
+    role is discussions. The discussions role id is `org.openedx.frontend.role.discussions`
     (named 2026-10-20 with the discussion redirect; the destination-named
     form of `dashboard`, `profile`, `courses`), used by #2199 and the
     redirect route.
