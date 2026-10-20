@@ -22,3 +22,4 @@
 | live-tab | issue-body-live-tab.md | openedx/frontend-app-learning#2203 | settled |
 | discussion-redirect | issue-body-discussion-redirect.md | openedx/frontend-app-learning#2204 | settled |
 | redirect-landing | issue-body-redirect-landing.md | openedx/frontend-app-learning#2205 | settled |
+| goal-unsubscribe | issue-body-goal-unsubscribe.md | | unpublished |
