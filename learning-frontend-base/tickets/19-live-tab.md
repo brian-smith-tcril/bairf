@@ -7,7 +7,7 @@
 **Blocked by:** 03
 
 **Status:** ready-for-agent
-**Upstream:** unpublished `issue-body-live-tab.md`
+**Upstream:** openedx/frontend-app-learning#2203
 
 - [ ] Live renders with a provider configured in the LMS; the manual-testing record includes the setup recipe
 - [ ] Types, lint and tests of the new package pass; master's legacy workflow stays green; `npm run dev` from the new package serves every route ported so far
