@@ -14,7 +14,6 @@ Files port from the legacy `src/` tree to the same relative path under `frontend
 
 - The live tab ([`src/course-home/live-tab/`](https://github.com/openedx/frontend-app-learning/tree/master/src/course-home/live-tab)): one component that renders through the tab-page frame with the `lti_live` tab active and injects the iframe markup the LMS returns, sizing the embedded iframe to the viewport once it is in the document.
 - The live query, its key and API function, into the course-home data module that #2189 established, as #2190 did for progress. The API reads `/api/course_live/iframe/<course id>/` on the LMS; the markup is absent when live is disabled for the course, and a 404 answers as an empty object, so the tab renders empty rather than erroring. `LMS_BASE_URL` becomes the site config's `lmsBaseUrl`; the tab reads no other config.
-- The page renders through the timer wrapper, a pass-through until #2198.
 
 ## What makes the tab appear
 
