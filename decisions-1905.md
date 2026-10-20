@@ -290,7 +290,10 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     extras; CW7 course exit. Amended 2026-10-20: the bookmark leaves CW6
     for CW2 (openedx/frontend-app-learning#2196), since the bookmark button
     is the unit title slot's default content and ports with it; ticket 15
-    is folded. Amended 2026-10-20: the streak celebration modal joins CW6
+    is folded. Amended 2026-10-20: the course-exit mode helper and messages
+    (`course-exit/utils.js`, `messages.ts`) port with CW2's unit
+    navigation, which reads them for the next button; CW7 ports the page.
+    Amended 2026-10-20: the streak celebration modal joins CW6
     celebrations (it is rendered by the tab-page frame, which #2189 ported
     without naming it; #2189 now says the frame leaves it out until then),
     and social share (ticket 17) folds into celebrations, since the share
