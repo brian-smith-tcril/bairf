@@ -15,4 +15,4 @@
 | courseware-sequence-unit | issue-body-courseware-sequence-unit.md | openedx/frontend-app-learning#2196 | settled |
 | courseware-outline-sidebar | issue-body-courseware-outline-sidebar.md | openedx/frontend-app-learning#2197 | settled |
 | courseware-exams | issue-body-courseware-exams.md | openedx/frontend-app-learning#2198 | settled |
-| courseware-auxiliary-sidebar | issue-body-courseware-auxiliary-sidebar.md | | unpublished |
+| courseware-auxiliary-sidebar | issue-body-courseware-auxiliary-sidebar.md | openedx/frontend-app-learning#2199 | in-review |
