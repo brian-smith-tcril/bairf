@@ -225,6 +225,16 @@ Settled 2026-10-19, while charting the wayfinder map.
     dropped under that DEPR and the variable has no frontend-base
     equivalent. The two roles are discussions and the enterprise learner
     portal.
+    Amended 2026-10-19 (auxiliary sidebar): the discussions widget keeps its
+    iframe, built from the role-resolved URL plus `inContextSidebar`, the
+    parameter that tells the discussions app it is in a sidebar. An
+    installed, converted discussions app is a drop-in for the external route
+    as long as it keeps honoring that parameter; an iframe of an in-site
+    route otherwise loads the whole shell inside the shell. Replacing the
+    iframe (the installed app rendering its own panel, plausibly by
+    inserting a widget into the auxiliary sidebar slot) is for the
+    discussions conversion or a follow-up to it, not this effort. The
+    manual test here covers the external-route case only.
 
 25. **Config table reviewed; `SESSION_COOKIE_DOMAIN` is an app config key.**
     The 52-row table in wayfinder ticket 02 stands with the precedents its
