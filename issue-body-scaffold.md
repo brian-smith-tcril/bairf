@@ -10,41 +10,151 @@ Part of #1905.
 <details>
 <summary> Claude Plan </summary>
 
+## Baseline
+
+- The `frontend-base` branch was created on 2026-10-21 at `50faa452`, identical to `master`. Codecov reports that commit at 96.15% line coverage (6011 lines, 5780 hits, 368 files). The per-directory numbers, from the same codecov report, are at the end of this plan.
+- The template is frontend-template-application `main` at `9ffc229`. Its peer range for frontend-base, `^2.0.0-alpha || 0.0.0-dev`, is kept; the current alpha is 2.0.0-alpha.15, which catalog pins.
+
 ## Layout
 
 - `frontend-base/` is a self-contained npm package: its own `package.json`, `package-lock.json`, `jest.config.js`, `tsconfig.json`, `eslint.config.js`, `site.config.{dev,test,ci}.tsx`, `src/`. The root files stay `master`'s.
-- The legacy tree under `src/` is never edited on the branch. Later issues port files from it into `frontend-base/src/` at the same relative path, and record each move in `frontend-base/manifest.tsv`.
+- The legacy tree under `src/` is never edited on the branch. Later issues port files from it into `frontend-base/src/` at the same relative path, and record each move in `frontend-base/manifest.tsv`: one line per legacy path per target, tab separated, sorted by legacy path; a split is several lines with the same left side, a merge several lines with the same right side; `dropped` is the target of a file that is not ported. At the swap every file under `src/` must appear on the left side of a line.
 - Node resolves modules upward, so a dependency missing from `frontend-base/` could resolve from a root `node_modules`. CI for the new package therefore runs with no root install present.
-
-## Steps
-
-1. Add `frontend-base/` as a copy of frontend-template-application `main`, unchanged apart from removing the template's own repository metadata.
-2. Add `.github/workflows/frontend-base.yml`, copied from the template's [`ci.yml`](https://github.com/openedx/frontend-template-application/blob/main/.github/workflows/ci.yml), with `defaults.run.working-directory: frontend-base`, `node-version-file: frontend-base/.nvmrc`, and `paths` filters on `frontend-base/**` and the workflow file. The coverage step uploads with `flags: frontend-base` from `frontend-base/coverage`, configured by `frontend-base/codecov.yml` through the action's `codecov_yml_path` input. Add a throwaway test to prove the workflow and the flag run from the subdirectory.
-3. Remove the throwaway test.
-4. Replace the template's names with Learning's: package name `@openedx/frontend-app-learning`; `appId` `org.openedx.frontend.app.learning`; route id prefix `org.openedx.frontend.route.learning.`; role id prefix `org.openedx.frontend.role.` with `learning` as the root role; site config with the required fields (`siteId`, `siteName`, `baseUrl`, `lmsBaseUrl`, `loginUrl`, `logoutUrl`) and Learning's app registered with an empty route array.
-5. Add `frontend-base/manifest.tsv`, empty apart from a header comment giving the format: one line per legacy path per target, tab separated, sorted by legacy path; several lines for a split or a merge; `dropped` as the target of a file that is not ported.
-
-The pull request squashes on merge; the middle two commits exist to show the verification in review.
+- `master`'s tooling runs on the whole tree: `npm run lint` lints `.` and `.eslintignore` does not list `frontend-base/`; the root jest config has no `roots`, so it would collect `frontend-base/src/*.test.tsx` and fail them (root `tsconfig.json` is scoped to `src/` and needs nothing). Two root files therefore take one additive line each: `frontend-base/` in `.eslintignore`, and `<rootDir>/frontend-base/` in the root `jest.config.js` ignore patterns. Neither file is touched by renovate (`.eslintignore` last changed in 2024; `jest.config.js` by #2168). The swap at the end of #2185 removes both with the rest of the root config.
+- The template copy drops the template repository's own metadata: `catalog-info.yaml`, both READMEs (the package README is written at the swap, when the root README is modernized), `.github/` (its `ci.yml` becomes the root workflow below; the rest already exist at the root or act on the repository), `renovate.json` (renovate reads root config only) and `docs/` (the template's own ADRs). Everything else is kept as the template ships it, including `LICENSE`, `.releaserc`, `.nvmrc` (24, same as the root), the `Makefile`, the tool configs and the committed lockfile.
 
 ## Coverage policy
 
-- The flag's project target is a literal equal to `master`'s project coverage at branch creation, not `auto`, so every later change is held to `master`'s bar and the eventual merge to `master` is not the first comparison.
-- The legacy upload from `validate.yml` stays unflagged; the PR comment's combined number is noise, the flag's status check is the number to read.
-- This issue also records `master`'s coverage per source directory at branch creation. A whole-tree number can hide a poorly covered port, so each later port compares its directory against that baseline.
+- The bar is enforced by jest, not codecov: a `coverageThreshold` of `lines: 96.15` in `frontend-base/jest.config.js`, so `npm test` fails locally and in CI when the package's line coverage drops under `master`'s number at branch creation. Every later change is held to `master`'s bar and the eventual merge to `master` is not the first comparison. Codecov's `codecov_yml_path` input only serves automated test selection, and a flag status would need a root `codecov.yml` edit with carryforward rules; the jest threshold needs neither. It is removed in the swap at the end of #2185, since an absolute target is not a policy `master` has.
+- The package's upload carries the `frontend-base` flag and the legacy upload from `validate.yml` stays unflagged; the PR comment's combined number is noise, the flag's number on codecov is informational.
+- Each later port adds its directory's baseline from the table below to the threshold's per-path map, beside its manifest lines. A whole-tree number can hide a poorly covered port.
+- A partial local run (`npm run test -- <path>`) collects coverage for all of `src/` and trips the global threshold; partial runs pass `--coverage=false`.
+
+## Commits
+
+The pull request squashes on merge; the middle two commits exist to show the verification in review.
+
+1. **Add the package.** `frontend-base/` as the template copy described above, plus the two root ignore lines. Checked by `npm ci`, `npm run lint`, `npm test`, `npm run build` and `npm run build:ci` from inside `frontend-base/` with no root `node_modules`, then the root `npm ci && make validate` green with the ignore lines (and red without them, which is the evidence for them).
+2. **Add the workflow and a throwaway test.** `.github/workflows/frontend-base.yml`, copied from the template's [`ci.yml`](https://github.com/openedx/frontend-template-application/blob/main/.github/workflows/ci.yml), with `on.push.branches: [frontend-base]`, `paths` filters on `frontend-base/**` and the workflow file, `defaults.run.working-directory: frontend-base` and `node-version-file: frontend-base/.nvmrc`. The codecov step is a `uses:` step, which `defaults.run` does not cover, so it gets `working-directory: frontend-base` and `flags: frontend-base`. A throwaway test file proves the workflow and the flag run from the subdirectory; this commit is pushed and the run and the flag are read before the next.
+3. **Remove the throwaway test.**
+4. **Give the package Learning's identity.** Package name `@openedx/frontend-app-learning` with its description, repository, homepage and bugs fields; `atlasTranslations.path` `translations/frontend-app-learning/src/i18n/messages`; `dev` script `PORT=2000 PUBLIC_PATH=/learning openedx dev` (catalog's shape, the port from `master`'s `.env.development`); `appId` `org.openedx.frontend.app.learning`; route id prefix `org.openedx.frontend.route.learning.`; role id prefix `org.openedx.frontend.role.` with `learning` as the root role; `routes.tsx` and `slots.tsx` export empty arrays; `index.ts` exports `learningApp` and `learningRoutes`; `Main.tsx` and its page-title message keep the template's shape under Learning's name (the route tree that mounts it is #2188); the template's example page, example slot and example header widget are deleted, the `slots/` and `widgets/` READMEs stay as the directory contracts; `public/index.html` titled for Learning; the three `site.config.*.tsx` carry the required fields (`siteId`, `siteName`, `baseUrl`, `lmsBaseUrl`, `loginUrl`, `logoutUrl`) and register Learning's app with an empty route array and no `config`: a key goes in `defaultConfig` only when it has a real default, since a key set in the app's own `config` cannot be overridden by a site's `commonAppConfig` (openedx/frontend-app-catalog#156), and each key arrives with its first reader. The coverage threshold is set here, with one test of the exported app (its `appId` and empty `routes`) so the entry files no page test imports are covered and the package meets its own bar. `npm run dev` is checked to serve the shell; with no routes, the shell's home redirect and not-found page are the whole observable.
+5. **Add the empty provenance manifest.** `frontend-base/manifest.tsv` with a header comment giving the format above.
+
+## Stack
+
+The layer is the bottom of the epic's stack: branch `bsmith/scaffold` on openedx/frontend-app-learning, targeting `frontend-base`, opened as a draft. Commit 2 is pushed on its own so the workflow run is visible; commits 3 to 5 follow.
+
+## Verification environment
+
+The manual-testing record documents the environment every later layer reuses: a frontend-template-site checkout with `packages/frontend-app-learning` bind-mounted from this repository's `frontend-base/` directory (the site's README: symlinks break hoisted resolution, so local checkouts go directly under `packages/` or are bind-mounted), `@openedx/frontend-app-learning` added to the site's dependencies at `0.0.0-dev`, `learningApp` listed in its `site.config.dev.tsx`, and `npm run dev:packages` against a Tutor dev stack. For this layer the observation is that the site builds with Learning installed and the shell renders; no Learning route exists yet.
 
 ## Not in scope
 
-- Routes, roles, `provides`, providers, slots, header, any ported file. The route tree, with a stub route per page, is the next issue.
-- Any change to `validate.yml`, the root `package.json`, `codecov.yml` or any other `master`-owned file.
+- Routes, roles, `provides`, providers, slots, header, any ported file. The route tree, with a stub route per page, is #2188.
+- Any change to `validate.yml`, the root `package.json`, `codecov.yml` or any other `master`-owned file beyond the two ignore lines above.
 - The template's `release.yml`; publishing is #2185's and would publish the branch.
 
 ## Acceptance
 
 - [ ] `npm run dev`, `npm test`, `npm run build` and `npm run lint` succeed from inside `frontend-base/` with no root `node_modules`
-- [ ] The new workflow runs on changes under `frontend-base/`; no `master`-owned workflow file is modified
-- [ ] Coverage uploads under the `frontend-base` flag with the absolute target set; verified by the throwaway-test commits, then removed
+- [ ] The new workflow runs on changes under `frontend-base/`; no `master`-owned workflow file is modified; `master`'s `validate.yml` run stays green with the package in the tree
+- [ ] Coverage uploads under the `frontend-base` flag, verified by the throwaway-test commits, then removed; the jest threshold is set at 96.15 and the package meets it
 - [ ] Learning's identity replaces the template's everywhere in the package; site config carries the required fields and registers the app
 - [ ] `frontend-base/manifest.tsv` exists with its format documented
-- [ ] `master`'s per-directory coverage at branch creation is recorded as the baseline for later ports
+- [ ] `master`'s per-directory coverage at branch creation is recorded as the baseline for later ports (below)
+
+## Coverage baseline: `master` at `50faa452`, codecov line coverage
+
+<details>
+<summary>Per directory</summary>
+
+| directory | lines | hits | coverage |
+|---|---:|---:|---:|
+| `src/alerts` | 222 | 198 | 89.19% |
+| `src/alerts/access-expiration-alert` | 49 | 32 | 65.31% |
+| `src/alerts/active-enteprise-alert` | 17 | 17 | 100.00% |
+| `src/alerts/course-start-alert` | 38 | 38 | 100.00% |
+| `src/alerts/enrollment-alert` | 51 | 51 | 100.00% |
+| `src/alerts/logistration-alert` | 45 | 38 | 84.44% |
+| `src/alerts/sequence-alerts` | 22 | 22 | 100.00% |
+| `src/course-home` | 1943 | 1865 | 95.99% |
+| `src/course-home/courseware-search` | 239 | 238 | 99.58% |
+| `src/course-home/data` | 278 | 277 | 99.64% |
+| `src/course-home/dates-tab` | 124 | 122 | 98.39% |
+| `src/course-home/discussion-tab` | 15 | 12 | 80.00% |
+| `src/course-home/goal-unsubscribe` | 35 | 35 | 100.00% |
+| `src/course-home/live-tab` | 13 | 13 | 100.00% |
+| `src/course-home/outline-tab` | 604 | 566 | 93.71% |
+| `src/course-home/progress-tab` | 577 | 545 | 94.45% |
+| `src/course-home/suggested-schedule-messaging` | 58 | 57 | 98.28% |
+| `src/course-tabs` | 48 | 48 | 100.00% |
+| `src/courseware` | 2311 | 2244 | 97.10% |
+| `src/courseware/course` | 1782 | 1735 | 97.36% |
+| `src/courseware/data` | 338 | 329 | 97.34% |
+| `src/courseware/social-share` | 33 | 25 | 75.76% |
+| `src/data` | 43 | 34 | 79.07% |
+| `src/decode-page-route` | 22 | 22 | 100.00% |
+| `src/generic` | 308 | 284 | 92.21% |
+| `src/generic/notices` | 26 | 14 | 53.85% |
+| `src/generic/path-fixes` | 8 | 8 | 100.00% |
+| `src/generic/plugin-overrides` | 26 | 26 | 100.00% |
+| `src/generic/special-exams` | 13 | 13 | 100.00% |
+| `src/generic/tabs` | 38 | 37 | 97.37% |
+| `src/generic/upgrade-bullets` | 14 | 14 | 100.00% |
+| `src/generic/upgrade-button` | 29 | 28 | 96.55% |
+| `src/generic/user-messages` | 88 | 79 | 89.77% |
+| `src/instructor-toolbar` | 155 | 147 | 94.84% |
+| `src/instructor-toolbar/masquerade-widget` | 113 | 105 | 92.92% |
+| `src/pacts` | 6 | 6 | 100.00% |
+| `src/plugin-slots` | 206 | 205 | 99.51% |
+| `src/plugin-slots/BannerDatesUpgradeSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/ContentIFrameErrorSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/ContentIFrameLoaderSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/CourseBreadcrumbsSlot` | 4 | 4 | 100.00% |
+| `src/plugin-slots/CourseExitPluginSlots` | 34 | 33 | 97.06% |
+| `src/plugin-slots/CourseHomeSectionOutlineSlot` | 7 | 7 | 100.00% |
+| `src/plugin-slots/CourseOutlineMobileSidebarTriggerSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/CourseOutlineSidebarCompletionIconSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/CourseOutlineSidebarHeadingSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/CourseOutlineSidebarSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/CourseOutlineSidebarTriggerSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/CourseOutlineSidebarUnitSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/CourseOutlineTabNotificationsSlot` | 4 | 4 | 100.00% |
+| `src/plugin-slots/CourseTabLinksSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/CourseTabsNavigationSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/GatedUnitContentMessageSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/HeaderSlot` | 4 | 4 | 100.00% |
+| `src/plugin-slots/LearnerToolsSlot` | 10 | 10 | 100.00% |
+| `src/plugin-slots/NextUnitTopNavTriggerSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/ProgressCertificateStatusSlot` | 3 | 3 | 100.00% |
+| `src/plugin-slots/ProgressTabCertificateStatusMainBodySlot` | 6 | 6 | 100.00% |
+| `src/plugin-slots/ProgressTabCertificateStatusSidePanelSlot` | 6 | 6 | 100.00% |
+| `src/plugin-slots/ProgressTabCourseCompletionSlot` | 7 | 7 | 100.00% |
+| `src/plugin-slots/ProgressTabCourseGradeSlot` | 3 | 3 | 100.00% |
+| `src/plugin-slots/ProgressTabGradeBreakdownSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/ProgressTabRelatedLinksSlot` | 3 | 3 | 100.00% |
+| `src/plugin-slots/RightSidebarSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/RightSidebarTriggerSlot` | 5 | 5 | 100.00% |
+| `src/plugin-slots/SequenceBottomNavigationSlot` | 6 | 6 | 100.00% |
+| `src/plugin-slots/SequenceContainerSlot` | 4 | 4 | 100.00% |
+| `src/plugin-slots/SequenceNavigationSlot` | 3 | 3 | 100.00% |
+| `src/plugin-slots/SubmittedTimedExamInstructionsSlot` | 11 | 11 | 100.00% |
+| `src/plugin-slots/UnitTitleSlot` | 11 | 11 | 100.00% |
+| `src/preferences-unsubscribe` | 29 | 29 | 100.00% |
+| `src/preferences-unsubscribe/data` | 5 | 5 | 100.00% |
+| `src/product-tours` | 185 | 178 | 96.22% |
+| `src/product-tours/data` | 32 | 29 | 90.62% |
+| `src/product-tours/newUserCourseHomeTour` | 30 | 30 | 100.00% |
+| `src/shared` | 230 | 218 | 94.78% |
+| `src/shared/data` | 74 | 66 | 89.19% |
+| `src/shared/effort-estimate` | 23 | 21 | 91.30% |
+| `src/shared/streak-celebration` | 90 | 89 | 98.89% |
+| `src/tab-page` | 108 | 108 | 100.00% |
+| `src/tests` | 33 | 33 | 100.00% |
+| `src/widgets` | 116 | 116 | 100.00% |
+| `src/widgets/discussions` | 42 | 42 | 100.00% |
+| `src/widgets/upgrade` | 74 | 74 | 100.00% |
+
+</details>
 
 </details>

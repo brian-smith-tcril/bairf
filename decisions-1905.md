@@ -91,6 +91,17 @@ Settled 2026-10-19, while charting the wayfinder map.
     `package.json` files is Node's upward module resolution: CI for the new
     package runs with no root install present so a missing dependency cannot
     resolve from the root `node_modules`.
+    Amended 2026-10-21: two root files take one additive line each, because
+    master's tooling runs on the whole tree: `npm run lint` is
+    `fedx-scripts eslint ... .` and `.eslintignore` does not list
+    `frontend-base/`; frontend-build's jest config sets `rootDir` to the
+    working directory with no `roots` or ignore patterns, so it would collect
+    `frontend-base/src/*.test.tsx` and fail them. `.eslintignore` gains
+    `frontend-base/` and the root `jest.config.js` ignores
+    `<rootDir>/frontend-base/`. Root `tsconfig.json` needs nothing; its
+    `include` is scoped to `src/`, `plugins/` and root `*.js`. Neither file is
+    touched by renovate (`.eslintignore`: three commits ever, last 2024;
+    `jest.config.js`: last 2026-10-15), so the rebase argument stands.
 
 12. **Rebase, not merge.** `frontend-base` is rebased on `master` and
     force-pushed; Brian is the only one pushing it and the open stack is
@@ -121,6 +132,11 @@ Settled 2026-10-19, while charting the wayfinder map.
 15. **The swap is the last commit of epic 2.** Delete `src/` and the root
     config, move `frontend-base/` to the root, add the template's
     `release.yml` with a `master` trigger. Nothing rebases after it.
+    Amended 2026-10-21: the swap also removes the branch-only coverage bar,
+    the `coverageThreshold` in the package's `jest.config.js` (decision 17),
+    since an absolute target is not a policy master has (master's codecov
+    status is `auto` against the base commit). The two root ignore lines from
+    decision 11 go with the root config they live in.
 
 16. **CI is one new workflow file.** `.github/workflows/frontend-base.yml`,
     copied from frontend-template-application's `ci.yml`, with
@@ -144,6 +160,24 @@ Settled 2026-10-19, while charting the wayfinder map.
     branch creation; this stays manual, since per-directory thresholds in
     codecov would be a maintenance burden across 34 slot directories and
     nine route areas.
+    Amended 2026-10-21: the bar is a jest `coverageThreshold` in the
+    package's `jest.config.js`, not a codecov status. `codecov_yml_path` is
+    "ONLY used for automated test selection" (codecov-action `action.yml`);
+    the YAML must sit at the repository root, `dev/` or `.github/`, so a
+    flag status would be a root `codecov.yml` edit, needing a
+    `flag_management` carryforward block for PRs that upload no flag, and
+    an unwind at the swap. The jest threshold fails `npm test` locally and
+    in CI, uses the same lcov line numbers codecov reports, and takes a
+    per-path map, so the per-directory check stops being manual: each port
+    PR adds its directory's baseline line beside its manifest lines, read
+    from `coverage-baseline-master.tsv` in the effort worktree (codecov's
+    line coverage of master @ `50faa452`, project 96.15%). The global
+    threshold is `lines: 96.15`. The upload still carries
+    `flags: frontend-base`, so codecov shows the package's number
+    separately; it is informational. Cost accepted: a partial local run
+    (`npm run test -- <path>`) collects coverage for all of `src/` and trips
+    the global threshold, so partial runs pass `--coverage=false`. Removed
+    at the swap (decision 15).
 
 18. **Unit of a port.** One route-level page per PR, with what only it
     uses; shared code moves with its first consumer. A page too big for one
