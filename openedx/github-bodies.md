@@ -4,8 +4,9 @@ Every body is drafted in the effort worktree first and applied with `--body-file
 
 ## The worktree docs a body is built from
 
-- `plan-<issue>.md`: planning for an issue, written after the issue is approved.
-- `decisions-<issue>.md`: the layer's settled decisions, numbered entries, grounded in merged code and public issue numbers (unpushed branches are never referenced). Embedded whole in the PR.
+- `decisions-<effort>.md` (named by the epic or task number): the effort-level decision log, numbered entries. Stays in the worktree; never embedded or cited by number outside it. An issue that rests on one of its entries restates the entry whole in its body's plan, scrubbed of effort-only references (wayfinder tickets, worktree files, scripts).
+- `plan-<issue>.md`: planning for an issue, written after the issue is approved. Private, so it may cite effort-level decisions by number.
+- `decisions-<issue>.md`: the decisions made while implementing the layer, numbered entries, grounded in merged code and public issue numbers (unpushed branches are never referenced). An inherited effort-level decision is named by the issue's own wording ("the coverage policy in #2187"), never by its number. Embedded whole in the PR.
 - `manual-testing-<issue>.md`: what was observed in the browser per step on tutor dev, written during the layer's manual pass. A step done in frontend-app-authoring names the control the way its UI does ("Open edX" discussions provider), not the platform setting or API value behind it; the API value goes in parentheses only when it helps read a response. Embedded whole in the PR.
 - `issue-body-<slug>.md`, `pr-body-<n>.md`: the bodies themselves.
 
