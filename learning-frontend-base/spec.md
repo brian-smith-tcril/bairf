@@ -89,7 +89,7 @@ The done criterion for a layer is decision 8: types, lint and tests of the new p
 
 ## Out of Scope
 
-- Porting plugin slots to the Slot API, slot id renaming, the swap of the new package to the repository root, publishing to npm, inclusion in frontend-template-site and tutor-mfe, and the merge of `frontend-base` into `master`: #2185.
+- Porting plugin slots to the Slot API and slot id renaming: #2185. (The swap, the merge of `frontend-base` into `master`, publishing, and inclusion in frontend-template-site and tutor-mfe were #2185's until 2026-10-21 and are this epic's close-out.)
 - Splitting tabs into widgets and the shared-query-key and `provides` experiment: #2186.
 - Deciding on this map that any feature is dropped; drops are decided in the PR that would otherwise port the feature, with a DEPR filed after (decision 9).
 - Breadcrumbs and the unit tab strip as rendered content; they are operator plugins today and return with #2185.

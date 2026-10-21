@@ -18,6 +18,11 @@ Settled 2026-10-18, before implementation.
    branch merges to `master` at the end of epic 2, so publishing to NPM,
    inclusion in frontend-template-site and inclusion in tutor-mfe are epic 2
    exit criteria and move off #1905's list.
+   Amended 2026-10-21 (landing moved): the branch lands on `master` at the end of
+   epic 1, agreed between Brian and arbrandes on 2026-10-21, so publishing,
+   frontend-template-site inclusion and tutor-mfe inclusion return to #1905's
+   exit criteria. The FWG's "initial conversion" still completes with #2185,
+   on `master`.
 
 3. **Epic 1 breaks every slot on purpose.** Each slot module keeps its file
    and name and renders its default content in a bare fragment, with no
@@ -31,6 +36,13 @@ Settled 2026-10-18, before implementation.
    wayfinder ticket 03; "45" was a grep line count) lose that contract in
    epic 1; the
    `frontend-base` branch absorbs the break until epic 2 restores each slot.
+   Amended 2026-10-21 (landing moved): `master` carries the break from the landing until
+   #2185 restores each slot, and a `legacy-mfe` branch cut from the last
+   pre-swap `master` carries the old behavior, as every converted app did.
+   Two of the parked items are more than a slot rendering its default:
+   `SIDEBAR_WIDGETS` registration stops doing anything (decision 33) and the
+   upgrade widget is absent. The swap PR's breaking section names both
+   beside the slots; the DEPRs of decision 9 are filed after the landing.
 
 4. **Header and footer are shell concerns, not ported slots.** The header
    and footer slots and the five direct imports of
@@ -41,9 +53,15 @@ Settled 2026-10-18, before implementation.
 5. **PR targets.** Epic 1 and epic 2 PRs target the `frontend-base` branch
    on openedx/frontend-app-learning. The closing PR of epic 2 merges
    `frontend-base` into `master`. Epic 3 PRs target `master`.
+   Amended 2026-10-21 (landing moved): epic 1 PRs target `frontend-base`; the
+   closing PR of epic 1 merges `frontend-base` into `master`; epic 2 and
+   epic 3 PRs target `master`.
 
 6. **This effort covers epics 1 and 2.** Epic 3 gets its own effort once
    the branch has landed on `master`.
+   Amended 2026-10-21 (landing moved): this effort covers epic 1 through the
+   landing. Epics 2 and 3 each get their own effort, since both now sit on
+   `master` after the landing.
 
 Settled 2026-10-19, while charting the wayfinder map.
 
@@ -74,6 +92,15 @@ Settled 2026-10-19, while charting the wayfinder map.
    `packages/*` glob would pick up the legacy root `package.json`, so the
    layout (an explicit `workspaces` path, or a checkout outside the glob)
    is settled at close-out.
+   Amended 2026-10-21 (landing moved): done also requires the landing: a
+   `legacy-mfe` branch cut from the last pre-swap `master`; a tutor-mfe PR,
+   merged before the swap, adding `alternate_master: "legacy-mfe"` to
+   Learning's entry in `CORE_MFE_APPS` (every converted app has one; without
+   it tutor's nightly builds the new `master` as a webpack MFE) and listing
+   Learning in the site target's config; the swap adding the template's
+   `release.yml` and `.releaserc` with `master` in place of `main`, so the
+   alpha channel publishes as the other apps do; and the
+   frontend-template-site default-config PR after the first publish.
 
 9. **Breaking changes are decided in PRs, not on the map.** As in the React
    Query epic, a feature the branch stops carrying ships as a `refactor!:`
@@ -146,6 +173,8 @@ Settled 2026-10-19, while charting the wayfinder map.
     since an absolute target is not a policy master has (master's codecov
     status is `auto` against the base commit). The two root ignore lines from
     decision 11 go with the root config they live in.
+ Amended 2026-10-21 (landing moved): the swap is the last commit of epic 1,
+    in the PR that merges `frontend-base` into `master`.
 
 16. **CI is one new workflow file.** `.github/workflows/frontend-base.yml`,
     copied from frontend-template-application's `ci.yml`, with
