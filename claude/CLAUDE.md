@@ -79,6 +79,7 @@ Applies when the repo is under the `openedx` org or a fork of one.
 
 - Upstream is the repo a fork was forked from, whatever its remote is called here (`git remote -v`). Its default branch is read, not assumed (`gh repo view <owner>/<repo> --json defaultBranchRef`); a fork's can differ from upstream's. Branches push to the fork whenever that works; a branch pushed to upstream itself carries the `bsmith/` prefix.
 - Stacked PRs through the `gh-stack` skill, house rules in `openedx/stacked-prs.md`.
+- Commit messages: what the repo's commitlint check enforces, found as `openedx/commits.md` says.
 - Issue and PR body shapes, disclosure forms and sub-issue linking: `openedx/github-bodies.md`.
 - Code conventions for frontend apps: `openedx/frontend-app-code.md`.
 - Tutor dev facts: `openedx/tutor-dev.md`.
