@@ -65,6 +65,15 @@ Settled 2026-10-19, while charting the wayfinder map.
    exercised by hand in the verification environment and the observations
    are in the PR's manual-testing record; a behavior the manual pass finds
    untested gets its test in the same PR.
+   Amended 2026-10-21: per-layer manual testing runs on the package's own
+   `npm run dev` site (shell, header, footer and Learning, against tutor
+   dev), the way the converted apps are developed. The template-site
+   composition is the epic's close-out check only. Never a bind mount into
+   the site's `packages/`: a checkout or a git worktree goes there directly,
+   and because the package is a subdirectory of its repository, the site's
+   `packages/*` glob would pick up the legacy root `package.json`, so the
+   layout (an explicit `workspaces` path, or a checkout outside the glob)
+   is settled at close-out.
 
 9. **Breaking changes are decided in PRs, not on the map.** As in the React
    Query epic, a feature the branch stops carrying ships as a `refactor!:`
