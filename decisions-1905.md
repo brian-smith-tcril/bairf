@@ -291,6 +291,17 @@ Settled 2026-10-19, while charting the wayfinder map.
     deviates says why in its PR. Profile's Pact test runs under
     frontend-base by pointing the provider at `mergeSiteConfig`, so Pact is
     a per-port check, not an open question.
+    Amended 2026-10-22 (openedx/frontend-app-learning#2188): route-level
+    tests render the exported route array through `createMemoryRouter`,
+    the data-router twin of the shell's `createBrowserRouter`, so `lazy`
+    routes and loaders run in tests; the package's jest environment
+    (`jest.environment.js`) forwards Node's Fetch classes into jsdom for
+    that, since jsdom has none and the data router builds a `Request`.
+    Page tests ported from `master` keep their component-router seams
+    (`MemoryRouter` with the page mounted on its own path patterns); the
+    redirect layers' loaders are unit-tested directly, which needs the
+    same globals for the `Response` that `redirect()` returns. Sources
+    and the rejected `whatwg-fetch` are in the layer's decision log.
 
 24. **Cross-app URLs are route roles.** `DISCUSSIONS_MFE_BASE_URL`,
     `ENTERPRISE_LEARNER_PORTAL_URL` and `INSIGHTS_BASE_URL` become
