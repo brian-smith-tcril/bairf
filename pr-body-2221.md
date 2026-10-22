@@ -95,8 +95,8 @@ the test approach are in #2188's plan and are not repeated.
    the shell's and is checked on the dev site.
 
 3. **Four page roles, named with the glossary; route ids share the page
-   key.** The plan listed six roles. Live and course exit lost theirs
-   (effort decision 31, amended 2026-10-22): a role is a promise that
+   key.** The plan listed six roles. Live and course exit lost theirs,
+   by the rule #2188's plan states: a role is a promise that
    another app may resolve it to link there, live is reached only from
    the course bar (which navigates by the tab URLs `course_metadata`
    supplies, not by role) and course exit only from inside courseware.
