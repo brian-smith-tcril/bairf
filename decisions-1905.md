@@ -60,14 +60,15 @@ Settled 2026-10-18, before implementation.
    targets the default branch, and linked issues auto-close only on merge
    into it. GitHub Docs, "Linking a pull request to an issue"
    (https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue),
-   section "Linking a pull request to an issue using a keyword": "If the
-   pull request targets any other branch, then these keywords are
-   ignored"; section "About linked issues and pull requests": "When you
-   merge a linked pull request into the default branch of a repository,
-   its linked issues are automatically closed"; section "Manually linking
-   a pull request or branch to an issue": "Anyone with write permissions
-   to a repository can manually link a pull request to an issue from the
-   pull request sidebar." So for every PR against `frontend-base`, the
+   section "About linked issues and pull requests": "When you merge a
+   linked pull request into the default branch of a repository, its linked
+   issue is automatically closed", and its note: "If the pull request
+   targets any other branch, then these keywords are ignored, no links are
+   created, and merging the PR [...]"; section "Manually linking a pull
+   request to an issue using the pull request sidebar": "Anyone with write
+   permissions to a repository can manually link a pull request to an
+   issue from the pull request sidebar." So for every PR against
+   `frontend-base`, the
    "Resolves #N" line stays for readers, Brian links the issue by hand from
    the PR sidebar when the draft goes up (no API for that link), and the
    issue is closed by hand when the PR merges. The swap PR into `master` is
