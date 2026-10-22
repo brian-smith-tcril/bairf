@@ -20,7 +20,7 @@ Part of #1905.
 
 - `jest-fail-on-console` as a dev dependency of `frontend-base/`, called once in `src/setupTest.js`, which `jest.config.js` already lists in `setupFilesAfterEnv`. Defaults do what the issue asks: a test fails when it calls `console.error` or `console.warn`; `console.log`, `info`, `debug` and `assert` are left alone.
 - `silenceMessage` returns true for a message starting with `⚠️ React Router Future Flag Warning`, so those two messages neither print nor fail. `silenceMessage` rather than `allowMessage`, because `allowMessage` keeps printing ("the message will show in the console and the test won't fail"), and the point is a silent suite. The matcher carries a comment naming openedx/frontend-base#325 and saying the entry goes when that is resolved. This list is the only place tolerated output lives; a later entry needs the same comment saying whose warning it is.
-- A test whose point is the output mutes the console for that test, the README's own recommendation: `jest.spyOn(console, 'error').mockImplementation(() => {})` in the test, restored by the automatic mock restore, with the call asserted where the message is the behavior under test. The convention is written as a comment in `setupTest.js` so a port finds it where the hook is.
+- A test whose point is the output mutes the console for that test, the README's own recommendation: `jest.spyOn(console, 'error').mockImplementation(() => {})` in the test and `mockRestore()` at its end (the jest config does not restore mocks automatically), with the call asserted where the message is the behavior under test. The convention is written as a comment in `setupTest.js` so a port finds it where the hook is.
 
 ## Commits
 
