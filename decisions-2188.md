@@ -48,10 +48,16 @@ the test approach are in #2188's plan and are not repeated.
    can hand over the classes Node already ships, the same implementation,
    with no dependency and the version pinned by `.nvmrc`. The pattern is
    `jest-fixed-jsdom`'s (mswjs), whose export-conditions change is not
-   taken. `jest.config.js` points `testEnvironment` at the file,
-   `tsconfig.json` includes it beside the other config files, and
-   `eslint.config.js` allows `require` in it as the base config does for
-   `jest.config.js`.
+   taken. The file is an ES module, `jest.environment.mjs`, which jest 29
+   loads as a test environment (checked by running the suite), so it
+   needs no `require` and therefore no exception in `eslint.config.js`,
+   which stays the template's shape like every converted app's; a
+   CommonJS version would have needed an override, since the base lint
+   config exempts only `babel.config.js`, `jest.config.js` and
+   `eslint.config.js` from the `require` rule. `jest.config.js` points
+   `testEnvironment` at the file and `tsconfig.json` includes it beside
+   the other config files, which is what lets the TypeScript project
+   service parse it for lint.
 
 2. **No unmatched-path test.** Rendering the array alone at a path no
    child matches reaches react-router's default error boundary, which
