@@ -4,7 +4,7 @@
 | widgetize | issue-body-widgetize.md | openedx/frontend-app-learning#2186 | settled |
 | scaffold | issue-body-scaffold.md | openedx/frontend-app-learning#2187 | settled |
 | test-console-noise | issue-body-test-console-noise.md | openedx/frontend-app-learning#2218 | settled |
-| router-future-flags | issue-body-router-future-flags.md | — (openedx/frontend-base) | unpublished |
+| router-future-flags | issue-body-router-future-flags.md | openedx/frontend-base#325 | settled |
 | frame-routes | issue-body-frame-routes.md | openedx/frontend-app-learning#2188 | settled |
 | dates-tab | issue-body-dates-tab.md | openedx/frontend-app-learning#2189 | settled |
 | progress-tab | issue-body-progress-tab.md | openedx/frontend-app-learning#2190 | settled |

@@ -13,7 +13,7 @@ Part of #1905.
 ## Mechanism
 
 - `jest-fail-on-console` as a dev dependency of `frontend-base/`, registered in `src/setupTest.js`: a test that prints to `console.error` or `console.warn` fails with the printed message. `console.log` is not failed; lint keeps it out of `src/` and test-time logging stays available.
-- An allowlist by message, the one place noise is tolerated, each entry with a comment saying whose it is. The first two entries are react-router 6's future flag warnings (`v7_startTransition`, `v7_relativeSplatPath`), printed by any router created without `future` flags. Learning does not create the runtime router, the frontend-base shell does, and the flags change behavior, so whether and when to opt in is frontend-base's call; an issue is filed there to track it, and these two entries go when it is resolved.
+- An allowlist by message, the one place noise is tolerated, each entry with a comment saying whose it is. The first two entries are react-router 6's future flag warnings (`v7_startTransition`, `v7_relativeSplatPath`), printed by any router created without `future` flags. Learning does not create the runtime router, the frontend-base shell does, and the flags change behavior, so whether and when to opt in is frontend-base's call, tracked as openedx/frontend-base#325; these two entries go when it is resolved.
 - A test whose point is the output (an error-boundary test, a "logs on 404" test) mocks `console.error` for that test, which also documents the intent. The convention is stated in the package's test setup file.
 
 ## Test conventions this adds to
@@ -28,7 +28,7 @@ The package's tests follow the converted apps' conventions: each test file mocks
 ## Acceptance
 
 - [ ] `npm test` in `frontend-base/` fails a test that prints an unexpected `console.warn` or `console.error`, demonstrated by a throwaway test in the PR and then removed
-- [ ] The two react-router future flag messages are allowlisted with a comment pointing at the frontend-base issue
+- [ ] The two react-router future flag messages are allowlisted with a comment pointing at openedx/frontend-base#325
 - [ ] The package's suite passes with no console output
 - [ ] The convention for muting the console in a test is written in the setup file
 

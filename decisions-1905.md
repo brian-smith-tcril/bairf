@@ -368,8 +368,8 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     openedx/frontend-app-learning#2218, which makes the package's suite fail
     on unexpected `console.warn` and `console.error` (`jest-fail-on-console`
     in the setup file, an allowlist by message holding only react-router's
-    two future flag warnings until frontend-base decides on the flags, an
-    issue to be filed there). Reason: one run of master's suite prints 2,101
+    two future flag warnings until frontend-base decides on the flags,
+    openedx/frontend-base#325). Reason: one run of master's suite prints 2,101
     console blocks; half vanish by construction under frontend-base and the
     rest are app or test defects that each port fixes, and a failing hook is
     what makes a port fix them rather than carry them. The inventory is
