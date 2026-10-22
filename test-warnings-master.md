@@ -10,7 +10,7 @@ block whose stack reaches the test only through non-test frames is
 "unattributed" and is counted by message.
 
 Package baseline for comparison: `frontend-base/` at `f8a64c1e`, 2 tests,
-2 console blocks, both the react-router future-flag warnings from
+2 console blocks, both the react-router future flag warnings from
 `Main.test.tsx`'s `BrowserRouter`.
 
 ## Inventory, largest first
@@ -24,7 +24,7 @@ Package baseline for comparison: `frontend-base/` at `f8a64c1e`, 2 tests,
 | 134 | error | `[react-bootstrap] Specifying only the "hover" trigger limits the visibility of the overlay to just mouse users` | Paragon `OverlayTrigger` with `trigger="hover"` in `GradeSummaryHeader.jsx:27` and `GradeSummaryTableFooter.jsx:44` | app code, an accessibility warning; fixed in the progress tab port (#2190) with `trigger={['hover', 'focus']}` |
 | 74 | warn | `A function to advance timers was called but the timers APIs are not replaced with fake timers` | `Sequence.specialExams.test.tsx` (72), `index.test.tsx` (2) | test code; fixed in the exams port (#2198): `jest.useFakeTimers()` in the file or drop the advance calls |
 | 66 | error | `Failed prop type: ...` (16 distinct props) | tests rendering components without required props (`NextButton`, `PreviousButton`, `SequenceContent`, `WeeklyGoalCelebrationModal`, `SubsectionTitleCell`, ...) | test code; fixed per file at port time by passing the props the component declares; disappears outright where a component converts to TypeScript and drops `propTypes` |
-| 60 + 60 | warn | React Router future-flag warnings (`v7_startTransition`, `v7_relativeSplatPath`), once per suite that mounts a router | react-router 6.30 on every `BrowserRouter`/`MemoryRouter`/`createBrowserRouter` without `future` flags; 58 suites | see "React Router" below; frontend-base's shell has the same gap at runtime |
+| 60 + 60 | warn | React Router future flag warnings (`v7_startTransition`, `v7_relativeSplatPath`), once per suite that mounts a router | react-router 6.30 on every `BrowserRouter`/`MemoryRouter`/`createBrowserRouter` without `future` flags; 58 suites | see "React Router" below; frontend-base's shell has the same gap at runtime |
 | 40 | error | `An update to <NotificationsTray|MasqueradeWidget|GoalUnsubscribe|Overlay> inside a test was not wrapped in act(...)` | 33 from `NotificationsTray` in `@edx/frontend-component-header`; 4 `MasqueradeWidget`, 2 `GoalUnsubscribe`, 1 `Overlay` | the header's go with the header package; the three app ones are test code, fixed at port with `await findBy*`/`waitFor` |
 | 16 + 1 | log | `AxiosError: Request failed with status code 404` (400) | the legacy `logError` mock printing to `console.log` | gone by construction with the new setup |
 | 15 | error | `Not implemented: navigation (except hash changes)` | jsdom, when code assigns `window.location` (6 sites in `src/`; `DatesTab`, `OutlineTab` tests hit them) | mostly gone: redirects become route loaders (#1905's plan); any remaining assignment gets a `window.location` stub in its test |
@@ -64,7 +64,7 @@ Package baseline for comparison: `frontend-base/` at `f8a64c1e`, 2 tests,
    routers mounted off-route, error-boundary tests printing React's report.
    Fixed per file at port time.
 
-And one that is neither: the two React Router future-flag warnings, which
+And one that is neither: the two React Router future flag warnings, which
 are the only noise the package has today and would be the only noise left
 after the three classes above.
 
