@@ -295,7 +295,7 @@ Settled 2026-10-19, while charting the wayfinder map.
     tests render the exported route array through `createMemoryRouter`,
     the data-router twin of the shell's `createBrowserRouter`, so `lazy`
     routes and loaders run in tests; the package's jest environment
-    (`jest.environment.js`) forwards Node's Fetch classes into jsdom for
+    (`jsdom-environment-with-node-fetch.mjs`) forwards Node's Fetch classes into jsdom for
     that, since jsdom has none and the data router builds a `Request`.
     Page tests ported from `master` keep their component-router seams
     (`MemoryRouter` with the page mounted on its own path patterns); the
