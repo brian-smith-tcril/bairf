@@ -16,8 +16,14 @@ runs on openedx/frontend-app-learning#2219, in the fail-then-pass shape.
       failed before the coverage step, so the commit has only the legacy
       upload and the combined number lost the package's lines; the legacy
       `tests` job, commitlint, version-check and the CLA are green.
-- [ ] **Run 2, green** — commit 2 removes the throwaway: 2 tests pass,
-      no console block in the `test` job log, every check green.
+- [x] **Run 2, green** — head `8d56fdc5`, commit 2 removes the throwaway:
+      `src/app.test.ts` and `src/Main.test.tsx` pass, 2 of 2; zero console
+      blocks in the `test` step's log; all eight checks green, with
+      `codecov/project` back at "96.16% (+0.00%) compared to f8a64c1".
+      The only extra output in the job is a Browserslist notice that the
+      package's `caniuse-lite` data is six months old (twice in the Test
+      step, once in Build (CI)); that is the package lockfile's pin, not
+      a console call, and not something the hook sees.
 
 ## Left to the automated suite
 
