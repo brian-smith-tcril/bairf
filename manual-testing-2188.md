@@ -38,8 +38,8 @@ its page, and what is verified by hand is the routing, the roles and the
       bar, since no course route is active).
 - [x] **Unmatched path** — `/learning/nope` shows the shell's not-found
       page, with header and footer this time, since the root route matched.
-- [ ] **Console** — no error or warning from the app on any of the above.
-- [ ] **No masquerade request without a course** — on the three non-course
+- [x] **Console** — no error or warning from the app on any of the above.
+- [x] **No masquerade request without a course** — on the three non-course
       pages the network panel shows no request to `/courses//masquerade`
       (the first pass found four; see results).
 
@@ -69,3 +69,8 @@ removed`, react-bootstrap's `Nav` in the shell header; `UNSAFE_componentWillMoun
 websocket and back-forward-cache lines. Nothing from the layer's own code.
 The tree was restructured in response (course layout routes carrying
 `learningCourse`); every box is re-checked on the restructured tree.
+
+**Second pass, 2026-10-22, Brian, on the restructured tree (`d638d386`,
+local branch before push).** All nine boxes passed, including the new one:
+no request to `/courses//masquerade` on the non-course pages, since the
+masquerade bar no longer mounts there.

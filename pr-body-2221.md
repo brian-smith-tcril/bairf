@@ -1,20 +1,20 @@
 ## Summary
 
-Learning's route tree now exists in the frontend-base package and the shell knows about it: one root route at `learning`, a child route for every URL Learning serves today, each rendering a stub that names its page as not yet ported, a role on the four destination tabs, and `provides` listing the root role so the shell's course bar lists Learning's tabs and switches between them client-side, with the masquerade bar on course routes. Nothing fetches, no provider mounts, no page is ported. **No user-facing change on `master`.**
+Learning's route tree now exists in the frontend-base package and the shell knows about it: one root route at `learning`, course layout routes at `course/:courseId` and `preview/course/:courseId` carrying a `learningCourse` role, a child route for every URL Learning serves today, each rendering a stub that names its page as not yet ported, a role on the four destination tabs, and `provides` listing `learningCourse` so the shell's course bar lists Learning's tabs and switches between them client-side, with the masquerade bar on course routes only. Nothing fetches, no provider mounts, no page is ported. **No user-facing change on `master`.**
 
 Part of #1905. Resolves #2188. Stacked above #2219.
 
 ## What changed
 
-- `src/routes.tsx`: the root `learning` route (role `learning`, lazy-loading `Main`) and one named array of explicit route objects per page, sixteen child routes in all; ids per page, roles on course home, dates, progress and courseware.
-- `src/constants.ts`: the four page role ids beside the root role. `src/provides.ts`, `src/app.ts`: the root role under both course-bar ids, as instructor dashboard declares its own.
+- `src/routes.tsx`: the root `learning` route (role `learning`, lazy-loading `Main`); two course layout routes (bare outlets, role `learningCourse`) holding one named array of explicit route objects per course page, with the bare course path as the course layout's index route; the three non-course pages under the root. Ids per page, roles on the outline tab, dates, progress and courseware.
+- `src/constants.ts`: `learningCourse` and the four page role ids beside the root role. `src/provides.ts`, `src/app.ts`: `learningCourse` under both course-bar ids, as instructor dashboard declares its own course-scoped role.
 - `src/StubPage.tsx`: one line naming the page and a list of the params the route captured.
 - `jsdom-environment-with-node-fetch.mjs`, with `jest.config.js` pointing at it and `tsconfig.json` including it: forwards Node's Fetch classes into jsdom, which has none, so route tests can start react-router's data router.
 - `src/tests/render.tsx` (memory router plus intl), `src/routes.test.tsx` (one block per page), `src/app.test.ts` (role declarations, `provides`, what each role resolves to); `tsconfig.build.json` excludes `src/**/tests/**/*` so helpers never ship.
 
 ## Testing
 
-In `frontend-base/`: lint, 27 tests at 100% lines with no console output, `build` and `build:ci` green. The root `make validate` does not see the package. Manual: the stubs, the course bar and the masquerade bar on the package's dev site against tutor dev, recorded below.
+In `frontend-base/`: lint, 29 tests at 100% lines with no console output, `build` and `build:ci` green. The root `make validate` does not see the package. Manual: the stubs, the course bar and the masquerade bar on the package's dev site against tutor dev, recorded below.
 
 ## Decisions
 
@@ -160,6 +160,34 @@ the test approach are in #2188's plan and are not repeated.
    reaches its page through the real array. The test course id is
    `course-v1:OpenedX+DemoX+DemoCourse`, the current demo course.
 
+7. **The course bar and masquerade roles come from course layout routes,
+   not the root.** The manual pass found `GET /courses//masquerade` 404
+   four times on the goal-unsubscribe page: the shell mounts
+   `MasqueradeBar` wherever a role listed under the masquerade id is
+   active, the root `learning` role was that role and is active on every
+   Learning route, and `MasqueradeBar` hands `useParams().courseId`,
+   `''` on a non-course page, to a query with no `enabled` guard (its
+   sibling, the course bar's `course_metadata` query, has `enabled:
+   !!courseId`). The bar renders nothing because the 404 reads as denied;
+   the request and the console noise remain, refetched on each window
+   focus. The deeper point, from Brian: a course-bar role declares "this
+   route is a course page" (frontend-base ADR 0013's example and
+   instructor dashboard's role both sit on a `:courseId` route), and
+   `learning` on the root said that of three pages with no course. So
+   the tree gained two layout routes, `course/:courseId` and
+   `preview/course/:courseId`, each an `Outlet` carrying a new role,
+   `org.openedx.frontend.role.learningCourse`, and `provides` lists that
+   role under both ids. `learning` stays on the root meaning "inside the
+   Learning app", unprovided; the page roles are unchanged; the three
+   non-course pages sit directly under the root. `learningCourse`
+   resolves to `/learning/course/:courseId`, which prefix-matches every
+   tab URL for client-side navigation, and the masquerade bar now mounts
+   only where a course exists. Two notes for frontend-base, not filed:
+   the unguarded masquerade query, and that a role on an index route
+   resolves with a trailing slash (`findRoleInRoutes` joins an empty
+   segment), which is why `courseware` resolves to
+   `/learning/course/:courseId/`; harmless for navigation.
+
 </details>
 
 <details>
@@ -183,29 +211,32 @@ its page, and what is verified by hand is the routing, the roles and the
 
 ## Verify by hand
 
-- [ ] **Course home renders its stub under the shell** — at
+- [x] **Course home renders its stub under the shell** — at
       `/learning/course/<courseId>/home`: the shell header and footer, the
       course bar listing the course's tabs, and the body "outline: not yet
       ported" with `courseId=<courseId>` under it.
-- [ ] **Tab switches are client-side** — click each tab in the course bar:
+- [x] **Tab switches are client-side** — click each tab in the course bar:
       the body changes to that tab's stub with no document request in the
       network panel and the console keeping its earlier lines. The
       discussion tab, whose LMS URL points at the discussions app, may be
       a full-page link; note which it is.
-- [ ] **Masquerade bar on course routes** — as staff, the masquerade bar
+- [x]  **Masquerade bar on course routes** — as staff, the masquerade bar
       renders on the course home stub and on a courseware stub.
-- [ ] **Courseware paths with ids** — `/learning/course/<courseId>/<seq>/<unit>`
+- [x] **Courseware paths with ids** — `/learning/course/<courseId>/<seq>/<unit>`
       shows "courseware: not yet ported" with `sequenceId` and `unitId`
       listed; `/learning/preview/course/<courseId>/<seq>` likewise.
-- [ ] **Progress with a target user** — `/learning/course/<courseId>/progress/42`
+- [x] **Progress with a target user** — `/learning/course/<courseId>/progress/42`
       shows the progress stub with `targetUserId=42`.
-- [ ] **Non-course paths** — `/learning/goal-unsubscribe/tok`,
+- [x] **Non-course paths** — `/learning/goal-unsubscribe/tok`,
       `/learning/redirect/dashboard` and `/learning/preferences-unsubscribe/tok`
       each show their stub, with the shell header and footer (no course
       bar, since no course route is active).
-- [ ] **Unmatched path** — `/learning/nope` shows the shell's not-found
+- [x] **Unmatched path** — `/learning/nope` shows the shell's not-found
       page, with header and footer this time, since the root route matched.
-- [ ] **Console** — no error or warning from the app on any of the above.
+- [x] **Console** — no error or warning from the app on any of the above.
+- [x] **No masquerade request without a course** — on the three non-course
+      pages the network panel shows no request to `/courses//masquerade`
+      (the first pass found four; see results).
 
 ## Left to the automated suite
 
@@ -216,7 +247,28 @@ its page, and what is verified by hand is the routing, the roles and the
 
 ## Results
 
-Not yet run.
+**First pass, 2026-10-22, Brian, on the tree with the root `learning` role
+provided (`892f928b`).** Course home rendered its stub under the shell with
+the course bar (box 1 passed). The discussions tab was absent from the bar:
+`course_metadata` lists it only when discussions are enabled on the course,
+and the shell renders exactly that list; enabling discussions in Studio's
+Pages & Resources brings it back. Non-course pages showed the shell header
+and footer with no course bar or masquerade bar, as expected. Console on
+the goal-unsubscribe page: `GET http://local.openedx.io:8000/courses//masquerade`
+404, four times (refetched on window focus), from the shell's masquerade
+bar mounting on a non-course route under the root role and querying with
+an empty course id (decision 7); the React Router future flag warning
+(openedx/frontend-base#325); `Nav: Support for defaultProps will be
+removed`, react-bootstrap's `Nav` in the shell header; `UNSAFE_componentWillMount
+... SideEffect(NullComponent)`, react-helmet under StrictMode; webpack-dev-server
+websocket and back-forward-cache lines. Nothing from the layer's own code.
+The tree was restructured in response (course layout routes carrying
+`learningCourse`); every box is re-checked on the restructured tree.
+
+**Second pass, 2026-10-22, Brian, on the restructured tree (`d638d386`,
+local branch before push).** All nine boxes passed, including the new one:
+no request to `/courses//masquerade` on the non-course pages, since the
+masquerade bar no longer mounts there.
 
 </details>
 
