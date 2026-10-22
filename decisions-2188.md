@@ -103,3 +103,34 @@ the test approach are in #2188's plan and are not repeated.
    assert declarations (`declaredRolesByChildPath`), not which roles are
    active at a URL; the runtime merges ancestors' roles, which is
    frontend-base's to test.
+
+4. **Route objects written out, one named array per page.** A first cut
+   built the sixteen child routes through a helper with conditional
+   spreads; it hid what each route was. The file now has one
+   `RoleRouteObject[]` per page (`outlineRoutes`, `coursewareRoutes`, ...)
+   with every object explicit, spread into the root's children in table
+   order. A port replaces its page's array with real routes, so the
+   explicit shape is the one that lasts; the repetition across a page's
+   paths is the honest shape of "one route object per path".
+
+5. **Test helpers live in `src/tests/`, excluded from the build.** The
+   helper that renders the route array under a memory router and the intl
+   provider started in a new `src/testing/` directory. `master` keeps its
+   helpers in `src/tests/` (`CourseQueryGate.tsx`, `MountCourseQueryHooks.tsx`,
+   `SidebarState.tsx`), as do account and profile, and the ports bring
+   those files along, so the helper moved there. The template's
+   `tsconfig.build.json` excludes only test files, mocks and the setup
+   file, which would have shipped the directory in `dist/` (instructor
+   dashboard's `testUtils.tsx` is in its published build); account's
+   `src/**/tests/**/*` exclusion is added and a build confirmed `dist/`
+   has no `tests/`.
+
+6. **Route tests are one `describe` per page.** The first cut was one
+   `it.each` table of seventeen rows, hard to read and wrong the moment a
+   page is real. Each page now has its own block and one test per path,
+   through `renderAt(path)` and `expectStub(page, params)`, where the
+   params a case names are the ones its path captures; `StubPage` prints
+   one list item per param for that. A page's block changes with its port
+   instead of being deleted, so the file keeps saying that every URL
+   reaches its page through the real array. The test course id is
+   `course-v1:OpenedX+DemoX+DemoCourse`, the current demo course.
