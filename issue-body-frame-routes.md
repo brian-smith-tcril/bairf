@@ -22,7 +22,7 @@ Part of #1905. Depends on #2187.
 `src/routes.tsx` exports a `RoleRouteObject[]` with one root and eleven children, paths relative to the root so the array carries no site basename:
 
 - Root: `path: 'learning'`, `id: 'org.openedx.frontend.route.learning.main'`, `handle.roles: ['org.openedx.frontend.role.learning']`, `Component: Main` (the template's `Main.tsx`, which is the `CurrentAppProvider` the shell's per-app config reads through, plus an outlet; the Learning-wide providers land on it with the first page that needs each).
-- Children, each `id: 'org.openedx.frontend.route.learning.<page>'`, each rendering `<StubPage page="..." />`, with a role only where another app would resolve it to link there:
+- Children, each `id: 'org.openedx.frontend.route.learning.<page>'`, each rendering `<StubPage page="..." />` (the page key, which is also the route id's last segment and matches the role's noun where a role exists), with a role only where another app would resolve it to link there:
 
   | page | path(s) under `learning` | role |
   |---|---|---|

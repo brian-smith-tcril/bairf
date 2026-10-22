@@ -68,3 +68,26 @@ the test approach are in #2188's plan and are not repeated.
    logs to `console.error` and fails under the console hook; the shell's
    `errorElement` is what handles it at runtime. The not-found behavior is
    the shell's and is checked on the dev site.
+
+3. **Four page roles, named with the glossary; route ids share the page
+   key.** The plan listed six roles. Live and course exit lost theirs
+   (effort decision 31, amended 2026-10-22): a role is a promise that
+   another app may resolve it to link there, live is reached only from
+   the course bar (which navigates by the tab URLs `course_metadata`
+   supplies, not by role) and course exit only from inside courseware.
+   The four that stay, `courseOutline`, `courseDates`, `courseProgress`
+   and `courseware`, each have a plausible outside consumer and are each a
+   course-bar tab. The landing tab's role is `courseOutline` rather than
+   the config review's `courseHome`: the repo glossary's "course home" is
+   the whole tab-page side, the effort glossary's name for the page is
+   "outline tab", and the shell's course-bar slug is `outline`; the
+   collision with the navigation sidebar that the glossary guards against
+   is not a risk inside a role id. The `course` prefix on dates and
+   progress is disambiguation, not app naming (bare `dates` says nothing
+   about what they are dates of), on the pattern of catalog's
+   `courseAbout`; `courseware` is the platform's own word and stays one
+   word like `gradebook`. Route ids are
+   `org.openedx.frontend.route.learning.<page>` with the page key on the
+   first path of a page, and the key matches the role's noun where a role
+   exists (`outline`, `dates`, `progress`, `courseware`); the stub prints
+   the same key, so the dev site and the tests name a page one way.
