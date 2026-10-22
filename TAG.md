@@ -32,3 +32,4 @@ issues:
 
 prs:
   openedx/frontend-app-learning#2217
+  openedx/frontend-app-learning#2219
