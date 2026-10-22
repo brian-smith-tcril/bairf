@@ -21,8 +21,9 @@ Part of #1905. Depends on #2187.
 
 `src/routes.tsx` exports a `RoleRouteObject[]` with one root and eleven children, paths relative to the root so the array carries no site basename:
 
-- Root: `path: 'learning'`, `id: 'org.openedx.frontend.route.learning.main'`, `handle.roles: ['org.openedx.frontend.role.learning']`, `Component: Main` (the template's `Main.tsx`, which is the `CurrentAppProvider` the shell's per-app config reads through, plus an outlet; the Learning-wide providers land on it with the first page that needs each).
-- Children, each `id: 'org.openedx.frontend.route.learning.<page>'`, each rendering `<StubPage page="..." />` (the page key, which is also the route id's last segment and matches the role's noun where a role exists), with a role only where another app would resolve it to link there:
+- Root: `path: 'learning'`, `id: 'org.openedx.frontend.route.learning.main'`, `handle.roles: ['org.openedx.frontend.role.learning']`, `Component: Main` (the template's `Main.tsx`, which is the `CurrentAppProvider` the shell's per-app config reads through, plus an outlet; the Learning-wide providers land on it with the first page that needs each). `learning` means "inside the Learning app" and is not what the course bar is given.
+- Two course layout routes under the root, `course/:courseId` and `preview/course/:courseId`, each a bare outlet carrying `org.openedx.frontend.role.learningCourse`: "this route is a course page", the statement a course-bar role makes (frontend-base's ADR 0013 example and instructor dashboard's role both sit on a `:courseId` route). The course pages are their children; the three non-course pages sit directly under the root, so the shell's course bar and masquerade bar, which read `courseId` from the route params, mount only where one exists.
+- Page routes, each `id: 'org.openedx.frontend.route.learning.<page>'`, each rendering `<StubPage page="..." />` (the page key, which is also the route id's last segment and matches the role's noun where a role exists), with a role only where another app would resolve it to link there (paths below are relative to `learning`; under the course layouts the `course/:courseId` and `preview/course/:courseId` prefixes are the layout's):
 
   | page | path(s) under `learning` | role |
   |---|---|---|
@@ -38,14 +39,14 @@ Part of #1905. Depends on #2187.
   | redirect landing | `redirect/*` | none (internal state) |
   | preferences unsubscribe | `preferences-unsubscribe/:userToken/:updatePatch?` | none (reached from emailed URLs) |
 
-  Each page is a named array of its route objects written out in full (`coursewareRoutes`, `progressRoutes`, ...), spread into the root's children in table order; a page with several paths has several objects sharing its stub and role, with the id on the first. No helper: a port replaces its page's array with real routes, so the explicit shape is the lasting one; react-router ranks a static segment above a param, so `course/:courseId/dates` beats `course/:courseId/:sequenceId` as it does on `master`. The eleven paths are `master`'s `DECODE_ROUTES` and `ROUTES` with the leading slash removed; the legacy constants are rewritten here, not moved, so the manifest gets no line.
+  Each page is a named array of its route objects written out in full (`coursewareRoutes`, `progressRoutes`, ...), spread into its layout's children in table order; the bare course path is the course layout's index route; a page with several paths has several objects sharing its stub and role, with the id on the first. No helper: a port replaces its page's array with real routes, so the explicit shape is the lasting one; react-router ranks a static segment above a param, so `dates` beats `:sequenceId` under the course layout as it does on `master`. The eleven paths are `master`'s `DECODE_ROUTES` and `ROUTES` with the leading slash removed; the legacy constants are rewritten here, not moved, so the manifest gets no line.
 - `src/constants.ts` holds the four page role ids beside `appId` and `learningRole`, flat camelCase after catalog's. The four are the pages with a plausible consumer outside Learning, and each is also a tab the course bar lists. Nothing exports them: other apps name the role they resolve as a string, as learner dashboard does for catalog's `courses` role.
 - `src/StubPage.tsx`: one component, one line, the page name and "not yet ported", no translation since it never ships. Each port deletes its use; the file goes with the last.
 - No catch-all: the shell's router renders its not-found page for an unmatched path. Not here: the URL-decoding and path-fixes wrappers (they come with the courseware container, #2195), providers, data, the header widget, slots.
 
 ## `provides`
 
-`src/provides.ts`, as instructor dashboard's: the root role in an array under both `providesCourseBarRolesId` and `providesCourseBarMasqueradeRolesId` (the shell's docstring form), wired into `src/app.ts`. The masquerade bar then renders on any course route when the masquerade endpoint says the user may; a tab that the LMS lists and no app provides is still shown, as a full-page link.
+`src/provides.ts`, as instructor dashboard's: the `learningCourse` role in an array under both `providesCourseBarRolesId` and `providesCourseBarMasqueradeRolesId` (the shell's docstring form), wired into `src/app.ts`. It resolves to `/learning/course/:courseId`, which prefix-matches every tab URL, so the bar client-navigates to every Learning tab. The masquerade bar then renders on any course route when the masquerade endpoint says the user may; a tab that the LMS lists and no app provides is still shown, as a full-page link.
 
 ## Tests
 

@@ -476,6 +476,18 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     "outline tab", and the shell's course-bar slug is `outline`; the
     collision with the navigation sidebar that the glossary guards against
     is not a risk inside a role id.
+    Amended 2026-10-22 (openedx/frontend-app-learning#2188, manual pass):
+    the role provided for the course bar and the masquerade bar is not
+    the root's. A course-bar role says "this route is a course page"
+    (ADR 0013's example and instructor dashboard's role sit on a
+    `:courseId` route), and the root `learning` role is active on the
+    three non-course pages too, where the shell's masquerade bar then
+    requested `/courses//masquerade`. Two course layout routes,
+    `course/:courseId` and `preview/course/:courseId`, carry
+    `org.openedx.frontend.role.learningCourse`, which is what `provides`
+    lists; `learning` stays on the root as the app's role, unprovided.
+    The layout routes are the parents the courseware-container layer's
+    URL-decoding wrapper was going to need.
 
 32. **The two courseware sidebars are the navigation sidebar and the
     auxiliary sidebar.** Direction names describe the left-to-right

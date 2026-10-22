@@ -134,3 +134,31 @@ the test approach are in #2188's plan and are not repeated.
    instead of being deleted, so the file keeps saying that every URL
    reaches its page through the real array. The test course id is
    `course-v1:OpenedX+DemoX+DemoCourse`, the current demo course.
+
+7. **The course bar and masquerade roles come from course layout routes,
+   not the root.** The manual pass found `GET /courses//masquerade` 404
+   four times on the goal-unsubscribe page: the shell mounts
+   `MasqueradeBar` wherever a role listed under the masquerade id is
+   active, the root `learning` role was that role and is active on every
+   Learning route, and `MasqueradeBar` hands `useParams().courseId`,
+   `''` on a non-course page, to a query with no `enabled` guard (its
+   sibling, the course bar's `course_metadata` query, has `enabled:
+   !!courseId`). The bar renders nothing because the 404 reads as denied;
+   the request and the console noise remain, refetched on each window
+   focus. The deeper point, from Brian: a course-bar role declares "this
+   route is a course page" (frontend-base ADR 0013's example and
+   instructor dashboard's role both sit on a `:courseId` route), and
+   `learning` on the root said that of three pages with no course. So
+   the tree gained two layout routes, `course/:courseId` and
+   `preview/course/:courseId`, each an `Outlet` carrying a new role,
+   `org.openedx.frontend.role.learningCourse`, and `provides` lists that
+   role under both ids. `learning` stays on the root meaning "inside the
+   Learning app", unprovided; the page roles are unchanged; the three
+   non-course pages sit directly under the root. `learningCourse`
+   resolves to `/learning/course/:courseId`, which prefix-matches every
+   tab URL for client-side navigation, and the masquerade bar now mounts
+   only where a course exists. Two notes for frontend-base, not filed:
+   the unguarded masquerade query, and that a role on an index route
+   resolves with a trailing slash (`findRoleInRoutes` joins an empty
+   segment), which is why `courseware` resolves to
+   `/learning/course/:courseId/`; harmless for navigation.
