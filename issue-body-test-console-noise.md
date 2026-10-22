@@ -20,7 +20,7 @@ Part of #1905.
 
 - `jest-fail-on-console` as a dev dependency of `frontend-base/`, called once in `src/setupTest.js`, which `jest.config.js` already lists in `setupFilesAfterEnv`. Defaults do what the issue asks: a test fails when it calls `console.error` or `console.warn`; `console.log`, `info`, `debug` and `assert` are left alone.
 - `silenceMessage` returns true for a message starting with `⚠️ React Router Future Flag Warning`, so those two messages neither print nor fail. `silenceMessage` rather than `allowMessage`, because `allowMessage` keeps printing ("the message will show in the console and the test won't fail"), and the point is a silent suite. The matcher carries a comment naming openedx/frontend-base#325 and saying the entry goes when that is resolved. This list is the only place tolerated output lives; a later entry needs the same comment saying whose warning it is.
-- A test whose point is the output mutes the console for that test, the README's own recommendation: `jest.spyOn(console, 'error').mockImplementation(() => {})` in the test and `mockRestore()` at its end (the jest config does not restore mocks automatically), with the call asserted where the message is the behavior under test. The convention is written as a comment in `setupTest.js` so a port finds it where the hook is.
+- A test whose point is the output mutes the console for that test, the README's own recommendation: `jest.spyOn(console, 'error').mockImplementation(() => {})` in the test and `mockRestore()` at its end (the jest config does not restore mocks automatically), with the call asserted where the message is the behavior under test. The library's failure message says which method printed what, which is all a port needs to find this rule in the issue.
 
 ## Commits
 
@@ -49,6 +49,5 @@ None: the layer changes test tooling only. The record lists the two CI runs as t
 - [ ] `npm test` in `frontend-base/` fails a test that prints an unexpected `console.warn` or `console.error`, demonstrated by a throwaway test in the PR and then removed
 - [ ] The two react-router future flag messages are silenced with a comment pointing at openedx/frontend-base#325
 - [ ] The package's suite passes with no console output
-- [ ] The convention for muting the console in a test is written in the setup file
 
 </details>
