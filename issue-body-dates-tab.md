@@ -10,41 +10,87 @@ Part of #1905. Depends on #2188.
 <details>
 <summary> Claude Plan </summary>
 
+## Baseline
+
+- The package at the top of #2221: the route tree with stubs, `learningCourse` on the course layout routes, no fetch, no provider, 29 tests, the suite failing on unexpected console output, the jest environment supplying the Fetch globals.
+- On `master`, the dates tab's import closure (walked from `DatesTab.jsx`, `TabPage.tsx`, `LoadedTabPage.tsx`, `TabWithTimer.tsx` and `course-home/data/apiHooks.ts`, with the instructor toolbar, product tours, streak celebration, special-exams provider and the header, footer and tabs slots left out) is 44 source files; with their tests, factories and the Pact test, 72 files move. The two root providers outside that closure, notices and plugin overrides, come with the root route.
+- frontend-platform symbols the closure uses, all exported by `@openedx/frontend-base` from its root: `getAuthenticatedHttpClient`, `getAuthenticatedUser`, `getLoginRedirectUrl`, `sendTrackEvent`, `logError`, `logInfo`, `useIntl`, `FormattedMessage`, `defineMessages`, `getLocale`, `camelCaseObject`; `getConfig` becomes `getSiteConfig` or `getAppConfig(appId)` per key; `AppContext` becomes `SiteContext` (same `authenticatedUser` field). `history` appears only in tests.
+- Config keys the closure reads: `LMS_BASE_URL` (23 sites) is `getSiteConfig().lmsBaseUrl`; `SITE_NAME` is `siteName`; `EXAMS_BASE_URL` (the onboarding and exam-attempt URLs in `course-home/data/api.ts`) and `ENABLE_NOTICES` are app config keys under their existing names, read through `getAppConfig(appId)`, with no bundled default, since `master` defaults both to `null` and the code treats unset the same way.
+
 ## What moves
 
-Files port from the legacy `src/` tree to the same relative path under `frontend-base/src/`, with their tests, and get a line each in `frontend-base/manifest.tsv`.
+Each file ports to the same relative path under `frontend-base/src/` and gets a line in `frontend-base/manifest.tsv`; the ported directories and what each brings:
 
-- The dates tab itself: the tab component, its timeline and utilities, messages.
-- The tab-page frame: the tab page and loaded tab page components, the course-tabs utilities the frame reads (not the tabs navigation component, which the shell's course bar replaces), the alerts module (enrollment, logistration, access expiration, course start, and the rest the loaded tab page mounts), and the generic pieces they need (page loading, user messages).
-- The course-home data module: the course-metadata and dates queries, query keys, API functions and normalizers. The frame owns the course-metadata fetch; everything below it reads the cache without fetching, as on `master`.
-- The Learning-wide providers from the legacy app root: user messages, toast, notices, plugin overrides. They become the element of the root `learning` route, so they mount once, only under Learning's paths, and persist across client-side tab switches. Not `App.providers`, which frontend-base hoists above the whole site. The legacy query client provider is dropped; the shell owns one.
+- `course-home/dates-tab/`: the tab, its timeline (`Day`, `Timeline`, `badgelist`, `Day.scss`), utilities, messages, test.
+- `course-home/suggested-schedule-messaging/`: the four alerts the dates tab renders, messages, test.
+- `course-home/data/`: `api.ts`, `apiHooks.ts`, `courseHomeOutline.ts` (imported by `api.ts`), the five factories, the three tests and `pact-tests/lmsPact.test.jsx`; plus `src/pacts/` (the constants and the contract file) and `@pact-foundation/pact` as a dev dependency. The module ports whole: its outline and progress functions have no consumer yet but splitting the file for one tab would be a change for nothing.
+- `tab-page/`: `TabPage`, `LoadedTabPage`, `TabWithTimer`, index, messages, their four tests.
+- `alerts/enrollment-alert/`, `alerts/logistration-alert/`: the two alerts the loaded tab page mounts, with their hooks, data and tests.
+- `generic/`: `PageLoading`, `ToastContext`, `messages`, `user-messages/` (provider, context, hooks, `Alert`, `AlertList`, tests), `notices/` (provider, api, test), `plugin-overrides/` (context, index, test).
+- `shared/access.js`, `data/http-error.ts`, `data/localStorage.js`, `course-tabs/utils.ts`, `utils.ts`, `plugin-slots/BannerDatesUpgradeSlot/index.tsx`.
 
-## What does not move with it
+Dropped, with `dropped` manifest lines, because the shell owns what they rendered: `plugin-slots/HeaderSlot/`, `plugin-slots/CourseTabsNavigationSlot/`, and `course-tabs/` apart from `utils.ts` (the tabs navigation and its links, replaced by the shell's course bar).
 
-- On `master` the tab page itself renders the header slot, the course tabs navigation and the footer slot around its content. The ported tab page renders none of them: the shell owns header, course bar and footer. The org and title line the legacy header showed is its own issue.
-- The instructor toolbar, the product tour provider and the streak celebration modal the tab page wraps: each is its own issue; until they land, the ported frame does not render them.
-- Special exams. Every tab renders through a timer wrapper that mounts the special-exams host provider and the outer exam timer. Exams are their own issue, so the wrapper ports as a pass-through to the tab page, with no provider and no timer, until that issue replaces it.
-- Any plugin slot the dates tab renders (the dates upgrade banner) becomes a placeholder slot: the slot module keeps its file and name and renders its default content in a bare fragment, with no plugin-framework import. Slot API ports are #2185.
+## What changes in the moved code
 
-## Configuration
+- Imports: every `@edx/frontend-platform*` import becomes one from `@openedx/frontend-base`; `getConfig()` reads become the site-config field or `getAppConfig(appId)` per the key table above; the two alert hooks and `useContext(AppContext)` read `SiteContext` instead.
+- `TabPage` stops rendering the header slot, the footer slot, the tour provider and the tour launch button; `LoadedTabPage` stops rendering the course tabs navigation slot, the instructor toolbar, the streak modal and the product tours. The alerts, the toast, the loading and error states, the access-denied redirect and the document title stay. The org and title line is #2193; the toolbar #2194; tours #2208; the streak modal with the celebrations.
+- `TabWithTimer` ports as a pass-through to `TabPage`: no special-exams provider, no outer timer, until #2198 replaces it.
+- `BannerDatesUpgradeSlot` becomes a placeholder slot: the file and the component name stay, it renders its default content (`UpgradeToCompleteAlert`) in a bare fragment, and the two props it passed to plugins are recorded in the manifest line's commit for #2185.
+- Paths: `getAccessDeniedRedirectUrl` returns Learning-relative paths (`/redirect/...`, `/course/<id>/access-denied`, `/course/<id>/home`) and `TabPage` navigates to them; under the shell they must sit under Learning's root, so `TabPage` prefixes them with the URL the `learning` role resolves to. This is the per-port check on absolute paths; the redirect landing page itself stays a stub until #2205.
+- The URL-decoding wrapper and the path-fixes provider that wrap the course routes on `master` are not here (#2195 brings them as layout routes), so a course id with encoded characters is a known gap of this layer, recorded in the manual-testing record.
 
-Values the moved code read from the legacy environment config come from the frontend-base equivalents: site-config fields for the LMS base URL and the like, app config under the existing key names for Learning's own flags, resolved through `getSiteConfig()` and `getAppConfig()`.
+## Root route element
 
-## Testing
+`Main.tsx` keeps the `CurrentAppProvider` and the outlet and gains the four Learning-wide providers in `master`'s nesting order: notices, user messages, toast, plugin overrides. They mount once, only under `/learning`, and persist across client-side tab switches; nothing goes in `App.providers`, which the shell hoists site-wide, and the legacy query client provider is dropped since the shell owns one. The title message stays until a page sets its own through Helmet, as the loaded tab page does.
 
-- The setup file calls frontend-base's `initializeMockApp` with an authenticated user and `addAppConfigs()` at top level, as [frontend-app-profile](https://github.com/openedx/frontend-app-profile/blob/master/src/setupTest.ts) and [frontend-app-account](https://github.com/openedx/frontend-app-account/blob/master/src/setupTest.ts) do in their `setupTest.ts`. A shared render helper supplies a query client, the intl provider and a memory router.
-- Each test file mocks `@openedx/frontend-base` by spreading `jest.requireActual` and overriding what it needs; no shared mock module; no Mock Service Worker; the HTTP client is a per-file `jest.fn()` on `getAuthenticatedHttpClient`. Assertions that only test shell responsibilities are dropped.
-- The dates and tab-page tests port with their files and reach the page through the exported route array at the dates path.
-- These conventions are the template for every later page port; a port that deviates says why.
+## Test conventions
+
+This is the first page port, so its choices are the template for the rest.
+
+- `src/setupTest.js` calls `initializeMockApp({ authenticatedUser })` and `addAppConfigs()` at top level, as profile and account do; the fail-on-console hook stays.
+- **HTTP: the real mock-app client with `axios-mock-adapter`, not a per-file `jest.fn()`.** This amends the epic's stated convention and is the one open decision in this plan. `master`'s 124 suites are written against `new MockAdapter(getAuthenticatedHttpClient())`, with request assertions on `axiosMock.history`; frontend-base's `MockAuthService` hands out a real `axios.create()` client and its own docstring recommends wrapping it with `axios-mock-adapter`. Porting onto the adapter is a move; porting onto a hand-written mock per file is a rewrite of every suite. The three converted apps that use per-file mocks are smaller and were rewritten more. `axios-mock-adapter` becomes a dev dependency.
+- `src/tests/`: `createTestQueryClient` and `seedQueryData` from `master`'s setup file, and the render helper grows to `master`'s wrapper shape (query client, intl provider, the four Learning providers, a memory router around the exported route array). `mockCourseRequests` waits for the courseware container, which is what it mocks.
+- Each test file mocks `@openedx/frontend-base` by spreading `jest.requireActual` and overriding what it needs; no shared mock module; no Mock Service Worker. `master`'s plugin-framework mock is gone with the placeholder slots. `master`'s setup file silences two React deprecation messages (`defaultProps` on function components, `propTypes` on `forwardRef`); under the console hook each occurrence in the ported suites is either fixed in the component or, where it is Paragon's or react-fontawesome's, added to the silenced list under its upstream issue.
+- The dates test reaches the page through the exported route array at the dates path, with the course-metadata and dates requests mocked; its `history` assertions become memory-router ones. The tab-page, alerts, user-messages, notices and data tests port at their seams.
+- Pact: the test ports as profile's does, `initializeMockApp()` and `mergeSiteConfig({ lmsBaseUrl: 'http://localhost:8081' })` in place of `mergeConfig`; the contract file moves with it. No provider-side consumer of the contract's path in the repository was found (openedx-platform searched 2026-10-22).
+
+## Commits
+
+Four, in review order, squashed on merge:
+
+1. **Test setup**: the setup file, `src/tests/` helpers, the two dev dependencies, the silenced-message entries.
+2. **Course-home data module**: `course-home/data/`, `src/pacts/`, `utils.ts`, `data/http-error.ts`, tests and factories. Nothing renders yet; the tests pin the API surface.
+3. **The frame**: `Main.tsx` with the providers, `tab-page/`, the two alerts, `generic/` pieces, `shared/access.js`, `course-tabs/utils.ts`, the `dropped` lines.
+4. **The dates tab**: `dates-tab/`, `suggested-schedule-messaging/`, the placeholder slot, the dates route replacing its stub, the per-directory coverage thresholds.
+
+Checks after each: `npm run lint`, `npm test`, `npm run build`, `npm run build:ci` in `frontend-base/`.
+
+## Coverage
+
+Each ported directory gets a `coverageThreshold` entry at `master`'s line coverage from the baseline table in #2187: `course-home/dates-tab` 98.39, `course-home/suggested-schedule-messaging` 98.28, `course-home/data` 99.64, `tab-page` 100, `alerts/enrollment-alert` 100, `alerts/logistration-alert` 84.44, `generic/user-messages` 89.77, `generic/notices` 53.85, `generic/plugin-overrides` 100, `plugin-slots/BannerDatesUpgradeSlot` 100. jest removes files matched by a path threshold from the global one.
+
+## Stack
+
+`bsmith/dates-tab` above `bsmith/frame-routes`, opened as a draft.
+
+## Manual testing
+
+On the package's dev site against Tutor dev with the demo course: the dates tab renders its timeline for an enrolled learner, with the suggested-schedule alerts where the course has a schedule; the enrollment alert for a signed-in unenrolled learner and the logistration alert for an anonymous one; the upgrade banner slot's default content for an audit learner on a course with a verified mode; loading and error states; a course the learner cannot access redirects to the access-denied or redirect stub; the providers on the root persist across a switch to another tab (a toast shown on dates survives the switch); no console output from the app. The record also carries the dates directory's coverage against the baseline.
+
+## Not in scope
+
+- The outline, progress and other tabs; the header title line (#2193); the instructor toolbar (#2194); product tours (#2208); special exams (#2198); the course-id decoding and path-fixes layout routes (#2195); the redirect routes' loaders (#2205).
+- Porting any slot to the Slot API (#2185).
 
 ## Acceptance
 
 - [ ] The dates tab renders its timeline for an enrolled learner, with the frame's alerts, and the dates upgrade banner slot as a placeholder slot
 - [ ] Loading, error and access-denied states of the frame behave as on `master`; access denied lands on the access-denied route (a stub until its own issue)
 - [ ] The root route's element mounts the four providers; nothing is registered in `App.providers`; no second query client
-- [ ] Switching between dates and another tab keeps the frame mounted
-- [ ] The test setup, render helper and mocking conventions above are in place and the ported tests pass through the route array
-- [ ] Types, lint and tests of the new package pass; the legacy workflow stays green; `npm run dev` from the package serves dates
-- [ ] Manifest lines added for every file moved; the dates directory's coverage compared against the `master` baseline
+- [ ] Switching between dates and another tab keeps the root providers mounted
+- [ ] The test setup, render helper and mocking conventions above are in place and the ported tests pass, the dates test through the route array
+- [ ] Lint, tests and both builds of the package pass; the legacy workflow stays green; `npm run dev` from the package serves dates
+- [ ] Manifest lines added for every file moved or dropped; the ported directories' coverage held at the `master` baseline by the threshold map
 
 </details>
