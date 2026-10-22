@@ -90,7 +90,10 @@ runs on openedx/frontend-app-learning#2219, in the fail-then-pass shape.
       The only extra output in the job is a Browserslist notice that the
       package's `caniuse-lite` data is six months old (twice in the Test
       step, once in Build (CI)); that is the package lockfile's pin, not
-      a console call, and not something the hook sees.
+      a console call, and not something the hook sees. After the
+      `caniuse-lite` bump in #2217's first commit, the rerun on `7c35d8c2`
+      is green with no Browserslist notice in the job (#2217's rerun on
+      `f5b78764` likewise).
 
 ## Left to the automated suite
 
