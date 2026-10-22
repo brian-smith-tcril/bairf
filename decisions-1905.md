@@ -461,6 +461,16 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     six destination pages (course home, dates, progress, live, courseware,
     course exit) keep theirs. A role on a redirect would send a resolving
     app through Learning's hop instead of to the destination.
+    Amended 2026-10-22 (openedx/frontend-app-learning#2188): four, not
+    six. Live is reached only from the course bar, which navigates by the
+    tab URLs `course_metadata` supplies rather than by role, and course
+    exit only from inside courseware (the next button on the last unit);
+    neither has a consumer outside Learning. Course home, dates, progress
+    and courseware keep theirs: each has a plausible outside consumer
+    (the learner dashboard resumes into courseware and course home, the
+    instructor side links to a learner's progress page, the platform
+    points learners at dates from outside the app) and each is also a
+    course-bar tab.
 
 32. **The two courseware sidebars are the navigation sidebar and the
     auxiliary sidebar.** Direction names describe the left-to-right
