@@ -91,3 +91,11 @@ the test approach are in #2188's plan and are not repeated.
    first path of a page, and the key matches the role's noun where a role
    exists (`outline`, `dates`, `progress`, `courseware`); the stub prints
    the same key, so the dev site and the tests name a page one way.
+   A role declared on several paths resolves to the first one declared
+   (frontend-base's `getUrlByRouteRole` walks the tree in order), so the
+   base path is listed first for progress and courseware and a test pins
+   both resolutions: the order is what every other app's link depends on,
+   and nothing else in the suite would notice a reorder. The route tests
+   assert declarations (`declaredRolesByChildPath`), not which roles are
+   active at a URL; the runtime merges ancestors' roles, which is
+   frontend-base's to test.
