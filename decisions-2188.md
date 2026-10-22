@@ -93,9 +93,13 @@ the test approach are in #2188's plan and are not repeated.
    the same key, so the dev site and the tests name a page one way.
    A role declared on several paths resolves to the first one declared
    (frontend-base's `getUrlByRouteRole` walks the tree in order), so the
-   base path is listed first for progress and courseware and a test pins
-   both resolutions: the order is what every other app's link depends on,
-   and nothing else in the suite would notice a reorder. The route tests
+   base path is listed first for progress and courseware, and a
+   `role resolution` block has one test per role naming the URL it
+   resolves to and, for the two multi-path roles, what it must not be (a
+   sequence, unit or preview path; another user's progress): the order is
+   what every other app's link depends on, nothing else in the suite
+   would notice a reorder, and one case per role reads as the table of
+   link targets. The route tests
    assert declarations (`declaredRolesByChildPath`), not which roles are
    active at a URL; the runtime merges ancestors' roles, which is
    frontend-base's to test.
