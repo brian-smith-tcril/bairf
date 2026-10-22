@@ -68,3 +68,14 @@ shape and verification environment are in #2187's plan and are not repeated.
    uploading only the absolute-path clover or json reports (leaves out the
    canonical lcov and leans on path-fixing). Both changes describe the
    subdirectory layout and leave at the swap with the threshold.
+
+7. **`caniuse-lite` updated in the package lockfile, folded into the first
+   commit.** The template's lockfile pinned 1.0.30001790 (2026-04-22), and
+   browserslist prints a "browsers data is 6 months old" notice from
+   babel and webpack whenever the data it finds is that old; the org's
+   `update-browserslist-db.yml` runs in the repository root and never
+   touches `frontend-base/package-lock.json`. `npm update caniuse-lite` in
+   `frontend-base/` moved the pin to 1.0.30001819 (2026-10-22), a three-line
+   lock diff, after which the notice stops for six months, longer than the
+   branch will exist, so the workflow is left alone; the swap puts the
+   package lock under the root workflow. Noticed by Brian in #2219's run.
