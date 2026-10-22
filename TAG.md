@@ -29,3 +29,4 @@ issues:
   openedx/frontend-base#324
 
 prs:
+  openedx/frontend-app-learning#2217

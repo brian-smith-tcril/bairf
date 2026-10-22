@@ -172,7 +172,11 @@ Settled 2026-10-19, while charting the wayfinder map.
     the `coverageThreshold` in the package's `jest.config.js` (decision 17),
     since an absolute target is not a policy master has (master's codecov
     status is `auto` against the base commit). The two root ignore lines from
-    decision 11 go with the root config they live in.
+    decision 11 go with the root config they live in. Added 2026-10-21: so do
+    the lcov `projectRoot: '..'` in the package's jest config and the
+    workflow's codecov step form (`files: frontend-base/coverage/lcov.info`,
+    no `working-directory`), both of which describe the subdirectory layout;
+    the step returns to the template's plain form.
  Amended 2026-10-21 (landing moved): the swap is the last commit of epic 1,
     in the PR that merges `frontend-base` into `master`.
 
