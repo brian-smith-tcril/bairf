@@ -26,7 +26,7 @@ Part of #1905. Depends on #2187.
 
   | page | path(s) under `learning` | role |
   |---|---|---|
-  | course home (outline tab) | `course/:courseId/home` | `org.openedx.frontend.role.courseHome` |
+  | course home (outline tab) | `course/:courseId/home` | `org.openedx.frontend.role.courseOutline` |
   | dates | `course/:courseId/dates` | `org.openedx.frontend.role.courseDates` |
   | progress | `course/:courseId/progress`, `course/:courseId/progress/:targetUserId` | `org.openedx.frontend.role.courseProgress` |
   | discussion | `course/:courseId/discussion/:path/*` | none (ported as a redirect, #2204) |

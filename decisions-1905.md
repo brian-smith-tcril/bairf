@@ -470,7 +470,12 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     (the learner dashboard resumes into courseware and course home, the
     instructor side links to a learner's progress page, the platform
     points learners at dates from outside the app) and each is also a
-    course-bar tab.
+    course-bar tab. The landing tab's role is `courseOutline`, not the
+    config review's `courseHome`: the repo glossary's "course home" is the
+    whole tab-page side, the effort glossary's name for the page is
+    "outline tab", and the shell's course-bar slug is `outline`; the
+    collision with the navigation sidebar that the glossary guards against
+    is not a risk inside a role id.
 
 32. **The two courseware sidebars are the navigation sidebar and the
     auxiliary sidebar.** Direction names describe the left-to-right
