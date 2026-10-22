@@ -10,25 +10,44 @@ Part of #1905.
 <details>
 <summary> Claude Plan </summary>
 
+## Baseline
+
+- The package at the top of #2217 (`f8a64c1e`): 2 tests, 100% lines, and 2 console blocks per run, both react-router 6's future flag warnings printed when `Main.test.tsx` mounts a `BrowserRouter`. Nothing else prints.
+- `master`'s suite, for scale: 2,101 console blocks in one run (960 warnings, 296 errors, 845 logs). About half go away by construction under frontend-base; the rest are app and test defects that the ports fix file by file. The inventory with every message, its emitter and its fate is kept with the effort's working notes.
+- `jest-fail-on-console` 3.3.4 (2025-12-16), no dependencies, peer `@jest/globals >=27.5.1`, which jest 29's tree provides.
+
 ## Mechanism
 
-- `jest-fail-on-console` as a dev dependency of `frontend-base/`, registered in `src/setupTest.js`: a test that prints to `console.error` or `console.warn` fails with the printed message. `console.log` is not failed; lint keeps it out of `src/` and test-time logging stays available.
-- An allowlist by message, the one place noise is tolerated, each entry with a comment saying whose it is. The first two entries are react-router 6's future flag warnings (`v7_startTransition`, `v7_relativeSplatPath`), printed by any router created without `future` flags. Learning does not create the runtime router, the frontend-base shell does, and the flags change behavior, so whether and when to opt in is frontend-base's call, tracked as openedx/frontend-base#325; these two entries go when it is resolved.
-- A test whose point is the output (an error-boundary test, a "logs on 404" test) mocks `console.error` for that test, which also documents the intent. The convention is stated in the package's test setup file.
+- `jest-fail-on-console` as a dev dependency of `frontend-base/`, called once in `src/setupTest.js`, which `jest.config.js` already lists in `setupFilesAfterEnv`. Defaults do what the issue asks: a test fails when it calls `console.error` or `console.warn`; `console.log`, `info`, `debug` and `assert` are left alone.
+- `silenceMessage` returns true for a message starting with `⚠️ React Router Future Flag Warning`, so those two messages neither print nor fail. `silenceMessage` rather than `allowMessage`, because `allowMessage` keeps printing ("the message will show in the console and the test won't fail"), and the point is a silent suite. The matcher carries a comment naming openedx/frontend-base#325 and saying the entry goes when that is resolved. This list is the only place tolerated output lives; a later entry needs the same comment saying whose warning it is.
+- A test whose point is the output mutes the console for that test, the README's own recommendation: `jest.spyOn(console, 'error').mockImplementation(() => {})` in the test, restored by the automatic mock restore, with the call asserted where the message is the behavior under test. The convention is written as a comment in `setupTest.js` so a port finds it where the hook is.
 
-## Test conventions this adds to
+## Commits
 
-The package's tests follow the converted apps' conventions: each test file mocks `@openedx/frontend-base` by spreading `jest.requireActual`, no shared mock module, no Mock Service Worker, the HTTP client a per-file mock, a shared render helper for the query client, intl provider and memory router, and assertions that only test shell responsibilities dropped. This layer adds one rule: the suite fails on unexpected console output, and a port that mutes the console in a test says why in the test. None of the converted apps (account, catalog, profile, instructor dashboard) enforces this; the deviation is justified by the state of `master`'s suite above.
+The pull request squashes on merge; the first commit is pushed on its own so the red run is the evidence, in the fail-then-pass shape.
+
+1. **`build: fail the frontend-base package's tests on unexpected console output`** — the dependency (package manifest and lockfile), the `failOnConsole` call with the silence matcher and the muting convention in `setupTest.js`, and a throwaway test file that calls `console.warn('unexpected')` once. `npm test` fails that file with the library's message naming the method and the output; `Main.test.tsx` still passes, its two warnings silenced. Pushed; the workflow's `test` job is red.
+2. **`chore: remove the throwaway console test`** — the suite is 2 tests, green, with no console block in the job log.
+
+Checks: `npm run lint`, `npm test` and `npm run build` in `frontend-base/` after each commit; the coverage threshold is unaffected (`setupTest.js` is in `coveragePathIgnorePatterns`, test files are not collected). The root `make validate` does not see the package.
+
+## Stack
+
+`bsmith/test-console-noise` above `bsmith/scaffold-frontend-base`, so the PR's base is the scaffold branch until #2217 merges; opened as a draft.
+
+## Manual testing
+
+None: the layer changes test tooling only. The record lists the two CI runs as the evidence, the first red with the library's message in the `test` job log, the second green with zero console blocks.
 
 ## Not in scope
 
 - Fixing any of `master`'s warnings on `master`; each is fixed in the port that moves its file.
-- The runtime warnings in the browser console; those are the shell's router and belong to frontend-base.
+- The runtime warnings in the browser console; those are the shell's router, openedx/frontend-base#325.
 
 ## Acceptance
 
 - [ ] `npm test` in `frontend-base/` fails a test that prints an unexpected `console.warn` or `console.error`, demonstrated by a throwaway test in the PR and then removed
-- [ ] The two react-router future flag messages are allowlisted with a comment pointing at openedx/frontend-base#325
+- [ ] The two react-router future flag messages are silenced with a comment pointing at openedx/frontend-base#325
 - [ ] The package's suite passes with no console output
 - [ ] The convention for muting the console in a test is written in the setup file
 
