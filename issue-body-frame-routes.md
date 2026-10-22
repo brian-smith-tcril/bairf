@@ -10,47 +10,80 @@ Part of #1905. Depends on #2187.
 <details>
 <summary> Claude Plan </summary>
 
+## Baseline
+
+- The package at the top of #2219: `routes` and `slots` are empty arrays, `Main.tsx` (a `CurrentAppProvider`, a Helmet title and an `Outlet`) is unused, 2 tests, the suite fails on unexpected console output.
+- The shell's course bar and masquerade bar take the course from the active route's params: `CourseTabsNavigation` and `MasqueradeBar` call `useParams()` for `courseId`, and the Studio link also reads `unitId`. Learning's param names are already those, so the routes below keep them.
+- The shell mounts the course bar when a role listed under `org.openedx.frontend.provides.courseBarRoles.v1` is active, where ancestor routes' roles count as active; it makes a tab a client-side link when that role's route path prefix-matches the tab's pathname (`isClientRoute`), and the tab list itself comes from `course_metadata` as absolute LMS URLs, matched by pathname (`findActiveTab`). A single role on the root `learning` route therefore satisfies every check for every tab, which is how instructor dashboard declares its one role under both ids.
+- Legacy Learning never required a signed-in user at initialization (anonymous access to public courses), so no route takes `authenticatedLoader` here; a page port that needs one adds it.
+
 ## Route tree
 
-- One root route, path `learning`, id `org.openedx.frontend.route.learning.main`, role `org.openedx.frontend.role.learning`, element a bare outlet. The converted apps checked each keep the first segment of their old URL as the root route: [catalog](https://github.com/openedx/frontend-app-catalog/blob/master/src/routes.tsx) `/catalog`, [gradebook](https://github.com/openedx/frontend-app-gradebook/blob/master/src/routes.tsx) `/gradebook/:courseId`, [profile](https://github.com/openedx/frontend-app-profile/blob/master/src/routes.tsx) `profile`, [account](https://github.com/openedx/frontend-app-account/blob/master/src/routes.tsx) `account`, [instructor dashboard](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/routes.tsx) `instructor-dashboard/:courseId`. The shell's [`getAppRoutes`](https://github.com/openedx/frontend-base/blob/main/shell/router/getAppRoutes.ts) concatenates app routes as written under one site basename, so this is what keeps every existing `/learning/...` link resolving.
-- Child routes, one per page Learning serves today, each with its own id and a stub element, and a role where another app would resolve it to link there:
+`src/routes.tsx` exports a `RoleRouteObject[]` with one root and eleven children, paths relative to the root so the array carries no site basename:
 
-  | Page | Path(s) under `learning` | Role |
+- Root: `path: 'learning'`, `id: 'org.openedx.frontend.route.learning.main'`, `handle.roles: ['org.openedx.frontend.role.learning']`, `Component: Main` (the template's `Main.tsx`, which is the `CurrentAppProvider` the shell's per-app config reads through, plus an outlet; the Learning-wide providers land on it with the first page that needs each).
+- Children, each `id: 'org.openedx.frontend.route.learning.<page>'`, each rendering `<StubPage page="..." />`, with a role only where another app would resolve it to link there:
+
+  | page | path(s) under `learning` | role |
   |---|---|---|
-  | outline tab (course home) | `course/:courseId/home` | `org.openedx.frontend.role.courseHome` |
+  | course home (outline tab) | `course/:courseId/home` | `org.openedx.frontend.role.courseHome` |
   | dates | `course/:courseId/dates` | `org.openedx.frontend.role.courseDates` |
   | progress | `course/:courseId/progress`, `course/:courseId/progress/:targetUserId` | `org.openedx.frontend.role.courseProgress` |
-  | discussion | `course/:courseId/discussion/:path/*` | none (a redirect; the destination role belongs to the discussions app) |
+  | discussion | `course/:courseId/discussion/:path/*` | none (ported as a redirect, #2204) |
   | live | `course/:courseId/live` | `org.openedx.frontend.role.courseLive` |
   | courseware | `course/:courseId`, `course/:courseId/:sequenceId`, `course/:courseId/:sequenceId/:unitId`, `preview/course/:courseId/:sequenceId`, `preview/course/:courseId/:sequenceId/:unitId` | `org.openedx.frontend.role.courseware` |
   | course exit | `course/:courseId/course-end` | `org.openedx.frontend.role.courseExit` |
-  | access denied | `course/:courseId/access-denied` | none (an internal state) |
+  | access denied | `course/:courseId/access-denied` | none (internal state) |
   | goal unsubscribe | `goal-unsubscribe/:token` | none (reached from emailed URLs) |
-  | redirect landing | `redirect/*` | none (an internal state) |
+  | redirect landing | `redirect/*` | none (internal state) |
   | preferences unsubscribe | `preferences-unsubscribe/:userToken/:updatePatch?` | none (reached from emailed URLs) |
 
-  Route ids are `org.openedx.frontend.route.learning.<page>`; role ids follow the flat camelCase of catalog's ([`src/constants.ts`](https://github.com/openedx/frontend-app-catalog/blob/master/src/constants.ts)). The root role on the root route is what the shell's course bar checks. A page role is a promise that another app may resolve it to link there, so only destination pages carry one; redirects, internal states and pages reached from emailed URLs carry none.
-- A stub element renders one line: the page's name and "not yet ported". It exists so a tester can tell an unported page from a broken one; each page's port replaces it.
-- No catch-all route: the shell renders its own not-found page for unmatched paths.
-- Not in this issue: the URL-decoding and path-fixing wrappers around the course routes (they come with the courseware container), providers, data fetching, the header widget, slots.
+  A page with several paths is several route objects sharing the page's stub and role, with the id on the first; react-router ranks a static segment above a param, so `course/:courseId/dates` beats `course/:courseId/:sequenceId` as it does on `master`. The eleven paths are `master`'s `DECODE_ROUTES` and `ROUTES` with the leading slash removed; the legacy constants are rewritten here, not moved, so the manifest gets no line.
+- `src/constants.ts` holds the role ids beside `appId` and `learningRole`, flat camelCase after catalog's. Nothing exports them: other apps name the role they resolve as a string, as learner dashboard does for catalog's `courses` role.
+- `src/StubPage.tsx`: one component, one line, the page name and "not yet ported", no translation since it never ships. Each port deletes its use; the file goes with the last.
+- No catch-all: the shell's router renders its not-found page for an unmatched path. Not here: the URL-decoding and path-fixes wrappers (they come with the courseware container, #2195), providers, data, the header widget, slots.
 
 ## `provides`
 
-- The root role is listed under both `providesCourseBarRolesId` and `providesCourseBarMasqueradeRolesId`, exactly as frontend-app-instructor-dashboard declares its single role in [`src/provides.ts`](https://github.com/openedx/frontend-app-instructor-dashboard/blob/main/src/provides.ts). The course bar then renders on every route carrying the root role (ancestor roles count as active), and client-navigates to any tab whose URL prefix-matches a provided role's route, which `/learning` does for every tab.
-- Tabs the LMS lists that no installed app provides still appear and render as full-page links; that is the shell's behavior and is not changed here.
+`src/provides.ts`, as instructor dashboard's: the root role in an array under both `providesCourseBarRolesId` and `providesCourseBarMasqueradeRolesId` (the shell's docstring form), wired into `src/app.ts`. The masquerade bar then renders on any course route when the masquerade endpoint says the user may; a tab that the LMS lists and no app provides is still shown, as a full-page link.
 
-## Testing
+## Tests
 
-- Route tests render the exported route array under a memory router at each path above and assert the stub line for that page, as profile's [`app.test.ts`](https://github.com/openedx/frontend-app-profile/blob/master/src/app.test.ts) exercises its routes through the app object.
-- No fetch is mocked because nothing fetches.
+- `src/routes.test.tsx`: renders the exported array with `createMemoryRouter` at each path in the table and asserts the stub line names that page; an unmatched path under `learning` renders nothing of Learning's (the shell's not-found page is the shell's to test). Params are taken from the stub where a path has them, so the test shows `courseId` reaches the page.
+- `src/app.test.ts` grows the `provides` assertion: the root role under both ids, and every route's `handle.roles` drawn from the constants.
+- A shared render helper, `src/testing/render.tsx`, wrapping a memory router and the intl provider, is introduced here since every later page test needs it; the query client joins when the dates port brings the first fetch.
+- No fetch is mocked because nothing fetches; the suite must stay silent under the console hook.
+
+## Commits
+
+One commit, squashed on merge: `feat: add the frontend-base route tree with stub pages, roles and provides`. Checks: `npm run lint`, `npm test`, `npm run build`, `npm run build:ci` in `frontend-base/`; the root `make validate` does not see the package.
+
+## Stack
+
+`bsmith/frame-routes` above `bsmith/test-console-noise`, opened as a draft.
+
+## Manual testing
+
+On the package's dev site against Tutor dev, signed in as a staff user, with the LMS's learning URL pointing at `apps.local.openedx.io:2000/learning` and tutor's `mfe` service stopped:
+
+- `/learning/course/<courseId>/home`: the shell header and footer render, the course bar lists the course's tabs from `course_metadata`, and the page body is the course home stub.
+- Each tab in the bar switches to its stub without a full page load (the dev console keeps its earlier lines; the network panel shows no document request).
+- The masquerade bar shows on course routes for staff.
+- A courseware path with sequence and unit ids, a preview path, the progress path with a target user, and the three non-course paths each show their stub.
+- An unmatched path under `/learning` shows the shell's not-found page with header and footer.
+
+## Not in scope
+
+- Any page content, provider, fetch or slot; the header title widget (#2193); the masquerade bar's Learning extras (#2194).
+- The redirect of the discussion route (#2204) and the loaders of the redirect landing page (#2205); both are stubs here.
 
 ## Acceptance
 
 - [ ] Every path in the table renders its stub under the shell; an unmatched path renders the shell's not-found page
 - [ ] The shell course bar lists the course's tabs and navigates to Learning's tabs without a full page load; the masquerade bar appears on course routes for staff
 - [ ] The route array has no site-basename assumption
-- [ ] Route tests cover every path in the table
-- [ ] Types, lint and tests of the new package pass; the legacy workflow stays green; `npm run dev` from the package serves the stubs
-- [ ] Manifest lines added for any legacy file this touches (expected: none; the route constants are rewritten, not moved)
+- [ ] Route tests cover every path in the table; the suite stays silent
+- [ ] Lint, tests and both builds of the package pass; the legacy workflow stays green; `npm run dev` from the package serves the stubs
+- [ ] No manifest line: the route constants are rewritten, not moved
 
 </details>
