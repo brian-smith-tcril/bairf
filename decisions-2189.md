@@ -178,3 +178,10 @@ and are not repeated.
     #2223 holds the Slot API replacement (the #2082 review's sketch and the
     survey of other plugin authors).
 
+19. **Font Awesome stays for the port.** The frame and dates files render
+    their icons through `@fortawesome/react-fontawesome` as on `master`, and
+    the package declares the three dependencies (decision 13). Replacing
+    Font Awesome with Paragon icons is one change across twenty files, with
+    a product question on the Creative Commons marks, so it is a follow-up
+    after the port rather than a change inside each layer: #2224.
+
