@@ -160,3 +160,8 @@ and are not repeated.
     ESLint 9 reports the `no-return-assign,no-sequences` disable in
     `courseBlocks.factory.js` as unused under the base config, so it goes
     (commit 2).
+
+17. **rosie stays for the port.** The factories and their 192 `Factory.build`
+    call sites move as they are, so each test file is rewritten once, after
+    the port; the library's maintenance status (last release 2023-11-11)
+    and the replacement options are #2222.
