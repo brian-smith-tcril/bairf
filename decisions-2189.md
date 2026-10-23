@@ -45,3 +45,48 @@ and are not repeated.
    can bring them back from `master`'s history if a provider-side
    verifier appears. The epic's "Pact is a per-port check" stands, with
    the check answered here.
+
+5. **The app bundles a `defaultConfig` with the keys it reads, at `null`.**
+   `getAppConfig(appId)` returns `undefined` for an app with no
+   `defaultConfig`, no `config` and no site `commonAppConfig`, so
+   `getAppConfig(appId).EXAMS_BASE_URL` threw in the first run of the
+   ported data tests, and would throw at runtime on a site that sets
+   nothing. Account and profile bundle their keys at `null` for this
+   reason, and `null` is what `master`'s `mergeConfig` gave these keys
+   (`process.env.X || null`). The epic's "only real defaults in
+   `defaultConfig`" is read as "a key the app reads, with the value
+   `master` defaulted it to"; `defaultConfig` sits below
+   `commonAppConfig`, so it cannot shadow a site-wide value the way an
+   app's own `config` would. This layer adds `ENABLE_NOTICES` and
+   `EXAMS_BASE_URL`; each later layer adds the keys its files read.
+
+6. **The real app is registered from the setup file, not the test site
+   config.** Importing `learningApp` into `site.config.test.tsx` made the
+   `provides` ids `undefined`: frontend-base's `initializeMockApp` imports
+   `site.config` while frontend-base itself is still loading, so the
+   app's imports from `@openedx/frontend-base` resolved to a half-built
+   module. The test site config keeps the template's inline stub (the
+   how-to's reason for it), and `setupTest.js` runs
+   `mergeSiteConfig({ apps: [learningApp] })` before `addAppConfigs()`,
+   after frontend-base is loaded, which is what profile's app test does
+   locally. The stub's `config` survives the merge, so the test config
+   is still where test-only values live.
+
+7. **`.env.test` becomes the test site config.** `master`'s tests ran
+   with `EXAMS_BASE_URL=http://localhost:18740`, `LMS_BASE_URL=http://localhost:18000`
+   and `BASE_URL=http://localhost:2000` from `.env.test`, and the hook
+   tests filter requests by the exams-service URL shape. The test site
+   config carries those three (`lmsBaseUrl`, `baseUrl`, and
+   `EXAMS_BASE_URL` in the stub app's `config`), the way account's test
+   config carries only the keys its tests rely on; later layers add
+   theirs as their tests need them.
+
+8. **The factories register from the setup file, and the shared course
+   factories come with the course-home ones.** rosie factories exist
+   only once their module runs; `master`'s setup file imports the
+   factory index, so does the package's. The course-home factories
+   import `shared/data/__factories__` (course metadata base, tabs,
+   blocks), so those five files port here rather than with courseware;
+   the `eslint-disable-line import/no-extraneous-dependencies` comments
+   on their rosie imports go, since the base lint config has no `import`
+   plugin and reports the unknown rule.
