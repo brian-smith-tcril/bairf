@@ -90,3 +90,73 @@ and are not repeated.
    the `eslint-disable-line import/no-extraneous-dependencies` comments
    on their rosie imports go, since the base lint config has no `import`
    plugin and reports the unknown rule.
+
+9. **The `main` landmark stays on the loaded tab page; `#main-content` goes.**
+   The shell's `DefaultLayout` wraps the content slot in `div#main-content`,
+   the target of the header's skip link, and renders no `main` element.
+   `LoadedTabPage` keeps `master`'s `<main>` and drops `id="main-content"`
+   from its inner `div`, which would be a second element with the id; the
+   template's `Main.tsx` renders a `div` instead of its `<main>` so the
+   page's landmark is not nested in another.
+
+10. **`unitId` leaves `TabPage` and `LoadedTabPage`.** On `master` the prop
+    reaches only the instructor toolbar (`LoadedTabPage.tsx:75`); with the
+    toolbar deferred to #2194 nothing reads it, and #2194 brings it back.
+
+11. **`defaultProps` become default parameters, and `null` defaults go.**
+    `master`'s setup file silences React's `defaultProps` deprecation for
+    the whole suite; under the console hook `UserMessagesProvider`,
+    `AlertList` and `Alert` are fixed instead. A `= null` default on a
+    `.jsx` parameter is typed `null` by tsc (strict, `allowJs`), which made
+    `.tsx` callers unable to pass a string `topic` or `className` or element
+    children; those props keep no default (undefined when omitted), and no
+    reader tells the two apart (`!topic`, `className`, `children`,
+    `onClose`). `dismissible`, `stacked`, `customAlerts` and `customProps`
+    keep theirs.
+
+12. **Third-party `defaultProps`: Paragon silenced, react-fontawesome
+    upgraded.** Paragon 23.23.0's `Icon` still declares `defaultProps`; its
+    message is silenced under openedx/paragon#3043, one pattern per
+    component the suite has met rather than a Paragon-wide one.
+    react-fontawesome removed its `defaultProps` in 0.2.1 (its changelog,
+    2024-05-16), so the package takes `^0.2.6`, the version profile and
+    account pin, in place of `master`'s `^0.1.4` (installed as 0.1.19).
+
+13. **The package declares the dependencies its files import.**
+    `@fortawesome/react-fontawesome`, `@fortawesome/free-solid-svg-icons`
+    and `prop-types` resolved through the parent repo's `node_modules`
+    (`prop-types` also through frontend-base's own dependency) with no line
+    in the package's `package.json`; the two FontAwesome packages were not
+    installed in the package at all. They are declared at `master`'s
+    versions apart from react-fontawesome (decision 12):
+    `free-solid-svg-icons` `^5.15.4` (profile and account are on the 6.x
+    pack, which changes glyphs; not this port's change),
+    `fontawesome-svg-core` `^6.7.2` (react-fontawesome's peer, and what
+    `master`'s lock installs beside the 5.x icons), `prop-types`
+    `^15.8.1`. Twenty `master` files import FontAwesome, two in the dates
+    tab, so the dependency arrives with this layer either way.
+
+14. **The render helper keeps an `ErrorBoundary` where `AppProvider`
+    stood.** `master`'s wrapper is frontend-platform's `AppProvider`, whose
+    outermost element is its `ErrorBoundary`, and `LoadedTabPage.test.jsx`
+    depends on it: a render before the metadata loads throws, and the test
+    asserts the `logError` call the boundary makes. frontend-base's
+    `ErrorBoundary` reports the same way, so it takes that place; the rest
+    of `AppProvider` is the shell's (`SiteContext`, locale) or the helper's
+    `wrapWithRouter`. The query client is created once per `render` call,
+    as on `master`, not once per render of the wrapper.
+
+15. **Tests that go with the deferred pieces.** `TabPage.test.jsx` loses
+    the two tour-button cases (#2208); `LoadedTabPage.test.jsx` the
+    instructor-toolbar (#2194) and streak-modal (celebrations) cases, its
+    `renders correctly` case becoming a frame assertion without the tabs
+    slot; `TabWithTimer.test.tsx` keeps one pass-through case, its seven
+    timer and attempt cases returning with #2198.
+
+16. **Two fixes amended into earlier commits.** frontend-base's `User`
+    requires `avatar: string`, which the CI build's type check over the
+    test files (not `tsconfig.build.json`) reported; the mock user takes
+    the value frontend-base's `authenticatedLoader.test.ts` uses (commit 1).
+    ESLint 9 reports the `no-return-assign,no-sequences` disable in
+    `courseBlocks.factory.js` as unused under the base config, so it goes
+    (commit 2).
