@@ -165,3 +165,16 @@ and are not repeated.
     call sites move as they are, so each test file is rewritten once, after
     the port; the library's maintenance status (last release 2023-11-11)
     and the replacement options are #2222.
+
+18. **The plugin override registry is dropped, not carried.** The frame
+    commit first ported `generic/plugin-overrides/` and mounted its
+    provider on the root route as the faithful port of `index.jsx`. On a
+    frontend-base site no plugin can reach the registry: `usePluginOverrides`
+    is not among the package's exports (`learningApp`, `learningRoutes`),
+    and until #2185 restores the slots there is no slot to mount a widget
+    in; carrying the provider preserved nothing observable. The four files
+    get `dropped` manifest lines, `Main.tsx` and the render helper mount
+    three providers, the unit (#2196) calls `getIFrameUrl` directly, and
+    #2223 holds the Slot API replacement (the #2082 review's sketch and the
+    survey of other plugin authors).
+

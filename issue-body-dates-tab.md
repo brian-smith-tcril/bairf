@@ -13,7 +13,7 @@ Part of #1905. Depends on #2188.
 ## Baseline
 
 - The package at the top of #2221: the route tree with stubs, `learningCourse` on the course layout routes, no fetch, no provider, 29 tests, the suite failing on unexpected console output, the jest environment supplying the Fetch globals.
-- On `master`, the dates tab's import closure (walked from `DatesTab.jsx`, `TabPage.tsx`, `LoadedTabPage.tsx`, `TabWithTimer.tsx` and `course-home/data/apiHooks.ts`, with the instructor toolbar, product tours, streak celebration, special-exams provider and the header, footer and tabs slots left out) is 44 source files; with their tests, factories and the Pact test, 72 files move. The two root providers outside that closure, notices and plugin overrides, come with the root route.
+- On `master`, the dates tab's import closure (walked from `DatesTab.jsx`, `TabPage.tsx`, `LoadedTabPage.tsx`, `TabWithTimer.tsx` and `course-home/data/apiHooks.ts`, with the instructor toolbar, product tours, streak celebration, special-exams provider and the header, footer and tabs slots left out) is 44 source files; with their tests, factories and the Pact test, 72 files move. The root provider outside that closure, notices, comes with the root route.
 - frontend-platform symbols the closure uses, all exported by `@openedx/frontend-base` from its root: `getAuthenticatedHttpClient`, `getAuthenticatedUser`, `getLoginRedirectUrl`, `sendTrackEvent`, `logError`, `logInfo`, `useIntl`, `FormattedMessage`, `defineMessages`, `getLocale`, `camelCaseObject`; `getConfig` becomes `getSiteConfig` or `getAppConfig(appId)` per key; `AppContext` becomes `SiteContext` (same `authenticatedUser` field). `history` appears only in tests.
 - Config keys the closure reads: `LMS_BASE_URL` (23 sites) is `getSiteConfig().lmsBaseUrl`; `SITE_NAME` is `siteName`; `EXAMS_BASE_URL` (the onboarding and exam-attempt URLs in `course-home/data/api.ts`) and `ENABLE_NOTICES` are app config keys under their existing names, read through `getAppConfig(appId)`, with no bundled default, since `master` defaults both to `null` and the code treats unset the same way.
 
@@ -26,10 +26,10 @@ Each file ports to the same relative path under `frontend-base/src/` and gets a 
 - `course-home/data/`: `api.ts`, `apiHooks.ts`, `courseHomeOutline.ts` (imported by `api.ts`), the five factories and the three tests. The module ports whole: its outline and progress functions have no consumer yet but splitting the file for one tab would be a change for nothing.
 - `tab-page/`: `TabPage`, `LoadedTabPage`, `TabWithTimer`, index, messages, their four tests.
 - `alerts/enrollment-alert/`, `alerts/logistration-alert/`: the two alerts the loaded tab page mounts, with their hooks, data and tests.
-- `generic/`: `PageLoading`, `ToastContext`, `messages`, `user-messages/` (provider, context, hooks, `Alert`, `AlertList`, tests), `notices/` (provider, api, test), `plugin-overrides/` (context, index, test).
+- `generic/`: `PageLoading`, `ToastContext`, `messages`, `user-messages/` (provider, context, hooks, `Alert`, `AlertList`, tests), `notices/` (provider, api, test).
 - `shared/access.js`, `data/http-error.ts`, `data/localStorage.js`, `course-tabs/utils.ts`, `utils.ts`, `plugin-slots/BannerDatesUpgradeSlot/index.tsx`.
 
-Dropped, with `dropped` manifest lines, because the shell owns what they rendered: `plugin-slots/HeaderSlot/`, `plugin-slots/CourseTabsNavigationSlot/`, and `course-tabs/` apart from `utils.ts` (the tabs navigation and its links, replaced by the shell's course bar).
+Dropped, with `dropped` manifest lines, because the shell owns what they rendered: `plugin-slots/HeaderSlot/`, `plugin-slots/CourseTabsNavigationSlot/`, and `course-tabs/` apart from `utils.ts` (the tabs navigation and its links, replaced by the shell's course bar). Dropped as well: `generic/plugin-overrides/`, the override registry a slot-rendered plugin used to change the unit's iframe URL. On a frontend-base site no plugin can reach it: the hook is not a package export, and until #2185 there is no slot to mount a widget in. The unit (#2196) calls `getIFrameUrl` directly; the override moves onto the Slot API in #2223.
 
 ## What changes in the moved code
 
@@ -42,7 +42,7 @@ Dropped, with `dropped` manifest lines, because the shell owns what they rendere
 
 ## Root route element
 
-`Main.tsx` keeps the `CurrentAppProvider` and the outlet and gains the four Learning-wide providers in `master`'s nesting order: notices, user messages, toast, plugin overrides. They mount once, only under `/learning`, and persist across client-side tab switches; nothing goes in `App.providers`, which the shell hoists site-wide, and the legacy query client provider is dropped since the shell owns one. The title message stays until a page sets its own through Helmet, as the loaded tab page does.
+`Main.tsx` keeps the `CurrentAppProvider` and the outlet and gains the three Learning-wide providers in `master`'s nesting order: notices, user messages, toast. They mount once, only under `/learning`, and persist across client-side tab switches; nothing goes in `App.providers`, which the shell hoists site-wide, and the legacy query client provider is dropped since the shell owns one. The title message stays until a page sets its own through Helmet, as the loaded tab page does.
 
 ## Test conventions
 
@@ -50,7 +50,7 @@ This is the first page port, so its choices are the template for the rest.
 
 - `src/setupTest.js` calls `initializeMockApp({ authenticatedUser })` and `addAppConfigs()` at top level, as profile and account do; the fail-on-console hook stays.
 - **HTTP: the real mock-app client with `axios-mock-adapter`, not a per-file `jest.fn()`.** None of the converted apps has the adapter; profile, account, catalog, gradebook and learner dashboard replace `getAuthenticatedHttpClient` with a fake per file. Learning keeps the adapter: frontend-base's `MockAuthService` hands out a real `axios.create()` client and its own docstring's example wraps it in `axios-mock-adapter`; `master`'s 124 suites, its course-request harness and its request assertions on `axiosMock.history` are written for it, so porting is a move rather than a rewrite; and the error-path tests depend on real axios error shapes (`TabPage` branches on `response.status`), which a hand-built fake does not produce. `axios-mock-adapter` becomes a dev dependency; the deviation from the other apps is stated in the PR.
-- `src/tests/`: `createTestQueryClient` and `seedQueryData` from `master`'s setup file, and the render helper grows to `master`'s wrapper shape (query client, intl provider, the four Learning providers, a memory router around the exported route array). `mockCourseRequests` waits for the courseware container, which is what it mocks.
+- `src/tests/`: `createTestQueryClient` and `seedQueryData` from `master`'s setup file, and the render helper grows to `master`'s wrapper shape (query client, intl provider, the three Learning providers, a memory router around the exported route array). `mockCourseRequests` waits for the courseware container, which is what it mocks.
 - Each test file mocks `@openedx/frontend-base` by spreading `jest.requireActual` and overriding what it needs; no shared mock module; no Mock Service Worker. `master`'s plugin-framework mock is gone with the placeholder slots. `master`'s setup file silences two React deprecation messages (`defaultProps` on function components, `propTypes` on `forwardRef`); under the console hook each occurrence in the ported suites is either fixed in the component or, where it is Paragon's or react-fontawesome's, added to the silenced list under its upstream issue.
 - The dates test reaches the page through the exported route array at the dates path, with the course-metadata and dates requests mocked; its `history` assertions become memory-router ones. The tab-page, alerts, user-messages, notices and data tests port at their seams.
 - Pact: the consumer test and the contract it writes are dropped (`dropped` manifest lines for the test, `src/pacts/constants.js` and `src/pacts/frontend-app-learning-lms.json`). The contract is published and verified by nothing (openedx-platform's only Pact verifier loads its own xblock-handler contract; `master` has no broker, stub script or CI step), its committed file is stale, and `api.test.js` covers the two functions the test exercised.
@@ -68,7 +68,7 @@ Checks after each: `npm run lint`, `npm test`, `npm run build`, `npm run build:c
 
 ## Coverage
 
-Each ported directory gets a `coverageThreshold` entry at `master`'s line coverage from the baseline table in #2187: `course-home/dates-tab` 98.39, `course-home/suggested-schedule-messaging` 98.28, `course-home/data` 99.64, `tab-page` 100, `alerts/enrollment-alert` 100, `alerts/logistration-alert` 84.44, `generic/user-messages` 89.77, `generic/notices` 53.85, `generic/plugin-overrides` 100, `plugin-slots/BannerDatesUpgradeSlot` 100. jest removes files matched by a path threshold from the global one.
+Each ported directory gets a `coverageThreshold` entry at `master`'s line coverage from the baseline table in #2187: `course-home/dates-tab` 98.39, `course-home/suggested-schedule-messaging` 98.28, `course-home/data` 99.64, `tab-page` 100, `alerts/enrollment-alert` 100, `alerts/logistration-alert` 84.44, `generic/user-messages` 89.77, `generic/notices` 53.85, `plugin-slots/BannerDatesUpgradeSlot` 100. jest removes files matched by a path threshold from the global one.
 
 ## Stack
 
@@ -87,7 +87,7 @@ On the package's dev site against Tutor dev with the demo course: the dates tab 
 
 - [ ] The dates tab renders its timeline for an enrolled learner, with the frame's alerts, and the dates upgrade banner slot as a placeholder slot
 - [ ] Loading, error and access-denied states of the frame behave as on `master`; access denied lands on the access-denied route (a stub until its own issue)
-- [ ] The root route's element mounts the four providers; nothing is registered in `App.providers`; no second query client
+- [ ] The root route's element mounts the three providers; nothing is registered in `App.providers`; no second query client
 - [ ] Switching between dates and another tab keeps the root providers mounted
 - [ ] The test setup, render helper and mocking conventions above are in place and the ported tests pass, the dates test through the route array
 - [ ] Lint, tests and both builds of the package pass; the legacy workflow stays green; `npm run dev` from the package serves dates

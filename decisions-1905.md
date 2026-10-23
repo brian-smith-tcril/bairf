@@ -463,6 +463,12 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     page. The query client provider is dropped; the shell owns one. A
     widget mounted in the shell header cannot read these and reads the
     shared query cache instead (the title widget).
+    Amended 2026-10-23: three providers, not four. The plugin-overrides
+    provider is dropped with its module (#2223 reshapes the override onto
+    the Slot API): on a frontend-base site no plugin can reach the registry,
+    since `usePluginOverrides` is not a package export and, until #2185,
+    there is no slot to mount a widget in; carrying it preserved nothing
+    observable. The unit (#2196) calls `getIFrameUrl` directly.
 
 31. **Roles: one on the root, one per tab.** Learning provides a single
     `learning` role under both `providesCourseBarRolesId` and
