@@ -28,3 +28,20 @@ and are not repeated.
    arrival with the 2020 data integration tests (`eac9bf9c`) and was only
    ever moved by renovate (`19b8df35`, 2024-11-20), which keeps whatever
    range style it finds; no commit names a reason for it.
+
+4. **The Pact consumer test is dropped, with its contract.** `master`'s
+   `src/course-home/data/pact-tests/lmsPact.test.jsx` runs in the suite
+   and was maintained (last touched by #2099), but what it produces is
+   unconsumed: the contract it writes, `src/pacts/frontend-app-learning-lms.json`,
+   is in merge mode and still carries interactions for courseware
+   endpoints whose tests were deleted years ago and an old
+   `/api/course_home/v1/course_metadata` path; nothing publishes or
+   verifies it (openedx-platform's one Pact verifier,
+   `lms/djangoapps/courseware/tests/pacts/verify_pact.py`, loads its own
+   xblock-handler contract; `master` has no broker, stub script or CI
+   step). The two functions it exercised are covered by `api.test.js`.
+   The test, `src/pacts/constants.js` and the contract file get `dropped`
+   manifest lines and `@pact-foundation/pact` is not added; a later layer
+   can bring them back from `master`'s history if a provider-side
+   verifier appears. The epic's "Pact is a per-port check" stands, with
+   the check answered here.
