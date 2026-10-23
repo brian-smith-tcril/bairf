@@ -302,6 +302,23 @@ Settled 2026-10-19, while charting the wayfinder map.
     redirect layers' loaders are unit-tested directly, which needs the
     same globals for the `Response` that `redirect()` returns. Sources
     and the rejected `whatwg-fetch` are in the layer's decision log.
+    Amended 2026-10-23 (openedx/frontend-app-learning#2189): the HTTP
+    client in tests is the real mock-app client wrapped in
+    `axios-mock-adapter`, not a per-file `jest.fn()` on
+    `getAuthenticatedHttpClient`. None of the eight converted apps has the
+    adapter; profile, account, catalog, gradebook and learner dashboard
+    replace the client with a fake per file. Learning stays with the
+    adapter because frontend-base's `MockAuthService` hands out a real
+    `axios.create()` client and its docstring's own example wraps it in
+    `axios-mock-adapter`; master's 124 suites, its `mockCourseRequests`
+    harness and the React Query epic's HTTP-boundary assertions on
+    `axiosMock.history` are written for it, so porting is a move; and
+    the error-path tests depend on real axios error shapes (`TabPage`
+    branches on `response.status`), which a hand-built fake does not
+    produce. The deviation is stated in #2189's PR body. The rest of the
+    convention stands: `initializeMockApp` and `addAppConfigs` at top
+    level, per-file `jest.requireActual` mocks of frontend-base, no
+    shared mock module, no Mock Service Worker.
 
 24. **Cross-app URLs are route roles.** `DISCUSSIONS_MFE_BASE_URL`,
     `ENTERPRISE_LEARNER_PORTAL_URL` and `INSIGHTS_BASE_URL` become
