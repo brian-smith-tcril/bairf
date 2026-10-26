@@ -1,6 +1,6 @@
 # Plan: openedx/frontend-base#328 — the skip link moves focus to the app's `<main>`
 
-The direction settled in the issue's discussion on 2026-10-26: the skip link finds the landmark itself; apps put no id on anything; the one rule for apps is "render exactly one `<main>` around the primary content". Written 2026-10-26, for the PR body.
+The direction settled in the issue's discussion on 2026-10-26: the skip link finds the landmark itself; apps put no id on anything; the one rule for apps is the HTML one, per route: one `<main>` around the primary content, and no other `<main>` without the `hidden` attribute (HTML Living Standard, the `main` element: "A document must not have more than one main element that does not have the hidden attribute specified."). Written 2026-10-26, revised the same day, for the PR body.
 
 ## Baseline
 
@@ -10,17 +10,17 @@ The direction settled in the issue's discussion on 2026-10-26: the skip link fin
 
 ## Change
 
-1. **`shell/header/SkipLink.tsx` (new), rendered by `Header.tsx` in place of the anchor.** The same anchor, `href="#main-content"` kept as the no-JS fallback, with a click handler: find `document.querySelector('main')`, else `document.getElementById('main-content')`; if neither, return and let the anchor act. Otherwise `preventDefault`, set `tabindex="-1"` on the target if it has no `tabindex`, then `focus()` and `scrollIntoView()`. Browsers scroll to a hash target but do not move focus to a non-focusable element, so the next Tab would return to the top of the page without this.
+1. **`shell/header/SkipLink.tsx` (new), rendered by `Header.tsx` in place of the anchor.** The same anchor, `href="#main-content"` kept as the no-JS fallback, with a click handler: find the first `<main>` without the `hidden` attribute, else `document.getElementById('main-content')`; if neither, return and let the anchor act. Otherwise `preventDefault`, set `tabindex="-1"` on the target if it has no `tabindex`, then `focus()` and `scrollIntoView()`. Browsers scroll to a hash target but do not move focus to a non-focusable element, so the next Tab would return to the top of the page without this.
 2. **`shell/style.scss`:** `main[tabindex="-1"]:focus { outline: none; }`, scoped to the programmatic case so an app's own focus styling is untouched.
-3. **A development-only check for nested landmarks, in `Shell.tsx`.** After each location change, on a development site, warn when `document.querySelectorAll('main').length > 1`, naming the rule. Only "more than one" is checked: a count of zero can be a lazy route still loading, and a false warning on every navigation would teach people to ignore it. The warning goes through `console.warn` with a message that names the rule and the count.
-4. **`docs/how_tos/migrate-frontend-app.md`:** one line under the app's layout: render exactly one `<main>` around the primary content; the shell's skip link focuses it.
+3. **A development-only check for nested landmarks, in `Shell.tsx`.** After each location change, on a development site, warn when more than one `<main>` lacks the `hidden` attribute, naming the rule. Only "more than one" is checked: a count of zero can be a lazy route still loading, and a false warning on every navigation would teach people to ignore it. The warning goes through `console.warn` with a message that names the rule and the count.
+4. **`docs/how_tos/migrate-frontend-app.md`:** one line under the app's layout: each route renders one `<main>` around its primary content and no other without `hidden`; the shell's skip link focuses it.
 
 Not here: frontend-template-application's nested `<main>` (a one-line fix there, filed separately), focus management after client-side navigation (the issue's last paragraph; its own issue), any change to `id="main-content"` on the wrapper, which stays as the fallback target.
 
 ## Tests
 
-- `shell/header/SkipLink.test.tsx`: renders the link with its message and `href`; click with a `<main>` in the document moves focus to it and gives it `tabindex="-1"`; a `<main>` that already has a `tabindex` keeps it; with no `<main>` the wrapper with `id="main-content"` is focused; with neither, the click is not prevented. jsdom has no `scrollIntoView`, so the test defines it on `Element.prototype` and asserts the call.
-- The landmark check: one `<main>` is silent; two warn on a development site; two are silent on a production site. Rendered through the shell's test site config, the way `site.config.test.tsx` is used by the router tests.
+- `shell/header/SkipLink.test.tsx`: renders the link with its message and `href`; click with a `<main>` in the document moves focus to it and gives it `tabindex="-1"`; a hidden `<main>` is passed over for the visible one; a `<main>` that already has a `tabindex` keeps it; with no `<main>` the wrapper with `id="main-content"` is focused; with neither, the click is not prevented. jsdom has no `scrollIntoView`, so the test defines it on `Element.prototype` and asserts the call.
+- The landmark check: one `<main>` is silent; two warn on a development site; hidden ones are not counted; two are silent on a production site. Rendered through the shell's test site config, the way `site.config.test.tsx` is used by the router tests.
 - `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 
 ## Commit and PR
