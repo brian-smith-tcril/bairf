@@ -188,3 +188,17 @@ and are not repeated.
     a product question on the Creative Commons marks, so it is a follow-up
     after the port rather than a change inside each layer: #2224.
 
+20. **The package lints its `.jsx` files itself.** frontend-base's base lint
+    config names no `**/*.jsx` pattern, so ESLint 9 never lints `.jsx` files
+    under `createLintConfig` (openedx/frontend-base#327, a regression of its
+    ESLint 9 upgrade; reproduced in every converted app with `.jsx` files).
+    This layer brings the first eleven, so `eslint.config.js` gains a
+    `files: ['src/**/*.jsx']` block under the issue's URL, in the commit that
+    brings the files rather than the scaffold. Linting them surfaced four
+    findings, fixed in the same commit: an airbnb-era
+    `react/forbid-prop-types` disable in `AlertList.jsx` for a rule the base
+    config does not enable, an unused `act` import and a double blank line
+    in `LoadedTabPage.test.jsx`, and a nameless mocked component in
+    `TabPage.test.jsx` (named `LoadedTabPage`, as `TabWithTimer.test.tsx`
+    names its). The block goes when frontend-base ships the fix.
+
