@@ -4,8 +4,8 @@ The direction settled in the issue's discussion on 2026-10-26: the skip link fin
 
 ## Baseline
 
-- `shell/header/Header.tsx` renders `<a className="sr-only sr-only-focusable" href="#main-content">`; `shell/DefaultLayout.tsx` puts `id="main-content"` on the `div.flex-grow-1` around the content slot. The shell renders no `<main>`. The template's `src/Main.tsx` renders `<main>` around its outlet and `src/example/ExamplePage.tsx` renders another inside it (two nested landmarks); profile, account, catalog, learner dashboard and Learning's tab page each render one `<main>`.
-- The shell has no stylesheet rule for `main` (`shell/style.scss` is utility classes) and no development-only diagnostics beyond the React Query devtools gate in `shell/site.tsx` (`process.env.NODE_ENV === 'development'`); a development site is also marked by `getSiteConfig().environment === EnvironmentTypes.DEVELOPMENT` (`site.config.dev.tsx`).
+- `shell/header/Header.tsx` renders `<a className="sr-only sr-only-focusable" href="#main-content">`; `shell/DefaultLayout.tsx` puts `id="main-content"` on the `div.flex-grow-1` around the content slot. The shell renders no `<main>`; every app does, around what it considers its primary content (the template's `src/Main.tsx`, profile, account, catalog, learner dashboard, Learning). The template also renders a second `<main>` inside the first, in `src/example/ExamplePage.tsx`.
+- The shell has no stylesheet rule for `main` (`shell/style.scss` is utility classes) and no development-only diagnostics beyond the React Query devtools gate in `shell/site.tsx` (`process.env.NODE_ENV === 'development'`); a development site is marked by `getSiteConfig().environment === EnvironmentTypes.DEVELOPMENT` (`site.config.dev.tsx`).
 - `Shell.tsx` is where per-route hooks run (`useActiveRouteRoleWatcher`, `useTrackColorSchemeChoice`); routes are a data router (`createBrowserRouter`), and app routes may be `lazy`.
 
 ## Change
@@ -30,4 +30,3 @@ One commit, `fix: move the skip link's focus to the app's main landmark` (a patc
 ## Open
 
 - Whether the development check should also cover zero `<main>` once the router is idle (`useNavigation().state === 'idle'`), which still cannot see a lazy component's render. Left out here.
-- Where Learning stands once this ships: the skip link lands on the tab page's `<main>`, which on `master` since openedx/frontend-app-learning#2026 wraps only the tab content on non-courseware tabs and only the sequence on courseware. The port carries #2026's landmark half and nothing else.
