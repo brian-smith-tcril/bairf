@@ -205,3 +205,16 @@ and are not repeated.
     `TabPage.test.jsx` (named `LoadedTabPage`, as `TabWithTimer.test.tsx`
     names its).
 
+21. **`AlertList` gets the tests its FIXME deferred.** `master`'s
+    `AlertList.test.jsx` renders the list empty and a 2020 FIXME (#214) says
+    the alerts are tested in `OutlineTab.test` and `Course.test` because a
+    provider for testing would be boilerplate; the shared render wrapper
+    has mounted `UserMessagesProvider` since before that FIXME was written,
+    and on the branch neither of those tests exists yet. The file gains four
+    cases through the real provider, each registering a message with
+    `useAlert` from a small component: a message renders as an alert of its
+    type under the list's class, the topic filter (and a list with no topic
+    shows every message), a `customAlerts` component receiving the payload
+    and `customProps`, and dismiss removing the message. `user-messages`
+    line coverage goes from 58.06 to 93.54 against `master`'s 89.77.
+
