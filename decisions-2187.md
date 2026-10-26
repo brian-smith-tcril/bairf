@@ -97,6 +97,15 @@ shape and verification environment are in #2187's plan and are not repeated.
    shell fixes (lint exit code, jest crawl, ts-loader rootDir, source-map
    warnings, typescript as a peer, workspace package support) plus role
    resolution in the client (alpha.15), the language menu (alpha.14) and
-   authz permission validation (alpha.12); lint, tests and both builds
-   pass at the stack top on it.
+   authz permission validation (alpha.12). The same commit takes the two
+   `package.json` changes the template made on 2026-10-21 after the
+   scaffold was copied: `typescript` `^5.9.3` as a dev dependency (alpha.16
+   makes it a peer, and with frontend-base as a workspace package npm
+   otherwise hoists TypeScript 6; template commit 5301f432), and
+   `@openedx/frontend-base` and `@openedx/paragon` as dev dependencies with
+   the Paragon peer widened to `^23 || 0.0.0-dev` (workspace support;
+   template commit fc61f34d). The package's `package.json` then differs
+   from the template's only in its identity fields. The lock and these
+   lines share the commit, Brian's call for this case. Lint, tests and
+   both builds pass at the stack top.
 
