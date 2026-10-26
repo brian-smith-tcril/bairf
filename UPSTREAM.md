@@ -27,3 +27,8 @@
 | goal-unsubscribe | issue-body-goal-unsubscribe.md | openedx/frontend-app-learning#2206 | settled |
 | preferences-unsubscribe | issue-body-preferences-unsubscribe.md | openedx/frontend-app-learning#2207 | settled |
 | product-tours | issue-body-product-tours.md | openedx/frontend-app-learning#2208 | settled |
+| rosie | issue-body-rosie.md | openedx/frontend-app-learning#2222 | settled |
+| plugin-overrides | issue-body-plugin-overrides.md | openedx/frontend-app-learning#2223 | settled |
+| fontawesome | issue-body-fontawesome.md | openedx/frontend-app-learning#2224 | settled |
+| jsx-lint | issue-body-jsx-lint.md | openedx/frontend-base#327 | settled |
+| skip-target | issue-body-skip-target.md | openedx/frontend-base#328 | settled |
