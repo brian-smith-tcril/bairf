@@ -79,3 +79,24 @@ shape and verification environment are in #2187's plan and are not repeated.
    lock diff, after which the notice stops for six months, longer than the
    branch will exist, so the workflow is left alone; the swap puts the
    package lock under the root workflow. Noticed by Brian in #2219's run.
+
+8. **The package lockfile is regenerated at the scaffold commit
+   (2026-10-26).** The lock the template produced on 2026-10-21 resolved
+   Paragon 23.23.0, whose `Icon` still declares `defaultProps`; the console
+   hook in #2219 fails on the warning once a Paragon icon renders (#2189's
+   frame). openedx/paragon#4136 converted `Icon` (merged 2026-09-08) and
+   shipped in 23.23.1 on 2026-10-16, inside frontend-base's `^23.23.0`, so
+   the fix is a lock change, not a silence entry. The lock is regenerated
+   from scratch (lock and `node_modules` removed, `npm install`) at the
+   scaffold commit so no layer carries the old resolution; the one lock
+   conflict replaying the stack, #2219's `jest-fail-on-console` addition,
+   is resolved by taking the regenerated lock and running `npm install`
+   against that commit's `package.json`. `@openedx/frontend-base` moves
+   with it from 2.0.0-alpha.5 to 2.0.0-alpha.16 (the template's range is
+   `^2.0.0-alpha`); the alpha.6 to alpha.16 release notes are tooling and
+   shell fixes (lint exit code, jest crawl, ts-loader rootDir, source-map
+   warnings, typescript as a peer, workspace package support) plus role
+   resolution in the client (alpha.15), the language menu (alpha.14) and
+   authz permission validation (alpha.12); lint, tests and both builds
+   pass at the stack top on it.
+

@@ -114,13 +114,16 @@ and are not repeated.
     `onClose`). `dismissible`, `stacked`, `customAlerts` and `customProps`
     keep theirs.
 
-12. **Third-party `defaultProps`: Paragon silenced, react-fontawesome
-    upgraded.** Paragon 23.23.0's `Icon` still declares `defaultProps`; its
-    message is silenced under openedx/paragon#3043, one pattern per
-    component the suite has met rather than a Paragon-wide one.
-    react-fontawesome removed its `defaultProps` in 0.2.1 (its changelog,
-    2024-05-16), so the package takes `^0.2.6`, the version profile and
-    account pin, in place of `master`'s `^0.1.4` (installed as 0.1.19).
+12. **Third-party `defaultProps`: Paragon by a lock regeneration,
+    react-fontawesome by an upgrade.** Paragon 23.23.0's `Icon` still
+    declared `defaultProps` and was first silenced under
+    openedx/paragon#3043; openedx/paragon#4136 had already converted it and
+    shipped in 23.23.1, inside frontend-base's range, so the scaffold
+    commit's lock is regenerated instead (the scaffold layer's decision
+    log) and no Paragon pattern is silenced. react-fontawesome removed its
+    `defaultProps` in 0.2.1 (its changelog, 2024-05-16), so the package
+    takes `^0.2.6`, the version profile and account pin, in place of
+    `master`'s `^0.1.4` (installed as 0.1.19).
 
 13. **The package declares the dependencies its files import.**
     `@fortawesome/react-fontawesome`, `@fortawesome/free-solid-svg-icons`
