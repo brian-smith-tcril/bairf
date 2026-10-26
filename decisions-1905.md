@@ -614,3 +614,21 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     tour step that only a plugin can target needs a way for an operator to
     add a step to the tour, so the question is parked with #2185's port of
     that slot. The port carries the step as it is.
+
+37. **A deferred piece is stubbed at `master`'s import path, never cut out
+    of the file that renders it.** Set 2026-10-26 while reviewing #2189's
+    frame, which had removed the toolbar, tours and streak modal from
+    `LoadedTabPage.tsx` and `TabPage.tsx` with their tests: lines cut now
+    come back in a later layer's diff, in whatever shape that layer gives
+    them, and the port's file stops matching `master`. Instead the host
+    file ports whole and the module it imports is a stub at the same path
+    (renders nothing or passes children through, declares the props the
+    host passes, carries the replacing issue's URL), deleted by the layer
+    that ports the real module. #2188's stub pages and #2196's planned
+    stubs are the same pattern; #2189 is redone to it. Removal is for what
+    the shell owns (header, footer, course tabs) and is recorded as
+    `dropped` in the manifest. A `master` test that renders a stubbed
+    module for real is kept whole as `it.skip` under the issue's URL. A
+    library import that cannot be stubbed at its path (the special-exams
+    timer in `TabWithTimer`) is the exception and is said so in the plan.
+

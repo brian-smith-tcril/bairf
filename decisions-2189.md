@@ -99,9 +99,10 @@ and are not repeated.
    template's `Main.tsx` renders a `div` instead of its `<main>` so the
    page's landmark is not nested in another.
 
-10. **`unitId` leaves `TabPage` and `LoadedTabPage`.** On `master` the prop
-    reaches only the instructor toolbar (`LoadedTabPage.tsx:75`); with the
-    toolbar deferred to #2194 nothing reads it, and #2194 brings it back.
+10. **`unitId` stays on `TabPage` and `LoadedTabPage`.** First removed,
+    since on `master` the prop reaches only the instructor toolbar
+    (`LoadedTabPage.tsx:75`); with the toolbar a stub (entry 22) the prop
+    threads through to it as on `master` and the files keep their shape.
 
 11. **`defaultProps` become default parameters, and `null` defaults go.**
     `master`'s setup file silences React's `defaultProps` deprecation for
@@ -149,12 +150,16 @@ and are not repeated.
     `wrapWithRouter`. The query client is created once per `render` call,
     as on `master`, not once per render of the wrapper.
 
-15. **Tests that go with the deferred pieces.** `TabPage.test.jsx` loses
-    the two tour-button cases (#2208); `LoadedTabPage.test.jsx` the
-    instructor-toolbar (#2194) and streak-modal (celebrations) cases, its
-    `renders correctly` case becoming a frame assertion without the tabs
-    slot; `TabWithTimer.test.tsx` keeps one pass-through case, its seven
-    timer and attempt cases returning with #2198.
+15. **Tests of the deferred pieces stay, through the stubs.** First cut
+    with the pieces; with the stubs (entry 22) `master`'s tests return:
+    `TabPage.test.jsx` keeps its two tour-button cases and
+    `LoadedTabPage.test.jsx` its instructor-toolbar case, since both mock
+    the module by path and the stub sits there; `LoadedTabPage.test.jsx`'s
+    `renders correctly` only loses the course-tabs assertion (the slot is
+    dropped); its streak-modal case renders the real modal and is kept
+    whole as `it.skip` under #2201's URL. `TabWithTimer.test.tsx` keeps one
+    pass-through case, its seven timer and attempt cases returning with
+    #2198, since the library import cannot be stubbed in place.
 
 16. **Two fixes amended into earlier commits.** frontend-base's `User`
     requires `avatar: string`, which the CI build's type check over the
@@ -223,4 +228,22 @@ and are not repeated.
     dismiss. `user-messages` line coverage goes from 58.06 to 88.7 against
     `master`'s 89.77; `useAlert` itself (70%) is exercised by the alert
     hooks once the dates tab renders them.
+
+22. **The frame is redone with stubs instead of removals.** Reviewed
+    2026-10-26: cutting the toolbar, tours and streak modal out of
+    `LoadedTabPage.tsx` and `TabPage.tsx` meant their later layers would
+    re-add the lines in their own shape, so the effort log now says a
+    deferred piece is stubbed at `master`'s import path (effort decision
+    37). Five stubs: `instructor-toolbar/InstructorToolbar` (#2194),
+    `product-tours/ProductTours`, `TourContext` and
+    `newUserCourseHomeTour/LaunchCourseHomeTourButton` (#2208),
+    `shared/streak-celebration/StreakCelebrationModal` (#2201), each a
+    TypeScript `FC` typed with the props `master` passes (so the host's
+    JSX type-checks) that renders nothing, the provider returning its
+    children, with the issue URL as its one comment, plus the two index
+    re-exports `master` has. `LoadedTabPage.tsx` and `TabPage.tsx` now
+    differ from `master` only in the import rewrites, the dropped shell
+    pieces, the redirect prefix and the autofixer's wrapping of one-line
+    `if` bodies. Stubs are new files, not moves, so they get no manifest
+    line; the plan's "stubbed here" table is their record.
 
