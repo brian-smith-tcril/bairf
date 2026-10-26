@@ -210,11 +210,17 @@ and are not repeated.
     the alerts are tested in `OutlineTab.test` and `Course.test` because a
     provider for testing would be boilerplate; the shared render wrapper
     has mounted `UserMessagesProvider` since before that FIXME was written,
-    and on the branch neither of those tests exists yet. The file gains four
-    cases through the real provider, each registering a message with
-    `useAlert` from a small component: a message renders as an alert of its
-    type under the list's class, the topic filter (and a list with no topic
-    shows every message), a `customAlerts` component receiving the payload
-    and `customProps`, and dismiss removing the message. `user-messages`
-    line coverage goes from 58.06 to 93.54 against `master`'s 89.77.
+    and on the branch neither of those tests exists yet. The file gains a
+    `renderAlertList(props)` helper that renders the list under the shared
+    wrapper beside a component capturing the provider's context, and
+    returns the provider's own `add` wrapped in `act`; each case adds its
+    message through that rather than through `useAlert` from a per-message
+    component (review: no invented name, no component per message, no test
+    ids; queries are by role and text). Cases: nothing with no message, an
+    added message as a `role="alert"` with its variant class under the
+    list's class, the topic filter and a list without a topic, a
+    `customAlerts` component receiving the payload and `customProps`, and
+    dismiss. `user-messages` line coverage goes from 58.06 to 88.7 against
+    `master`'s 89.77; `useAlert` itself (70%) is exercised by the alert
+    hooks once the dates tab renders them.
 
