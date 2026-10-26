@@ -33,6 +33,7 @@ issues:
   openedx/frontend-base#324
   openedx/frontend-base#325
   openedx/frontend-base#327
+  openedx/frontend-base#328
 
 prs:
   openedx/frontend-app-learning#2217
