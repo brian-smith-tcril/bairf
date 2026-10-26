@@ -1,0 +1,53 @@
+commit dd012d1d6216a53a09a36f4592f6e64c702ca595
+Author: Brian Smith <112954497+brian-smith-tcril@users.noreply.github.com>
+Date:   Fri Oct 23 15:38:00 2026 -0400
+
+    refactor: port the tab page frame and root providers to frontend-base
+    
+    tab-page (TabPage, LoadedTabPage, TabWithTimer), the enrollment and
+    logistration alerts, the user-messages and notices providers,
+    PageLoading, the access helpers and the local-storage helper move to the
+    same paths under frontend-base/src; the course tabs navigation, its slot
+    and the header slot are dropped, since the shell renders the header and
+    the course bar. Main.tsx mounts the three Learning-wide providers around
+    the outlet. TabPage renders no header, footer or tour; LoadedTabPage no
+    tabs, toolbar, streak modal or tours, and no second main-content id;
+    TabWithTimer passes through to TabPage until the exam timer returns.
+    Access-denied redirects are prefixed with the URL the learning role
+    resolves to.
+    
+    The plugin override registry (generic/plugin-overrides) is dropped: on a
+    frontend-base site no plugin can reach it, since the hook is not a
+    package export and there is no slot to mount a widget in; its Slot API
+    replacement is #2223.
+    
+    defaultProps become default parameters where the console hook met them,
+    and react-fontawesome moves to 0.2.x, which has none. The package
+    declares the FontAwesome and prop-types dependencies its files import.
+    
+    The package's lint config names src/**/*.jsx: frontend-base's base config
+    lints no .jsx files (https://github.com/openedx/frontend-base/issues/327),
+    and this commit brings the first.
+    
+    The package's coverage bar is not met at this commit: the alerts and the
+    user-messages provider are exercised by the dates tab, which follows.
+    
+    Part of #2189.
+    
+    Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+
+diff --git a/frontend-base/eslint.config.js b/frontend-base/eslint.config.js
+index 4bd1dfa6..a8484591 100644
+--- a/frontend-base/eslint.config.js
++++ b/frontend-base/eslint.config.js
+@@ -9,6 +9,10 @@ module.exports = createLintConfig(
+       'site.config.*',
+     ],
+   },
++  {
++    // https://github.com/openedx/frontend-base/issues/327
++    files: ['src/**/*.jsx'],
++  },
+   {
+     ignores: [
+       'coverage/*',

@@ -192,13 +192,16 @@ and are not repeated.
     config names no `**/*.jsx` pattern, so ESLint 9 never lints `.jsx` files
     under `createLintConfig` (openedx/frontend-base#327, a regression of its
     ESLint 9 upgrade; reproduced in every converted app with `.jsx` files).
-    This layer brings the first eleven, so `eslint.config.js` gains a
-    `files: ['src/**/*.jsx']` block under the issue's URL, in the commit that
-    brings the files rather than the scaffold. Linting them surfaced four
-    findings, fixed in the same commit: an airbnb-era
+    This layer brings the first eleven. The `files: ['src/**/*.jsx']` block
+    that lints them is not committed: it stays a local, uncommitted change
+    to `frontend-base/eslint.config.js` (the patch is `local-eslint-jsx.patch`
+    in the effort worktree, reapplied after every stack operation), and
+    every commit from this one on is linted with it in place, so the branch
+    needs nothing when frontend-base ships the fix. Linting them surfaced
+    four findings, fixed in this commit: an airbnb-era
     `react/forbid-prop-types` disable in `AlertList.jsx` for a rule the base
     config does not enable, an unused `act` import and a double blank line
     in `LoadedTabPage.test.jsx`, and a nameless mocked component in
     `TabPage.test.jsx` (named `LoadedTabPage`, as `TabWithTimer.test.tsx`
-    names its). The block goes when frontend-base ships the fix.
+    names its).
 
