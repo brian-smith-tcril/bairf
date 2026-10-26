@@ -4,7 +4,7 @@ The direction settled in the issue's discussion on 2026-10-26: the skip link fin
 
 ## Baseline
 
-- `shell/header/Header.tsx` renders `<a className="sr-only sr-only-focusable" href="#main-content">`; `shell/DefaultLayout.tsx` puts `id="main-content"` on the `div.flex-grow-1` around the content slot. The shell renders no `<main>`; every app does, around what it considers its primary content (the template's `src/Main.tsx`, profile, account, catalog, learner dashboard, Learning). The template also renders a second `<main>` inside the first, in `src/example/ExamplePage.tsx`.
+- `shell/header/Header.tsx` renders `<a className="sr-only sr-only-focusable" href="#main-content">`; `shell/DefaultLayout.tsx` puts `id="main-content"` on the `div.flex-grow-1` around the content slot. The shell renders no `<main>`; every app does, around what it considers its primary content: frontend-template-application (the repository an app is scaffolded from) in its `src/Main.tsx`, and profile, account, catalog, learner dashboard and Learning in theirs. frontend-template-application also renders a second `<main>` inside the first, in `src/example/ExamplePage.tsx`.
 - The shell has no stylesheet rule for `main` (`shell/style.scss` is utility classes) and no development-only diagnostics beyond the React Query devtools gate in `shell/site.tsx` (`process.env.NODE_ENV === 'development'`); a development site is marked by `getSiteConfig().environment === EnvironmentTypes.DEVELOPMENT` (`site.config.dev.tsx`).
 - `Shell.tsx` is where per-route hooks run (`useActiveRouteRoleWatcher`, `useTrackColorSchemeChoice`); routes are a data router (`createBrowserRouter`), and app routes may be `lazy`.
 
@@ -15,7 +15,7 @@ The direction settled in the issue's discussion on 2026-10-26: the skip link fin
 3. **A development-only check for nested landmarks, in `Shell.tsx`.** After each location change, on a development site, warn when `document.querySelectorAll('main').length > 1`, naming the rule. Only "more than one" is checked: a count of zero can be a lazy route still loading, and a false warning on every navigation would teach people to ignore it. The warning goes through `console.warn` with a message that names the rule and the count.
 4. **`docs/how_tos/migrate-frontend-app.md`:** one line under the app's layout: render exactly one `<main>` around the primary content; the shell's skip link focuses it.
 
-Not here: the template's own nested `<main>` (a one-line fix in frontend-template-application, filed separately), focus management after client-side navigation (the issue's last paragraph; its own issue), any change to `id="main-content"` on the wrapper, which stays as the fallback target.
+Not here: frontend-template-application's nested `<main>` (a one-line fix there, filed separately), focus management after client-side navigation (the issue's last paragraph; its own issue), any change to `id="main-content"` on the wrapper, which stays as the fallback target.
 
 ## Tests
 
