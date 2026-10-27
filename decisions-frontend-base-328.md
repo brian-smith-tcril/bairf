@@ -139,3 +139,21 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     renders them inside the shell, the warning applies. Whether they
     should render a `<main>` is left to the PR review.
 
+12. **The rules run from a component inside `SiteProvider`, not from
+    `Shell`'s own hook call.** The first manual pass showed the "no
+    `<main>`" warning on every hard reload of `/dev` and `/slots`, with
+    `document.querySelectorAll('main').length` reading `1` afterwards.
+    `SiteProvider` renders `null` until the theme has loaded, and `Shell`
+    called `usePageRules` above it, so the effect ran after `Shell`'s first
+    commit with no page in the document and did not run again when the
+    page appeared, since nothing it depends on (location key, navigation
+    state) had changed; client-side navigations were silent because the
+    page already existed. `Shell` now renders `<PageRules />`, a component
+    that calls the hook and renders nothing, as a sibling of the layout
+    slot inside `SiteProvider`: it mounts only once the provider renders
+    its children, and sibling effects run after the whole tree has
+    committed, so the page's `<main>` is in the document when the rules
+    run. `shell/PageRules.test.tsx` renders it beside a `<main>` under a
+    provider that renders its children on the commit after its own, with
+    a mocked rule that records whether a `<main>` existed when it ran.
+

@@ -26,3 +26,5 @@ What the automated suite cannot show: where focus actually lands in a browser, w
 ## Results
 
 **First pass, 2026-10-26, Brian.** `/nope` showed the not-found page with no header or footer and no diagnostic: the root route's `errorElement` renders it in place of `Shell`, so nothing in this branch runs there (pre-existing; the record's step 4 was rewritten to use a temporary edit instead). The rest of the boxes are not yet recorded.
+
+Also in the first pass: the "no `<main>`" warning appeared on every hard reload of `/dev` and `/slots` (twice, StrictMode) while the page had its `<main>`: the rules ran before `SiteProvider` rendered the page (decision 12). Fixed by running them from a component inside the provider; the boxes are re-checked on that build.

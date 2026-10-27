@@ -11,10 +11,10 @@ Resolves #328.
 - `shell/header/SkipLink.tsx` (new), rendered by `Header.tsx` in place of the anchor: same `href`, plus a click handler that focuses the first `<main>` without `hidden`, else the `main-content` wrapper, setting `tabindex="-1"` when the target has no tabindex and calling `scrollIntoView`; with neither present the anchor acts as before.
 - `shell/style.scss`: `main[tabindex="-1"]:focus { outline: none; }`.
 - `shell/rules/`: `types.ts` (`Diagnostic`, `PageRule`), `mainLandmark.ts` (the rule, with the HTML spec URL), `index.ts` (the list).
-- `shell/usePageRules.ts`, called from `Shell.tsx`: runs the list when the location key changes and the data router's navigation is idle; `enabled` is a parameter defaulting to `getSiteConfig().environment !== EnvironmentTypes.PRODUCTION`; errors go to `console.error`, warnings to `console.warn`.
+- `shell/usePageRules.ts`, run by `shell/PageRules.tsx`, a component `Shell.tsx` renders inside `SiteProvider` beside the layout slot (so the rules run once the page can exist; the provider renders nothing until the theme has loaded): runs the list when the location key changes and the data router's navigation is idle; `enabled` is a parameter defaulting to `getSiteConfig().environment !== EnvironmentTypes.PRODUCTION`; errors go to `console.error`, warnings to `console.warn`.
 - `docs/how_tos/migrate-frontend-app.md`: a section, "Render one `<main>` landmark per route", after the document-title section.
 - `shell/dev/devHome/HomePage.tsx`, `shell/dev/slotShowcase/SlotShowcasePage.tsx`: the dev site's pages render their container `as="main"`, so the dev site follows the rule it reports on. The runtime's `NotFoundPage` and `ErrorPage` render no `<main>` and warn on a development site; whether they should is a review question.
-- Tests: `SkipLink.test.tsx` (render; focus and tabindex; a hidden `<main>` passed over; an existing tabindex kept; the wrapper fallback; no target), `rules/mainLandmark.test.ts` (one passes; hidden not counted; two is an error; none is a warning), `usePageRules.test.tsx` on mocked rules (every rule called with the document; diagnostics by level; disabled; the default per environment).
+- Tests: `SkipLink.test.tsx` (render; focus and tabindex; a hidden `<main>` passed over; an existing tabindex kept; the wrapper fallback; no target), `rules/mainLandmark.test.ts` (one passes; hidden not counted; two is an error; none is a warning), `usePageRules.test.tsx` on mocked rules (every rule called with the document; diagnostics by level; disabled; the default per environment), `PageRules.test.tsx` (the rules see the page when the provider delays its children).
 
 Not here: frontend-template-application's own nested `<main>` (`src/Main.tsx` around `src/example/ExamplePage.tsx`), which this rule reports and which is a one-line fix there; focus after client-side navigation, the issue's last paragraph, which is its own issue.
 
@@ -169,6 +169,24 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     pre-existing and its own question; when an app's own route tree
     renders them inside the shell, the warning applies. Whether they
     should render a `<main>` is left to the PR review.
+
+12. **The rules run from a component inside `SiteProvider`, not from
+    `Shell`'s own hook call.** The first manual pass showed the "no
+    `<main>`" warning on every hard reload of `/dev` and `/slots`, with
+    `document.querySelectorAll('main').length` reading `1` afterwards.
+    `SiteProvider` renders `null` until the theme has loaded, and `Shell`
+    called `usePageRules` above it, so the effect ran after `Shell`'s first
+    commit with no page in the document and did not run again when the
+    page appeared, since nothing it depends on (location key, navigation
+    state) had changed; client-side navigations were silent because the
+    page already existed. `Shell` now renders `<PageRules />`, a component
+    that calls the hook and renders nothing, as a sibling of the layout
+    slot inside `SiteProvider`: it mounts only once the provider renders
+    its children, and sibling effects run after the whole tree has
+    committed, so the page's `<main>` is in the document when the rules
+    run. `shell/PageRules.test.tsx` renders it beside a `<main>` under a
+    provider that renders its children on the commit after its own, with
+    a mocked rule that records whether a `<main>` existed when it ran.
 </details>
 
 <details>
@@ -202,6 +220,8 @@ What the automated suite cannot show: where focus actually lands in a browser, w
 ## Results
 
 **First pass, 2026-10-26, Brian.** `/nope` showed the not-found page with no header or footer and no diagnostic: the root route's `errorElement` renders it in place of `Shell`, so nothing in this branch runs there (pre-existing; the record's step 4 was rewritten to use a temporary edit instead). The rest of the boxes are not yet recorded.
+
+Also in the first pass: the "no `<main>`" warning appeared on every hard reload of `/dev` and `/slots` (twice, StrictMode) while the page had its `<main>`: the rules ran before `SiteProvider` rendered the page (decision 12). Fixed by running them from a component inside the provider; the boxes are re-checked on that build.
 </details>
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
