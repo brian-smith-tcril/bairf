@@ -358,8 +358,8 @@ and are not repeated.
       registry before any test file's `jest.mock` ran.
     - `renderRoutes` returns the router and the query client it creates.
       The access-denied cases assert the router's location, which carries
-      the role prefix (`/learning/redirect/dashboard`, decision 9's
-      sibling: `TabPage` prefixes with the learning role's URL); the
+      the role prefix (`/learning/redirect/dashboard`: `TabPage`
+      prefixes the learning role's URL, the plan's Paths bullet); the
       memory router keeps the query string as `TabPage` built it, so
       `audit_expired` expects `uhoh oh no`, where `master`'s browser
       history percent-encoded it. The request-count case waits for the
