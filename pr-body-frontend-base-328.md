@@ -13,7 +13,7 @@ Resolves #328.
 - `shell/rules/`: `types.ts` (`Diagnostic`, `PageRule`), `mainLandmark.ts` (the rule, with the HTML spec URL), `index.ts` (the list and `runPageRules`), exported from the package root.
 - `shell/dev/devHome/HomePage.tsx`, `shell/dev/slotShowcase/SlotShowcasePage.tsx`: the dev site's pages render their container `as="main"`, and each gets a test asserting the rule.
 - `docs/how_tos/migrate-frontend-app.md`: a section, "Render one `<main>` landmark per route", after the document-title section, ending with the assertion for route tests.
-- Tests: `SkipLink.test.tsx` (render; focus and tabindex; a hidden `<main>` passed over; an existing tabindex kept; the wrapper fallback; no target), `rules/mainLandmark.test.ts` (one passes; hidden not counted; two is an error; none is a warning), `rules/index.test.ts` (`runPageRules` on a mocked rule: each rule gets the document, `[]` when all pass, the failing rules' diagnostics otherwise), the two dev-page tests.
+- Tests: `SkipLink.test.tsx` (render; focus and tabindex; a hidden `<main>` passed over; an existing tabindex kept; the wrapper fallback; no target), `rules/mainLandmark.test.ts` (one passes; hidden not counted; two is an error; none is a warning), `rules/index.test.ts` (`runPageRules` on fake rules passed as its second parameter: each rule gets the document, `[]` when all pass, the failing rules' diagnostics otherwise), the two dev-page tests.
 
 Not here: frontend-template-application's own nested `<main>` (`src/Main.tsx` around `src/example/ExamplePage.tsx`), which this rule reports and which is a one-line fix there; the test-site's pages, which also render no `<main>` and are scoped narrowly on purpose; the runtime's not-found and error pages, which replace `Shell` entirely on an unmatched path (pre-existing); focus after client-side navigation, the issue's last paragraph, which is its own issue.
 
@@ -134,11 +134,13 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
 
 8. **Tests.** The rule is tested alone on document markup
    (`shell/rules/mainLandmark.test.ts`: one passes, hidden ones are not
-   counted, two is an error, none is a warning). `runPageRules` is tested
-   on a mocked rule (`shell/rules/index.test.ts`): it calls each rule with
-   the document, returns nothing when every rule passes, and returns the
-   diagnostics of the rules that fail, which is the shape an app's
-   assertion relies on. The shell's dev pages,
+   counted, two is an error, none is a warning). `runPageRules` takes the
+   rules as a second parameter defaulting to the list, so its test
+   (`shell/rules/index.test.ts`) passes plain functions instead of mocking
+   rule modules, which would have to grow with the list: it calls each
+   rule with the document, returns nothing when every rule passes, and
+   returns the diagnostics of the rules that fail, which is the shape an
+   app's assertion relies on. The shell's dev pages,
    `HomePage` and `SlotShowcasePage`, each get a test that renders the
    page under an intl provider and a memory router and asserts
    `runPageRules(document)` is empty: the shell asserting its own rule

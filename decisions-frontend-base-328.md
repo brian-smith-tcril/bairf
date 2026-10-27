@@ -104,11 +104,13 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
 
 8. **Tests.** The rule is tested alone on document markup
    (`shell/rules/mainLandmark.test.ts`: one passes, hidden ones are not
-   counted, two is an error, none is a warning). `runPageRules` is tested
-   on a mocked rule (`shell/rules/index.test.ts`): it calls each rule with
-   the document, returns nothing when every rule passes, and returns the
-   diagnostics of the rules that fail, which is the shape an app's
-   assertion relies on. The shell's dev pages,
+   counted, two is an error, none is a warning). `runPageRules` takes the
+   rules as a second parameter defaulting to the list, so its test
+   (`shell/rules/index.test.ts`) passes plain functions instead of mocking
+   rule modules, which would have to grow with the list: it calls each
+   rule with the document, returns nothing when every rule passes, and
+   returns the diagnostics of the rules that fail, which is the shape an
+   app's assertion relies on. The shell's dev pages,
    `HomePage` and `SlotShowcasePage`, each get a test that renders the
    page under an intl provider and a memory router and asserts
    `runPageRules(document)` is empty: the shell asserting its own rule
