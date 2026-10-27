@@ -273,6 +273,15 @@ and are not repeated.
       non-courseware case without "excludes the tab navigation", whose
       subject, the tabs slot, is dropped (the shell's course bar renders
       the tabs); its title says what is left, "wraps the page children".
+      `master`'s title, "wraps only the page children, not the alerts or
+      tab navigation", claimed more than it asserted: its assertions were
+      the `#main-content` id, the children inside, and the tabs `<nav>`
+      outside. No assertion checked the alerts, and none could pass or
+      fail on them: both alert hooks show only when a private outline is
+      cached, and the test seeds only the course metadata, so the alert
+      list renders empty. The shorter title drops that untested claim,
+      not a check; the alerts still render outside the `<main>` in
+      `LoadedTabPage.tsx`, as on `master`.
       `renders correctly` loses the tabs assertion, which left it asserting
       only absences (no instructor toolbar, no dialog) that an empty render
       also satisfies; it now first waits for the document title the page
