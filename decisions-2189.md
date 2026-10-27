@@ -280,3 +280,32 @@ and are not repeated.
     The `Sequence.jsx` and `CourseOutline.tsx` changes land with #2196 and
     #2197, whose bodies now say so.
 
+
+24. **frontend-base is vendored from openedx/frontend-base#329 until an
+    alpha carries it, and every route test asserts the page rules.**
+    2026-10-27. #329 adds `runPageRules` (exported from the package root)
+    and its first rule, `mainLandmark`; its how-to tells apps to assert
+    `expect(runPageRules(document)).toEqual([])` in route tests once the
+    page has rendered. Rather than wait for a release, the package takes
+    the whole frontend-base from #329's branch: `npm pack` of its head
+    commit `da3af1a1` (alpha.16 plus a docs commit and #329, neither
+    touching `package.json`), packed from a clean `dist/` so no output
+    of an earlier draft rides along, committed as
+    `vendor/openedx-frontend-base-da3af1a1.tgz` (the package's ignore
+    list covers `/*.tgz` at its root only) and named as the dev
+    dependency with `file:`. The peer range, `^2.0.0-alpha || 0.0.0-dev`,
+    already admits the packed `0.0.0-dev`. Copying the rule into
+    `src/tests/` was the alternative; the tarball tests against the code
+    that will ship, and leaving it is one lock-only commit.
+    Placement: two commits between the data module and the frame, since
+    the frame is the first commit of this layer that renders ported code
+    (the vendor commit, then `routes.test.tsx`'s assertions). The route
+    test asserts the rules in a `describe('page rules')` of its own, one
+    case per path the file covers, rather than inside `expectStub`, so
+    the "renders at" titles keep claiming only the route match. The stubs
+    each render one `<main>`, and `renderRoutes` renders no shell, so the
+    document holds only Learning's markup. A page's port moves its paths
+    out of that list and asserts the rules in its own route test; the
+    dates tab is the first. When an alpha with #329 is published, the
+    vendor commit is replaced by a lock-only bump to it and the tarball
+    goes.
