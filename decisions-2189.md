@@ -309,3 +309,11 @@ and are not repeated.
     dates tab is the first. When an alpha with #329 is published, the
     vendor commit is replaced by a lock-only bump to it and the tarball
     goes.
+    Finding, 2026-10-27: placed before the frame, every one of the 17
+    cases fails with `mainLandmark`'s error, "The page has 2 <main>
+    elements without the hidden attribute". `Main.tsx` keeps the
+    template's `<main className="d-flex flex-column flex-grow-1">` around
+    the outlet from #2217, where the route list is empty, and #2221's
+    `StubPage` renders a `<main className="p-4">` inside it. The frame
+    commit turns `Main.tsx`'s wrapper into a `div`, which is what makes
+    the rule pass from there on.
