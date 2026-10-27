@@ -181,7 +181,7 @@ What the automated suite cannot show: where focus actually lands in a browser, w
 ## Environment
 
 - The frontend-base checkout on `skip-link-main-landmark`, `npm run dev` (builds, then serves the shell's dev site at `http://apps.local.openedx.io:8080`). The dev site config sets `environment: DEVELOPMENT`, so the page rules run.
-- A browser with its developer console open. Pages used: `/dev` (the dev home, renders a `<main>` as of this branch) and `/slots` (the slot showcase, likewise). A path no route matches (`/nope`) is no use here: the root route's `errorElement` renders the not-found page in place of `Shell`, so there is no header, no skip link and no rule run on it (pre-existing, see results).
+- A browser with its developer console open. On the first load of a page every diagnostic appears twice: the dev site renders under `StrictMode`, which runs each effect twice on mount in development; a client-side navigation runs it once. Pages used: `/dev` (the dev home, renders a `<main>` as of this branch) and `/slots` (the slot showcase, likewise). A path no route matches (`/nope`) is no use here: the root route's `errorElement` renders the not-found page in place of `Shell`, so there is no header, no skip link and no rule run on it (pre-existing, see results).
 
 ## Verify by hand
 
