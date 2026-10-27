@@ -391,6 +391,15 @@ and are not repeated.
       Paragon's own components), and the third under
       openedx/paragon#3425, which tracks `findDOMNode` in that trigger.
       Each pattern names the exact message.
+    - Lint under the base config, as in entries 7, 16 and 20: the
+      autofixer wraps `utils.jsx`'s one-line `if` bodies and the
+      `UpgradeToShiftDatesAlert` test's `render` call; `badgelist.jsx`
+      loses an `import/prefer-default-export` disable for a rule the base
+      config does not know; `DatesTab.test.jsx` loses its unused `React`
+      import.
+    - The commit lands without the plan's per-directory thresholds; how
+      coverage is held is decided separately, and the plan's Coverage
+      section and commit 6 change with that decision.
     Open: the per-directory thresholds
     at `master`'s baseline are not met: `course-home/data` 81.27 of 99.64,
     `alerts/logistration-alert` 53.84 of 84.44, `generic/user-messages`
