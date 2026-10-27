@@ -381,10 +381,17 @@ and are not repeated.
     - `Day` and `UpgradeToCompleteAlert` move `defaultProps` to default
       parameters (entry 11).
     - `classnames` is declared (`^2.5.1`; `master` pins 2.5.1), entry 13.
-    Open: react-bootstrap 1.6.8's `OverlayTrigger` (through Paragon's
-    `Overlay`, in `Day`'s tooltip) warns about `defaultProps`; no Paragon
-    issue names it (#3043 and #3744 are Paragon's own components, #3425 is
-    `findDOMNode` in the same trigger). And the per-directory thresholds
+    - `Day`'s tooltip renders Paragon's `OverlayTrigger`, which wraps
+      react-bootstrap 1.6.8's, and React 18.3 warns three times from
+      inside react-bootstrap: `defaultProps` on its `OverlayTrigger` and
+      `Overlay`, and `findDOMNode` from `react-overlays` under its
+      `Overlay`. `setupTest.js` silences the first two under
+      openedx/paragon#4523, filed for warnings from the react-bootstrap
+      1.x components Paragon wraps (openedx/paragon#3043 and #3744 cover
+      Paragon's own components), and the third under
+      openedx/paragon#3425, which tracks `findDOMNode` in that trigger.
+      Each pattern names the exact message.
+    Open: the per-directory thresholds
     at `master`'s baseline are not met: `course-home/data` 81.27 of 99.64,
     `alerts/logistration-alert` 53.84 of 84.44, `generic/user-messages`
     88.7 of 89.77, `course-home/dates-tab` 97.89 of 98.39, global 63.78
