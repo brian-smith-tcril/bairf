@@ -273,7 +273,12 @@ and are not repeated.
       non-courseware case without "excludes the tab navigation", whose
       subject, the tabs slot, is dropped (the shell's course bar renders
       the tabs); its title says what is left, "wraps the page children".
-      `renders correctly` loses the tabs assertion as before.
+      `renders correctly` loses the tabs assertion, which left it asserting
+      only absences (no instructor toolbar, no dialog) that an empty render
+      also satisfies; it now first waits for the document title the page
+      sets from the metadata, "Course | Demonstration Course | Learning
+      Test Site" (the active tab's title, the course title, the site
+      name), as `Main.test.tsx` checks its title.
     `master`'s removal of the `#main-content` flex rules from `index.scss`
     has nothing to apply: the package has no `#main-content` styling, and
     `index.scss` is unported; its layer starts from the post-#2026 file.
