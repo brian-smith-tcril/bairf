@@ -181,6 +181,11 @@ Settled 2026-10-19, while charting the wayfinder map.
     file master added into a ported area). Each hit becomes a re-port issue
     through the usual export. Master's edits to ported files therefore never
     conflict; they become reviewed PRs.
+    Amended 2026-10-27: a hit in a file that exists only in an open layer
+    of the stack (not yet merged into `frontend-base`) is folded into that
+    layer's commit instead of becoming an issue, since the layer's PR is
+    where it gets reviewed; the layer's decision log records it. First
+    case: #1938 and #2026 against #2189's frame.
 
 15. **The swap is the last commit of epic 2.** Delete `src/` and the root
     config, move `frontend-base/` to the root, add the template's

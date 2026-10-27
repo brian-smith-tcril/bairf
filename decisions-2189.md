@@ -98,6 +98,13 @@ and are not repeated.
    from its inner `div`, which would be a second element with the id; the
    template's `Main.tsx` renders a `div` instead of its `<main>` so the
    page's landmark is not nested in another.
+   Amended 2026-10-27: since #2026 `master` puts the `<main>` on the inner
+   container of non-courseware tabs, around the tab content only, and the
+   sequence renders it on courseware (entry 23); the port follows, still
+   without the id. With openedx/frontend-base#329 the shell's skip link
+   moves focus to the page's `<main>` element, so the skip target becomes
+   the same element as on `master`; until it ships, the link lands on the
+   shell's wrapper.
 
 10. **`unitId` stays on `TabPage` and `LoadedTabPage`.** First removed,
     since on `master` the prop reaches only the instructor toolbar
@@ -246,4 +253,30 @@ and are not repeated.
     pieces, the redirect prefix and the autofixer's wrapping of one-line
     `if` bodies. Stubs are new files, not moves, so they get no manifest
     line; the plan's "stubbed here" table is their record.
+
+23. **Rebased on `master` at `230799eb`, with two re-ports folded into the
+    frame.** The `frontend-base` branch had no commits of its own and was
+    fast-forwarded to `master` (#2225, #2026, #1938, #2229); the stack
+    rebased onto it without conflicts. The rebase audit flagged four ported
+    files, all in this layer's frame commit, folded in rather than filed
+    (effort decision 14 as amended):
+    - #1938: `alerts/enrollment-alert/data/api.js` and its test post to
+      `/api/enrollment/v2/enrollment/`, the same one-line change.
+    - #2026 and #2229: `LoadedTabPage.tsx` and its test are regenerated
+      from `master`'s new versions with the same port edits as before. The
+      alerts sit in a plain `div`; the `<main>` is the inner container on
+      non-courseware tabs and a `div` on courseware, where the sequence
+      renders the `<main>` (#2196). The `id` prop goes, since the shell
+      owns `#main-content` (entry 9), and the code comment loses
+      `id="main-content"`, which became false. In the test the two
+      landmark cases port without their `#main-content` assertions and the
+      non-courseware case without "excludes the tab navigation", whose
+      subject, the tabs slot, is dropped (the shell's course bar renders
+      the tabs); its title says what is left, "wraps the page children".
+      `renders correctly` loses the tabs assertion as before.
+    `master`'s removal of the `#main-content` flex rules from `index.scss`
+    has nothing to apply: the package has no `#main-content` styling, and
+    `index.scss` is unported; its layer starts from the post-#2026 file.
+    The `Sequence.jsx` and `CourseOutline.tsx` changes land with #2196 and
+    #2197, whose bodies now say so.
 
