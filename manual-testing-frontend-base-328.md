@@ -12,11 +12,11 @@ What the automated suite cannot show: where focus actually lands in a browser, w
 - [x] **The skip link appears on focus** — load `/dev`, press Tab: "Skip to main content." appears at the top of the page as the focused element (it is visually hidden until focused).
 - [x] **Activating it focuses the `<main>`** — press Enter on the link: in the console, `document.activeElement.tagName` is `MAIN`; the URL did not gain `#main-content`; no focus ring is drawn on the `<main>`.
 - [x] **Keyboard navigation continues inside the content** — press Tab once more: focus is on the first link inside the page content ("Go to ... page"), not on anything in the header.
-- [ ] **A page with no `<main>` falls back to the wrapper** — temporarily remove `as="main"` from `HomePage.tsx`, let the dev server rebuild, reload `/dev`: the console shows the warning "The page has no <main> element. ..."; Tab to the skip link, Enter: `document.activeElement.id` is `main-content`. Revert the edit.
-- [ ] **One `<main>` is silent** — on `/dev` and `/slots`, the console shows no "<main> element" diagnostic after load.
-- [ ] **Rules re-run on client-side navigation** — from `/dev`, follow "Go to slot showcase page", then the browser's back button: no page reload (the console keeps its earlier lines), and no diagnostic appears on either page.
-- [ ] **More than one `<main>` is an error** — temporarily wrap the `<ul>` in `HomePage.tsx` in a second `<main>`, let the dev server rebuild, reload `/dev`: the console shows the error "The page has 2 <main> elements without the hidden attribute; ...". Revert the edit.
-- [ ] **A hidden `<main>` is not counted** — in the same temporary edit, give the inner `<main>` the `hidden` attribute: no diagnostic. Revert the edit.
+- [x] **A page with no `<main>` falls back to the wrapper** — temporarily remove `as="main"` from `HomePage.tsx`, let the dev server rebuild, reload `/dev`: the console shows the warning "The page has no <main> element. ..."; Tab to the skip link, Enter: `document.activeElement.id` is `main-content`. Revert the edit.
+- [x] **One `<main>` is silent** — on `/dev` and `/slots`, the console shows no "<main> element" diagnostic after load.
+- [x] **Rules re-run on client-side navigation** — from `/dev`, follow "Go to slot showcase page", then the browser's back button: no page reload (the console keeps its earlier lines), and no diagnostic appears on either page.
+- [x] **More than one `<main>` is an error** — temporarily wrap the `<ul>` in `HomePage.tsx` in a second `<main>`, let the dev server rebuild, reload `/dev`: the console shows the error "The page has 2 <main> elements without the hidden attribute; ...". Revert the edit.
+- [x] **A hidden `<main>` is not counted** — in the same temporary edit, give the inner `<main>` the `hidden` attribute: no diagnostic. Revert the edit.
 
 ## Left to the automated suite
 
@@ -29,4 +29,4 @@ What the automated suite cannot show: where focus actually lands in a browser, w
 
 Also in the first pass: the "no `<main>`" warning appeared on every hard reload of `/dev` and `/slots` (twice, StrictMode) while the page had its `<main>`: the rules ran before `SiteProvider` rendered the page (decision 12). Fixed by running them from a component inside the provider; the boxes are re-checked on that build.
 
-**Second pass, 2026-10-26, Brian, on the build with the rules inside the provider.** Reloads of `/dev` and `/slots` show no diagnostic. With `as="main"` temporarily removed from the dev home's container, `/dev` shows the "no `<main>`" warning and `/slots` stays silent; the edit was reverted.
+**Second pass, 2026-10-26, Brian, on the build with the rules inside the provider.** Reloads of `/dev` and `/slots` show no diagnostic. With `as="main"` temporarily removed from the dev home's container, `/dev` shows the "no `<main>`" warning and `/slots` stays silent; the edit was reverted. With a second `<main>` nested in the dev home, `/dev` shows the error for 2 elements; with that inner element given `hidden`, no diagnostic; edits reverted. The skip-link boxes (appears on Tab, focuses the `<main>` on Enter with no hash and no ring, the next Tab lands in the content), the fallback focus on `main-content` and the navigation box were checked and passed. All boxes checked.
