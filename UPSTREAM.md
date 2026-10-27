@@ -32,4 +32,4 @@
 | fontawesome | issue-body-fontawesome.md | openedx/frontend-app-learning#2224 | settled |
 | jsx-lint | issue-body-jsx-lint.md | openedx/frontend-base#327 | settled |
 | skip-target | issue-body-skip-target.md | openedx/frontend-base#328 | settled |
-| react-bootstrap-warnings | issue-body-react-bootstrap-warnings.md | openedx/paragon#4523 | in-review |
+| react-bootstrap-warnings | issue-body-react-bootstrap-warnings.md | openedx/paragon#4523 | settled |
