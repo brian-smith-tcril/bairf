@@ -132,7 +132,10 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     page on it would carry the warning and the skip link would only ever
     reach the fallback. Both pages' Paragon `Container` now renders
     `as="main"`. The runtime's not-found and error pages (`NotFoundPage`,
-    `ErrorPage`), rendered in the content slot for every site, also have
-    no `<main>` and so warn on a development site; whether they should
-    render one is left to the PR review rather than decided here.
+    `ErrorPage`) have no `<main>` either; when they render as the root
+    route's `errorElement` (a path no route matches) they replace `Shell`
+    entirely, so no header, no skip link and no rule run there, which is
+    pre-existing and its own question; when an app's own route tree
+    renders them inside the shell, the warning applies. Whether they
+    should render a `<main>` is left to the PR review.
 
