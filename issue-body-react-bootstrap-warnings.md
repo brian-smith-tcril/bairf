@@ -12,7 +12,7 @@ and a second warning for `Overlay` (`react-bootstrap/cjs/Overlay.js:52:22`). Par
 
 **Why it is not fixed upstream:** react-bootstrap 1.6.8, published 2023-12-22, is the last 1.x release. React 18.3, which added the warning, came out in April 2024.
 
-**Related:** #3043 and #3744 track `defaultProps` in Paragon's own components. #3425 tracks a different React 18 deprecation (`findDOMNode`) that comes from react-bootstrap's `OverlayTrigger`. It's a warning of the same kind as this one, with the same source. #2484 (closed by #3318) moved `Card` off react-bootstrap's `Card`, and #2485 (open) proposes the same for `Form`.
+**Related:** #3043 and #3744 track `defaultProps` in Paragon's own components. #3425 tracks a different React 18 deprecation (`findDOMNode`) that comes from react-bootstrap's `OverlayTrigger`. #2484 (closed by #3318) moved `Card` off react-bootstrap's `Card`, and #2485 (open) proposes the same for `Form`.
 
 **How this surfaced:** openedx/frontend-app-learning#2189 ports the Dates tab to frontend-base, where tests fail on any console output. The timeline's day tooltip renders Paragon's `OverlayTrigger`, so a test that renders the Dates tab fails on these two warnings. The port silences a third-party warning only under an upstream issue that tracks it, and none tracked this one.
 
