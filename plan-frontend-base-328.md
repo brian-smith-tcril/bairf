@@ -39,7 +39,7 @@ Not here: frontend-template-application's nested `<main>` (a one-line fix there,
 ## Tests
 
 - `shell/header/SkipLink.test.tsx`: renders the link with its message and `href`; click with a `<main>` in the document moves focus to it and gives it `tabindex="-1"`; a hidden `<main>` is passed over for the visible one; a `<main>` that already has a `tabindex` keeps it; with no `<main>` the wrapper with `id="main-content"` is focused; with neither, the click is not prevented. jsdom has no `scrollIntoView`, so the test defines it on `Element.prototype` and asserts the call.
-- `shell/rules/mainLandmark.test.ts`: one `<main>` passes; hidden ones are not counted; two is an error; none is a warning. `shell/dev/devHome/HomePage.test.tsx` and `shell/dev/slotShowcase/SlotShowcasePage.test.tsx`: each page rendered under an intl provider and a memory router satisfies `runPageRules`.
+- `shell/rules/mainLandmark.test.ts`: one `<main>` passes; hidden ones are not counted; two is an error; none is a warning. `shell/rules/index.test.ts`, on a mocked rule: `runPageRules` calls each rule with the document, returns `[]` when all pass, returns the failing rules' diagnostics. `shell/dev/devHome/HomePage.test.tsx` and `shell/dev/slotShowcase/SlotShowcasePage.test.tsx`: each page rendered under an intl provider and a memory router satisfies `runPageRules`.
 - `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 
 ## Commit and PR
