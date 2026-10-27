@@ -35,6 +35,7 @@ issues:
   openedx/frontend-base#327
   openedx/frontend-base#328
 
+  openedx/paragon#4523
 prs:
   openedx/frontend-app-learning#2217
   openedx/frontend-app-learning#2219
