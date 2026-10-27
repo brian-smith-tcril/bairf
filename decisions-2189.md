@@ -162,11 +162,23 @@ and are not repeated.
     `TabPage.test.jsx` keeps its two tour-button cases and
     `LoadedTabPage.test.jsx` its instructor-toolbar case, since both mock
     the module by path and the stub sits there; `LoadedTabPage.test.jsx`'s
-    `renders correctly` only loses the course-tabs assertion (the slot is
-    dropped); its streak-modal case renders the real modal and is kept
+    `renders correctly` loses the course-tabs assertion (the slot is
+    dropped; entry 23 replaces it with the page title); its streak-modal case renders the real modal and is kept
     whole as `it.skip` under #2201's URL. `TabWithTimer.test.tsx` keeps one
     pass-through case, its seven timer and attempt cases returning with
     #2198, since the library import cannot be stubbed in place.
+    Amended 2026-10-27: those seven cases are not deleted but kept as
+    `master`'s file, verbatim, in one block comment under #2198's URL,
+    after the pass-through case. Neither a stub nor `it.skip` can hold
+    them: they run on `master`'s `mockCourseRequests()` and its
+    `specialExams` mock from `@edx/frontend-lib-special-exams/testing`,
+    neither of which exists in the package until #2198, so a skipped case
+    would still fail the CI build's type check over the tests. A block
+    comment rather than `//` lines keeps the text byte-identical (the file
+    has no `*/`), so its diff against `master` is the two comment markers
+    and the pass-through case, and #2198's restore is deleting those and
+    porting the imports. A third form, after stubs and `it.skip`, for a
+    test whose harness cannot exist yet.
 
 16. **Two fixes amended into earlier commits.** frontend-base's `User`
     requires `avatar: string`, which the CI build's type check over the
