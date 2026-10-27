@@ -36,79 +36,82 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
    works through the wrapper fallback without it; the "no more than one
    visible" part is HTML's "must". That split gives the rule its two
    levels: more than one visible `<main>` is an error, none is a warning.
-   The warning level also covers a component-level `React.lazy` that
-   renders its `<main>` after the rule has run.
 
 5. **Page rules are a new category, named for what they are.** Nothing in
-   frontend-base inspected the rendered document before this: the runtime
+   frontend-base judged the rendered document before this: the runtime
    throws on misconfiguration at startup and reports failures through the
-   logging service, and nothing is gated on the site's environment except
-   the devtools import. The first draft was one runtime hook named for its
-   rule (`useMainLandmarkCheck`); review asked what category it belongs
-   to. Settled: rules about what a route renders, each yielding a
-   diagnostic (TypeScript's and the language servers' word for a message
-   with a severity). `shell/rules/types.ts` defines `Diagnostic`
+   logging service. The first draft was one hook named for its rule
+   (`useMainLandmarkCheck`); review asked what category it belongs to.
+   Settled: rules about what a route renders, each yielding a diagnostic
+   (TypeScript's and the language servers' word for a message with a
+   severity). `shell/rules/types.ts` defines `Diagnostic`
    (`level: 'error' | 'warning'`, `message`) and `PageRule`
    (`(document: Document) => Diagnostic | undefined`); each rule is a file
    declared against that type (`const mainLandmark: PageRule = ...`) with
-   its own test; `shell/rules/index.ts` lists them. "Page" scopes the type
-   to this runner, which hands a rule the document after a route renders;
-   a rule about site config would run once at startup against the config
-   and be a different type with a different runner. "Development" is not
-   in the type's name because when rules run is the runner's decision, not
-   a property of a rule. Rejected names: "check" (says nothing about the
-   output), "audit" (in accessibility tooling it names a whole run, and
-   not every rule is an accessibility one). The level union stays inline:
-   the repository has no severity or log-level type to reuse (the logging
-   service encodes levels as two methods, `logError` and `logInfo`).
+   its own test; `shell/rules/index.ts` lists them and exports
+   `runPageRules(document)`, which returns the diagnostics of every rule
+   that fails. "Page" scopes the type to a rendered route's document; a
+   rule about site config would take the config and be a different type.
+   Rejected names: "check" (says nothing about the output), "audit" (in
+   accessibility tooling it names a whole run, and not every rule is an
+   accessibility one). The level union stays inline: the repository has
+   no severity or log-level type to reuse (the logging service encodes
+   levels as two methods, `logError` and `logInfo`), and in a test any
+   diagnostic fails the assertion while a suite that wants to tolerate
+   warnings can filter on `level`.
 
-6. **The runner: `usePageRules(enabled = environment !== PRODUCTION)`.**
-   `shell/usePageRules.ts` runs the list in an effect keyed on the
-   location `key` (so a navigation that changes only the search re-runs
-   it) and the data router's navigation state, and reports each
-   diagnostic with `console.error` or `console.warn`; `Shell.tsx` calls
-   it with no argument. Whether rules run on a site is policy, so it is a
-   parameter with a default rather than a constant in the effect; the
-   default is every environment but production, not development only, so
-   test sites see the diagnostics too: under a console-strict test setup
-   (the kind that fails a test on unexpected console output) a page with
-   no `<main>` fails the test, which is the rule enforced where it can be.
-   The navigation-idle gate is a separate early return: it is about
-   timing (a route's `lazy()` has resolved, so the document is worth
-   inspecting), not policy. The console is the channel because the
-   audience is the developer looking at it; the logging service reports
-   to production monitoring, which is the wrong place for conformance
-   notes.
+6. **The rules run in tests, not on the dev site.** Three runtime shapes
+   were built and each was wrong about *when*: a hook called from `Shell`
+   after its own commit (`SiteProvider` renders nothing until the theme
+   has loaded, so the page was not there yet); a component mounted beside
+   the page inside the provider (a page that renders its `<main>` once
+   its data arrives, as Learning's tab page does after the course
+   metadata query, would warn on every load and never correct itself);
+   then a `MutationObserver` with a quiet period gated on the router
+   being idle and React Query having no fetch in flight. The plan's
+   "When the document can be judged" lists every source of change in the
+   document after a navigation and shows that only two of them expose a
+   signal; the rest (the provider's gate, component-level lazy loading,
+   data loading outside React Query, later interaction) leave "the page
+   has rendered" a heuristic. A static check cannot replace it either: a
+   lint rule sees one file, and both real cases cross files
+   (frontend-template-application's `Main.tsx` around
+   `ExamplePage.tsx`, Learning's `LoadedTabPage` under `TabPage`). The
+   place where "the page has rendered" is actually known is a route test:
+   its author renders the route, waits for the content and then asserts.
+   So the rules run there: `runPageRules` is exported from the package
+   root beside `initializeMockApp`, the how-to says to assert
+   `expect(runPageRules(document)).toEqual([])` once the page has
+   rendered, and nothing in the shell guesses at timing. Lost: a
+   developer who writes no route test gets no diagnostic. If a dev-site
+   diagnostic is wanted later it comes back for instant rules only (more
+   than one visible `<main>` is a violation whenever observed) on any
+   mutation, with no settle heuristic, as its own change.
 
 7. **Rules considered and not included.** `documentTitle`, from the
    how-to's "Set the document title on every route-level page": an empty
-   `document.title` after the route rendered would be the finding, since
-   the shell's generated `index.html` sets no title; left for a later PR
-   as the second rule, noted in this PR's description. A rule that an app
-   chunk re-ships Paragon's `:root` declarations (ADR 0008, the how-to's
-   "must NOT import" box): rejected, because the signal depends on the
-   build's cascade-layer wrapping being present and on same-origin
-   stylesheets, jsdom cannot parse `@layer` so its test would run against
-   hand-built sheets, and ADR 0008's layering already neutralises the
-   failure. A duplicate-id rule: no sentence in the docs asks for it, and a
-   third-party widget is the likeliest thing to trip it.
+   `document.title` once the page has rendered would be the finding,
+   since the shell's generated `index.html` sets no title; left for a
+   later PR as the second rule, noted in this PR's description. A rule
+   that an app chunk re-ships Paragon's `:root` declarations (ADR 0008,
+   the how-to's "must NOT import" box): rejected, because the signal
+   depends on the build's cascade-layer wrapping being present and on
+   same-origin stylesheets, jsdom cannot parse `@layer` so its test would
+   run against hand-built sheets, and ADR 0008's layering already
+   neutralises the failure. A duplicate-id rule: no sentence in the docs
+   asks for it, and a third-party widget is the likeliest thing to trip
+   it.
 
 8. **Tests.** The rule is tested alone on document markup
    (`shell/rules/mainLandmark.test.ts`: one passes, hidden ones are not
-   counted, two is an error, none is a warning). The runner is tested on
-   mocked rules (`shell/usePageRules.test.tsx`): `jest.mock('./rules')`
-   returns three `jest.fn()`s whose return values are declared in the
-   factory, so the file reads as "the rules are these three"; the test
-   imports the mocked list through the same swap and names them with
-   `jest.mocked`; `jest.clearAllMocks` between tests clears call records
-   and keeps those implementations. Cases: every rule is called with the
-   document; diagnostics reach the console by level; disabled runs no
-   rule; the default runs on a development site, runs on a test site and
-   does not run on a production site, with the environment restored after
-   each. A second navigation cannot be tested in this repository: the
-   data router builds a `Request`, which its jsdom lacks (jsdom/jsdom#1724),
-   so the re-run on navigation is covered by the effect's dependency list
-   only.
+   counted, two is an error, none is a warning). The shell's dev pages,
+   `HomePage` and `SlotShowcasePage`, each get a test that renders the
+   page under an intl provider and a memory router and asserts
+   `runPageRules(document)` is empty: the shell asserting its own rule
+   the way the how-to tells apps to, and what fails if the `<main>` is
+   dropped again. The skip link's tests are the handler's cases (target
+   found, a hidden `<main>` passed over, an existing tabindex kept, the
+   wrapper fallback, no target).
 
 9. **The how-to gets a section of its own.** The rule first went into the
    `Main.jsx` bullet of the file layout, which implied `Main.jsx` renders
@@ -116,60 +119,25 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
    route" now follows "Set the document title on every route-level page":
    the shell renders no `<main>`, apps are expected to render it around
    primary content in each route, HTML allows no more than one without
-   `hidden`, and the skip link moves focus to it. The page rules are not
-   mentioned there.
+   `hidden`, the skip link moves focus to it, and route tests assert it
+   with `runPageRules`.
 
 10. **Left for their own changes.** frontend-template-application renders
     a second `<main>` inside the first (`src/Main.tsx` and
-    `src/example/ExamplePage.tsx`), which this rule would report; a
-    one-line fix there. Focus after client-side navigation, which the
-    skip link does not address, is the issue's last paragraph and its own
-    issue.
+    `src/example/ExamplePage.tsx`), which this rule reports; a one-line
+    fix there, with the assertion in its route test. The test-site's
+    `ExamplePage` and `AuthenticatedPage` render a `Container` without
+    `<main>` and have no page tests; the test-site is scoped narrowly on
+    purpose, so that is left alone here. Focus after client-side
+    navigation, which the skip link does not address, is the issue's last
+    paragraph and its own issue.
 
-11. **The shell's dev pages render a `<main>`; the runtime's error pages
-    are an open question.** Preparing the manual pass showed that the
-    dev site's own pages (`/dev`, `/slots`) rendered no `<main>`, so every
-    page on it would carry the warning and the skip link would only ever
-    reach the fallback. Both pages' Paragon `Container` now renders
-    `as="main"`. The runtime's not-found and error pages (`NotFoundPage`,
-    `ErrorPage`) have no `<main>` either; when they render as the root
-    route's `errorElement` (a path no route matches) they replace `Shell`
-    entirely, so no header, no skip link and no rule run there, which is
-    pre-existing and its own question; when an app's own route tree
-    renders them inside the shell, the warning applies. Whether they
-    should render a `<main>` is left to the PR review.
-
-12. **The rules run whenever the document settles, not once.** The first
-    manual pass showed the "no `<main>`" warning on every hard reload of
-    `/dev` and `/slots` while the page had its `<main>`: `SiteProvider`
-    renders nothing until the theme has loaded, `Shell` ran the rules
-    after its own first commit, and nothing the effect depended on
-    changed when the page appeared. Moving the call into a component
-    beside the page fixed that one and left the next: a page that renders
-    its `<main>` after its own data arrives (Learning's tab page shows a
-    spinner until the course metadata query resolves) would warn on every
-    load and never correct itself, and a nested `<main>` rendered after a
-    load would never be reported. Each fix had picked one source of
-    change in the document; the plan's "When the document can be judged"
-    lists them all with the signals that exist (the router idle, React
-    Query's fetch count under the shell's own `QueryClient`) and the ones
-    that do not (the provider's gate, component-level lazy loading, data
-    loading outside React Query, later interaction). The runner therefore
-    watches the document with a `MutationObserver`, runs the rules after a
-    short quiet period gated on the two real signals, reports each
-    diagnostic once per navigation, and judges again when the document
-    next settles. A rule is instant (more than one visible `<main>` is a
-    violation whenever seen) or settled (none is meaningful only once the
-    page stops changing); the quiet period is the heuristic for the
-    latter, and a page loading outside React Query for longer than it
-    gets that warning once, which the warning's text already qualifies.
-    With the observer the mount point no longer matters, so `usePageRules`
-    is called from `Shell` beside its sibling hooks and the `PageRules`
-    component is gone. What we wanted to test all along was that the
-    rules judge the page content, not the states before it; with the
-    settle model that is a property of the hook and is tested on it with
-    fake timers (a page rendering its `<main>` after an effect, a change
-    after the first judgement, a query in flight), rather than a property
-    of where the hook is mounted, which only a `Shell` render test could
-    show and the shell's mount-time fetches under jsdom make that its own
-    work.
+11. **The shell's dev pages render a `<main>`.** Preparing the manual pass
+    showed that the dev site's own pages (`/dev`, `/slots`) rendered no
+    `<main>`, so the skip link only ever reached the fallback there. Both
+    pages' Paragon `Container` now renders `as="main"`, and their new
+    tests (entry 8) hold it. The runtime's `NotFoundPage` and `ErrorPage`
+    have no `<main>` either; when they render as the root route's
+    `errorElement` (a path no route matches) they replace `Shell`
+    entirely, so there is no header and no skip link there, which is
+    pre-existing and its own question.
