@@ -363,8 +363,13 @@ and are not repeated.
       memory router keeps the query string as `TabPage` built it, so
       `audit_expired` expects `uhoh oh no`, where `master`'s browser
       history percent-encoded it. The request-count case waits for the
-      first dates row before waiting for fetches to settle, since a lazy
-      route has nothing fetching until it loads.
+      page's title before waiting for fetches to settle, since a lazy
+      route has nothing fetching until it loads; the page-rules case waits
+      for the same title. `TabPage` renders the tab only once its data has
+      loaded, so the title (`messages.title`, a level-one heading) arrives
+      with the timeline and the `<main>`, and the wait names no fixture
+      date (`Sun, May 3, 2020` is the factory's `2020-05-04T02:59:40Z` in
+      the test's `America/New_York`).
     - `master`'s request-count case replied with whatever `courseMetadata`
       the access-denied cases left (`enrollment_required`), so it measured
       a redirect, not a dates load; the port gives it fresh metadata with
