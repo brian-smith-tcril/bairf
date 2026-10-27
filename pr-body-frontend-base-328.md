@@ -14,13 +14,13 @@ Resolves #328.
 - `shell/usePageRules.ts`, run by `shell/PageRules.tsx`, a component `Shell.tsx` renders inside `SiteProvider` beside the layout slot (so the rules run once the page can exist; the provider renders nothing until the theme has loaded): runs the list when the location key changes and the data router's navigation is idle; `enabled` is a parameter defaulting to `getSiteConfig().environment !== EnvironmentTypes.PRODUCTION`; errors go to `console.error`, warnings to `console.warn`.
 - `docs/how_tos/migrate-frontend-app.md`: a section, "Render one `<main>` landmark per route", after the document-title section.
 - `shell/dev/devHome/HomePage.tsx`, `shell/dev/slotShowcase/SlotShowcasePage.tsx`: the dev site's pages render their container `as="main"`, so the dev site follows the rule it reports on. The runtime's `NotFoundPage` and `ErrorPage` render no `<main>` and warn on a development site; whether they should is a review question.
-- Tests: `SkipLink.test.tsx` (render; focus and tabindex; a hidden `<main>` passed over; an existing tabindex kept; the wrapper fallback; no target), `rules/mainLandmark.test.ts` (one passes; hidden not counted; two is an error; none is a warning), `usePageRules.test.tsx` on mocked rules (every rule called with the document; diagnostics by level; disabled; the default per environment), `PageRules.test.tsx` (the rules see the page when the provider delays its children).
+- Tests: `SkipLink.test.tsx` (render; focus and tabindex; a hidden `<main>` passed over; an existing tabindex kept; the wrapper fallback; no target), `rules/mainLandmark.test.ts` (one passes; hidden not counted; two is an error; none is a warning), `usePageRules.test.tsx` on mocked rules (every rule called with the document; diagnostics by level; disabled; the default per environment).
 
 Not here: frontend-template-application's own nested `<main>` (`src/Main.tsx` around `src/example/ExamplePage.tsx`), which this rule reports and which is a one-line fix there; focus after client-side navigation, the issue's last paragraph, which is its own issue.
 
 ## Testing
 
-`npm run lint`, `npm run typecheck`, `npm test` (550 tests, 60 suites) and `npm run build` pass, with the test site installed from the packed tarball as CI does. Manual check on the shell's dev site (`npm run dev`): the record below, every box checked.
+`npm run lint`, `npm run typecheck`, `npm test` (552 tests, 60 suites) and `npm run build` pass, with the test site installed from the packed tarball as CI does. Manual check on the shell's dev site (`npm run dev`): the record below, every box checked.
 
 ## Decisions
 
@@ -184,9 +184,15 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     slot inside `SiteProvider`: it mounts only once the provider renders
     its children, and sibling effects run after the whole tree has
     committed, so the page's `<main>` is in the document when the rules
-    run. `shell/PageRules.test.tsx` renders it beside a `<main>` under a
-    provider that renders its children on the commit after its own, with
-    a mocked rule that records whether a `<main>` existed when it ran.
+    run. What we wanted to test was that the hook runs at the right time,
+    after the page content exists. It has no unit test: with `PageRules`
+    beside the page, the rules cannot run before the page, which is
+    React's guarantee rather than ours, so every tree we wrote for it only
+    asserted that; the test that would guard the wiring renders `Shell`
+    itself, and that reaches the network under jsdom through whatever
+    fetches on mount below `SiteProvider`, which no test in the repository
+    mocks yet. The manual record's reload boxes, which failed before the
+    move, and this entry carry it; a `Shell` render test is its own work.
 </details>
 
 <details>

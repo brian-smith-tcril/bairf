@@ -153,7 +153,13 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     slot inside `SiteProvider`: it mounts only once the provider renders
     its children, and sibling effects run after the whole tree has
     committed, so the page's `<main>` is in the document when the rules
-    run. `shell/PageRules.test.tsx` renders it beside a `<main>` under a
-    provider that renders its children on the commit after its own, with
-    a mocked rule that records whether a `<main>` existed when it ran.
+    run. What we wanted to test was that the hook runs at the right time,
+    after the page content exists. It has no unit test: with `PageRules`
+    beside the page, the rules cannot run before the page, which is
+    React's guarantee rather than ours, so every tree we wrote for it only
+    asserted that; the test that would guard the wiring renders `Shell`
+    itself, and that reaches the network under jsdom through whatever
+    fetches on mount below `SiteProvider`, which no test in the repository
+    mocks yet. The manual record's reload boxes, which failed before the
+    move, and this entry carry it; a `Shell` render test is its own work.
 
