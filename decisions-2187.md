@@ -109,3 +109,19 @@ shape and verification environment are in #2187's plan and are not repeated.
    lines share the commit, Brian's call for this case. Lint, tests and
    both builds pass at the stack top.
 
+9. **`Main.tsx` wraps the outlet in a `div`, not the template's `<main>`
+   (2026-10-27).** The template's `Main.tsx` renders
+   `<main className="d-flex flex-column flex-grow-1">` around the outlet.
+   Here that wraps nothing, since the route list is empty, but from #2221
+   on every page renders its own `<main>` inside it, as `master`'s pages
+   do (`LoadedTabPage`, `Sequence`, `GoalUnsubscribe`, `PageNotFound`;
+   `master`'s root renders none). The HTML Living Standard: "A document
+   must not have more than one main element that does not have the hidden
+   attribute specified." Found by openedx/frontend-base#329's
+   `runPageRules`, which #2189's route tests assert: each of #2221's stub
+   routes reports two. The wrapper becomes
+   `<div className="d-flex flex-column flex-grow-1">` here, the root
+   route's element, so no later layer inherits the nesting; until then
+   #2189's frame commit made that change. The template has the same
+   nesting with its example page (`src/Main.tsx` around
+   `src/example/ExamplePage.tsx`), left to its own change.

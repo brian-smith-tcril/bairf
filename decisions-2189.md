@@ -317,3 +317,6 @@ and are not repeated.
     `StubPage` renders a `<main className="p-4">` inside it. The frame
     commit turns `Main.tsx`'s wrapper into a `div`, which is what makes
     the rule pass from there on.
+    The `div` moves down to #2217 (decisions-2187 entry 9), where the
+    root route's element is created, so the frame commit no longer
+    touches that line.

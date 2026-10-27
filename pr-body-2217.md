@@ -6,7 +6,7 @@ Part of #1905. Resolves #2187.
 
 ## What changed
 
-- `frontend-base/`: the template copy minus the template repository's own metadata (`catalog-info.yaml`, its READMEs, `.github/`, `renovate.json`, `docs/`), given Learning's identity: package `@openedx/frontend-app-learning`, app id `org.openedx.frontend.app.learning`, root role `org.openedx.frontend.role.learning`, dev server on port 2000 under `/learning`, empty `routes` and `slots`, the template's example page, slot and header widget removed.
+- `frontend-base/`: the template copy minus the template repository's own metadata (`catalog-info.yaml`, its READMEs, `.github/`, `renovate.json`, `docs/`), given Learning's identity: package `@openedx/frontend-app-learning`, app id `org.openedx.frontend.app.learning`, root role `org.openedx.frontend.role.learning`, dev server on port 2000 under `/learning`, empty `routes` and `slots`, the template's example page, slot and header widget removed, and `Main.tsx`'s wrapper around the outlet a `div` rather than the template's `<main>`, since each page renders its own.
 - `.github/workflows/frontend-base.yml`: the template's `ci.yml` run from `frontend-base/` on changes under it, uploading coverage under the `frontend-base` flag with repository paths (the codecov step runs from the root and jest's lcov names files as `frontend-base/src/...`). `validate.yml` is untouched and keeps running the legacy suite.
 - `frontend-base/jest.config.js`: `coverageThreshold` of 96.15 lines, `master`'s codecov line coverage at branch creation; `src/app.test.ts` covers the entry files no page test imports.
 - `.eslintignore` and the root `jest.config.js`: one ignore line each for `frontend-base/`.
@@ -105,6 +105,52 @@ shape and verification environment are in #2187's plan and are not repeated.
    lock diff, after which the notice stops for six months, longer than the
    branch will exist, so the workflow is left alone; the swap puts the
    package lock under the root workflow. Noticed by Brian in #2219's run.
+
+8. **The package lockfile is regenerated at the scaffold commit
+   (2026-10-26).** The lock the template produced on 2026-10-21 resolved
+   Paragon 23.23.0, whose `Icon` still declares `defaultProps`; the console
+   hook in #2219 fails on the warning once a Paragon icon renders (#2189's
+   frame). openedx/paragon#4136 converted `Icon` (merged 2026-09-08) and
+   shipped in 23.23.1 on 2026-10-16, inside frontend-base's `^23.23.0`, so
+   the fix is a lock change, not a silence entry. The lock is regenerated
+   from scratch (lock and `node_modules` removed, `npm install`) at the
+   scaffold commit so no layer carries the old resolution; the one lock
+   conflict replaying the stack, #2219's `jest-fail-on-console` addition,
+   is resolved by taking the regenerated lock and running `npm install`
+   against that commit's `package.json`. `@openedx/frontend-base` moves
+   with it from 2.0.0-alpha.5 to 2.0.0-alpha.16 (the template's range is
+   `^2.0.0-alpha`); the alpha.6 to alpha.16 release notes are tooling and
+   shell fixes (lint exit code, jest crawl, ts-loader rootDir, source-map
+   warnings, typescript as a peer, workspace package support) plus role
+   resolution in the client (alpha.15), the language menu (alpha.14) and
+   authz permission validation (alpha.12). The same commit takes the two
+   `package.json` changes the template made on 2026-10-21 after the
+   scaffold was copied: `typescript` `^5.9.3` as a dev dependency (alpha.16
+   makes it a peer, and with frontend-base as a workspace package npm
+   otherwise hoists TypeScript 6; template commit 5301f432), and
+   `@openedx/frontend-base` and `@openedx/paragon` as dev dependencies with
+   the Paragon peer widened to `^23 || 0.0.0-dev` (workspace support;
+   template commit fc61f34d). The package's `package.json` then differs
+   from the template's only in its identity fields. The lock and these
+   lines share the commit, Brian's call for this case. Lint, tests and
+   both builds pass at the stack top.
+
+9. **`Main.tsx` wraps the outlet in a `div`, not the template's `<main>`
+   (2026-10-27).** The template's `Main.tsx` renders
+   `<main className="d-flex flex-column flex-grow-1">` around the outlet.
+   Here that wraps nothing, since the route list is empty, but from #2221
+   on every page renders its own `<main>` inside it, as `master`'s pages
+   do (`LoadedTabPage`, `Sequence`, `GoalUnsubscribe`, `PageNotFound`;
+   `master`'s root renders none). The HTML Living Standard: "A document
+   must not have more than one main element that does not have the hidden
+   attribute specified." Found by openedx/frontend-base#329's
+   `runPageRules`, which #2189's route tests assert: each of #2221's stub
+   routes reports two. The wrapper becomes
+   `<div className="d-flex flex-column flex-grow-1">` here, the root
+   route's element, so no later layer inherits the nesting; until then
+   #2189's frame commit made that change. The template has the same
+   nesting with its example page (`src/Main.tsx` around
+   `src/example/ExamplePage.tsx`), left to its own change.
 
 </details>
 
