@@ -346,3 +346,48 @@ and are not repeated.
     The `div` moves down to #2217 (decisions-2187 entry 9), where the
     root route's element is created, so the frame commit no longer
     touches that line.
+
+25. **The dates commit, in progress (2026-10-27).** Made while porting:
+    - The dates route is `lazy`, with a `learning-dates` chunk name, as
+      account, catalog and profile load each page route
+      (`src/routes.tsx` in openedx/frontend-app-account,
+      openedx/frontend-app-catalog and openedx/frontend-app-profile, read
+      2026-10-27). Imported eagerly, it broke every test that mocks a
+      tab-page module by path: `setupTest.js` registers the app, `app.ts`
+      imports `routes.tsx`, and the real `LoadedTabPage` was in the module
+      registry before any test file's `jest.mock` ran.
+    - `renderRoutes` returns the router and the query client it creates.
+      The access-denied cases assert the router's location, which carries
+      the role prefix (`/learning/redirect/dashboard`, decision 9's
+      sibling: `TabPage` prefixes with the learning role's URL); the
+      memory router keeps the query string as `TabPage` built it, so
+      `audit_expired` expects `uhoh oh no`, where `master`'s browser
+      history percent-encoded it. The request-count case waits for the
+      first dates row before waiting for fetches to settle, since a lazy
+      route has nothing fetching until it loads.
+    - `master`'s request-count case replied with whatever `courseMetadata`
+      the access-denied cases left (`enrollment_required`), so it measured
+      a redirect, not a dates load; the port gives it fresh metadata with
+      the file's timezone.
+    - "does not render UpgradeToCompleteAlert" waits for the suggested
+      schedule header before its absence checks; `master`'s ran before
+      the page could have rendered, and under the lazy route the test
+      ended mid-load (React's `act` warning).
+    - The suggested-schedule `describe` swaps `window.location` for a copy
+      with a `replace` mock, restored after each case: the upgrade buttons
+      call `location.replace`, which jsdom reports as not implemented, and
+      the console hook fails on it. Same swap `master`'s `apiHooks.test`
+      makes.
+    - `Day` and `UpgradeToCompleteAlert` move `defaultProps` to default
+      parameters (entry 11).
+    - `classnames` is declared (`^2.5.1`; `master` pins 2.5.1), entry 13.
+    Open: react-bootstrap 1.6.8's `OverlayTrigger` (through Paragon's
+    `Overlay`, in `Day`'s tooltip) warns about `defaultProps`; no Paragon
+    issue names it (#3043 and #3744 are Paragon's own components, #3425 is
+    `findDOMNode` in the same trigger). And the per-directory thresholds
+    at `master`'s baseline are not met: `course-home/data` 81.27 of 99.64,
+    `alerts/logistration-alert` 53.84 of 84.44, `generic/user-messages`
+    88.7 of 89.77, `course-home/dates-tab` 97.89 of 98.39, global 63.78
+    of 96.15. `master`'s baseline is its whole suite, so files whose
+    consumers are later tabs (the outline factories and functions, the
+    logistration alert) were covered by tests this layer does not port.
