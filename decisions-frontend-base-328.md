@@ -125,3 +125,14 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     one-line fix there. Focus after client-side navigation, which the
     skip link does not address, is the issue's last paragraph and its own
     issue.
+
+11. **The shell's dev pages render a `<main>`; the runtime's error pages
+    are an open question.** Preparing the manual pass showed that the
+    dev site's own pages (`/dev`, `/slots`) rendered no `<main>`, so every
+    page on it would carry the warning and the skip link would only ever
+    reach the fallback. Both pages' Paragon `Container` now renders
+    `as="main"`. The runtime's not-found and error pages (`NotFoundPage`,
+    `ErrorPage`), rendered in the content slot for every site, also have
+    no `<main>` and so warn on a development site; whether they should
+    render one is left to the PR review rather than decided here.
+

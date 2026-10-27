@@ -13,13 +13,14 @@ Resolves #328.
 - `shell/rules/`: `types.ts` (`Diagnostic`, `PageRule`), `mainLandmark.ts` (the rule, with the HTML spec URL), `index.ts` (the list).
 - `shell/usePageRules.ts`, called from `Shell.tsx`: runs the list when the location key changes and the data router's navigation is idle; `enabled` is a parameter defaulting to `getSiteConfig().environment !== EnvironmentTypes.PRODUCTION`; errors go to `console.error`, warnings to `console.warn`.
 - `docs/how_tos/migrate-frontend-app.md`: a section, "Render one `<main>` landmark per route", after the document-title section.
+- `shell/dev/devHome/HomePage.tsx`, `shell/dev/slotShowcase/SlotShowcasePage.tsx`: the dev site's pages render their container `as="main"`, so the dev site follows the rule it reports on. The runtime's `NotFoundPage` and `ErrorPage` render no `<main>` and warn on a development site; whether they should is a review question.
 - Tests: `SkipLink.test.tsx` (render; focus and tabindex; a hidden `<main>` passed over; an existing tabindex kept; the wrapper fallback; no target), `rules/mainLandmark.test.ts` (one passes; hidden not counted; two is an error; none is a warning), `usePageRules.test.tsx` on mocked rules (every rule called with the document; diagnostics by level; disabled; the default per environment).
 
 Not here: frontend-template-application's own nested `<main>` (`src/Main.tsx` around `src/example/ExamplePage.tsx`), which this rule reports and which is a one-line fix there; focus after client-side navigation, the issue's last paragraph, which is its own issue.
 
 ## Testing
 
-`npm run lint`, `npm run typecheck`, `npm test` (550 tests, 60 suites) and `npm run build` pass, with the test site installed from the packed tarball as CI does. Manual check on the shell's dev site (`npm run dev`): pending.
+`npm run lint`, `npm run typecheck`, `npm test` (550 tests, 60 suites) and `npm run build` pass, with the test site installed from the packed tarball as CI does. Manual check on the shell's dev site (`npm run dev`): the record below; results pending.
 
 ## Decisions
 
@@ -155,6 +156,49 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     one-line fix there. Focus after client-side navigation, which the
     skip link does not address, is the issue's last paragraph and its own
     issue.
+
+11. **The shell's dev pages render a `<main>`; the runtime's error pages
+    are an open question.** Preparing the manual pass showed that the
+    dev site's own pages (`/dev`, `/slots`) rendered no `<main>`, so every
+    page on it would carry the warning and the skip link would only ever
+    reach the fallback. Both pages' Paragon `Container` now renders
+    `as="main"`. The runtime's not-found and error pages (`NotFoundPage`,
+    `ErrorPage`), rendered in the content slot for every site, also have
+    no `<main>` and so warn on a development site; whether they should
+    render one is left to the PR review rather than decided here.
+</details>
+
+<details>
+<summary>Manual testing</summary>
+
+# Manual testing — the skip link and page rules (openedx/frontend-base#328)
+
+What the automated suite cannot show: where focus actually lands in a browser, what the console shows on real navigations, and what a keyboard user sees.
+
+## Environment
+
+- The frontend-base checkout on `skip-link-main-landmark`, `npm run dev` (builds, then serves the shell's dev site at `http://apps.local.openedx.io:8080`). The dev site config sets `environment: DEVELOPMENT`, so the page rules run.
+- A browser with its developer console open. Pages used: `/dev` (the dev home, renders a `<main>` as of this branch), `/slots` (the slot showcase, likewise), and `/nope` (the shell's not-found page, which renders no `<main>`).
+
+## Verify by hand
+
+- [ ] **The skip link appears on focus** — load `/dev`, press Tab: "Skip to main content." appears at the top of the page as the focused element (it is visually hidden until focused).
+- [ ] **Activating it focuses the `<main>`** — press Enter on the link: in the console, `document.activeElement.tagName` is `MAIN`; the URL did not gain `#main-content`; no focus ring is drawn on the `<main>`.
+- [ ] **Keyboard navigation continues inside the content** — press Tab once more: focus is on the first link inside the page content ("Go to ... page"), not on anything in the header.
+- [ ] **A page with no `<main>` falls back to the wrapper** — load `/nope`: the console shows the warning "The page has no <main> element. ..."; Tab to the skip link, Enter: `document.activeElement.id` is `main-content`.
+- [ ] **One `<main>` is silent** — on `/dev` and `/slots`, the console shows no "<main> element" diagnostic after load.
+- [ ] **Rules re-run on client-side navigation** — from `/dev`, follow "Go to slot showcase page", then the browser's back button: no page reload (the console keeps its earlier lines), and no diagnostic appears on either page.
+- [ ] **More than one `<main>` is an error** — temporarily wrap the `<ul>` in `HomePage.tsx` in a second `<main>`, let the dev server rebuild, reload `/dev`: the console shows the error "The page has 2 <main> elements without the hidden attribute; ...". Revert the edit.
+- [ ] **A hidden `<main>` is not counted** — in the same temporary edit, give the inner `<main>` the `hidden` attribute: no diagnostic. Revert the edit.
+
+## Left to the automated suite
+
+- The handler's cases (target found, hidden passed over, existing tabindex kept, wrapper fallback, no target): `shell/header/SkipLink.test.tsx`.
+- The rule's outcomes and the runner's gating by `enabled` and environment: `shell/rules/mainLandmark.test.ts`, `shell/usePageRules.test.tsx`.
+
+## Results
+
+(not yet run)
 
 </details>
 
