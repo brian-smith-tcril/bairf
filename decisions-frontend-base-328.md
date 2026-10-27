@@ -139,27 +139,37 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     renders them inside the shell, the warning applies. Whether they
     should render a `<main>` is left to the PR review.
 
-12. **The rules run from a component inside `SiteProvider`, not from
-    `Shell`'s own hook call.** The first manual pass showed the "no
-    `<main>`" warning on every hard reload of `/dev` and `/slots`, with
-    `document.querySelectorAll('main').length` reading `1` afterwards.
-    `SiteProvider` renders `null` until the theme has loaded, and `Shell`
-    called `usePageRules` above it, so the effect ran after `Shell`'s first
-    commit with no page in the document and did not run again when the
-    page appeared, since nothing it depends on (location key, navigation
-    state) had changed; client-side navigations were silent because the
-    page already existed. `Shell` now renders `<PageRules />`, a component
-    that calls the hook and renders nothing, as a sibling of the layout
-    slot inside `SiteProvider`: it mounts only once the provider renders
-    its children, and sibling effects run after the whole tree has
-    committed, so the page's `<main>` is in the document when the rules
-    run. What we wanted to test was that the hook runs at the right time,
-    after the page content exists. It has no unit test: with `PageRules`
-    beside the page, the rules cannot run before the page, which is
-    React's guarantee rather than ours, so every tree we wrote for it only
-    asserted that; the test that would guard the wiring renders `Shell`
-    itself, and that reaches the network under jsdom through whatever
-    fetches on mount below `SiteProvider`, which no test in the repository
-    mocks yet. The manual record's reload boxes, which failed before the
-    move, and this entry carry it; a `Shell` render test is its own work.
-
+12. **The rules run whenever the document settles, not once.** The first
+    manual pass showed the "no `<main>`" warning on every hard reload of
+    `/dev` and `/slots` while the page had its `<main>`: `SiteProvider`
+    renders nothing until the theme has loaded, `Shell` ran the rules
+    after its own first commit, and nothing the effect depended on
+    changed when the page appeared. Moving the call into a component
+    beside the page fixed that one and left the next: a page that renders
+    its `<main>` after its own data arrives (Learning's tab page shows a
+    spinner until the course metadata query resolves) would warn on every
+    load and never correct itself, and a nested `<main>` rendered after a
+    load would never be reported. Each fix had picked one source of
+    change in the document; the plan's "When the document can be judged"
+    lists them all with the signals that exist (the router idle, React
+    Query's fetch count under the shell's own `QueryClient`) and the ones
+    that do not (the provider's gate, component-level lazy loading, data
+    loading outside React Query, later interaction). The runner therefore
+    watches the document with a `MutationObserver`, runs the rules after a
+    short quiet period gated on the two real signals, reports each
+    diagnostic once per navigation, and judges again when the document
+    next settles. A rule is instant (more than one visible `<main>` is a
+    violation whenever seen) or settled (none is meaningful only once the
+    page stops changing); the quiet period is the heuristic for the
+    latter, and a page loading outside React Query for longer than it
+    gets that warning once, which the warning's text already qualifies.
+    With the observer the mount point no longer matters, so `usePageRules`
+    is called from `Shell` beside its sibling hooks and the `PageRules`
+    component is gone. What we wanted to test all along was that the
+    rules judge the page content, not the states before it; with the
+    settle model that is a property of the hook and is tested on it with
+    fake timers (a page rendering its `<main>` after an effect, a change
+    after the first judgement, a query in flight), rather than a property
+    of where the hook is mounted, which only a `Shell` render test could
+    show and the shell's mount-time fetches under jsdom make that its own
+    work.
