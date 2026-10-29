@@ -356,8 +356,7 @@ and are not repeated.
       tab-page module by path: `setupTest.js` registers the app, `app.ts`
       imports `routes.tsx`, and the real `LoadedTabPage` was in the module
       registry before any test file's `jest.mock` ran.
-    - `renderRoutes` returns the router and the query client it creates.
-      `master`'s access-denied block is not ported (entry 27). The
+    - `master`'s access-denied block is not ported (entry 27). The
       request-count case waits for the
       page's title before waiting for fetches to settle, since a lazy
       route has nothing fetching until it loads; the page-rules case waits
@@ -468,7 +467,9 @@ and are not repeated.
       code's path, the fallback, and the outline's `null`. `TabPage.test.jsx`
       gains the redirect assertion: a denied course leaves the router at
       the learning role's URL plus the function's path, which tests the
-      prefix where it is made.
+      prefix where it is made. `renderRoutes` returns the router and the
+      query client it creates from this commit on, since this case is the
+      first to read the router; the dates test reads both.
     - Commit 2's `api.test.js` gains a `getCourseHomeCourseMetadata`
       case: the response's `course_access` comes back as `courseAccess`.
     - #2195 drops `CoursewareContainer.test.jsx`'s block when it ports
