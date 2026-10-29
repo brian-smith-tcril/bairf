@@ -21,7 +21,7 @@ and are not repeated.
    the mocks, which the template already excludes, so `src/tests` joins
    `coveragePathIgnorePatterns`; the build already excludes the directory.
    Amended 2026-10-29: the exclusion moves to #2221, which creates
-   `src/tests/` (decisions-2188 entry 5), and the query-client helpers
+   `src/tests/` (#2221's decision log, entry 5), and the query-client helpers
    arrive with the frame commit, their first user (entry 31).
 
 3. **Caret ranges for the two test dependencies.** `master` pins
@@ -221,8 +221,8 @@ and are not repeated.
     ESLint 9 upgrade; reproduced in every converted app with `.jsx` files).
     This layer brings the first eleven. The `files: ['src/**/*.jsx']` block
     that lints them is not committed: it stays a local, uncommitted change
-    to `frontend-base/eslint.config.js` (the patch is `local-eslint-jsx.patch`
-    in the effort worktree, reapplied after every stack operation), and
+    to `frontend-base/eslint.config.js`, reapplied after every stack
+    operation, and
     every commit from this one on is linted with it in place, so the branch
     needs nothing when frontend-base ships the fix. Linting them surfaced
     four findings, fixed in this commit: an airbnb-era
@@ -345,10 +345,10 @@ and are not repeated.
     `2.0.0-alpha.17`; `package.json` keeps the range it had before the
     vendoring, which admits it, and the tarball is gone from the branch.
     Then, by Brian's call, the bump is not a commit of this layer: it
-    folds into #2217's scaffold commit (decisions-2187 entry 8), and this
+    folds into #2217's scaffold commit (#2217's decision log, entry 8), and this
     layer's commits drop to seven, the page rules third.
     Then the page-rules commit moves to #2221 as its second commit
-    (decisions-2188 entry 8): it tests only #2221's route tree, and both
+    (#2221's decision log, entry 8): it tests only #2221's route tree, and both
     reasons it sat here, the vendored dependency and the template's
     `<main>`, are gone.
     Finding, 2026-10-27: placed before the frame, every one of the 17
@@ -359,7 +359,7 @@ and are not repeated.
     `StubPage` renders a `<main className="p-4">` inside it. The frame
     commit turns `Main.tsx`'s wrapper into a `div`, which is what makes
     the rule pass from there on.
-    The `div` moves down to #2217 (decisions-2187 entry 9), where the
+    The `div` moves down to #2217 (its decision log, entry 9), where the
     root route's element is created, so the frame commit no longer
     touches that line.
 
@@ -494,7 +494,7 @@ and are not repeated.
 
 28. **A factory moves with the first test that builds it.** The plan
     ported `course-home/data/` whole, reading "shared code moves with its
-    first consumer" (decisions-1905 entry 18) per directory, and so took
+    first consumer" (#1905's unit of a port) per directory, and so took
     every factory with it. Against the 96.15 bar, kept global
     (2026-10-29), four factories no ported test builds were 61 of the 130
     missed lines: `courseBlocks` 41 of 44, `block` 14 of 15,
@@ -648,7 +648,7 @@ and are not repeated.
     - The page-rules commit moves to #2221 (entry 24) and the `src/tests`
       coverage exclusion to #2221's route-tree commit (entry 2).
     - The test site's `baseUrl` (`http://localhost:2000`) moves to #2217's
-      identity commit (decisions-2187 entry 10). Its LMS URLs
+      identity commit (#2217's decision log, entry 10). Its LMS URLs
       (`http://localhost:18000`) and `EXAMS_BASE_URL` stay in the data
       commit: they are not identity but the LMS the ported factories and
       tests build URLs on (`courseHomeMetadata.factory.js`'s `host`

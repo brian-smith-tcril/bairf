@@ -127,8 +127,8 @@ the test approach are in #2188's plan and are not repeated.
    Amended 2026-10-29: the directory is also excluded from coverage
    (`'src/tests'` in `coveragePathIgnorePatterns`), as the template
    excludes the setup file and the mocks. #2189 had added the exclusion
-   when its query-client helpers arrived before any test used them
-   (decisions-2189 entry 2); it belongs where the directory starts.
+   when its query-client helpers arrived before any test used them; it
+   belongs where the directory starts.
 
 6. **Route tests are one `describe` per page.** The first cut was one
    `it.each` table of seventeen rows, hard to read and wrong the moment a
@@ -169,12 +169,12 @@ the test approach are in #2188's plan and are not repeated.
    `/learning/course/:courseId/`; harmless for navigation.
 
 8. **Route tests assert the page rules, in a commit of their own.**
-   Moved down from #2189 on 2026-10-29 (decisions-2189 entry 24), once
-   frontend-base was no longer vendored there: `runPageRules` and its
+   Moved down from #2189 on 2026-10-29, once frontend-base was no longer
+   vendored there: `runPageRules` and its
    `mainLandmark` rule come from openedx/frontend-base#329, first
    published in 2.0.0-alpha.17, which #2217's scaffold commit locks.
-   Each stub renders one `<main>` inside `Main.tsx`'s `div`
-   (decisions-2187 entry 9), so every path passes. `routes.test.tsx`
+   Each stub renders one `<main>` inside `Main.tsx`'s `div` (#2217's
+   decision log, entry 9), so every path passes. `routes.test.tsx`
    asserts `expect(runPageRules(document)).toEqual([])` in a
    `describe('page rules')` of its own, one case per path, rather than
    inside each page's block, so the "renders at" titles keep claiming
