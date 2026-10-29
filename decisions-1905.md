@@ -242,6 +242,9 @@ Settled 2026-10-19, while charting the wayfinder map.
     (`npm run test -- <path>`) collects coverage for all of `src/` and trips
     the global threshold, so partial runs pass `--coverage=false`. Removed
     at the swap (decision 15).
+    Amended 2026-10-29: no per-path thresholds. The global 96.15 is the
+    bar for every port, met by tests beside the code each port brings
+    (decisions-2189 entry 29); the baseline table is for comparison.
 
 18. **Unit of a port.** One route-level page per PR, with what only it
     uses; shared code moves with its first consumer. A page too big for one

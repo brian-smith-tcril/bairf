@@ -27,7 +27,7 @@ Part of #1905.
 
 - The bar is enforced by jest, not codecov: a `coverageThreshold` of `lines: 96.15` in `frontend-base/jest.config.js`, so `npm test` fails locally and in CI when the package's line coverage drops under `master`'s number at branch creation. Every later change is held to `master`'s bar and the eventual merge to `master` is not the first comparison. Codecov's `codecov_yml_path` input only serves automated test selection, and a flag status would need a root `codecov.yml` edit with carryforward rules; the jest threshold needs neither. It is removed in the swap at the end of #1905, since an absolute target is not a policy `master` has, together with the lcov `projectRoot` and the codecov step's `files` path, which describe the subdirectory layout.
 - The package's upload carries the `frontend-base` flag and the legacy upload from `validate.yml` stays unflagged; the PR comment's combined number is noise, the flag's number on codecov is informational.
-- Each later port adds its directory's baseline from the table below to the threshold's per-path map, beside its manifest lines. A whole-tree number can hide a poorly covered port.
+- Each later port meets the global threshold with the code it ports covered by tests beside that code, in the commit that ports it; no per-directory thresholds are added. The table below is for comparing a port's directories against `master`.
 - A partial local run (`npm run test -- <path>`) collects coverage for all of `src/` and trips the global threshold; partial runs pass `--coverage=false`.
 
 ## Commits

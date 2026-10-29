@@ -506,3 +506,26 @@ and are not repeated.
       was deleted with the component in `14c662dc` (#1675, 2025-04-14),
       which left the factory and its import behind.
 
+29. **Coverage: the global bar, met by tests beside the code.** Decided
+    2026-10-29. The plan's per-directory thresholds at `master`'s baseline
+    are not added; the global `lines: 96.15` from #2187 is the bar. At the
+    top before entries 27 and 28 the package was at 82.53% (744 lines, 130
+    missed). `master`'s 96.15 averages the whole app, but a port is held
+    to it on its own: code a commit ports is covered by tests in that
+    commit, beside the code, and code nothing covers is either unused
+    (entry 28) or tested only through a later tab's suite on `master`, a
+    placement gap like entry 27's.
+    - The data module's own tests on `master` leave out the bodies of
+      `getOutlineTabData` and `getProgressTabData`,
+      `unsubscribeFromCourseGoal` and `getCoursewareSearchEnabled` (no
+      caller in the port), and `normalizeCourseHomeOutline` (35 lines);
+      `api.test.js` and `courseHomeOutline.test.ts` gain them in commit 2.
+    - The used files #2189 ports that its tests leave short (34 lines:
+      `getNotices` 11, `LogistrationAlert` 6, `user-messages` 7, the
+      dates timeline and utilities 4, `ToastContext` and `http-error` 2
+      each, `localStorage` and `PageLoading` 1 each) are covered in the
+      commit that ports each. A line whose test would be contrived may
+      stay uncovered while the bar is met, named in the PR.
+    - The commit messages' "coverage bar is not met at this commit" lines
+      stay where it still holds; the bar is met at the top.
+

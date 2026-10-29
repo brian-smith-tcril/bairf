@@ -78,13 +78,13 @@ Six, in review order, squashed on merge:
 3. **Vendored frontend-base**: the tarball packed from openedx/frontend-base#329 at `vendor/openedx-frontend-base-da3af1a1.tgz` as the `@openedx/frontend-base` dev dependency, and the lock entry it changes. Replaced by a lock-only bump once an alpha with #329 is published.
 4. **Page rules on every route**: `routes.test.tsx` asserts `runPageRules` at each path it covers, ahead of the frame, the first commit that renders ported code.
 5. **The frame**: `Main.tsx` with the providers, `tab-page/`, the two alerts, `generic/` pieces, `shared/access.js` with a new `access.test.ts`, `TabPage.test.jsx`'s redirect case, `course-tabs/utils.ts`, the stubs, the `dropped` lines.
-6. **The dates tab**: `dates-tab/` (without `master`'s access-denied block), `suggested-schedule-messaging/`, the placeholder slot, the dates route replacing its stub (its page-rule assertion moves from `routes.test.tsx` to the dates test), the per-directory coverage thresholds.
+6. **The dates tab**: `dates-tab/` (without `master`'s access-denied block), `suggested-schedule-messaging/`, the placeholder slot, the dates route replacing its stub (its page-rule assertion moves from `routes.test.tsx` to the dates test), the tests that cover what it ports.
 
 Checks after each: `npm run lint`, `npm test`, `npm run build`, `npm run build:ci` in `frontend-base/`.
 
 ## Coverage
 
-Each ported directory gets a `coverageThreshold` entry at `master`'s line coverage from the baseline table in #2187: `course-home/dates-tab` 98.39, `course-home/suggested-schedule-messaging` 98.28, `course-home/data` 99.64, `tab-page` 100, `alerts/enrollment-alert` 100, `alerts/logistration-alert` 84.44, `generic/user-messages` 89.77, `generic/notices` 53.85, `plugin-slots/BannerDatesUpgradeSlot` 100. jest removes files matched by a path threshold from the global one.
+The bar is the package's global `lines: 96.15` threshold from #2187, met at the top of the PR; there are no per-directory thresholds. Code the PR ports is covered by tests in the commit that ports it, placed beside the code they test: where `master` covered a file only through another tab's suite, the port adds the test next to the file (`api.test.js` and `courseHomeOutline.test.ts` for the outline, progress, goal and search functions; the frame's notices, alert, user-messages and toast files; the dates files). A line whose test would be contrived may stay uncovered while the bar is met; the PR names each one. Factories are counted like any file: one no test builds is unused, and moves with the first test that builds it (What moves).
 
 ## Stack
 
@@ -108,6 +108,6 @@ On the package's dev site against Tutor dev with the demo course: the dates tab 
 - [ ] The test setup, render helper and mocking conventions above are in place and the ported tests pass, the dates test through the route array
 - [ ] Every route test asserts no page-rule diagnostics once its page has rendered
 - [ ] Lint, tests and both builds of the package pass; the legacy workflow stays green; `npm run dev` from the package serves dates
-- [ ] Manifest lines added for every file moved or dropped; the ported directories' coverage held at the `master` baseline by the threshold map
+- [ ] Manifest lines added for every file moved or dropped; the package meets the global 96.15 line threshold, with what this PR ports covered by tests beside it
 
 </details>
