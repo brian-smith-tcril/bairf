@@ -357,15 +357,8 @@ and are not repeated.
       imports `routes.tsx`, and the real `LoadedTabPage` was in the module
       registry before any test file's `jest.mock` ran.
     - `renderRoutes` returns the router and the query client it creates.
-      As on `master`, `renderDenied` renders and waits, and each
-      access-denied case asserts: the helper waits until the router has
-      left the dates path and returns its location. The cases assert the
-      router's location, which carries
-      the role prefix (`/learning/redirect/dashboard`: `TabPage`
-      prefixes the learning role's URL, the plan's Paths bullet); the
-      memory router keeps the query string as `TabPage` built it, so
-      `audit_expired` expects `uhoh oh no`, where `master`'s browser
-      history percent-encoded it. The request-count case waits for the
+      `master`'s access-denied block is not ported (entry 27). The
+      request-count case waits for the
       page's title before waiting for fetches to settle, since a lazy
       route has nothing fetching until it loads; the page-rules case waits
       for the same title. `TabPage` renders the tab only once its data has
@@ -450,3 +443,34 @@ and are not repeated.
       throws. The case now asserts what the line meant: `href` is still
       the one the case started at, which a redirect by `href` assignment
       would change.
+
+27. **Access-denied redirects are tested where they are made.**
+    `getAccessDeniedRedirectUrl` (`shared/access.js`) maps
+    `courseAccess.errorCode` to a path; `activeTabSlug` matters only on
+    the fallback, where the outline gets `null` (no redirect). `TabPage`
+    is its only caller, and the frame commit's `TabPage` prefixes the
+    learning role's URL before its `<Navigate>` (the plan's Paths
+    bullet). On `master` the redirect is tested only by two page suites,
+    both from c667e294 (#558): `DatesTab.test.jsx`'s "when receiving an
+    access denied error" (six codes; "These tests could go into any
+    particular tab, as they all go through the same flow. But dates tab
+    works.") and `CoursewareContainer.test.jsx`'s "when receiving a
+    course_access error_code" (the same six plus
+    `data_sharing_access_required`, `incorrect_active_enterprise`,
+    `course_not_started_enterprise_learner`). `TabPage.test.jsx`'s denied
+    cases assert the loading text and the absent tab, not the redirect;
+    `access.js` has no test. Starting from server-shaped metadata, the
+    page blocks were also the only check that `course_access` arrives as
+    `courseAccess`.
+    - Commit 6 drops the Dates block, and `renderDenied` with it.
+    - Commit 5 adds `shared/access.test.ts` beside `access.js` (a `.ts`
+      test of a `.js` module, as `EnrollmentAlert.test.tsx` is): every
+      code's path, the fallback, and the outline's `null`. `TabPage.test.jsx`
+      gains the redirect assertion: a denied course leaves the router at
+      the learning role's URL plus the function's path, which tests the
+      prefix where it is made.
+    - Commit 2's `api.test.js` gains a `getCourseHomeCourseMetadata`
+      case: the response's `course_access` comes back as `courseAccess`.
+    - #2195 drops `CoursewareContainer.test.jsx`'s block when it ports
+      that test. A drafted follow-up issue for moving the blocks was
+      dropped: the move is this.
