@@ -528,4 +528,15 @@ and are not repeated.
       stay uncovered while the bar is met, named in the PR.
     - The commit messages' "coverage bar is not met at this commit" lines
       stay where it still holds; the bar is met at the top.
+    - Outcome, 2026-10-29: 99.4% of lines at the top (216 tests), the bar
+      met from commit 5 on (98.69%). `master`'s `ToastContext.test.tsx`
+      had been left behind when commit 2 ported `ToastContext.tsx`; it
+      ports now, the only `master` test of a ported file that was missing.
+      Four lines stay uncovered: `PageLoading`'s `return null` when
+      `srMessage` is absent (the prop is required, so reaching it means a
+      prop-types error); `http-error.ts`'s `NonRetryableError` field and
+      `isNonRetryable`, whose `master` consumers (`queryClient.ts`,
+      `courseware-search/map-search-response.js`) are not ported; and
+      `alerts/logistration-alert/messages.ts`, whose only importer on
+      `master` is `AccountActivationAlert.jsx`, an outline-tab file.
 
