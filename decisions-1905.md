@@ -480,6 +480,12 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     since `usePluginOverrides` is not a package export and, until #2185,
     there is no slot to mount a widget in; carrying it preserved nothing
     observable. The unit (#2196) calls `getIFrameUrl` directly.
+    Amended 2026-10-29: dropping the provider dropped what Learning's
+    client set (retry policy, no focus refetch, query-failure logging).
+    Retry and focus go on each query through a shared `queryDefaults`
+    spread; logging is a listener on the shell's query cache mounted by the
+    root route, filtered to Learning's `appId` keys (decisions-2189 entry
+    30). Every port spreads `queryDefaults` into the queries it brings.
 
 31. **Roles: one on the root, one per tab.** Learning provides a single
     `learning` role under both `providesCourseBarRolesId` and

@@ -545,3 +545,34 @@ and are not repeated.
       `alerts/logistration-alert/messages.ts`, whose only importer on
       `master` is `AccountActivationAlert.jsx`, an outline-tab file.
 
+30. **Learning's query client settings move off the client.** Decided
+    2026-10-29. Found through coverage: `isNonRetryable` had no reader,
+    since `master`'s `queryClient.ts` was not ported when epic decision 30
+    dropped Learning's query client provider. The shell's client is a bare
+    `new QueryClient()` (`dist/shell/site.js` in the vendored build;
+    `shell/site.tsx` on frontend-base `main` at `ae5ec93`), so under it a
+    4xx is retried three times (query-core 5.105.0's default `retry: 3`
+    with 1, 2 and 4 second delays), queries refetch on window focus, and
+    a failed query is not logged: frontend-base's request-error
+    interceptor logs only 401 and 403, as info, and the mutations' own
+    `onError: logError` are unaffected. The test query client sets
+    `retry: false` and `refetchOnWindowFocus: false`, so no test showed it.
+    - Retry and focus refetch are per query, the converted apps' pattern,
+      checked on each default branch 2026-10-29: account and profile set
+      `retry: retryUnlessClientError` on each query (openedx/frontend-app-account#1468,
+      openedx/frontend-app-profile#1407), gradebook spreads
+      `gradebookQueryOptions` with `refetchOnWindowFocus: false` too
+      (openedx/frontend-app-gradebook#635), learner-dashboard writes the
+      4xx check inline, catalog sets nothing. Learning spreads
+      `queryDefaults` first in each `queryOptions(...)`, so a query's own
+      option wins.
+    - Logging is a query-cache listener in `Main.tsx`, the only Learning
+      code mounted on every Learning page. query-core dispatches the
+      `error` action once, after retries, just before the cache's
+      `onError`, so the listener logs where `master`'s cache did. It
+      filters on the key's first element, Learning's `appId`, which every
+      Learning query key on `master` starts with. No converted app does
+      this; none had logging to lose.
+    - Two commits after the dates commit, retry and focus first, logging
+      second.
+

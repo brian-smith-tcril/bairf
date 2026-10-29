@@ -56,6 +56,14 @@ A `master` test that renders a stubbed module for real, the streak-modal case in
 
 `Main.tsx` keeps the `CurrentAppProvider` and the outlet and gains the three Learning-wide providers in `master`'s nesting order: notices, user messages, toast. They mount once, only under `/learning`, and persist across client-side tab switches; nothing goes in `App.providers`, which the shell hoists site-wide, and the legacy query client provider is dropped since the shell owns one. The title message stays until a page sets its own through Helmet, as the loaded tab page does.
 
+## Query client settings
+
+`master` creates Learning's own query client (`src/queryClient.ts`), which retries a failed query up to three times except on a 4xx or a `NonRetryableError` (`shouldRetryQuery`), does not refetch on window focus, and logs each query's final failure with `logError`, or at the level its `meta.logStatusAs` names for that status. Under the shell, Learning's queries run on the shell's client, a `new QueryClient()` with the library's defaults: a 4xx is retried three times (1, 2 and 4 seconds apart, so an error page waits about seven seconds), every active query refetches when the window regains focus, and a failed query is logged nowhere. `src/queryClient.ts` ports to the same path without `createQueryClient`, and the settings move off the client:
+
+- Retry and focus refetch go on each query, as the converted apps do (`retryUnlessClientError` in openedx/frontend-app-account's and openedx/frontend-app-profile's `src/data/queryOptions.js`; openedx/frontend-app-gradebook's `gradebookQueryOptions` in `src/data/query.ts`, which adds `refetchOnWindowFocus: false`). `queryClient.ts` exports `queryDefaults` (`retry: shouldRetryQuery`, `refetchOnWindowFocus: false`), spread first into every `queryOptions(...)` in `apiHooks.ts`, so a query's own setting still wins (`proctoringInfoDataQuery` keeps `retry: false`). Later ports spread it into the query definitions they bring.
+- Logging cannot go on a query: TanStack Query 5 has no per-query error callback, and only the client's query cache sees a query's final failure. `Main.tsx` subscribes to the shell's query cache while Learning's root route is mounted and logs each `updated` event whose action is `error` (dispatched once, after retries, where the cache's `onError` runs) for queries whose key starts with Learning's `appId`, as every Learning query key does, with `master`'s logger table and `logStatusAs` lookup. The shell's queries and other apps' are never logged by Learning. None of the converted apps logs failed queries; Learning restores what `master` does.
+- `master`'s `queryClient.test.ts` ports with them: `shouldRetryQuery`, the retry and focus behavior through `queryDefaults`, and the logging through the listener.
+
 ## Test conventions
 
 This is the first page port, so its choices are the template for the rest.
@@ -71,7 +79,7 @@ This is the first page port, so its choices are the template for the rest.
 
 ## Commits
 
-Six, in review order, squashed on merge:
+Eight, in review order, squashed on merge:
 
 1. **Test setup**: the setup file, `src/tests/` helpers, `axios-mock-adapter`, the Pact `dropped` lines, the silenced-message entries.
 2. **Course-home data module**: `course-home/data/`, `utils.ts`, `data/http-error.ts`, tests and the factories its tests build (`api.test.js` gains the `courseAccess` case), the `upgradeNotificationData` `dropped` line. Nothing renders yet; the tests pin the API surface.
@@ -79,6 +87,8 @@ Six, in review order, squashed on merge:
 4. **Page rules on every route**: `routes.test.tsx` asserts `runPageRules` at each path it covers, ahead of the frame, the first commit that renders ported code.
 5. **The frame**: `Main.tsx` with the providers, `tab-page/`, the two alerts, `generic/` pieces, `shared/access.js` with a new `access.test.ts`, `TabPage.test.jsx`'s redirect case, `course-tabs/utils.ts`, the stubs, the `dropped` lines.
 6. **The dates tab**: `dates-tab/` (without `master`'s access-denied block), `suggested-schedule-messaging/`, the placeholder slot, the dates route replacing its stub (its page-rule assertion moves from `routes.test.tsx` to the dates test), the tests that cover what it ports.
+7. **Query retry and focus refetch**: `queryClient.ts` with `shouldRetryQuery` and `queryDefaults`, spread into every query in `apiHooks.ts`, with `master`'s retry and focus tests.
+8. **Query error logging**: the logger table and `logStatusAs` lookup in `queryClient.ts`, the query-cache listener `Main.tsx` mounts, with `master`'s logging tests.
 
 Checks after each: `npm run lint`, `npm test`, `npm run build`, `npm run build:ci` in `frontend-base/`.
 
