@@ -378,11 +378,9 @@ and are not repeated.
       schedule header before its absence checks; `master`'s ran before
       the page could have rendered, and under the lazy route the test
       ended mid-load (React's `act` warning).
-    - The suggested-schedule `describe` swaps `window.location` for a copy
-      with a `replace` mock, restored after each case: the upgrade buttons
-      call `location.replace`, which jsdom reports as not implemented, and
-      the console hook fails on it. Same swap `master`'s `apiHooks.test`
-      makes.
+    - The two upgrade-button cases stub `location.replace` with
+      `mockLocation` (entry 26): the buttons call it, jsdom reports the
+      navigation as not implemented, and the console hook fails on it.
     - `Day` and `UpgradeToCompleteAlert` move `defaultProps` to default
       parameters (entry 11).
     - `classnames` is declared (`^2.5.1`; `master` pins 2.5.1), entry 13.
@@ -412,3 +410,36 @@ and are not repeated.
     of 96.15. `master`'s baseline is its whole suite, so files whose
     consumers are later tabs (the outline factories and functions, the
     logistration alert) were covered by tests this layer does not port.
+
+26. **Tests stub `window.location` through `mockLocation`.** jsdom cannot
+    navigate (`location.replace`, `assign` or a new `href` reports
+    "Not implemented: navigation", which the console hook fails on), and
+    its `Location` members are non-configurable, so a test that stubs one
+    swaps the whole object. `master` does that in six files, four ways:
+    `defineProperty` with a bare `{ replace }` or `{ reload }` and a
+    `try`/`finally` restore (`apiHooks.test`, `ProgressTab.test`,
+    `EnrollmentAlert.test`); `delete` and assignment, restored at the end
+    of the case (`OutlineTab.test`) or never (`NoticesProvider.test`,
+    `CoursewareRedirectLandingPage.test`); `defineProperty` with
+    `writable`, never restored (`RedirectPage.test`).
+    `src/tests/location.ts` exports `mockLocation(members)`, which installs
+    `{ ...window.location, ...members }` and returns it, and
+    `restoreLocation`, which the setup file runs after each test, so no
+    case restores by hand and none leaks. The spread keeps `href` and the
+    other values as plain readable, writable properties (the timer test
+    reads the `href` the exam library writes); a member not passed is
+    jsdom's method detached from its `Location`, which throws when called.
+    - The helper comes in commit 2 with `apiHooks.test`'s case, the first
+      that stubs navigation; commit 5's `EnrollmentAlert`,
+      `NoticesProvider` and `TabWithTimer` tests and commit 6's dates test
+      use it.
+    - `NoticesProvider.test`'s "does not redirect on no data" ended with
+      `expect(window.location.toString() === 'http://localhost/')`, an
+      `expect` without a matcher since the test arrived (`3fcc0d87`,
+      openedx/frontend-app-learning#667); against the bare mock a matcher
+      would have read `[object Object]`, and against the copy `toString`
+      throws. The case now asserts what the line meant: `href` is still
+      the one the case started at, which a redirect by `href` assignment
+      would change.
+    - The dates upgrade cases assert `replace` is called with the upgrade
+      link, which `master`'s did not.
