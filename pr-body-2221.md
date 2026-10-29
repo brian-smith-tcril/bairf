@@ -10,11 +10,12 @@ Part of #1905. Resolves #2188. Stacked above #2219.
 - `src/constants.ts`: `learningCourse` and the four page role ids beside the root role. `src/provides.ts`, `src/app.ts`: `learningCourse` under both course-bar ids, as instructor dashboard declares its own course-scoped role.
 - `src/StubPage.tsx`: one line naming the page and a list of the params the route captured.
 - `jsdom-environment-with-node-fetch.mjs`, with `jest.config.js` pointing at it and `tsconfig.json` including it: forwards Node's Fetch classes into jsdom, which has none, so route tests can start react-router's data router.
-- `src/tests/render.tsx` (memory router plus intl), `src/routes.test.tsx` (one block per page), `src/app.test.ts` (role declarations, `provides`, what each role resolves to); `tsconfig.build.json` excludes `src/**/tests/**/*` so helpers never ship.
+- `src/tests/render.tsx` (memory router plus intl), `src/routes.test.tsx` (one block per page), `src/app.test.ts` (role declarations, `provides`, what each role resolves to); `tsconfig.build.json` excludes `src/**/tests/**/*` so helpers never ship, and `jest.config.js` leaves `src/tests` out of coverage.
+- A second commit, `test: assert the page rules on every route`: `routes.test.tsx` asserts `expect(runPageRules(document)).toEqual([])` at every path, with `runPageRules` and its `mainLandmark` rule from openedx/frontend-base#329 (2.0.0-alpha.17, which #2217 locks).
 
 ## Testing
 
-In `frontend-base/`: lint, 29 tests at 100% lines with no console output, `build` and `build:ci` green. The root `make validate` does not see the package. Manual: the stubs, the course bar and the masquerade bar on the package's dev site against tutor dev, recorded below.
+In `frontend-base/`: lint, 46 tests at 100% lines with no console output, `build` and `build:ci` green. The root `make validate` does not see the package. Manual: the stubs, the course bar and the masquerade bar on the package's dev site against tutor dev, recorded below.
 
 ## Decisions
 
