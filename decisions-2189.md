@@ -569,8 +569,11 @@ and are not repeated.
       code mounted on every Learning page. query-core dispatches the
       `error` action once, after retries, just before the cache's
       `onError`, so the listener logs where `master`'s cache did. It
-      filters on the key's first element, Learning's `appId`, which every
-      Learning query key on `master` starts with. No converted app does
+      keeps the queries whose key starts with Learning's `appId`, which
+      every Learning query key on `master` does, through
+      `matchQuery({ queryKey: [appId] }, query)`, the documented query
+      filter's prefix match
+      (https://tanstack.com/query/latest/docs/framework/react/guides/filters#matchquery). No converted app does
       this; none had logging to lose.
     - The listener's event shape is typed but not documented, checked
       2026-10-29. The QueryCache reference
