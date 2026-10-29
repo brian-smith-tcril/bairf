@@ -447,5 +447,3 @@ and are not repeated.
       throws. The case now asserts what the line meant: `href` is still
       the one the case started at, which a redirect by `href` assignment
       would change.
-    - The dates upgrade cases assert `replace` is called with the upgrade
-      link, which `master`'s did not.
