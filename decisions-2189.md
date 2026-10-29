@@ -505,6 +505,11 @@ and are not repeated.
       non-literal name): its only user, `UpgradeNotification.test.jsx`,
       was deleted with the component in `14c662dc` (#1675, 2025-04-14),
       which left the factory and its import behind.
+    - The same reading applies outside the factories (2026-10-29):
+      `alerts/logistration-alert/messages.ts` came with the frame commit
+      as part of its directory, but its only reader on `master` is
+      `AccountActivationAlert.jsx`, which `OutlineTab.jsx` renders. Both
+      come with #2191.
 
 29. **Coverage: the global bar, met by tests beside the code.** Decided
     2026-10-29. The plan's per-directory thresholds at `master`'s baseline
