@@ -357,7 +357,10 @@ and are not repeated.
       imports `routes.tsx`, and the real `LoadedTabPage` was in the module
       registry before any test file's `jest.mock` ran.
     - `renderRoutes` returns the router and the query client it creates.
-      The access-denied cases assert the router's location, which carries
+      As on `master`, `renderDenied` renders and waits, and each
+      access-denied case asserts: the helper waits until the router has
+      left the dates path and returns its location. The cases assert the
+      router's location, which carries
       the role prefix (`/learning/redirect/dashboard`: `TabPage`
       prefixes the learning role's URL, the plan's Paths bullet); the
       memory router keeps the query string as `TabPage` built it, so
