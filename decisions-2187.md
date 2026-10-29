@@ -138,3 +138,14 @@ shape and verification environment are in #2187's plan and are not repeated.
    change. The template is left as it is: whether its `Main.tsx` or its
    example page should render the `<main>` is the template's choice,
    since not every app places it per route.
+
+10. **The test site takes Learning's port in the identity commit.** Found
+    2026-10-29 auditing the stack: the identity commit gave
+    `site.config.dev.tsx` Learning's port (`apps.local.openedx.io:2000`)
+    and renamed the test site, but left `site.config.test.tsx`'s
+    `baseUrl` at the template's `http://localhost:8080`, which #2189's
+    data commit then moved to `http://localhost:2000`. The port is
+    identity, so that line moves into the identity commit. The test
+    site's LMS URLs stay the template's here: #2189's data commit moves
+    them to `http://localhost:18000`, the LMS its ported factories and
+    tests build URLs on.

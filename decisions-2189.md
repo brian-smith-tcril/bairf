@@ -20,6 +20,9 @@ and are not repeated.
    96.15 threshold. They are test infrastructure like the setup file and
    the mocks, which the template already excludes, so `src/tests` joins
    `coveragePathIgnorePatterns`; the build already excludes the directory.
+   Amended 2026-10-29: the exclusion moves to #2221, which creates
+   `src/tests/` (decisions-2188 entry 5), and the query-client helpers
+   arrive with the frame commit, their first user (entry 31).
 
 3. **Caret ranges for the two test dependencies.** `master` pins
    `axios-mock-adapter` to exactly `2.1.0`; the package takes npm's
@@ -344,6 +347,10 @@ and are not repeated.
     Then, by Brian's call, the bump is not a commit of this layer: it
     folds into #2217's scaffold commit (decisions-2187 entry 8), and this
     layer's commits drop to seven, the page rules third.
+    Then the page-rules commit moves to #2221 as its second commit
+    (decisions-2188 entry 8): it tests only #2221's route tree, and both
+    reasons it sat here, the vendored dependency and the template's
+    `<main>`, are gone.
     Finding, 2026-10-27: placed before the frame, every one of the 17
     cases fails with `mainLandmark`'s error, "The page has 2 <main>
     elements without the hidden attribute". `Main.tsx` keeps the
@@ -634,4 +641,32 @@ and are not repeated.
       `onError` instead of the listener. Not filed.
     - Two commits after the dates commit, retry and focus first, logging
       second.
+
+31. **The stack audit, 2026-10-29.** Brian asked for every commit in the
+    four layers to be checked for a change sitting above the earliest
+    layer or commit where it belongs.
+    - The page-rules commit moves to #2221 (entry 24) and the `src/tests`
+      coverage exclusion to #2221's route-tree commit (entry 2).
+    - The test site's `baseUrl` (`http://localhost:2000`) moves to #2217's
+      identity commit (decisions-2187 entry 10). Its LMS URLs
+      (`http://localhost:18000`) and `EXAMS_BASE_URL` stay in the data
+      commit: they are not identity but the LMS the ported factories and
+      tests build URLs on (`courseHomeMetadata.factory.js`'s `host`
+      option, `tab.factory.js`, `api.test.js`), so the data commit's
+      message names that reason.
+    - The test-setup commit is dropped, its pieces moving to their first
+      users: `axios-mock-adapter`, `initializeMockApp` with
+      `src/tests/authenticatedUser.ts` and the Pact `dropped` lines to
+      the data commit, whose tests wrap the mock app's client and whose
+      module the Pact test covered; `src/tests/queryClient.ts` to the
+      frame commit, where `render.tsx`, `EnrollmentAlert.test.tsx` and
+      `LoadedTabPage.test.jsx` first use it. No reason for the separate
+      commit was recorded; its likely purpose was letting a reviewer
+      weigh the test conventions alone, and the data commit grows by
+      about 50 lines, every one used by its own tests.
+    - `course-tabs/utils.test.ts` moves from the frame commit to the data
+      commit, beside `utils.ts`, which the data commit ports for
+      `api.ts`'s `TabMetadata` type.
+    - The layer's commits drop to five. Commit numbers in earlier entries
+      refer to the lists in force when they were written.
 
