@@ -415,24 +415,30 @@ and are not repeated.
     navigate (`location.replace`, `assign` or a new `href` reports
     "Not implemented: navigation", which the console hook fails on), and
     its `Location` members are non-configurable, so a test that stubs one
-    swaps the whole object. `master` does that in six files, four ways:
+    swaps the whole object. `master` does that in eleven files, four ways:
+    `defineProperty` with a copy of the real location plus stubbed members,
+    restored in `afterEach` (`TabWithTimer.test`, and
+    `Sequence.specialExams.test`, whose `stubLocation` wraps it);
     `defineProperty` with a bare `{ replace }` or `{ reload }` and a
     `try`/`finally` restore (`apiHooks.test`, `ProgressTab.test`,
     `EnrollmentAlert.test`); `delete` and assignment, restored at the end
     of the case (`OutlineTab.test`) or never (`NoticesProvider.test`,
-    `CoursewareRedirectLandingPage.test`); `defineProperty` with
-    `writable`, never restored (`RedirectPage.test`).
-    `src/tests/location.ts` exports `mockLocation(members)`, which installs
-    `{ ...window.location, ...members }` and returns it, and
+    `CoursewareRedirectLandingPage.test`); `defineProperty` with a bare
+    object, never restored (`RedirectPage.test`,
+    `MasqueradeWidgetOption.test`, `useIFrameBehavior.test`).
+    `src/tests/location.ts` exports `mockLocation(members)`, which takes the
+    first shape, installs `{ ...window.location, ...members }` and returns
+    it, and
     `restoreLocation`, which the setup file runs after each test, so no
     case restores by hand and none leaks. The spread keeps `href` and the
     other values as plain readable, writable properties (the timer test
     reads the `href` the exam library writes); a member not passed is
     jsdom's method detached from its `Location`, which throws when called.
     - The helper comes in commit 2 with `apiHooks.test`'s case, the first
-      that stubs navigation; commit 5's `EnrollmentAlert`,
-      `NoticesProvider` and `TabWithTimer` tests and commit 6's dates test
-      use it.
+      that stubs navigation; commit 5's `EnrollmentAlert` and
+      `NoticesProvider` tests and commit 6's dates test use it.
+      `TabWithTimer.test`'s timer cases stay `master`'s, verbatim, in the
+      #2198 block comment (entry 15); #2198 brings them through the helper.
     - `NoticesProvider.test`'s "does not redirect on no data" ended with
       `expect(window.location.toString() === 'http://localhost/')`, an
       `expect` without a matcher since the test arrived (`3fcc0d87`,
