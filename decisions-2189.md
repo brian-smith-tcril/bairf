@@ -565,6 +565,18 @@ and are not repeated.
       4xx check inline, catalog sets nothing. Learning spreads
       `queryDefaults` first in each `queryOptions(...)`, so a query's own
       option wins.
+    - Mutations need nothing, checked 2026-10-29: `master`'s client set
+      only `defaultOptions.queries`, with no `mutations` entry and no
+      `MutationCache` (the only `mutations:` in `master`'s `src/` is the
+      test setup's `retry: false`). TanStack does not retry a mutation by
+      default ("By default, TanStack Query will not retry a mutation on
+      error",
+      https://tanstack.com/query/latest/docs/framework/react/guides/mutations#retry;
+      query-core 5.105.0's `mutation.js` passes `retry: this.options.retry
+      ?? 0`), so a mutation runs once under either client; focus refetch
+      is a query option only; and each Learning mutation logs through its
+      own `onError: (error) => logError(error)` in `apiHooks.ts`, ported
+      as is.
     - Logging is a query-cache listener in `Main.tsx`, the only Learning
       code mounted on every Learning page. query-core dispatches the
       `error` action once, after retries, just before the cache's
