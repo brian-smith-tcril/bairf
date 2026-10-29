@@ -13,7 +13,8 @@ Part of #1905. Depends on #2189.
 Files port from the legacy `src/` tree to the same relative path under `frontend-base/src/`, with their tests, and get a line each in `frontend-base/manifest.tsv`.
 
 - The outline tab: the tab component, the section and sequence outline, start and resume, the weekly learning goal card and its mutations, the course tools and dates widgets, handouts, notifications, the proctoring info panel and its gating of the goal card, messages.
-- The outline query, its key, API function and normalizer, into the course-home data module; the suggested-schedule messaging module; the effort-estimate shared module, which the outline is the first ported page to use; and the courseware data functions the outline reads (resume and sequence lookups), without the rest of the courseware data module, which comes with the courseware container.
+- The effort-estimate shared module, which the outline is the first ported page to use; and the courseware data functions the outline reads (resume and sequence lookups), without the rest of the courseware data module, which comes with the courseware container.
+- The `outlineTabData`, `courseBlocks` and `block` factories, which the outline's tests are the first to build. #2189 ported the two factory `index.js` files with their imports commented out under this issue's URL; this port uncomments them, and no commented factory import naming this issue remains. The outline query, its API function and normalizer, and the suggested-schedule messaging module are already ported (#2189).
 - The tab owns the outline fetch; readers below it read the cache without fetching, as on `master`. The outline is also the payload two frame alerts read on every tab (enrollment, logistration); that reading stays as on `master` and is a note for #2186, not a change here.
 
 ## Placeholder slots
