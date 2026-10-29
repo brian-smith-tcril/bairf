@@ -134,6 +134,17 @@ shape and verification environment are in #2187's plan and are not repeated.
    from the template's only in its identity fields. The lock and these
    lines share the commit, Brian's call for this case. Lint, tests and
    both builds pass at the stack top.
+   Amended 2026-10-29: the same commit locks `@openedx/frontend-base`
+   2.0.0-alpha.17, a targeted `npm update @openedx/frontend-base` that
+   changes only its lock entry (the range admits it; every other
+   resolution stays as regenerated on 2026-10-26). alpha.17 adds a docs
+   commit (3d40d1b, the `0.0.0-dev` suffix on workspace-able peers) and
+   openedx/frontend-base#329 (ae5ec935): the skip link focuses the app's
+   main landmark, and `runPageRules` with its `mainLandmark` rule, which
+   #2189's route tests assert. #2189 had vendored #329 as a tarball until
+   it was published; folding the bump into the scaffold commit keeps the
+   whole stack on one frontend-base and leaves no dependency commit in a
+   page layer.
 
 9. **`Main.tsx` wraps the outlet in a `div`, not the template's `<main>`
    (2026-10-27).** Learning's routes place the `<main>` differently, as

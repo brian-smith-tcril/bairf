@@ -341,6 +341,9 @@ and are not repeated.
     vendor commit becomes a lock-only bump from `2.0.0-alpha.16` to
     `2.0.0-alpha.17`; `package.json` keeps the range it had before the
     vendoring, which admits it, and the tarball is gone from the branch.
+    Then, by Brian's call, the bump is not a commit of this layer: it
+    folds into #2217's scaffold commit (decisions-2187 entry 8), and this
+    layer's commits drop to seven, the page rules third.
     Finding, 2026-10-27: placed before the frame, every one of the 17
     cases fails with `mainLandmark`'s error, "The page has 2 <main>
     elements without the hidden attribute". `Main.tsx` keeps the
