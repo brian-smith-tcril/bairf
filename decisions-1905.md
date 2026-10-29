@@ -247,6 +247,9 @@ Settled 2026-10-19, while charting the wayfinder map.
     uses; shared code moves with its first consumer. A page too big for one
     reviewable layer splits further, courseware being the expected case;
     split points are decided when that page's ticket is written.
+    Amended 2026-10-29: the unit is the file, not the directory. A
+    factory moves with the first test that builds it, not with its
+    directory's first consumer (decisions-2189 entry 28).
 
 19. **Layers push to upstream.** gh-stack cannot target an upstream branch
     from a fork, so the stack's layers are pushed to upstream as

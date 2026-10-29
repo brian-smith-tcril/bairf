@@ -475,3 +475,34 @@ and are not repeated.
     - #2195 drops `CoursewareContainer.test.jsx`'s block when it ports
       that test. A drafted follow-up issue for moving the blocks was
       dropped: the move is this.
+
+28. **A factory moves with the first test that builds it.** The plan
+    ported `course-home/data/` whole, reading "shared code moves with its
+    first consumer" (decisions-1905 entry 18) per directory, and so took
+    every factory with it. Against the 96.15 bar, kept global
+    (2026-10-29), four factories no ported test builds were 61 of the 130
+    missed lines: `courseBlocks` 41 of 44, `block` 14 of 15,
+    `outlineTabData` 5 of 6, `upgradeNotificationData` 1 of 2. An
+    uncovered factory is an unused one, so factories stay counted and get
+    no tests of their own; the unused ones leave.
+    - The three source files still port whole, since splitting them would
+      cut a file: `apiHooks.ts` imports every `api.ts` function, the
+      enrollment and logistration alert hooks call `useOutlineTabData`
+      with `enabled: false`, and `ShiftDatesAlert` invalidates
+      `outlineTabDataQuery`.
+    - `outlineTabData` is first built by `OutlineTab.test.jsx` and
+      `ProductTours.test.jsx` on `master`, and builds on `courseBlocks`,
+      which builds on `block`; all three come with #2191. Their imports in
+      `course-home/data/__factories__/index.js` and
+      `shared/data/__factories__/index.js` stay in place, commented out
+      with #2191's URL: the index files keep `master`'s lines and order,
+      the arriving port uncomments its line, and a commented import left
+      afterwards names a factory that never arrived.
+    - `upgradeNotificationData` is dropped with a `dropped` manifest line
+      and its index import deleted. Nothing on `master` builds it (a
+      whole-tree search finds only its definition and the index import,
+      and no `Factory.build`, `buildList` or `attributes` call takes a
+      non-literal name): its only user, `UpgradeNotification.test.jsx`,
+      was deleted with the component in `14c662dc` (#1675, 2025-04-14),
+      which left the factory and its import behind.
+
