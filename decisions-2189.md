@@ -335,6 +335,12 @@ and are not repeated.
     dates tab is the first. When an alpha with #329 is published, the
     vendor commit is replaced by a lock-only bump to it and the tarball
     goes.
+    Done 2026-10-29: #329 merged 2026-10-27 as `ae5ec935`, and
+    `2.0.0-alpha.17`, published four minutes later, has that commit as
+    its `gitHead` and exports `runPageRules` from `dist/shell/rules`. The
+    vendor commit becomes a lock-only bump from `2.0.0-alpha.16` to
+    `2.0.0-alpha.17`; `package.json` keeps the range it had before the
+    vendoring, which admits it, and the tarball is gone from the branch.
     Finding, 2026-10-27: placed before the frame, every one of the 17
     cases fails with `mainLandmark`'s error, "The page has 2 <main>
     elements without the hidden attribute". `Main.tsx` keeps the
