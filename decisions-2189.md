@@ -572,6 +572,42 @@ and are not repeated.
       filters on the key's first element, Learning's `appId`, which every
       Learning query key on `master` starts with. No converted app does
       this; none had logging to lose.
+    - The listener's event shape is typed but not documented, checked
+      2026-10-29. The QueryCache reference
+      (https://tanstack.com/query/latest/docs/reference/QueryCache)
+      documents `subscribe` "to be informed of safe/known updates to the
+      cache, such as queries being added, removed, or updated", and its
+      example reads only `event.type` and `event.query`;
+      `QueryCacheNotifyEvent` and its `action` are exported types of
+      `@tanstack/query-core`, so a renamed action fails the type check.
+      TanStack's documented route for global error handling is the
+      `QueryCache` `onError` of a client the app creates (the v5
+      migration guide's "Callbacks on useQuery (and QueryObserver) have
+      been removed" points to
+      https://github.com/TanStack/query/discussions/5279, where the
+      maintainer answers "That's what the global cache callbacks are
+      for"), which under frontend-base belongs to the shell's client. The
+      same thread suggests setting `queryCache.config.onError` from an
+      effect, but that is one slot the shell and every app would share.
+      Prior art for the shape, each read at the commit linked:
+      TanStack's own broadcast client branches on `updated` with a
+      `success` action
+      (https://github.com/TanStack/query/blob/8de245ba1/packages/query-broadcast-client-experimental/src/index.ts#L129-L138,
+      since the v4 release); Automattic/wp-calypso subscribes from a
+      `useEffect` to the context client's query and mutation caches and
+      handles `updated` with an `error` action as an expired login
+      (https://github.com/Automattic/wp-calypso/blob/72a3fc84f67e8ac0ea8527a96490f6f3eed8db30/client/dashboard/app/auth/index.tsx#L271-L299);
+      msupply-foundation/open-msupply does the same to show the error,
+      commented "replaces onError query default removed in v5"
+      (https://github.com/msupply-foundation/open-msupply/blob/f8edd26b94b03f8780faf6188877fc0d08099fa0/client/packages/host/src/QueryErrorHandler.tsx#L35-L47);
+      streamshub/console's `QueryErrorHandler` component sets up its
+      global query error handler the same way
+      (https://github.com/streamshub/console/blob/c92e0f1702f0f09513796d6dc7853303c727fb61/api/src/main/webui/src/components/auth/QueryErrorHandler.tsx#L13-L16).
+    - Possible later move: if frontend-base gave apps a way to register
+      query-cache handlers with the shell's client (for instance the
+      shell's `QueryCache` `onError` forwarding to handlers apps
+      register), Learning could log through TanStack's documented
+      `onError` instead of the listener. Not filed.
     - Two commits after the dates commit, retry and focus first, logging
       second.
 
