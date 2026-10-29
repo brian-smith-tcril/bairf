@@ -33,4 +33,3 @@
 | jsx-lint | issue-body-jsx-lint.md | openedx/frontend-base#327 | settled |
 | skip-target | issue-body-skip-target.md | openedx/frontend-base#328 | settled |
 | react-bootstrap-warnings | issue-body-react-bootstrap-warnings.md | openedx/paragon#4523 | settled |
-| access-denied-tests | issue-body-access-denied-tests.md | | unpublished |
