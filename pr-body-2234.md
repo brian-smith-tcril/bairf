@@ -741,6 +741,20 @@ and are not repeated.
       dropping the default only moves that throw. `DatesTab.jsx`'s two
       reads and `TabPage.tsx`'s keep theirs: they render while the
       queries load.
+    - A defensive check is judged by what it changes when its input
+      arrives, not by whether today's callers or the LMS send that input.
+      One that only moves a crash, like the two `?? {}` above, is dropped:
+      making those components render without data is a larger refactor
+      than the port. One that changes the outcome gets a test that feeds
+      it the input. `courseHomeOutline.ts` reads the outline response as
+      `getOutlineTabData` receives it, and its checks turn a malformed
+      block into an empty child list where the parent walk would throw:
+      `block.children || []` (lines 188 and 199) for a block with no
+      `children`, and `Array.isArray` (lines 230 and 239) for a
+      `children` that is not an array. openedx-platform's
+      `CourseBlockSerializer.get_blocks` sends a list on every block
+      today; `courseHomeOutline.test.ts` gains both cases in the data
+      commit.
 
 </details>
 
