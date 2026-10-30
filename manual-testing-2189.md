@@ -38,24 +38,28 @@ they show up, not counted against a box.
 - [ ] **Providers persist across a tab switch** — with the toast open, switch to another
       tab in the course bar and back within the toast's display time: the toast is still
       open, and the network panel shows no document request.
-- [ ] **Enrollment alert** — as the signed-in unenrolled learner on the dates path: record
-      whether the page shows the enrollment alert or redirects, and to which path.
-- [ ] **Logistration alert** — anonymous on the dates path: record whether the page shows
-      the logistration alert or redirects, and to which path.
-- [ ] **Access denied redirects** — a learner the course denies (unenrolled on a course
-      that requires enrollment, or one not yet started) lands on the course home stub
-      under `/learning`, with no flash of the dates page.
+- [x] **Signed-in unenrolled learner redirects** — on the dates path: redirected to the
+      course home stub at `/learning/course/<courseId>/home`, with no flash of the dates
+      page. `enrollment_required` takes `getAccessDeniedRedirectUrl`'s default case, which
+      sends every tab but the outline there, as on `master`; the enrollment alert shows
+      only on the outline (#2191).
+- [x] **Anonymous learner redirects** — on the dates path: redirected to the course home
+      stub, the same way (`authentication_required`); the logistration alert, likewise,
+      only on the outline.
+- [ ] **Course not started redirects** — on the dates path of a course whose start is in
+      the future: redirected to the redirect stub at
+      `/learning/redirect/dashboard?notlive=<start date>` (`course_not_started`).
 - [ ] **Loading state** — with the network throttled, the spinner shows before the timeline,
       with "Loading course page…" as its screen-reader text.
 - [ ] **Error state on a 4xx** — with the request to `/api/course_home/dates/<courseId>`
       blocked or answered with a 4xx: the frame's error page shows after the first
       failure, with no retries in the network panel (`master`'s retry policy), and the
       failure is logged once.
-- [ ] **No refetch on focus** — leave the window and come back: no new request from
+- [x] **No refetch on focus** — leave the window and come back: no new request from
       Learning's queries to the dates or metadata endpoints. The shell's course bar
       refetching `course_metadata` on focus is expected (a known difference, from
       #2221).
-- [ ] **Masquerade** — as staff, masquerade as a learner from the masquerade bar: the dates
+- [x] **Masquerade** — as staff, masquerade as a learner from the masquerade bar: the dates
       tab reloads for that learner.
 - [ ] **Console** — no error or warning from the app's own code on any of the above.
 
@@ -121,3 +125,8 @@ differences on the dates tab:
   refetches on focus. Learning's own metadata query
   (`[appId, 'courseHome', 'metadata', courseId]`) sets `refetchOnWindowFocus: false`
   through `queryDefaults` and is not in the stack. The course bar came with #2221.
+- The signed-in unenrolled and anonymous learners are both redirected from the dates
+  path to the course home stub. `master` does the same: `authentication_required` and
+  `enrollment_required` fall into `getAccessDeniedRedirectUrl`'s default case, so the
+  enrollment and logistration alerts render only on the outline (#2191). The issue's
+  manual-testing plan, which listed both alerts for the dates tab, was wrong.
