@@ -6,7 +6,9 @@ The record of this review. The state is rewritten, never appended; the passes ta
 
 ## State
 
-PR 2 of 5 in the split of openedx/frontend-app-catalog#169, stacked on #174 by content: the branch is #174's five commits plus e87d4fd (`refactor: support mixed course and pathway search responses`). The fork PR has to target `master`, so GitHub shows the cumulative diff; the review scope is the one commit, `git diff pr-174..pr-175` in this worktree. kdmccormick approved 2026-10-29 pending #174 and asked for a technical review of that last commit only. Waits on the #174 review.
+PR 2 of 5 in the split of openedx/frontend-app-catalog#169, stacked on #174 by content: the branch is #174's five commits plus e87d4fd. The fork PR has to target `master`, so GitHub shows the cumulative diff; the review scope is the one commit, `git diff pr-174..pr-175` in this worktree. kdmccormick approved 2026-10-29 pending #174 and asked for a technical review of that last commit only.
+
+2026-10-30: Claude read the commit line by line (entries 1 to 6); Brian has not done his own pass yet. Brian noticed one name thing, `CatalogListSearchMixedResponse`, and put it in the 174 comment's edit rather than here. Nothing posted on 175. Open from Claude's read: the normalizer is a fix of a master bug and the body does not say so (entry 2, candidate comment); the suite has not been run. Waits on the #174 review and the endpoint-name answer.
 
 ## Passes
 
