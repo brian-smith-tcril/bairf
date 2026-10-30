@@ -88,4 +88,19 @@ covers through a suite a later port brings (the PR's Testing section names them)
 
 ## Results
 
-Not run yet.
+**First look, 2026-10-29, Brian, on `ad85041b`, against master.openedx.io.** Two styling
+differences on the dates tab:
+
+- The timeline has no vertical line or dots; each day sits under a full-width horizontal
+  rule. Cause: `master` loads `Day.scss` only through `@import
+  "course-home/dates-tab/timeline/Day.scss"` in `src/index.scss`, which is not ported. The
+  dates commit copies `Day.scss` unchanged, and nothing in the package imports it: the
+  package's `style.scss`, imported from `Main.tsx`, holds only Paragon's breakpoints.
+- The course tabs are gray with a dark active tab and a thin underline, where `master`'s
+  are blue-on-hover with a thick primary underline. Cause: the tabs are the shell's
+  `CourseTabsNavigation` (frontend-base 2.0.0-alpha.17), a Paragon `Nav variant="tabs"`
+  with its own two-rule `course-tabs-navigation.scss`; `master`'s look is Learning's own
+  `CourseTabsNavigation` with `.nav-underline-tabs` from `src/index.scss`. Not code this PR
+  ports. The org and course title missing above the tabs is the header title line, #2193.
+
+The checklist has not been run yet.
