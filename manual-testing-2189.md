@@ -229,8 +229,10 @@ differences on the dates tab:
   entry 35: the frame's `Container` takes `mt-3`.
 - Course not started, first try: with the course's start date set in the future, the dates
   path rendered the timeline with the course start date ahead, and did not redirect.
-  Which user, and the metadata response's `course_access`, were not recorded; the
-  LMS grants a not-started course's access to staff, to a masquerading user unless
-  `ENFORCE_MASQUERADE_START_DATES` is on, when `DISABLE_START_DATES` is set, and when
-  `COURSE_PRE_START_ACCESS_FLAG` is on (`check_course_open_for_learner`,
-  `check_start_date` in `lms/djangoapps/courseware/access_utils.py`).
+  Which user, and the metadata response's `course_access`, were not recorded. The
+  LMS's start-date check grants access when `COURSE_PRE_START_ACCESS_FLAG` is on, when
+  `DISABLE_START_DATES` is set and the user is not masquerading as a learner, and to a
+  masquerading user unless `ENFORCE_MASQUERADE_START_DATES` is on
+  (`check_course_open_for_learner`, `check_start_date` in
+  `lms/djangoapps/courseware/access_utils.py`); whether staff skip it before that check
+  was not traced.
