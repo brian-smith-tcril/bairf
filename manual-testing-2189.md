@@ -97,7 +97,7 @@ they show up, not counted against a box.
       - The alert stays and the dates do not move: the LMS answers 200 with that body
         whether or not it had a schedule to shift, and the refetch gets the override
         again. Moving the dates is the LMS's part, not checked here.
-- [ ] **Providers persist across a tab switch** — right after the toast box, with the same
+- [x] **Providers persist across a tab switch** — right after the toast box, with the same
       overrides in place and the Network panel filtered to **Doc**.
       - Before the toast closes itself, click **Progress** (or **Course**) in the course
         bar, then **Dates**. Those tabs are Learning's routes, so the course bar switches
@@ -227,3 +227,10 @@ differences on the dates tab:
   course bar (a Paragon `Navbar` with `course-tabs-navigation pb-0`) sets no bottom margin,
   so the gap is the heading's 1rem alone, where `master`'s is 2rem. Fixed by decision log
   entry 35: the frame's `Container` takes `mt-3`.
+- Course not started, first try: with the course's start date set in the future, the dates
+  path rendered the timeline with the course start date ahead, and did not redirect.
+  Which user, and the metadata response's `course_access`, were not recorded; the
+  LMS grants a not-started course's access to staff, to a masquerading user unless
+  `ENFORCE_MASQUERADE_START_DATES` is on, when `DISABLE_START_DATES` is set, and when
+  `COURSE_PRE_START_ACCESS_FLAG` is on (`check_course_open_for_learner`,
+  `check_start_date` in `lms/djangoapps/courseware/access_utils.py`).
