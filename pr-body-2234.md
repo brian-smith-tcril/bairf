@@ -5,7 +5,7 @@ The Dates tab now runs in Learning's frontend-base package: at `/learning/course
 Part of #1905. Resolves #2189. Stacked above #2221.
 
 > [!NOTE]
-> **For reviewers:** I've been using the following script to see each commit's diff against `master`, based on `frontend-base/manifest.tsv`.
+> **For reviewers:** each commit adds the ported files under `frontend-base/src/` as new files, so `git show` cannot show what changed from `master`. I've been using the following script to see each commit's diff against `master`, based on `frontend-base/manifest.tsv`.
 >
 > <details>
 > <summary><code>port-diff</code></summary>
