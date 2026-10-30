@@ -19,3 +19,21 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 ## Ledger
 
 One entry per question, newest last: `### N. <question>`, a `Status:` line, a `Rests on:` line, then what was found, why no comment was needed, or what was posted. Status is one of: open; resolved, no comment; posted <thread url>; parked; stale. "Rests on" names the files and the head SHA the answer was reached at; a pass marks an entry stale when those files changed since.
+
+### 1. What `ENABLE_PROGRAMS` gates, how programs relate to pathways, and where the tab order came from
+
+Status: open; the programs facts are settled, the tab-order provenance is a candidate question for the author
+Rests on: src/widgets/LearnerDashboardHeader/app.tsx, ProgramsLinkMenuItem.jsx, DiscoverLinkMenuItem.jsx, src/data/services/lms/urls.js at aca7e369ba; the #878 threads; frontend-app-learner-dashboard issues #372, #865, #866; platform-roadmap#452, #448
+
+`ENABLE_PROGRAMS` gates exactly one thing: the Programs header link widget (`headerLinkPrograms.v1`, `ProgramsLinkMenuItem`), whose target is `programsUrl()` = `<LMS>/dashboard/programs`, the legacy program dashboard that is still Django templates in edx-platform (#865: converting it to a React route here is wanted, platform-roadmap#468, nobody on it). The gate came from #372 (arbrandes, 2024-11: hide the button on installs with no programs). "Programs" here is the course-discovery-era concept. Nothing in this repo links programs and pathways in code.
+
+Overlap is intended at the roadmap level: platform-roadmap#452 (Grouping Product) describes "new functionality that covers use cases currently handled by Discovery and Programs", and #463 (Modular Delivery) is its parent. So pathways are the planned successor to programs, not a sibling; a dashboard that shows both is the transition state. No roadmap issue, and nothing on #875 or #878, decides the header navigation.
+
+Tab order. Before this PR: Courses, Programs (if enabled), Discover New. After aca7e36: Explore, My Learning, Programs (if enabled). kdmccormick's thread on `messages.ts` asked only that the Courses tab become My Learning; ChrisChV's reply says "I also updated the 'Explore' tab and the order of the tabs", so Explore-first is the author's addition with no written ask behind it. The only candidate source is the Pathways Figma file (#866 and #875 link nodes 900-2007 and 2220-2065; #866 warns the designs changed and to wait for the final), which is not readable from here. Candidate comment: ask whether Explore-first and Programs-last come from the design, and whether the design shows Programs at all.
+
+Also from the commit: the widget ids were swapped so that `headerLinkDiscover.v1` is the first widget and `headerLinkCourses.v1` now renders My Learning (same destination, so an override keyed on that id still lands on the dashboard link); the message ids changed (`learnerVariantDashboard.course` → `.myLearning`, `.discoverNew` → `.explore`), which resets translations for those two strings, the right call when the English changes meaning.
+
+### 2. The `explore` message description still says "discover"
+
+Status: posted https://github.com/openedx/frontend-app-learner-dashboard/pull/878#discussion (thread on src/widgets/LearnerDashboardHeader/messages.js line 57, 2026-10-30 14:42)
+Rests on: src/widgets/LearnerDashboardHeader/messages.js at aca7e369ba
