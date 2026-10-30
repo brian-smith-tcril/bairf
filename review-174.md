@@ -19,3 +19,17 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 ## Ledger
 
 One entry per question, newest last: `### N. <question>`, a `Status:` line, a `Rests on:` line, then what was found, why no comment was needed, or what was posted. Status is one of: open; resolved, no comment; posted <thread url>; parked; stale. "Rests on" names the files and the head SHA the answer was reached at; a pass marks an entry stale when those files changed since.
+
+### 1. Does anything in the app call the new endpoint, and is the ADR still Proposed?
+
+Status: resolved, no comment
+Rests on: docs/decisions/0003-use-a-generic-catalog-search-endpoint.rst, src/data/catalog-list-search/urls.ts, src/data/catalog-list-search/api.ts at ead6afdfbd
+
+The ADR's Status section reads `Proposed`. Outside `docs/`, the only mention of `catalog_search`, `catalog_list_search` or `search/v1` is a code comment in `urls.ts`. The one search URL builder is `getCourseListSearchUrl()`, returning `/search/unstable/v0/course_list_search/`, called from `api.ts` line 48. No code path reaches the new endpoint.
+
+### 2. The code comment and the PR body name the new endpoint `catalog_list_search`; the ADR names it `catalog_search`
+
+Status: open
+Rests on: src/data/catalog-list-search/urls.ts lines 5-8 at ead6afdfbd; PR body "planned generic `catalog_list_search` endpoint"
+
+The ADR said `catalog_list_search` in c6f24b2 and 8ee4ecb; 7fb99a9 (answering kdmccormick's thread on not keeping two endpoints) renamed it to `/search/v1/catalog_search/`. The `urls.ts` comment was written in the rename commit 26ba130 and not updated, and the PR body still carries the old name. From this change, not pre-existing; the fix is one word in the comment and one in the body. Candidate comment.
