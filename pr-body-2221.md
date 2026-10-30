@@ -17,6 +17,7 @@ Part of #1905. Resolves #2188. Stacked above #2219.
 
 - **Course tabs.** The tabs are the shell's course bar, styled as Paragon's `tabs` nav: the active tab is dark text over a thin underline, where `master`'s is primary-colored with a 4px primary underline. openedx/frontend-base#332 asks whether the course bar should match `master`.
 - **Course metadata refetched on focus.** The shell's course bar fetches `course_metadata` under its own query key, on the shell's query client with TanStack's defaults, so it fetches again whenever the window regains focus. `master`'s tabs read Learning's metadata query, which does not refetch on focus.
+- **Encoded course ids.** `master` wraps the course routes in `DecodePageRoute`, which redirects a course path with encoded characters (`course-v1:OpenedX%2BDemoX%2BDemoCourse`) to its decoded form. The route tree has no such wrapper; #2195 ports it as a layout route.
 
 ## Testing
 

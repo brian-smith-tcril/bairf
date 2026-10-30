@@ -159,10 +159,6 @@ they show up, not counted against a box.
 - **Console** — the app's own errors and warnings were not checked box by box; nothing
   stood out as wrong during the pass (Results).
 
-- **Encoded course id** — a course id with an encoded character in the path (for example
-  `course-v1:OpenedX%2BDemoX%2BDemoCourse`). `master` decodes it in a wrapper around the
-  course routes, which #2195 brings back as a layout route and checks.
-
 ## Left to the automated suite
 
 - Dates tab rendering, its alerts and their analytics events, through the route array:
