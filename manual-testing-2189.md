@@ -134,12 +134,19 @@ they show up, not counted against a box.
       `/learning/redirect/dashboard?notlive=<start date>` (`course_not_started`). The
       metadata view checks access as the signed-in user before it applies a masquerade,
       so masquerading as a learner does not test this.
-- [ ] **Loading state** — with the network throttled, the spinner shows before the timeline,
+- [x] **Loading state** — with the network throttled, the spinner shows before the timeline,
       with "Loading course page…" as its screen-reader text.
-- [ ] **Error state on a 4xx** — with the request to `/api/course_home/dates/<courseId>`
-      blocked or answered with a 4xx: the frame's error page shows after the first
-      failure, with no retries in the network panel (`master`'s retry policy), and the
-      failure is logged once.
+- [ ] **Error state on a network failure** — block the dates request (Network panel,
+      right-click it, **Block request URL**) and reload: four requests to the dates
+      endpoint, the first and three retries, then the frame's error page, and the failure
+      logged once. A blocked request fails with no status, which `shouldRetryQuery`
+      retries while `failureCount < 3`, as on `master`.
+- [ ] **Error state on a 4xx** — at `/learning/course/course-v1:OpenedX+DemoX+NoSuchCourse/dates`,
+      a course id that does not exist: the frame's error page after the first failure,
+      one request to each endpoint that fails with no retries (`shouldRetryQuery` returns
+      false for 400–499), and the failure logged once. Record the status codes seen. A 401
+      or 403 from the dates endpoint does not count: `getDatesTabData` turns those into
+      `{}`, leaving the redirect to the metadata request's `course_access`.
 - [x] **No refetch on focus** — leave the window and come back: no new request from
       Learning's queries to the dates or metadata endpoints. The shell's course bar
       refetching `course_metadata` on focus is expected (a known difference, from
@@ -245,3 +252,8 @@ differences on the dates tab:
   start date formatted by `Intl.DateTimeFormat(getLocale())` as `getAccessDeniedRedirectUrl`
   does on `master`. The first try's user had access from the LMS, so the app had nothing to
   redirect on.
+- Error state, first try: with the dates request blocked in the Network panel, four
+  requests to `/api/course_home/dates/<courseId>` went out. That is `master`'s retry
+  policy for a failure with no status (the first request and three retries); the box
+  expected no retries because it was written for a 4xx. Split into a network-failure box
+  and a 4xx box.
