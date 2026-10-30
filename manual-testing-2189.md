@@ -21,7 +21,7 @@ behavior the test client's `retry: false` hides. The other tabs are still stubs.
 
 ## Verify by hand
 
-- [ ] **Timeline for an enrolled learner** — at `/learning/course/<courseId>/dates`: the
+- [x] **Timeline for an enrolled learner** — at `/learning/course/<courseId>/dates`: the
       "Important dates" heading and the timeline grouped by day, with today's marker,
       inside the shell header and course bar, and the browser tab titled
       `<dates tab title> | <course title> | <site name>`, the tab title as the course bar shows it.
@@ -103,4 +103,15 @@ differences on the dates tab:
   `CourseTabsNavigation` with `.nav-underline-tabs` from `src/index.scss`. Not code this PR
   ports; filed as openedx/frontend-base#332. The org and course title missing above the tabs is the header title line, #2193.
 
-The checklist has not been run yet.
+**Checklist pass, 2026-10-30, Brian, on `a31718b0` (`Day.scss` loaded from
+`style.scss`).** The timeline now renders with its line and dots, as on `master`.
+
+- No refetch on focus: switching browser tabs and back sends
+  `GET /api/course_home/course_metadata/<courseId>`. The call stack runs from
+  query-core's `focusManager` through `queryCache.onFocus` to the `queryFn` in the
+  shell's `CourseTabsNavigation`. That query is the shell's course bar
+  (`['org.openedx.frontend.app.header.courseMeta', courseId]`, `retry: 2`, no
+  `refetchOnWindowFocus`), on the shell's client with the library's defaults, so it
+  refetches on focus. Learning's own metadata query
+  (`[appId, 'courseHome', 'metadata', courseId]`) sets `refetchOnWindowFocus: false`
+  through `queryDefaults` and is not in the stack. The course bar came with #2221.
