@@ -37,3 +37,16 @@ Also from the commit: the widget ids were swapped so that `headerLinkDiscover.v1
 
 Status: posted https://github.com/openedx/frontend-app-learner-dashboard/pull/878#discussion (thread on src/widgets/LearnerDashboardHeader/messages.js line 57, 2026-10-30 14:42)
 Rests on: src/widgets/LearnerDashboardHeader/messages.js at aca7e369ba
+
+### 3. Naming is split between discover/explore and courses/myLearning after the rename commit
+
+Status: open, candidate comment
+Rests on: src/widgets/LearnerDashboardHeader/{app.tsx, DiscoverLinkMenuItem.jsx, DiscoverLinkMenuItem.test.jsx, MyLearningLink.jsx, messages.js}, src/data/services/lms/urls.js, src/tracking/constants.js at aca7e369ba; npm versions of @openedx/frontend-app-learner-dashboard; tags v1.0.0 and v2.0.0-alpha.1
+
+Brian's finding (2026-10-30). Enumerated:
+
+The Explore link. Renamed by aca7e36: message key `discoverNew` → `explore`, id `learnerVariantDashboard.explore`, label "Explore". Still "discover": the file `DiscoverLinkMenuItem.jsx` and its test, the inner `DiscoverLink` function, the `DiscoverLinkMenuItem` component, the widget id `headerLinkDiscover.v1`, and the message description "switching to discover page" (entry 2, posted). Already "explore" on master, untouched: the tracking event names `learner_home_nav_explore` and `learner_home_nav_dropdown_explore` (so analytics called it explore while the label said Discover New), `learner_home_widget_explore`, and the NoCoursesView `exploreCourses*` messages. The URL helper the link uses is `coursesUrl(courseSearchUrl)`, shared with NoCoursesView and LookingForChallengeWidget; it points at course search, so its name is the one pre-existing mismatch on this side.
+
+The My Learning link. Renamed: `CoursesLink.jsx` → `MyLearningLink.jsx`, function `MyLearningLink`, message key `course` → `myLearning`, id `.myLearning`, label "My Learning". Still "courses": the widget id `headerLinkCourses.v1`. (`CoursesPanel` and its messages are genuinely the courses list and stay.)
+
+What can move freely: file, component and function names, the test file, the message description. What cannot move freely: the two widget ids. Unlike catalog, this package has a non-alpha release: `1.0.0` is published, built on frontend-base, and `headerLinkCourses.v1` and `headerLinkDiscover.v1` are in its `app.tsx`; master is on `2.0.0-alpha.4`. A site that overrides or removes those widgets by id on 1.0.0 breaks if they are renamed, so an id rename is a `!` change under the 2.0.0 major, documented, not a free tidy. Tracking event names are analytics identifiers and stay. Candidate comment: finish the rename for the code-level names (file, component, function, test), and decide the widget ids explicitly: either rename them as a documented breaking change in the 2.0.0 line, or leave them and say so.
