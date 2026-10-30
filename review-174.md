@@ -6,7 +6,7 @@ The record of this review. The state is rewritten, never appended; the passes ta
 
 ## State
 
-(current read of the PR)
+First of the 5-PR split of openedx/frontend-app-catalog#169 (rpenido, open-craft fork). #175 is stacked on this branch by content, and the body says PRs 2 to 5 build on it, so this one unblocks catalog 175 to 178. kdmccormick requested changes 2026-10-28, then approved 2026-10-29. Not yet read.
 
 ## Passes
 
