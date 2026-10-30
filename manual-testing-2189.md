@@ -131,8 +131,9 @@ they show up, not counted against a box.
 - [x] **Course not started redirects** — as an enrolled learner who is not staff, not
       masquerading, on the dates path of a course whose start is in the future (set in
       Studio): redirected to the redirect stub at
-      `/learning/redirect/dashboard?notlive=<start date>` (`course_not_started`). Staff,
-      and staff masquerading as a learner, are let in by the LMS and see the dates page.
+      `/learning/redirect/dashboard?notlive=<start date>` (`course_not_started`). The
+      metadata view checks access as the signed-in user before it applies a masquerade,
+      so masquerading as a learner does not test this.
 - [ ] **Loading state** — with the network throttled, the spinner shows before the timeline,
       with "Loading course page…" as its screen-reader text.
 - [ ] **Error state on a 4xx** — with the request to `/api/course_home/dates/<courseId>`
