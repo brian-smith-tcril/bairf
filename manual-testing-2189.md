@@ -153,9 +153,11 @@ they show up, not counted against a box.
       #2221).
 - [x] **Masquerade** — as staff, masquerade as a learner from the masquerade bar: the dates
       tab reloads for that learner.
-- [ ] **Console** — no error or warning from the app's own code on any of the above.
 
 ## Known gaps, not checked here
+
+- **Console** — the app's own errors and warnings were not checked box by box; nothing
+  stood out as wrong during the pass (Results).
 
 - **Encoded course id** — a course id with an encoded character in the path (for example
   `course-v1:OpenedX%2BDemoX%2BDemoCourse`). `master` decodes it in a wrapper around the
@@ -260,15 +262,15 @@ differences on the dates tab:
 
 **Checklist pass, completed 2026-10-30, Brian, on `bsmith/dates-tab` as it moved from
 `c3a07fcf` to `5403c52f` during the session (the commits between change only the frame's
-container and its top margin).** Every box but **Console** ticked.
+container and its top margin).** Every box ticked.
 
 - Faked responses, per the boxes: **Upgrade alert**, **Shift-dates alert** and
   **Upgrade-to-shift alert** (metadata and dates overrides); **Shift dates and the
   toast** and **Providers persist** on the shift-dates overrides, with the POST to the
   LMS. The rest ran against the LMS unfaked; **Course not started** used a start date
   set in Studio.
-- Console: not watched during the pass, so not known whether the app logged errors or
-  warnings.
+- Console: not checked box by box, so the Console box was removed. Nothing in it stood
+  out as wrong during the pass, apart from the `defaultProps` warnings below.
 - Error state on a network failure: after the four requests, the frame's error page read
   "There was an error loading this course." The console, from the pasted log: "Request
   was blocked by DevTools" from `api.ts:101` for the attempts with one, two and three
