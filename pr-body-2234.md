@@ -82,7 +82,7 @@ At each of the five commits, in `frontend-base/`: `npm ci`, lint, the tests and 
 **Codecov's patch lines.** Codecov's first report on this PR listed 21 lines with a miss or a branch no test takes (decision log entry 32):
 
 - Twelve lines no `master` test fully covers get a test in the commit that ports their file: `getProgressTabData`'s locked-grades conditions, `getProctoringInfoData` without a username, `courseHomeOutline.ts`'s `|| []` and `Array.isArray` on a block's `children`, `reportTimeZone` with no browser time zone, the user-messages provider over a saved value that is not a list, `PageLoading` with an empty `srMessage`, and `UpgradeToCompleteAlert` with no click handler.
-- Three lines are dropped: `Timeline`'s `if (groupedDates.length)`, which the loop above it makes always true, and the `?? {}` after `useDatesTabData(...).data` in `Timeline` and `UpgradeToCompleteAlert`, which only moved a throw to the next line.
+- Three lose their branch: `Timeline`'s `if (groupedDates.length)`, which the loop above it makes always true (its body stays), and the `?? {}` after `useDatesTabData(...).data` in `Timeline` and `UpgradeToCompleteAlert`, which only moved a throw to the next line.
 - Six lines keep a branch no test takes. `master` tests each through a suite a later port brings:
 
 | Line | Branch no test takes | Tested with |
