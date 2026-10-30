@@ -4,6 +4,71 @@ The Dates tab now runs in Learning's frontend-base package: at `/learning/course
 
 Part of #1905. Resolves #2189. Stacked above #2221.
 
+> [!NOTE]
+> **For reviewers:** each commit adds the ported files under `frontend-base/src/` as new files, so `git show` cannot show what changed from `master`. The `port-diff` script below can: it diffs every file a commit added or changed under `frontend-base/src/` against its legacy file on `master`, found through `frontend-base/manifest.tsv`. Files identical to `master` are left out and named on stderr. From the repo root, with `master` fetched (`--master <ref>` if your openedx remote is not `upstream`):
+>
+> ```sh
+> ./port-diff <commit> -o dates.patch
+> ```
+>
+> Open the patch in any diff viewer, such as your editor or [`@pierre/diffs`](https://www.npmjs.com/package/@pierre/diffs) in a browser.
+
+<details>
+<summary><code>port-diff</code></summary>
+
+```bash
+#!/usr/bin/env bash
+# A patch of the files a commit changed under frontend-base/src, as they stand at that commit,
+# against their legacy files in master, per the provenance manifest at that commit.
+#
+#   port-diff <rev> [-C <repo>] [--master <ref>] [-o <file.patch>]
+#
+# A file with a manifest line is diffed against master's file at the legacy path; a file
+# without one has no legacy file and shows as added. Deleted files are not listed.
+# Files identical to their legacy file are left out of the patch and named on stderr.
+# A merge (several legacy files for one target) stops the script: there is no single base to show.
+# Defaults: -C ., --master upstream/master, the patch to stdout.
+set -euo pipefail
+repo=.; master=upstream/master; out=
+args=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -C) repo=$2; shift 2 ;;
+    --master) master=$2; shift 2 ;;
+    -o) out=$2; shift 2 ;;
+    -h|--help) sed -n '2,11p' "$0"; exit 0 ;;
+    *) args+=("$1"); shift ;;
+  esac
+done
+[ ${#args[@]} -eq 1 ] || { echo "usage: port-diff <rev> [-C <repo>] [--master <ref>] [-o <file.patch>]" >&2; exit 2; }
+rev=${args[0]}
+manifest=$(git -C "$repo" show "$rev:frontend-base/manifest.tsv") || { echo "no manifest at $rev" >&2; exit 2; }
+
+tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+mkdir -p "$tmp/master" "$tmp/port"
+
+while IFS= read -r target; do
+  [ -n "$target" ] || continue
+  rel=${target#frontend-base/}
+  legacy=$(printf '%s\n' "$manifest" | awk -F'\t' -v t="$target" '$2 == t { print $1 }')
+  if [ "$(printf '%s' "$legacy" | grep -c '')" -gt 1 ]; then
+    echo "$target is a merge of several legacy files:" >&2; printf '  %s\n' $legacy >&2; exit 1
+  fi
+  mkdir -p "$tmp/port/$(dirname "$rel")"
+  git -C "$repo" show "$rev:$target" > "$tmp/port/$rel"
+  if [ -n "$legacy" ]; then
+    mkdir -p "$tmp/master/$(dirname "$rel")"
+    git -C "$repo" show "$master:$legacy" > "$tmp/master/$rel"
+    cmp -s "$tmp/master/$rel" "$tmp/port/$rel" && echo "identical to $legacy: $target" >&2
+  fi
+done < <(git -C "$repo" diff-tree --no-commit-id --name-only -r --diff-filter=d "$rev" -- frontend-base/src)
+
+patch=$(cd "$tmp" && git diff --no-index --no-prefix master port || [ $? -eq 1 ])
+if [ -n "$out" ]; then printf '%s\n' "$patch" > "$out"; else printf '%s\n' "$patch"; fi
+```
+
+</details>
+
 ## What changed
 
 Five commits, squashed on merge:
