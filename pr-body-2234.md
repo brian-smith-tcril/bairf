@@ -71,6 +71,10 @@ Part of #1905. Resolves #2189. Stacked above #2221.
 - **Query retry and focus refetch.** Learning's queries run on the shell's query client, which has the library's defaults. `master`'s retry policy (no retry on a 4xx) and its `refetchOnWindowFocus: false` move onto each query through a shared `queryDefaults` spread, as the converted apps set per-query retry.
 - **Query error logging.** `Main.tsx` listens on the shell's query cache and logs each Learning query's final failure, at the level its `meta.logStatusAs` names, as `master`'s query cache did.
 
+## Known differences from `master`
+
+- **Course tabs.** The tabs are the shell's course bar, styled as Paragon's `tabs` nav: the active tab is dark text over a thin underline, where `master`'s is primary-colored with a 4px primary underline. openedx/frontend-base#332 asks whether the course bar should match `master`.
+
 ## Testing
 
 At each of the five commits, in `frontend-base/`: `npm ci`, lint, the tests and `build:ci` pass. Lint ran with the package's `.jsx` files included (openedx/frontend-base#327; decision log entry 20).
