@@ -1,0 +1,15 @@
+# Decisions — widget `idAliases` (openedx/frontend-base#334)
+
+Decisions made while implementing, 2026-10-30, against `ae5ec93` on `main`. The plan in the issue is the starting point and is not re-argued.
+
+1. **One match helper, exported.** `matchesWidgetId(identity, id)` in `runtime/slots/widget/utils.tsx` returns `identity.id === id || (identity.idAliases?.includes(id) ?? false)`, with the parameter typed structurally as `{ id: string; idAliases?: string[] }` so both an operation carrying `WidgetIdentityProps` and an `IdentifiedWidget` fit. It is exported because `hooks.ts` uses it for the sort and the options hook; the other `hasWidget*` helpers in that file stay unexported because nothing outside the file reads them.
+
+2. **The options hook takes the aliases as an optional third parameter, with no default.** `useWidgetOptionsForId(slotId, widgetId, widgetIdAliases?)` keeps the two-argument form working for existing callers. No `= []` default: a fresh array on every render would be a new `useMemo` dependency each time and recompute the merge on every render for every widget without aliases. The hook builds `{ id: widgetId, idAliases: widgetIdAliases }` for the helper instead.
+
+3. **Precedence is list order.** `findRelatedWidgetIndex` returns the first widget whose id or aliases match, which is what it did for duplicate ids before. A widget whose primary id matches does not outrank an earlier widget whose alias matches. The test covers both orders.
+
+4. **The sort's guard is untouched.** `isWidgetRelativeOperation` still narrows to `INSERT_AFTER` and `INSERT_BEFORE`, so `REPLACE`, `REMOVE` and `OPTIONS` get no dependency ordering, aliases or not. Pre-existing, and widening it changes which operations the sort reorders, so it is its own change if wanted.
+
+5. **Docs are the TSDoc on `WidgetIdentityProps.idAliases`.** Written in the style of the per-member comments on `WidgetOperationTypes` (one paragraph, two spaces after a period, "ID" capitalised as those comments do). Nothing under `docs/` or in the slot showcase documents slot `idAliases` either, so there was no prose to extend and no showcase entry is added.
+
+6. **Tests follow the three existing shapes.** The alias cases for `createWidgets` extend `runtime/slots/widget/utils.test.tsx` through its `makeAppendOp` helper plus a generic `makeRelativeOp<T>` (generic so each call's `op` stays a single literal and the result is assignable to `WidgetOperation`). The hooks get a new `runtime/slots/widget/hooks.test.tsx` in the shape of `runtime/slots/layout/hooks.test.tsx`, with `../hooks` mocked. The end-to-end case, a `REMOVE` whose `relatedId` is an alias, sits beside #178's site-config tests in `runtime/slots/Slot.test.tsx`.
