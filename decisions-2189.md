@@ -670,3 +670,30 @@ and are not repeated.
     - The layer's commits drop to five. Commit numbers in earlier entries
       refer to the lists in force when they were written.
 
+
+32. **Codecov's patch lines: tested here, or named with the issue that
+    tests them.** Decided 2026-10-29. With the bar met (entry 29),
+    Codecov's comment on #2234 still listed 21 patch lines: 3 missed and
+    18 partials, a partial being a line with a branch no test takes. Each
+    listed line is either tested in this PR or named in it with the issue
+    whose port brings `master`'s test for it.
+    - Lines `master` tests only through a suite this PR does not port wait
+      for that port: `api.ts`'s `isMasquerading` read, `TabPage.tsx`'s
+      line 94 and `ShiftDatesAlert`'s `hasEnded` default (`master`'s
+      `OutlineTab.test.jsx`, #2191), `LoadedTabPage.tsx` lines 57-58
+      (#2201) and line 75 (the live tab's suite, #2203).
+    - Lines no `master` test reaches get a test in the commit that ports
+      the file.
+    - `Timeline.jsx`'s `if (groupedDates.length)` is dropped and its body
+      kept, in the dates commit. The guard came in with the grouping loop
+      in #70 (bdb1afe9), when an empty `courseDateBlocks` left
+      `groupedDates` empty. #94 (1471abe7) then pushed today after the
+      loop whenever no block had placed it (`if (!foundToday)`), directly
+      above the guard, which it left in place. Since then the list is
+      never empty there: `foundToday` turns true only on a block dated
+      today, which line 43's push then groups since nothing in the
+      callback skips it, or on one dated after today, right before the
+      push of today's group; otherwise the `!foundToday` push runs. No
+      code removes an entry, and an invalid date makes `daycmp` return 0,
+      taking the first path. The guard's false branch cannot run, so
+      dropping it changes no behavior.
