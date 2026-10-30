@@ -13,6 +13,10 @@ Part of #1905. Resolves #2188. Stacked above #2219.
 - `src/tests/render.tsx` (memory router plus intl), `src/routes.test.tsx` (one block per page), `src/app.test.ts` (role declarations, `provides`, what each role resolves to); `tsconfig.build.json` excludes `src/**/tests/**/*` so helpers never ship, and `jest.config.js` leaves `src/tests` out of coverage.
 - A second commit, `test: assert the page rules on every route`: `routes.test.tsx` asserts `expect(runPageRules(document)).toEqual([])` at every path, with `runPageRules` and its `mainLandmark` rule from openedx/frontend-base#329 (2.0.0-alpha.17, which #2217 locks).
 
+## Known differences from `master`
+
+- **Course tabs.** The tabs are the shell's course bar, styled as Paragon's `tabs` nav: the active tab is dark text over a thin underline, where `master`'s is primary-colored with a 4px primary underline. openedx/frontend-base#332 asks whether the course bar should match `master`.
+
 ## Testing
 
 In `frontend-base/`: lint, 46 tests at 100% lines with no console output, `build` and `build:ci` green. The root `make validate` does not see the package. Manual: the stubs, the course bar and the masquerade bar on the package's dev site against tutor dev, recorded below.

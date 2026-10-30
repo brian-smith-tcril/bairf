@@ -73,7 +73,7 @@ Part of #1905. Resolves #2189. Stacked above #2221.
 
 ## Known differences from `master`
 
-- **Course tabs.** The tabs are the shell's course bar, styled as Paragon's `tabs` nav: the active tab is dark text over a thin underline, where `master`'s is primary-colored with a 4px primary underline. openedx/frontend-base#332 asks whether the course bar should match `master`.
+- **Course tabs.** The tabs are the shell's course bar, added in #2221 and styled as Paragon's `tabs` nav: the active tab is dark text over a thin underline, where `master`'s is primary-colored with a 4px primary underline. openedx/frontend-base#332 asks whether the course bar should match `master`.
 
 ## Testing
 
