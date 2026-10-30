@@ -21,6 +21,10 @@ behavior the test client's `retry: false` hides. The other tabs are still stubs.
 
 ## Verify by hand
 
+Requests and console output count only when Learning's code starts them. The shell's own
+(the course bar's and masquerade bar's metadata requests, for example) are noted when
+they show up, not counted against a box.
+
 - [x] **Timeline for an enrolled learner** — at `/learning/course/<courseId>/dates`: the
       "Important dates" heading and the timeline grouped by day, with today's marker,
       inside the shell header and course bar, and the browser tab titled
@@ -47,8 +51,10 @@ behavior the test client's `retry: false` hides. The other tabs are still stubs.
       blocked or answered with a 4xx: the frame's error page shows after the first
       failure, with no retries in the network panel (`master`'s retry policy), and the
       failure is logged once.
-- [ ] **No refetch on focus** — leave the window and come back: no new request to the
-      dates or metadata endpoints.
+- [ ] **No refetch on focus** — leave the window and come back: no new request from
+      Learning's queries to the dates or metadata endpoints. The shell's course bar
+      refetching `course_metadata` on focus is expected (a known difference, from
+      #2221).
 - [ ] **Masquerade** — as staff, masquerade as a learner from the masquerade bar: the dates
       tab reloads for that learner.
 - [ ] **Console** — no error or warning from the app's own code on any of the above.
