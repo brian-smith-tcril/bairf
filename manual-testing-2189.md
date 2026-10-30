@@ -60,7 +60,7 @@ they show up, not counted against a box.
       "Important dates" heading and the timeline grouped by day, with today's marker,
       inside the shell header and course bar, and the browser tab titled
       `<dates tab title> | <course title> | <site name>`, the tab title as the course bar shows it.
-- [ ] **Upgrade alert** — faked, as an enrolled learner.
+- [x] **Upgrade alert** — faked, as an enrolled learner.
       - Metadata request: set `"is_self_paced": true`.
       - Dates request: set `"has_ended": false`, add the faked assignment block to
         `course_date_blocks`, and replace `dates_banner_info` with:
@@ -74,7 +74,7 @@ they show up, not counted against a box.
         ```
       - Expect the suggested-schedule header and the "Upgrade to unlock" alert with "Upgrade now"
         (`UpgradeToCompleteAlert`), and neither shift alert.
-- [ ] **Shift-dates alert** — faked, as an enrolled learner.
+- [x] **Shift-dates alert** — faked, as an enrolled learner.
       - Metadata request: set `"is_self_paced": true`.
       - Dates request: set `"has_ended": false`, add the faked assignment block to
         `course_date_blocks`, and replace `dates_banner_info` with:
@@ -87,7 +87,26 @@ they show up, not counted against a box.
         ```
       - Expect the suggested-schedule header and "It looks like you missed some important
         deadlines…" with "Shift due dates" (`ShiftDatesAlert`), and neither upgrade alert.
-- [ ] **Upgrade-to-shift alert** — faked, as an enrolled learner.
+- [x] **Shift dates and the toast** — faked, with the **Shift-dates alert** overrides still
+      in place. Nothing else is overridden: the POST goes to the LMS.
+      - Click "Shift due dates".
+      - Expect `POST /api/course_experience/v1/reset_course_deadlines` with `course_key` and
+        `research_event_data: {"location": "dates-tab"}`, answered 200; a toast reading
+        "Your due dates have been successfully shifted to help you stay on track." with
+        "View all dates"; then a new dates request.
+      - The alert stays and the dates do not move: the LMS answers 200 with that body
+        whether or not it had a schedule to shift, and the refetch gets the override
+        again. Moving the dates is the LMS's part, not checked here.
+- [ ] **Providers persist across a tab switch** — right after the toast box, with the same
+      overrides in place and the Network panel filtered to **Doc**.
+      - Before the toast closes itself, click **Progress** (or **Course**) in the course
+        bar, then **Dates**. Those tabs are Learning's routes, so the course bar switches
+        them client-side; Discussion, Teams and Instructor are LMS pages and load in full.
+      - Expect the toast showing again on the dates page, and no new entry in the
+        Doc-filtered list: the toast's state lives in `ToastProvider` in `Main.tsx`, above
+        the routes, while `TabPage` renders the toast itself, so only a soft navigation
+        keeps the state. A full page load would add a Doc entry and lose the toast.
+- [x] **Upgrade-to-shift alert** — faked, as an enrolled learner.
       - Metadata request: set `"is_self_paced": true`.
       - Dates request: set `"has_ended": false`, add the faked assignment block to
         `course_date_blocks`, and replace `dates_banner_info` with:
@@ -101,20 +120,6 @@ they show up, not counted against a box.
         ```
       - Expect the suggested-schedule header and the alert with "Upgrade to shift due dates"
         (`UpgradeToShiftDatesAlert`), and neither of the other two.
-- [ ] **Shift dates and the toast** — faked, with the **Shift-dates alert** overrides still
-      in place. Nothing else is overridden: the POST goes to the LMS.
-      - Click "Shift due dates".
-      - Expect `POST /api/course_experience/v1/reset_course_deadlines` with `course_key` and
-        `research_event_data: {"location": "dates-tab"}`, answered 200; a toast reading
-        "Your due dates have been successfully shifted to help you stay on track." with
-        "View all dates"; then a new dates request.
-      - The alert stays and the dates do not move: the LMS answers 200 with that body
-        whether or not it had a schedule to shift, and the refetch gets the override
-        again. Moving the dates is the LMS's part, not checked here.
-- [ ] **Providers persist across a tab switch** — right after the toast box, with the toast
-      open and the same overrides in place, switch to another tab in the course bar and
-      back within the toast's display time: the toast is still open, and the network
-      panel shows no document request.
 - [x] **Signed-in unenrolled learner redirects** — on the dates path: redirected to the
       course home stub at `/learning/course/<courseId>/home`, with no flash of the dates
       page. `enrollment_required` takes `getAccessDeniedRedirectUrl`'s default case, which
