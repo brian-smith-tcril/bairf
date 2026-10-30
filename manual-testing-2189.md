@@ -136,3 +136,11 @@ differences on the dates tab:
   `enrollment_required` fall into `getAccessDeniedRedirectUrl`'s default case, so the
   enrollment and logistration alerts render only on the outline (#2191). The issue's
   manual-testing plan, which listed both alerts for the dates tab, was wrong.
+- The page content starts left of the header, masquerade bar and course tabs, where on
+  `master` all four line up. Cause: the frame's content wrapper in `LoadedTabPage` keeps
+  `master`'s `container-xl`, which Paragon 23.23.1 caps at 1600px from a 1200px viewport,
+  while the shell's `DesktopLayout`, `MasqueradeBar` and `CourseTabsNavigation` use
+  Paragon's `<Container fluid size="xl">` (`container-fluid container-mw-xl`), capped at
+  1440px plus the 24px gutter. Both pad 12px, so they line up below a 1464px viewport and
+  diverge above it, by up to 68px. On `master` the header's course tabs and
+  `InstructorToolbar` used `container-xl` too.
