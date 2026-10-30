@@ -143,4 +143,5 @@ differences on the dates tab:
   Paragon's `<Container fluid size="xl">` (`container-fluid container-mw-xl`), capped at
   1440px plus the 24px gutter. Both pad 12px, so they line up below a 1464px viewport and
   diverge above it, by up to 68px. On `master` the header's course tabs and
-  `InstructorToolbar` used `container-xl` too.
+  `InstructorToolbar` used `container-xl` too. Fixed by decision log entry 34: the frame's
+  wrapper is Paragon's `Container size="xl"`, and #2221's stubs take the same container.

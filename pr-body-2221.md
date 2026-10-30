@@ -8,7 +8,7 @@ Part of #1905. Resolves #2188. Stacked above #2219.
 
 - `src/routes.tsx`: the root `learning` route (role `learning`, lazy-loading `Main`); two course layout routes (bare outlets, role `learningCourse`) holding one named array of explicit route objects per course page, with the bare course path as the course layout's index route; the three non-course pages under the root. Ids per page, roles on the outline tab, dates, progress and courseware.
 - `src/constants.ts`: `learningCourse` and the four page role ids beside the root role. `src/provides.ts`, `src/app.ts`: `learningCourse` under both course-bar ids, as instructor dashboard declares its own course-scoped role.
-- `src/StubPage.tsx`: one line naming the page and a list of the params the route captured.
+- `src/StubPage.tsx`: one line naming the page and a list of the params the route captured, in Paragon's `Container size="xl"`, as the shell's header and course bar are, so the stub lines up with them (decision log entry 9).
 - `jsdom-environment-with-node-fetch.mjs`, with `jest.config.js` pointing at it and `tsconfig.json` including it: forwards Node's Fetch classes into jsdom, which has none, so route tests can start react-router's data router.
 - `src/tests/render.tsx` (memory router plus intl), `src/routes.test.tsx` (one block per page), `src/app.test.ts` (role declarations, `provides`, what each role resolves to); `tsconfig.build.json` excludes `src/**/tests/**/*` so helpers never ship, and `jest.config.js` leaves `src/tests` out of coverage.
 - A second commit, `test: assert the page rules on every route`: `routes.test.tsx` asserts `expect(runPageRules(document)).toEqual([])` at every path, with `runPageRules` and its `mainLandmark` rule from openedx/frontend-base#329 (2.0.0-alpha.17, which #2217 locks).
@@ -212,6 +212,38 @@ the test approach are in #2188's plan and are not repeated.
    only the route match; a page's port moves its path out of that list
    and asserts the rules in its own route test. A second commit, Brian's
    call, so the first stays the route tree.
+
+9. **Stub pages sit in Paragon's `Container size="xl"`, placed page by
+   page.** Decided 2026-10-30, after #2189's manual pass found page
+   content out of line with the shell's header, masquerade bar and course
+   tabs. The shell's `DesktopLayout`, `MasqueradeBar` and
+   `CourseTabsNavigation` each wrap their content in Paragon's
+   `<Container fluid size="xl">` (`container-fluid container-mw-xl`: at
+   most 1440px plus the 24px gutter, padded 12px). `StubPage` rendered
+   `<main className="p-4">`, 24px from the viewport's edge, in line with
+   none of them; it now renders `<Container as="main" size="xl"
+   className="py-4">` (Paragon's `Container` is fluid by default), still
+   one `<main>` (entry 8).
+   - The container goes on each page, not around `Main.tsx`'s outlet,
+     Brian's call. `master` places it per page, at different widths: the
+     tab frame's `container-xl` around the page children only, with
+     `AlertList` outside it; Bootstrap's `container` on
+     `CourseAccessErrorPage` and `GoalUnsubscribe`; `Container size="xs"`
+     on preferences-unsubscribe. An app-wide container would nest inside
+     those pages' own and move the outline's alerts into it.
+   - The converted apps split: openedx/frontend-app-account wraps its
+     outlet in `Main.tsx`
+     ([90ffeed](https://github.com/openedx/frontend-app-account/commit/90ffeed8bcd621644044d8f8cffe4cb16364e2e5),
+     "line the pages up with the shell's header container");
+     openedx/frontend-app-instructor-dashboard wraps it in a shared
+     `PageWrapper`; openedx/frontend-app-gradebook,
+     openedx/frontend-app-learner-dashboard and
+     openedx/frontend-app-catalog put it on each page; and
+     openedx/frontend-app-profile's `Main.tsx` holds none because its
+     page's bands are full-bleed.
+   - #2189's frame takes the same container (its decision log, entry 34).
+     Each later port that replaces a stub outside the frame decides its
+     page's width then.
 
 </details>
 

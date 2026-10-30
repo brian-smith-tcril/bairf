@@ -66,7 +66,7 @@ Part of #1905. Resolves #2189. Stacked above #2221.
 ## What changed
 
 - **Course-home data module.** `course-home/data/` (API functions, query hooks, outline normalizer, the factories its tests build), `utils.ts`, `data/http-error.ts`, `course-tabs/utils.ts` and `generic/ToastContext.tsx`, each with its test. The setup file starts frontend-base's mock app with a signed-in user and adds the app configs, as profile and account do. Tests wrap the mock app's real client in `axios-mock-adapter`, which none of the converted apps do (they replace the client with a per-file fake): frontend-base's `MockAuthService` hands out a real `axios.create()` client, `master`'s suites and their `axiosMock.history` assertions are written for the adapter, and the error-path tests depend on real axios error shapes. `src/tests/location.ts` stubs `window.location`. The test site's LMS URLs move to `http://localhost:18000`, which the ported factories build on. The Pact consumer test and its contract, and the dead `upgradeNotificationData` factory, are dropped; the outline factories wait for #2191.
-- **The frame.** `tab-page/` (`TabPage`, `LoadedTabPage`, `TabWithTimer`), the enrollment and logistration alerts, the user-messages and notices providers, `PageLoading`, `shared/access.js`, the local-storage helper; `Main.tsx` mounts the notices, user-messages and toast providers around the outlet. Access-denied redirects are prefixed with the learning role's URL and tested where they are made (`shared/access.test.ts`, `TabPage.test.jsx`). What later layers port is stubbed at `master`'s import paths: the instructor toolbar (#2194), product tours (#2208) and the streak celebration modal (#2201); `TabWithTimer` passes through until the exam timer returns (#2198). The plugin override registry is dropped (#2223).
+- **The frame.** `tab-page/` (`TabPage`, `LoadedTabPage`, `TabWithTimer`), the enrollment and logistration alerts, the user-messages and notices providers, `PageLoading`, `shared/access.js`, the local-storage helper; `Main.tsx` mounts the notices, user-messages and toast providers around the outlet. Access-denied redirects are prefixed with the learning role's URL and tested where they are made (`shared/access.test.ts`, `TabPage.test.jsx`). What later layers port is stubbed at `master`'s import paths: the instructor toolbar (#2194), product tours (#2208) and the streak celebration modal (#2201); `TabWithTimer` passes through until the exam timer returns (#2198). The plugin override registry is dropped (#2223). `LoadedTabPage`'s content wrapper is Paragon's `Container size="xl"` in place of `master`'s `container-xl`, so the page lines up with the shell's header and course bar (decision log entry 34).
 - **The dates tab.** `course-home/dates-tab/` and `course-home/suggested-schedule-messaging/`, the dates route replacing its stub and loading lazily, and `BannerDatesUpgradeSlot` as a placeholder until #2185. The package's `style.scss` loads the timeline's `Day.scss`, unscoped until openedx/frontend-base#333 settles how apps scope their styles (decision log entry 33). `Timeline` drops a check its own loop makes always true, and it and `UpgradeToCompleteAlert` drop a `?? {}` that only moved a throw (decision log entry 32). The dates test renders through the route array and asserts frontend-base's page rules at the dates path.
 - **Query retry and focus refetch.** Learning's queries run on the shell's query client, which has the library's defaults. `master`'s retry policy (no retry on a 4xx) and its `refetchOnWindowFocus: false` move onto each query through a shared `queryDefaults` spread, as the converted apps set per-query retry.
 - **Query error logging.** `Main.tsx` listens on the shell's query cache and logs each Learning query's final failure, at the level its `meta.logStatusAs` names, as `master`'s query cache did.
@@ -870,6 +870,25 @@ and are not repeated.
       should scope its selectors. Learning waits for that answer rather
       than choosing a wrapper ahead of it, and revisits scoping if a
       collision shows up first.
+
+34. **The frame's content wrapper is Paragon's `Container size="xl"`.**
+    Decided 2026-10-30. The manual pass found the dates page starting left
+    of the shell's header, masquerade bar and course tabs, by up to 68px
+    above a 1464px viewport. `LoadedTabPage` kept `master`'s
+    `container-xl`, which Paragon 23.23.1 caps at 1600px from a 1200px
+    viewport; the shell's bars use `<Container fluid size="xl">`, capped
+    at 1440px plus the 24px gutter. `master` lined up because its own
+    course tabs and `InstructorToolbar` used `container-xl` too; both are
+    now the shell's.
+    - The wrapper becomes `<Container as={ContentWrapper} size="xl">`,
+      keeping its other classes and `master`'s `main`/`div` switch for
+      courseware. Both containers pad half the grid gutter, so the
+      negative margins `master`'s `index.scss` gives `.unit-iframe-wrapper`
+      to cancel "the padding of the parent div with 'container-xl'" still
+      fit when courseware is ported.
+    - The container stays on the page, not around `Main.tsx`'s outlet;
+      #2188's decision log, entry 9, records why, and the stubs take the
+      same container there.
 
 </details>
 

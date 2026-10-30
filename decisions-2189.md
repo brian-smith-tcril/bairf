@@ -670,7 +670,6 @@ and are not repeated.
     - The layer's commits drop to five. Commit numbers in earlier entries
       refer to the lists in force when they were written.
 
-
 32. **Codecov's patch lines: tested here, or named with the issue that
     tests them.** Decided 2026-10-29. With the bar met (entry 29),
     Codecov's comment on #2234 still listed 21 patch lines: 3 missed and
@@ -763,3 +762,22 @@ and are not repeated.
       should scope its selectors. Learning waits for that answer rather
       than choosing a wrapper ahead of it, and revisits scoping if a
       collision shows up first.
+
+34. **The frame's content wrapper is Paragon's `Container size="xl"`.**
+    Decided 2026-10-30. The manual pass found the dates page starting left
+    of the shell's header, masquerade bar and course tabs, by up to 68px
+    above a 1464px viewport. `LoadedTabPage` kept `master`'s
+    `container-xl`, which Paragon 23.23.1 caps at 1600px from a 1200px
+    viewport; the shell's bars use `<Container fluid size="xl">`, capped
+    at 1440px plus the 24px gutter. `master` lined up because its own
+    course tabs and `InstructorToolbar` used `container-xl` too; both are
+    now the shell's.
+    - The wrapper becomes `<Container as={ContentWrapper} size="xl">`,
+      keeping its other classes and `master`'s `main`/`div` switch for
+      courseware. Both containers pad half the grid gutter, so the
+      negative margins `master`'s `index.scss` gives `.unit-iframe-wrapper`
+      to cancel "the padding of the parent div with 'container-xl'" still
+      fit when courseware is ported.
+    - The container stays on the page, not around `Main.tsx`'s outlet;
+      #2188's decision log, entry 9, records why, and the stubs take the
+      same container there.

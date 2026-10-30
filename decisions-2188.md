@@ -181,3 +181,35 @@ the test approach are in #2188's plan and are not repeated.
    only the route match; a page's port moves its path out of that list
    and asserts the rules in its own route test. A second commit, Brian's
    call, so the first stays the route tree.
+
+9. **Stub pages sit in Paragon's `Container size="xl"`, placed page by
+   page.** Decided 2026-10-30, after #2189's manual pass found page
+   content out of line with the shell's header, masquerade bar and course
+   tabs. The shell's `DesktopLayout`, `MasqueradeBar` and
+   `CourseTabsNavigation` each wrap their content in Paragon's
+   `<Container fluid size="xl">` (`container-fluid container-mw-xl`: at
+   most 1440px plus the 24px gutter, padded 12px). `StubPage` rendered
+   `<main className="p-4">`, 24px from the viewport's edge, in line with
+   none of them; it now renders `<Container as="main" size="xl"
+   className="py-4">` (Paragon's `Container` is fluid by default), still
+   one `<main>` (entry 8).
+   - The container goes on each page, not around `Main.tsx`'s outlet,
+     Brian's call. `master` places it per page, at different widths: the
+     tab frame's `container-xl` around the page children only, with
+     `AlertList` outside it; Bootstrap's `container` on
+     `CourseAccessErrorPage` and `GoalUnsubscribe`; `Container size="xs"`
+     on preferences-unsubscribe. An app-wide container would nest inside
+     those pages' own and move the outline's alerts into it.
+   - The converted apps split: openedx/frontend-app-account wraps its
+     outlet in `Main.tsx`
+     ([90ffeed](https://github.com/openedx/frontend-app-account/commit/90ffeed8bcd621644044d8f8cffe4cb16364e2e5),
+     "line the pages up with the shell's header container");
+     openedx/frontend-app-instructor-dashboard wraps it in a shared
+     `PageWrapper`; openedx/frontend-app-gradebook,
+     openedx/frontend-app-learner-dashboard and
+     openedx/frontend-app-catalog put it on each page; and
+     openedx/frontend-app-profile's `Main.tsx` holds none because its
+     page's bands are full-bleed.
+   - #2189's frame takes the same container (its decision log, entry 34).
+     Each later port that replaces a stub outside the frame decides its
+     page's width then.
