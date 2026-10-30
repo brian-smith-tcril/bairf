@@ -6,7 +6,9 @@ The record of this review. The state is rewritten, never appended; the passes ta
 
 ## State
 
-First of the 5-PR split of openedx/frontend-app-catalog#169 (rpenido, open-craft fork). #175 is stacked on this branch by content, and the body says PRs 2 to 5 build on it, so this one unblocks catalog 175 to 178. kdmccormick requested changes 2026-10-28, then approved 2026-10-29. Not yet read.
+First of the 5-PR split of openedx/frontend-app-catalog#169 (rpenido, open-craft fork); #175 is stacked on this branch by content and the body says PRs 2 to 5 build on it. kdmccormick settled the ADR (requested changes 2026-10-28, approved 2026-10-29) and asked Brian for a technical pass on the code.
+
+Brian's read after the first pass (2026-10-30): looking good overall. Two things posted: the endpoint name is written two ways and nothing outside this ADR has decided it, so the author is asked which; and the rename stops short (`CoursesList`, `CatalogListSearchHook.data`), with the principles that non-course-specific things do not get course names and that names fit from endpoint to component. The answer on the name drives the rename round. Not yet done: the diff line by line, the slot props and slot names ask (entry 3), the `/catalog/courses` URL question (entry 5), and running the suite.
 
 ## Passes
 
@@ -14,7 +16,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
-| 2026-10-30 | 586f5f6d7f | ead6afdfbd | | |
+| 2026-10-30 | 586f5f6d7f | ead6afdfbd | ADR threads and history; endpoint name across app, ADR and backend; enumeration of course-named things; not the diff line by line | comments: one summary comment, two items |
 
 ## Ledger
 
@@ -29,21 +31,21 @@ The ADR's Status section reads `Proposed`. Outside `docs/`, the only mention of 
 
 ### 2. The code comment and the PR body name the new endpoint `catalog_list_search`; the ADR names it `catalog_search`
 
-Status: open
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6524286800 (item 1, as a question: which name)
 Rests on: src/data/catalog-list-search/urls.ts lines 5-8 at ead6afdfbd; PR body "planned generic `catalog_list_search` endpoint"
 
 The ADR said `catalog_list_search` in c6f24b2 and 8ee4ecb; 7fb99a9 (answering kdmccormick's thread on not keeping two endpoints) renamed it to `/search/v1/catalog_search/`. The `urls.ts` comment was written in the rename commit 26ba130 and not updated, and the PR body still carries the old name. From this change, not pre-existing; the fix is one word in the comment and one in the body. Candidate comment. Brian's direction (2026-10-30): the review will ask for one name across the ADR's endpoint and the app's identifier family, and say which. Name families at ead6afdfbd: `catalog-list-search` / `CatalogListSearch` (this PR's renames, 21 and 14 files), `CourseListSearch` (the types deliberately left for the next PR, 13 files), `CatalogSearch` (5 files, all the pre-existing public slot `CourseCatalogSearchFieldSlot`, on master already and not part of this family), the ADR's endpoint `catalog_search` (0 files in src).
 
 ### 3. The slot props kept under their old names need not be: no non-alpha release exists to break
 
-Status: open
+Status: parked: not named in the posted comment; the principle there ("if it isn't course-specific, it shouldn't have course-specific naming") covers the slot props, the explicit ask waits for the author's answer on the name
 Rests on: src/slots/CourseCatalogIntroSlot/index.tsx, src/slots/CourseCatalogDataTableSlots/CourseCatalogDataTableSlot/index.tsx, their README.md files, src/catalog/CatalogPage.tsx lines 113 and 123 at ead6afdfbd
 
 Brian's direction (2026-10-30): catalog has not published a non-alpha version since the frontend-base port, so slot changes may break; anyone porting a plugin from the frontend-plugin-framework era already has changes to make, and more are documented rather than avoided. Checked: `@openedx/frontend-app-catalog` on npm has exactly `1.0.0-alpha.0` to `1.0.0-alpha.4`, `latest` is `alpha.4`, `package.json` says `0.0.0-dev`. The PR body lists two props as "deliberately not renamed here" for existing site plugins: `courseDataResultsLength` on `CourseCatalogIntroSlot` (fed by `catalogData?.results?.length`, passed on to the message as `resultsCount`) and `totalCourses` on `CourseCatalogDataTableSlot` (fed by `totalItems`). Both are from master; this PR renames their sources and stops at the slot boundary. The slot names themselves (`CourseCatalogIntroSlot`, `CourseCatalogDataTableSlot`, `CourseCatalogSearchFieldSlot`) also carry "Course" and are untouched. Review ask: rename the props with the rest (and say whether the slot names go too), and document the change for plugin authors. Candidate comment.
 
 ### 4. Catalog things still under a "course" name after this PR's rename
 
-Status: open
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6524286800 (item 2, as the two principles and the two examples: `CoursesList` destructuring `data` into `catalogData`, and `CatalogListSearchHook.data` typed `CourseListSearchResponse`; the full list here is for the next round)
 Rests on: `find src -ipath '*course*'` and the exported-identifier grep at ead6afdfbd
 
 Brian's direction (2026-10-30): the rename should reach everything that is a catalog thing under a course name, e.g. `CoursesList.tsx` → `CatalogList`. Enumerated at ead6afdfbd, outside `src/course-about/` which is genuinely one course.
@@ -61,7 +63,7 @@ Candidate comment: one list, with the course-card exceptions named so the author
 
 ### 5. The catalog page's URL is `/catalog/courses`, role `coursesRole`, and UI text "Courses"
 
-Status: open
+Status: open, not posted
 Rests on: src/routes.tsx lines 22-30, src/constants (coursesRole), src/catalog/messages.ts line 11 at ead6afdfbd
 
 The mixed catalog page keeps the path `courses` and the `coursesRole` route role; the header's "Courses" and "Explore courses" items and the page's "Courses" message point there. A route path is user-facing and linkable, unlike an identifier, so it is a separate decision from entry 4: does the mixed page stay at `/catalog/courses`, or move, and does the ADR or #169 say? Not checked yet. Question for the author rather than a rename ask.
