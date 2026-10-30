@@ -136,12 +136,12 @@ they show up, not counted against a box.
       so masquerading as a learner does not test this.
 - [x] **Loading state** — with the network throttled, the spinner shows before the timeline,
       with "Loading course page…" as its screen-reader text.
-- [ ] **Error state on a network failure** — block the dates request (Network panel,
+- [x] **Error state on a network failure** — block the dates request (Network panel,
       right-click it, **Block request URL**) and reload: four requests to the dates
       endpoint, the first and three retries, then the frame's error page, and the failure
       logged once. A blocked request fails with no status, which `shouldRetryQuery`
       retries while `failureCount < 3`, as on `master`.
-- [ ] **Error state on a 4xx** — at `/learning/course/course-v1:OpenedX+DemoX+NoSuchCourse/dates`,
+- [x] **Error state on a 4xx** — at `/learning/course/course-v1:OpenedX+DemoX+NoSuchCourse/dates`,
       a course id that does not exist: the frame's error page after the first failure,
       one request to each endpoint that fails with no retries (`shouldRetryQuery` returns
       false for 400–499), and the failure logged once. Record the status codes seen. A 401
@@ -257,3 +257,15 @@ differences on the dates tab:
   policy for a failure with no status (the first request and three retries); the box
   expected no retries because it was written for a 4xx. Split into a network-failure box
   and a 4xx box.
+
+**Checklist pass, completed 2026-10-30, Brian, on `bsmith/dates-tab` as it moved from
+`c3a07fcf` to `5403c52f` during the session (the commits between change only the frame's
+container and its top margin).** Every box but **Console** ticked.
+
+- Faked responses, per the boxes: **Upgrade alert**, **Shift-dates alert** and
+  **Upgrade-to-shift alert** (metadata and dates overrides); **Shift dates and the
+  toast** and **Providers persist** on the shift-dates overrides, with the POST to the
+  LMS. The rest ran against the LMS unfaked; **Course not started** used a start date
+  set in Studio.
+- Console: not watched during the pass, so not known whether the app logged errors or
+  warnings.
