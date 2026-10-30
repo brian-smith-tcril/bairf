@@ -697,3 +697,21 @@ and are not repeated.
       code removes an entry, and an invalid date makes `daycmp` return 0,
       taking the first path. The guard's false branch cannot run, so
       dropping it changes no behavior.
+    - `Timeline.jsx`'s and `UpgradeToCompleteAlert.jsx`'s `?? {}` after
+      `useDatesTabData(courseId, { enabled: false }).data` are dropped, in
+      the dates commit. #2093 (218c9dfb) added them when its readers moved
+      from `useModel('dates', courseId)` to the query, keeping `useModel`'s
+      `{}` for a missing model. Both render only inside `TabPage`'s
+      children on the dates tab (`master` renders `UpgradeToCompleteAlert`
+      only through `BannerDatesUpgradeSlot` in `DatesTab`), and `TabPage`
+      renders children only once `deriveView` finds the metadata and dates
+      queries neither pending nor failed, and on the dates tab a denied
+      learner is redirected first (`getAccessDeniedRedirectUrl`'s default
+      case for any tab but the outline). A query in v5's `success` state
+      holds defined data, `DatesTab` observes the entry so it is not
+      collected, and an `invalidateQueries` refetch keeps the old data.
+      Without data both components threw on the next line anyway
+      (`courseDateBlocks.forEach`, destructuring `datesBannerInfo`), so
+      dropping the default only moves that throw. `DatesTab.jsx`'s two
+      reads and `TabPage.tsx`'s keep theirs: they render while the
+      queries load.
