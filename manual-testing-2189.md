@@ -29,10 +29,17 @@ they show up, not counted against a box.
       "Important dates" heading and the timeline grouped by day, with today's marker,
       inside the shell header and course bar, and the browser tab titled
       `<dates tab title> | <course title> | <site name>`, the tab title as the course bar shows it.
-- [ ] **Suggested-schedule alerts** — on the self-paced course with a missed deadline:
-      the shift-dates alert and the suggested-schedule header. Note whether the upgrade
-      alert (`UpgradeToCompleteAlert` through `BannerDatesUpgradeSlot`) or the
-      upgrade-to-shift alert shows for the audit learner on a course with a verified mode.
+- [ ] **Upgrade alert** — on the self-paced course with no missed deadline, as an audit
+      learner on a course with a verified mode and content gating: the suggested-schedule
+      header and the "Upgrade to unlock" alert with "Upgrade now" (`UpgradeToCompleteAlert`
+      through `BannerDatesUpgradeSlot`).
+- [ ] **Shift-dates alert** — on the self-paced course with a missed deadline and no missed
+      gated content (a verified learner, or a course without gating): the
+      suggested-schedule header and "It looks like you missed some important deadlines…"
+      with "Shift due dates" (`ShiftDatesAlert`).
+- [ ] **Upgrade-to-shift alert** — as the audit learner after missing a deadline on gated
+      content: the suggested-schedule header and the alert with "Upgrade to shift due
+      dates" (`UpgradeToShiftDatesAlert`).
 - [ ] **Shift dates and the toast** — click "Shift due dates": the dates reload with the
       new due dates and a toast shows the LMS's message.
 - [ ] **Providers persist across a tab switch** — with the toast open, switch to another
