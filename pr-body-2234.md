@@ -755,6 +755,12 @@ and are not repeated.
       `CourseBlockSerializer.get_blocks` sends a list on every block
       today; `courseHomeOutline.test.ts` gains both cases in the data
       commit.
+    - `PageLoading`'s `return null` for a falsy `srMessage`, which entry
+      29 left uncovered as a prop-types error, is such a check: it passes
+      the spinner no screen-reader text instead of an empty `sr-only`
+      span. `srMessage=""` passes `PropTypes.node.isRequired`, which
+      rejects only `null` and `undefined`, so a `PageLoading.test.jsx`
+      case reaches it in the frame commit.
 
 </details>
 
