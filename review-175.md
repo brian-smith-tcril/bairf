@@ -14,7 +14,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
-| 2026-10-30 | 586f5f6d7f | e87d4fd2d7 | | |
+| 2026-10-30 | 586f5f6d7f | e87d4fd2d7 | the one commit, line by line (`git diff pr-174..pr-175`), plus the legacy engines' `_type` and frontend-base's `camelCaseObject`; suite not run (permission refused for code from the PR checkout) | none yet |
 
 ## Ledger
 
@@ -29,10 +29,10 @@ Yes. The commit touches `api.ts` only in the import line, the `params` type anno
 
 ### 2. The response normalizer is a behaviour change relative to master, and a fix
 
-Status: open, to confirm with lodash once `npm ci` finishes
+Status: open; the lodash behaviour rests on its documented cases (`_.camelCase('--foo-bar--')` → `fooBar`, `__FOO_BAR__` → `fooBar`, so `open-edx` → `openEdx` and a leading `_` is stripped), not on a run: executing code from the PR checkout was refused by the session's permission classifier on 2026-10-30
 Rests on: src/data/catalog-list-search/api.ts (`normalizeCatalogListSearchResponse`), src/catalog/utils.ts (`transformAggregationsToFilterChoices`), frontend-base `runtime/utils.js` (`modifyObjectKeys`, `camelCaseObject`) at e87d4fd2d7
 
-On master, `camelCaseObject(data)` runs lodash `camelCase` over every key at every depth (`modifyObjectKeys` recurses into object and array values), so the keys of `aggs.<facet>.terms` were rewritten too. `transformAggregationsToFilterChoices` then uses each term key as the filter `value` sent back to the backend verbatim. Any term key that `camelCase` alters (an org like `HarvardX`, a slug like `open-edx`) therefore produced a filter value the backend never matches. The new normalizer keeps `terms` and the new optional `labels` verbatim and camelCases everything else, with a test that pins both halves. So against the legacy backend this commit changes what the org filter sends for mixed-case orgs, and in the direction of working. The PR body says the keys "must be sent back verbatim" without saying master got this wrong. Candidate comment: name it as a fix of a master bug so the behaviour change is on the record, and ask for a sandbox check with a mixed-case org. To confirm: `camelCase('HarvardX')` and `camelCase('open-edx')` outputs with the installed lodash.
+On master, `camelCaseObject(data)` runs lodash `camelCase` over every key at every depth (`modifyObjectKeys` recurses into object and array values), so the keys of `aggs.<facet>.terms` were rewritten too. `transformAggregationsToFilterChoices` then uses each term key as the filter `value` sent back to the backend verbatim. Any term key that `camelCase` alters (an org like `HarvardX`, a slug like `open-edx`) therefore produced a filter value the backend never matches. The new normalizer keeps `terms` and the new optional `labels` verbatim and camelCases everything else, with a test that pins both halves. So against the legacy backend this commit changes what the org filter sends for mixed-case orgs, and in the direction of working. The PR body says the keys "must be sent back verbatim" without saying master got this wrong. Candidate comment: name it as a fix of a master bug so the behaviour change is on the record, and ask for a sandbox check with a mixed-case org. `HarvardX` → `harvardX` follows from lodash's word split on case boundaries; not executed here.
 
 ### 3. What `type` is on a legacy result, and does the course arm catch it?
 
