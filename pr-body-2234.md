@@ -67,7 +67,7 @@ Part of #1905. Resolves #2189. Stacked above #2221.
 
 - **Course-home data module.** `course-home/data/` (API functions, query hooks, outline normalizer, the factories its tests build), `utils.ts`, `data/http-error.ts`, `course-tabs/utils.ts` and `generic/ToastContext.tsx`, each with its test. The setup file starts frontend-base's mock app with a signed-in user and adds the app configs, as profile and account do. Tests wrap the mock app's real client in `axios-mock-adapter`, which none of the converted apps do (they replace the client with a per-file fake): frontend-base's `MockAuthService` hands out a real `axios.create()` client, `master`'s suites and their `axiosMock.history` assertions are written for the adapter, and the error-path tests depend on real axios error shapes. `src/tests/location.ts` stubs `window.location`. The test site's LMS URLs move to `http://localhost:18000`, which the ported factories build on. The Pact consumer test and its contract, and the dead `upgradeNotificationData` factory, are dropped; the outline factories wait for #2191.
 - **The frame.** `tab-page/` (`TabPage`, `LoadedTabPage`, `TabWithTimer`), the enrollment and logistration alerts, the user-messages and notices providers, `PageLoading`, `shared/access.js`, the local-storage helper; `Main.tsx` mounts the notices, user-messages and toast providers around the outlet. Access-denied redirects are prefixed with the learning role's URL and tested where they are made (`shared/access.test.ts`, `TabPage.test.jsx`). What later layers port is stubbed at `master`'s import paths: the instructor toolbar (#2194), product tours (#2208) and the streak celebration modal (#2201); `TabWithTimer` passes through until the exam timer returns (#2198). The plugin override registry is dropped (#2223).
-- **The dates tab.** `course-home/dates-tab/` and `course-home/suggested-schedule-messaging/`, the dates route replacing its stub and loading lazily, and `BannerDatesUpgradeSlot` as a placeholder until #2185. `Timeline` drops a check its own loop makes always true, and it and `UpgradeToCompleteAlert` drop a `?? {}` that only moved a throw (decision log entry 32). The dates test renders through the route array and asserts frontend-base's page rules at the dates path.
+- **The dates tab.** `course-home/dates-tab/` and `course-home/suggested-schedule-messaging/`, the dates route replacing its stub and loading lazily, and `BannerDatesUpgradeSlot` as a placeholder until #2185. The package's `style.scss` loads the timeline's `Day.scss`, unscoped until openedx/frontend-base#333 settles how apps scope their styles (decision log entry 33). `Timeline` drops a check its own loop makes always true, and it and `UpgradeToCompleteAlert` drop a `?? {}` that only moved a throw (decision log entry 32). The dates test renders through the route array and asserts frontend-base's page rules at the dates path.
 - **Query retry and focus refetch.** Learning's queries run on the shell's query client, which has the library's defaults. `master`'s retry policy (no retry on a 4xx) and its `refetchOnWindowFocus: false` move onto each query through a shared `queryDefaults` spread, as the converted apps set per-query retry.
 - **Query error logging.** `Main.tsx` listens on the shell's query cache and logs each Learning query's final failure, at the level its `meta.logStatusAs` names, as `master`'s query cache did.
 
@@ -844,6 +844,31 @@ and are not repeated.
       span. `srMessage=""` passes `PropTypes.node.isRequired`, which
       rejects only `null` and `undefined`, so a `PageLoading.test.jsx`
       case reaches it in the frame commit.
+
+33. **`Day.scss` loads from `style.scss`, unscoped.** Decided
+    2026-10-30. The manual pass found the dates timeline unstyled:
+    `master` loads `Day.scss` only through `@import
+    "course-home/dates-tab/timeline/Day.scss"` in `src/index.scss`, which
+    is not ported, and the dates commit copied `Day.scss` with nothing
+    importing it.
+    - The package's `style.scss` `@use`s it, in the dates commit. This
+      continues `master`'s single stylesheet, as the converted apps that
+      had one did: openedx/frontend-app-gradebook and
+      openedx/frontend-app-catalog `@use` their component partials from
+      `src/style.scss`, while learner-dashboard, instructor-dashboard and
+      authn, whose components imported their own SCSS before conversion,
+      still do. `Day.scss` uses only its own variables, so it compiles
+      under `@use` unchanged.
+    - It is not scoped. The shell keeps an app's stylesheet in the page
+      after a soft navigation (openedx/frontend-app-account's b3476d4),
+      so the `.dates-*` rules apply to every app a site shows afterwards,
+      including apps from outside the `openedx` org whose class names
+      Learning cannot know. The converted apps scope differently (account
+      and profile wrap their rules in a class on their `<main>`, the
+      others do not), and openedx/frontend-base#333 asks how an app
+      should scope its selectors. Learning waits for that answer rather
+      than choosing a wrapper ahead of it, and revisits scoping if a
+      collision shows up first.
 
 </details>
 

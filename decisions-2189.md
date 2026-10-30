@@ -738,3 +738,28 @@ and are not repeated.
       span. `srMessage=""` passes `PropTypes.node.isRequired`, which
       rejects only `null` and `undefined`, so a `PageLoading.test.jsx`
       case reaches it in the frame commit.
+
+33. **`Day.scss` loads from `style.scss`, unscoped.** Decided
+    2026-10-30. The manual pass found the dates timeline unstyled:
+    `master` loads `Day.scss` only through `@import
+    "course-home/dates-tab/timeline/Day.scss"` in `src/index.scss`, which
+    is not ported, and the dates commit copied `Day.scss` with nothing
+    importing it.
+    - The package's `style.scss` `@use`s it, in the dates commit. This
+      continues `master`'s single stylesheet, as the converted apps that
+      had one did: openedx/frontend-app-gradebook and
+      openedx/frontend-app-catalog `@use` their component partials from
+      `src/style.scss`, while learner-dashboard, instructor-dashboard and
+      authn, whose components imported their own SCSS before conversion,
+      still do. `Day.scss` uses only its own variables, so it compiles
+      under `@use` unchanged.
+    - It is not scoped. The shell keeps an app's stylesheet in the page
+      after a soft navigation (openedx/frontend-app-account's b3476d4),
+      so the `.dates-*` rules apply to every app a site shows afterwards,
+      including apps from outside the `openedx` org whose class names
+      Learning cannot know. The converted apps scope differently (account
+      and profile wrap their rules in a class on their `<main>`, the
+      others do not), and openedx/frontend-base#333 asks how an app
+      should scope its selectors. Learning waits for that answer rather
+      than choosing a wrapper ahead of it, and revisits scoping if a
+      collision shows up first.
