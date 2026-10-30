@@ -40,3 +40,28 @@ Status: open
 Rests on: src/slots/CourseCatalogIntroSlot/index.tsx, src/slots/CourseCatalogDataTableSlots/CourseCatalogDataTableSlot/index.tsx, their README.md files, src/catalog/CatalogPage.tsx lines 113 and 123 at ead6afdfbd
 
 Brian's direction (2026-10-30): catalog has not published a non-alpha version since the frontend-base port, so slot changes may break; anyone porting a plugin from the frontend-plugin-framework era already has changes to make, and more are documented rather than avoided. Checked: `@openedx/frontend-app-catalog` on npm has exactly `1.0.0-alpha.0` to `1.0.0-alpha.4`, `latest` is `alpha.4`, `package.json` says `0.0.0-dev`. The PR body lists two props as "deliberately not renamed here" for existing site plugins: `courseDataResultsLength` on `CourseCatalogIntroSlot` (fed by `catalogData?.results?.length`, passed on to the message as `resultsCount`) and `totalCourses` on `CourseCatalogDataTableSlot` (fed by `totalItems`). Both are from master; this PR renames their sources and stops at the slot boundary. The slot names themselves (`CourseCatalogIntroSlot`, `CourseCatalogDataTableSlot`, `CourseCatalogSearchFieldSlot`) also carry "Course" and are untouched. Review ask: rename the props with the rest (and say whether the slot names go too), and document the change for plugin authors. Candidate comment.
+
+### 4. Catalog things still under a "course" name after this PR's rename
+
+Status: open
+Rests on: `find src -ipath '*course*'` and the exported-identifier grep at ead6afdfbd
+
+Brian's direction (2026-10-30): the rename should reach everything that is a catalog thing under a course name, e.g. `CoursesList.tsx` → `CatalogList`. Enumerated at ead6afdfbd, outside `src/course-about/` which is genuinely one course.
+
+Catalog things under a course name (rename candidates):
+- `src/home/components/courses-list/CoursesList.tsx` and its slot `HomeCoursesListSlot` (id `...catalog.homeCoursesList.v1`): it calls `useCatalogListSearch` and renders one `HomeCourseCardSlot` per result, so it is the home page's catalog list and will be mixed once pathways render.
+- The catalog page slots: `CourseCatalogIntroSlot`, `CourseCatalogSearchFieldSlot`, `CourseCatalogDataTableSlots/` with `CourseCatalogDataTableSlot`, `...CardViewSlot`, `...ControlBarSlot`, `...TableFooterSlot`, and their props and READMEs. (`CourseCatalogDataTableCourseCardSlot` and `HomeCourseCardSlot` are the course card itself; a pathway card is its own slot, so those keep "Course".)
+- Inside the module this PR already renamed: `queryKey: ['courseListSearch', params]` in `hooks.ts` line 32 (unchanged from master, single use, no `invalidateQueries` on it, so harmless at runtime but missed by the rename) and the test file `__tests__/courseListSearch.test.tsx`.
+- Header widget items `CoursesLinkMenuItem.jsx` and `ExploreCoursesLinkMenuItem.jsx`: they link to the catalog page; whether they rename depends on entry 5.
+- Deferred by the PR on purpose: `CourseListSearchParams`, `CourseListSearchResponse` (to 175), `getCourseListSearchUrl` (to the endpoint cutover). Not part of this ask.
+
+Genuinely about one course, stay: `src/course-about/*` and every `CourseAbout*Slot`, `generic/course-card` (`CourseCard`), `HomeCourseCardSlot`, `CourseCatalogDataTableCourseCardSlot`, `__mocks__/course.ts` and `courseAbout.ts`, `no-course-image.svg`, the `coursePrice` id.
+
+Candidate comment: one list, with the course-card exceptions named so the author does not over-rename.
+
+### 5. The catalog page's URL is `/catalog/courses`, role `coursesRole`, and UI text "Courses"
+
+Status: open
+Rests on: src/routes.tsx lines 22-30, src/constants (coursesRole), src/catalog/messages.ts line 11 at ead6afdfbd
+
+The mixed catalog page keeps the path `courses` and the `coursesRole` route role; the header's "Courses" and "Explore courses" items and the page's "Courses" message point there. A route path is user-facing and linkable, unlike an identifier, so it is a separate decision from entry 4: does the mixed page stay at `/catalog/courses`, or move, and does the ADR or #169 say? Not checked yet. Question for the author rather than a rename ask.
