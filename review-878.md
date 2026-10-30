@@ -6,7 +6,7 @@ The record of this review. The state is rewritten, never appended; the passes ta
 
 ## State
 
-(current read of the PR)
+First of the PRs split out of openedx/frontend-app-learner-dashboard#875 (ChrisChV, open-craft fork). Covers the dashboard heading only ("My Learning" title, "Courses" heading, sticky heading and Refine filter, header links renamed to Explore and My Learning) and depends on no pathways code; #879 is independent of it by its own body and by branch content (diverged, neither contains the other). kdmccormick approved 2026-10-29. Brian is doing his own pass (2026-10-30); findings arrive from him as he goes.
 
 ## Passes
 
