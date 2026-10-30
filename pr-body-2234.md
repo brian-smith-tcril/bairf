@@ -786,8 +786,8 @@ and are not repeated.
       line 94 and `ShiftDatesAlert`'s `hasEnded` default (`master`'s
       `OutlineTab.test.jsx`, #2191), `LoadedTabPage.tsx` lines 57-58
       (#2201) and line 75 (the live tab's suite, #2203).
-    - Lines no `master` test reaches get a test in the commit that ports
-      the file.
+    - Lines no `master` test fully covers get a test in the commit that
+      ports the file.
     - `Timeline.jsx`'s `if (groupedDates.length)` is dropped and its body
       kept, in the dates commit. The guard came in with the grouping loop
       in #70 (bdb1afe9), when an empty `courseDateBlocks` left
@@ -819,13 +819,16 @@ and are not repeated.
       dropping the default only moves that throw. `DatesTab.jsx`'s two
       reads and `TabPage.tsx`'s keep theirs: they render while the
       queries load.
-    - A defensive check is judged by what it changes when its input
-      arrives, not by whether today's callers or the LMS send that input.
-      One that only moves a crash, like the two `?? {}` above, is dropped:
+    - A guard, a condition or default for an input today's callers or
+      the LMS do not send, is judged by what it changes when that input
+      arrives, not by whether it arrives today. One its own function
+      makes always true, like `Timeline`'s `if (groupedDates.length)`
+      above, is removed. One that only moves a throw, like the two
+      `?? {}` above, is dropped:
       making those components render without data is a larger refactor
       than the port. One that changes the outcome gets a test that feeds
       it the input. `courseHomeOutline.ts` reads the outline response as
-      `getOutlineTabData` receives it, and its checks turn a malformed
+      `getOutlineTabData` receives it, and its guards turn a malformed
       block into an empty child list where the parent walk would throw:
       `block.children || []` (lines 188 and 199) for a block with no
       `children`, and `Array.isArray` (lines 230 and 239) for a
@@ -834,7 +837,7 @@ and are not repeated.
       today; `courseHomeOutline.test.ts` gains both cases in the data
       commit.
     - `PageLoading`'s `return null` for a falsy `srMessage`, which entry
-      29 left uncovered as a prop-types error, is such a check: it passes
+      29 left uncovered as a prop-types error, is such a guard: it passes
       the spinner no screen-reader text instead of an empty `sr-only`
       span. `srMessage=""` passes `PropTypes.node.isRequired`, which
       rejects only `null` and `undefined`, so a `PageLoading.test.jsx`
