@@ -43,3 +43,4 @@ prs:
   openedx/frontend-app-learning#2234
   openedx/frontend-base#329
   openedx/frontend-base#332
+  openedx/frontend-base#333
