@@ -145,3 +145,9 @@ differences on the dates tab:
   diverge above it, by up to 68px. On `master` the header's course tabs and
   `InstructorToolbar` used `container-xl` too. Fixed by decision log entry 34: the frame's
   wrapper is Paragon's `Container size="xl"`, and #2221's stubs take the same container.
+- With the horizontal edges lined up, the gap between the course tabs and the "Important
+  dates" heading is smaller than on `master`. Cause: `master`'s `CourseTabsNavigation`
+  wraps the tabs in `<div id="courseTabsNavigation" className="mb-3 course-tabs-navigation">`,
+  so every tab page starts 1rem below the bar before the heading's own `my-3`; the shell's
+  course bar (a Paragon `Navbar` with `course-tabs-navigation pb-0`) sets no bottom margin,
+  so the gap is the heading's 1rem alone, where `master`'s is 2rem.
