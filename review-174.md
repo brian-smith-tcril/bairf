@@ -65,3 +65,12 @@ Status: open
 Rests on: src/routes.tsx lines 22-30, src/constants (coursesRole), src/catalog/messages.ts line 11 at ead6afdfbd
 
 The mixed catalog page keeps the path `courses` and the `coursesRole` route role; the header's "Courses" and "Explore courses" items and the page's "Courses" message point there. A route path is user-facing and linkable, unlike an identifier, so it is a separate decision from entry 4: does the mixed page stay at `/catalog/courses`, or move, and does the ADR or #169 say? Not checked yet. Question for the author rather than a rename ask.
+
+### 6. Does any backend PR already fix the new endpoint's name?
+
+Status: resolved, no comment
+Rests on: GitHub search on 2026-10-30 (PRs and code across openedx and open-craft; open PRs by rpenido and ChrisChV; open "pathway" PRs); openedx/openedx-search#20; open-craft/edx-search branch rpenido/catalog-pathway-search-results at f11b42d; openedx/openedx-platform#39204; open-craft/tutor-contrib-pathway-sandbox plugin.py
+
+No. Nothing outside this PR's ADR writes `catalog_search` or `catalog_list_search` as an endpoint: code search hits are unrelated (enterprise catalog-search package, end-to-end-tests selectors, a learning course-exit component). The backend work that exists: rpenido's edx-search branch is one commit over upstream master, `feat: support typed search results via an optional document_type field` (engines carry a `document_type` through to `_type`; no URL change, no PR opened); openedx-platform#39204 adds learner pathway APIs and never mentions search; openedx-search#20 is the FC-0144 library ADR (schema, registration, adapter contract) and names no endpoint. The pathway sandbox plugin pins only frontend branches. So the ADR in #174 is the first and only written source of the name, and the review's naming decision (entry 2) sets it rather than following anything.
+
+Carried to 175: the edx-search commit's `document_type` → `_type` mapping is the backend side of 175's `course | '_doc'` arm.
