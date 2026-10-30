@@ -10,15 +10,37 @@ Concrete case: openedx/frontend-app-learner-dashboard#878 renames the dashboard 
 <details>
 <summary> Claude Plan </summary>
 
-Match sites, as of `ae5ec93` on `main`:
+Written 2026-10-30 against `ae5ec93` on `main`.
 
-1. **Types.** Add `idAliases?: string[]` to `WidgetIdentityProps` in `runtime/slots/widget/types.ts`, so every operation that registers a widget (`APPEND`, `PREPEND`, `INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE`) can declare aliases, and to `IdentifiedWidget`.
-2. **`createIdentifiedWidget`** (`runtime/slots/widget/utils.tsx`) copies `idAliases` from the operation onto the identified widget.
-3. **`findRelatedWidgetIndex`** matches `widget.id === id || widget.idAliases?.includes(id)`. This covers `insertAfterWidget`, `insertBeforeWidget`, `replaceWidget` and `removeWidget` in one place.
-4. **`useWidgetOptionsForId`** (`runtime/slots/widget/hooks.ts`) compares `operation.relatedId === widgetId`; it needs the widget's aliases too. `WidgetContext` carries only `slotId` and `widgetId` today, so either add `widgetIdAliases` to the context where the widget is rendered, or resolve the identified widget from the list by id. The first keeps the hook's shape.
-5. **`useSortedWidgetOperations`** orders relative operations by `a.id === b.relatedId`; extend the comparison to `a.idAliases?.includes(b.relatedId)` so an operation relative to an alias is still sorted after the widget it depends on.
-6. **`WidgetList.byId` and `withoutId`** filter by `w.id === id`; apply the same alias match so a layout that picks widgets by id behaves consistently with the operations.
-7. **Tests**, mirroring #178's: each relative operation configured against an alias id applies; against the primary id still applies; a widget with no aliases is unaffected; sorting places an alias-relative operation after its target; `useWidgetOptions` merges options declared against an alias.
-8. **Docs.** A paragraph beside the slot `idAliases` documentation describing the widget form and the deprecation pattern (rename the id, keep the old one as an alias for at least one release). No ADR: #178 added none, and this changes no decision in ADR 0009 or ADR 0016.
+### Baseline
+
+- Slot aliases (#178): `Slot` takes `idAliases` and puts them in `SlotContext`; `useSlotOperations` passes `[id, ...idAliases]` to `getSlotOperations`, which matches `operation.slotId` against that list. The PR touched runtime code and tests only; nothing under `docs/` and no slot showcase entry mentions `idAliases`.
+- Widget identity: `WidgetIdentityProps` is `{ id, role? }`, carried by `APPEND`, `PREPEND`, `INSERT_AFTER`, `INSERT_BEFORE` and `REPLACE`. `createIdentifiedWidget` (`runtime/slots/widget/utils.tsx`) builds an `IdentifiedWidget` `{ id, role?, node }` and wraps the node in `WidgetProvider`, whose `WidgetContext` carries `slotId`, `widgetId` and `role`.
+- Targeting: `findRelatedWidgetIndex` matches `relatedId` against `widget.id` by equality and returns the first match in list order, or `null`; `insertAfterWidget`, `insertBeforeWidget`, `replaceWidget` and `removeWidget` do nothing on `null`. `useWidgetOptionsForId(slotId, widgetId)` (`runtime/slots/widget/hooks.ts`) keeps `OPTIONS` operations whose `relatedId === widgetId`. `useSortedWidgetOperations` orders two insert operations by `a.id === b.relatedId`; its guard `isWidgetRelativeOperation` covers `INSERT_AFTER` and `INSERT_BEFORE` only, so `REPLACE`, `REMOVE` and `OPTIONS` get no dependency ordering today. `WidgetList.byId` and `withoutId` filter by `w.id === id`.
+- Public surface: `runtime/slots/widget/index.ts` re-exports its hooks, utils, types and `WidgetContext`, and `runtime/index.ts` re-exports `./slots`, so `IdentifiedWidget`, `WidgetContext`, `useWidgetOptionsForId` and `createWidgets` are package API. Every change below is additive: an optional field or an optional trailing parameter.
+
+### Change
+
+1. **Types** (`runtime/slots/widget/types.ts`). `idAliases?: string[]` on `WidgetIdentityProps`, with the TSDoc that is this feature's documentation, and on `IdentifiedWidget`. `WidgetContext` (`WidgetContext.tsx`) gains `widgetIdAliases?: string[]`, named beside `widgetId`.
+2. **One match helper** in `runtime/slots/widget/utils.tsx`, exported so `hooks.ts` can use it: `matchesWidgetId(identity: { id: string; idAliases?: string[] }, id: string)` returns `identity.id === id || (identity.idAliases?.includes(id) ?? false)`. Both an operation with `WidgetIdentityProps` and an `IdentifiedWidget` fit the parameter structurally.
+3. **`createIdentifiedWidget`** copies `idAliases` from the operation onto the identified widget and passes it to `WidgetProvider` as `widgetIdAliases`, which `WidgetProvider` puts in the context.
+4. **`findRelatedWidgetIndex`**, **`byId`** and **`withoutId`** compare through `matchesWidgetId`. This covers `insertAfterWidget`, `insertBeforeWidget`, `replaceWidget` and `removeWidget` in one place.
+5. **`useWidgetOptionsForId(slotId, widgetId, widgetIdAliases = [])`**: a third, optional parameter; an `OPTIONS` operation applies when `matchesWidgetId({ id: widgetId, idAliases: widgetIdAliases }, operation.relatedId)`. `useWidgetOptions` reads `widgetIdAliases` from `WidgetContext` and passes it through. Existing callers of the two-argument form are unchanged.
+6. **`useSortedWidgetOperations`** compares through `matchesWidgetId(a, b.relatedId)` and `matchesWidgetId(b, a.relatedId)`, so an insert relative to an alias is still sorted after the operation that declares the alias. The guard stays as it is; ordering for `REPLACE`, `REMOVE` and `OPTIONS` is a pre-existing limit and not this change.
+7. **Precedence.** When a `relatedId` matches one widget's alias and another widget's id, the first widget in list order wins, exactly as two widgets with the same id resolve today. No ranking of id over alias.
+8. **Docs.** The TSDoc on `WidgetIdentityProps.idAliases`, in the style of the per-member comments on `WidgetOperationTypes`: other ids the widget answers to; a relative operation (`INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE`, `REMOVE`, `OPTIONS`) whose `relatedId` names one of them applies as if it named `id`; when a widget id is renamed, keep the old id here for at least one release so site configs that target it keep working. No showcase entry (none exists for slot aliases either) and no ADR (#178 added none, and this changes no decision in ADR 0009 or ADR 0016).
+
+Not here: dependency ordering for `REPLACE`, `REMOVE` and `OPTIONS` in the sort; any runtime notice when an operation targets an alias.
+
+### Tests
+
+- `runtime/slots/widget/utils.test.tsx`, a new `describe` on aliases using the existing `makeAppendOp` helper extended with `idAliases`: each of `INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE` and `REMOVE` configured against an alias applies (asserted on `identified` ids and order); against the primary id still applies; a `relatedId` matching neither id nor alias is a no-op; `byId` and `withoutId` match an alias; precedence: a widget with id `x` listed before a widget with alias `x`, and the reverse, each time the earlier one is targeted; `identified` exposes `idAliases`.
+- `runtime/slots/widget/hooks.test.tsx` (new), in the shape of `runtime/slots/layout/hooks.test.tsx` with `../hooks` mocked: `useSortedWidgetOperations` places an insert relative to an alias after the operation declaring that alias, in both declaration orders; `useWidgetOptionsForId` merges options declared against an alias and against the primary id and ignores others; `useWidgetOptions` reads `widgetIdAliases` from a `WidgetContext.Provider` wrapper.
+- `runtime/slots/Slot.test.tsx`, beside #178's site-config block: an `APPEND` widget declaring `idAliases: ['old-widget']` and a `REMOVE` with `relatedId: 'old-widget'` renders nothing from that widget.
+- `npm run typecheck`, `npm run lint`, `npm test`.
+
+### Commit and PR
+
+One commit, `feat: support widget ID aliases`, the sibling of #178's `feat: support slot ID aliases`; `.releaserc` makes it a minor release. Commitlint is `.github/workflows/commitlint.yml` calling `openedx/.github/.github/workflows/commitlint.yml@master` with no local config, the same chain as the learning repo. Branch `widget-id-aliases` on the fork, PR against `main`, "Resolves #334". Verification is the test suite; the first consumer check is openedx/frontend-app-learner-dashboard#878 adopting the alias for its two header link ids, outside this PR.
 
 </details>
