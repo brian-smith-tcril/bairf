@@ -270,5 +270,14 @@ container and its top margin).** Every box but **Console** ticked.
 - Console: not watched during the pass, so not known whether the app logged errors or
   warnings.
 - Error state on a network failure: after the four requests, the frame's error page read
-  "There was an error loading this course." Whether the failure was logged once was not
-  watched.
+  "There was an error loading this course." The console, from the pasted log: "Request
+  was blocked by DevTools" from `api.ts:101` for the attempts with one, two and three
+  retry frames in their stacks (`run @ retryer.js:138`), so the second to fourth requests;
+  the first attempt's message was not in the paste. One `logError` from
+  `queryClient.ts:26` (Learning's query-cache listener), an `AxiosError` "Network Error"
+  for the dates URL with `httpErrorType: 'api-request-error'`, printed in the console
+  between the third and fourth attempts' blocked messages. Logged once. Besides those,
+  React `defaultProps` deprecation warnings throughout the session; the port's own source
+  has no `defaultProps` (`git grep` at `5403c52f`), and the test setup silences the same
+  warning from react-bootstrap's `Overlay` and `OverlayTrigger` (openedx/paragon#4523).
+  Which components the browser's warnings named was not recorded.
