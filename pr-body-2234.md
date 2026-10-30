@@ -98,7 +98,7 @@ At each of the five commits, in `frontend-base/`: `npm ci`, lint, the tests and 
 | `tab-page/LoadedTabPage.tsx:58` | `celebrations.streakDiscountEnabled && verifiedMode`, likewise | the streak celebration, #2201 |
 | `tab-page/LoadedTabPage.tsx:75` | the page title with no tab title, when the metadata's tabs have none for the active slug | the live tab's suite, #2203 |
 
-**Manual testing** on tutor dev has not been done yet; its record will be added here.
+**Manual testing** on the package's dev site against tutor dev: the timeline, the three suggested-schedule alerts, shifting dates and its toast, providers across a tab switch, the access redirects, the loading and error states, focus refetch and masquerade. The alerts and the shift-dates toast ran on faked LMS responses (Chrome response overrides), each listed in its box. The record is [a comment below](https://github.com/openedx/frontend-app-learning/pull/2234#issuecomment-6519347190), since it does not fit in this body beside the decision log.
 
 ## Decisions
 
