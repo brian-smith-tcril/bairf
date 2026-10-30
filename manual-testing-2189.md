@@ -269,3 +269,6 @@ container and its top margin).** Every box but **Console** ticked.
   set in Studio.
 - Console: not watched during the pass, so not known whether the app logged errors or
   warnings.
+- Error state on a network failure: after the four requests, the frame's error page read
+  "There was an error loading this course." Whether the failure was logged once was not
+  watched.
