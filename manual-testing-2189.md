@@ -128,9 +128,11 @@ they show up, not counted against a box.
 - [x] **Anonymous learner redirects** — on the dates path: redirected to the course home
       stub, the same way (`authentication_required`); the logistration alert, likewise,
       only on the outline.
-- [ ] **Course not started redirects** — on the dates path of a course whose start is in
-      the future: redirected to the redirect stub at
-      `/learning/redirect/dashboard?notlive=<start date>` (`course_not_started`).
+- [x] **Course not started redirects** — as an enrolled learner who is not staff, not
+      masquerading, on the dates path of a course whose start is in the future (set in
+      Studio): redirected to the redirect stub at
+      `/learning/redirect/dashboard?notlive=<start date>` (`course_not_started`). Staff,
+      and staff masquerading as a learner, are let in by the LMS and see the dates page.
 - [ ] **Loading state** — with the network throttled, the spinner shows before the timeline,
       with "Loading course page…" as its screen-reader text.
 - [ ] **Error state on a 4xx** — with the request to `/api/course_home/dates/<courseId>`
@@ -236,3 +238,9 @@ differences on the dates tab:
   (`check_course_open_for_learner`, `check_start_date` in
   `lms/djangoapps/courseware/access_utils.py`); whether staff skip it before that check
   was not traced.
+- Course not started, retried as an enrolled learner who is not staff, not masquerading:
+  the dates path redirected to
+  `http://apps.local.openedx.io:2000/learning/redirect/dashboard?notlive=12/31/2039`, the
+  start date formatted by `Intl.DateTimeFormat(getLocale())` as `getAccessDeniedRedirectUrl`
+  does on `master`. The first try's user had access from the LMS, so the app had nothing to
+  redirect on.
