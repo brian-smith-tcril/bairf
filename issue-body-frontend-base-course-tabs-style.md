@@ -16,7 +16,7 @@ The course bar's tabs do not look like the course tabs Learning shows on `master
 
 ## Questions
 
-- Should the course bar's tabs match the underline tabs the course apps used before conversion, or is the Paragon `tabs` look the intended design?
-- If they should match, does the styling belong in the shell's `course-tabs-navigation.scss`, in a Paragon `Nav` variant, or in the theme?
+- Should the course bar's tabs match the underline tabs Learning shows on `master`, or is the Paragon `tabs` look the intended design?
+- If they should match, where does that styling belong?
 
 </details>
