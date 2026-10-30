@@ -101,6 +101,6 @@ differences on the dates tab:
   `CourseTabsNavigation` (frontend-base 2.0.0-alpha.17), a Paragon `Nav variant="tabs"`
   with its own two-rule `course-tabs-navigation.scss`; `master`'s look is Learning's own
   `CourseTabsNavigation` with `.nav-underline-tabs` from `src/index.scss`. Not code this PR
-  ports. The org and course title missing above the tabs is the header title line, #2193.
+  ports; filed as openedx/frontend-base#332. The org and course title missing above the tabs is the header title line, #2193.
 
 The checklist has not been run yet.
