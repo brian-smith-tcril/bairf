@@ -7,7 +7,7 @@ behavior the test client's `retry: false` hides. The other tabs are still stubs.
 
 ## Environment
 
-- The package's dev site on `bsmith/dates-tab` (`ad85041b`): `cd frontend-base && nvm use
+- The package's dev site on `bsmith/dates-tab` (`c3a07fcf`): `cd frontend-base && nvm use
   && npm ci && npm run dev`, served at `http://apps.local.openedx.io:2000/learning/`, with
   tutor dev's `mfe` service stopped so the port is free.
 - Tutor dev, the LMS's learning URL pointing at `apps.local.openedx.io:2000/learning`, as
