@@ -3,7 +3,7 @@
 Brian's Claude Code setup and project working docs.
 
 - `main` is the setup: the user-level `CLAUDE.md`, reference docs, hooks, skills, and the scripts that install them. Point a new machine at this branch.
-- Every other branch is an **effort**: a `project/<name>`, `task/<name>` or `sidequest/<name>` holding that effort's plans, decisions, manual-testing records and body drafts, checked out as a worktree beside the code it serves. A finished effort is a `<kind>-archive/<name>` tag.
+- Every other branch is an **effort**: a `project/<name>`, `task/<name>`, `sidequest/<name>` or `review/<name>` holding that effort's plans, decisions, manual-testing records and body drafts, checked out as a worktree beside the code it serves. A finished effort is a `<kind>-archive/<name>` tag.
 
 ## Set up a machine (agent-run)
 
@@ -41,7 +41,8 @@ hooks/test-no-scratch-refs.sh
 hooks/no-tmp-push.sh         blocks git push / gh pr create / gh stack submit from a clone under /tmp
 hooks/test-no-tmp-push.sh
 skills/upstream-issue        gated export of a local ticket to a project-repo issue
-bin/effort                   effort branch lifecycle (project, task, sidequest)
+bin/effort                   effort branch lifecycle (project, task, sidequest, review)
+bin/review                   reviewing someone else's PR: hub clone, PR worktree, review effort
 setup.sh
 ```
 
@@ -54,7 +55,7 @@ bin/effort list                        live effort branches and archived tags
 bin/effort close <kind>/<name>         annotated tag <kind>-archive/<name> from TAG.md, delete the branch, remove the worktree
 ```
 
-Kinds: a **project** is a multi-session effort against one or more code repos, an epic's worth. A **task** is work that would make sense as one issue or PR: a bug fix, a one-commit feature. A **sidequest** is for Brian: exploring an idea, investigating something with no commitment to act on the findings, or this repo's own setup.
+Kinds: a **project** is a multi-session effort against one or more code repos, an epic's worth. A **task** is work that would make sense as one issue or PR: a bug fix, a one-commit feature. A **sidequest** is for Brian: exploring an idea, investigating something with no commitment to act on the findings, or this repo's own setup. A **review** is Brian reviewing someone else's PR; it ends when the PR lands, closes without landing, or Brian abandons the review (see Reviews below).
 
 Where a worktree lives is a convention, not a requirement: `bin/effort path` finds it through `git worktree list` wherever it is. A task's worktree takes the default, beside the bairf checkout in the directory that holds the repo checkouts. A project usually has a directory of its own holding the repo checkouts it works on; its worktree goes in there, passed as `[dir]`, so it sits beside the code.
 
@@ -64,7 +65,7 @@ A code repo joins a project or task through a `CLAUDE.local.md` at its root (glo
 bairf branch: project/<name>
 ```
 
-Agents resolve the worktree with `bin/effort path` and write plans, decisions, manual-testing records and body drafts there. Files are named `plan-<issue>.md`, `decisions-<issue>.md`, `manual-testing-<issue>.md`, `issue-body-<slug>.md`, `pr-body-<n>.md`; `UPSTREAM.md` tracks exported issues; `wayfinder/<effort>/` holds a wayfinder map. Commit and push on the effort branch as they change.
+Agents resolve the worktree with `bin/effort path` and write plans, decisions, manual-testing records and body drafts there. Files are named `plan-<issue>.md`, `decisions-<issue>.md`, `manual-testing-<issue>.md`, `issue-body-<slug>.md`, `pr-body-<n>.md`, `review-<n>.md`; `UPSTREAM.md` tracks exported issues; `wayfinder/<effort>/` holds a wayfinder map. Commit and push on the effort branch as they change.
 
 `TAG.md` is the effort's index: the branch name, then its issues and PRs as `owner/repo#N` under `issues:` and `prs:`. `bin/effort start` creates it empty; a ref is added when the issue or PR is created, or when the effort takes up one that already exists. It becomes the archive tag's message, so it holds only refs, which stay true.
 
@@ -77,6 +78,26 @@ for t in $(git tag -l '*-archive/*'); do git cat-file -p $t | grep -q 'owner/rep
 git grep -l -i <term> $(git tag -l '*-archive/*')                                                     # which files
 git show <tag>:<file>
 ```
+
+## Reviews
+
+A review of someone else's PR is a `review/<repo>-<n>` effort, opened and closed through `bin/review`, with everything under `<parent of root>/reviews`:
+
+```
+reviews/.repos/<repo>      hub clone of upstream (blobless, push disabled); never worked in, it only owns worktrees
+reviews/<repo>-<n>/code    worktree of the hub on branch pr-<n>, at the PR head; its CLAUDE.local.md names the review branch
+reviews/<repo>-<n>/bairf   the effort worktree
+```
+
+```
+bin/review open <owner>/<repo> <n>                     clone the hub if missing, create both worktrees, write TAG.md and review-<n>.md
+bin/review sync <repo>-<n>                             reset code to the PR's current head (survives rebases), append a passes row
+bin/review close <repo>-<n> <merged|closed|abandoned>  write the reason as the last line of State, remove code worktree and hub branch, effort close
+```
+
+`ls reviews` is the list of open reviews; the hub's `git branch` is the same list by number. Each code worktree needs its own `npm ci`.
+
+`review-<n>.md` is the whole record, in three parts. **State** is free text, rewritten rather than appended: the current read of the PR, whatever that needs to be. **Passes** is a table with one row per pass (date, base and head SHA, scope, outcome); `sync` adds the row, the pass fills scope and outcome, and "since last pass" is the diff between consecutive heads. **Ledger** has one entry per question with a status (open; resolved, no comment; posted with the thread link; parked; stale) and a "rests on" line naming the files and head SHA the answer was reached at, so the next pass marks stale only what moved. A comment on the PR is what the author should act on or answer; everything else is a ledger entry.
 
 ## mattpocock skills in an Open edX checkout
 

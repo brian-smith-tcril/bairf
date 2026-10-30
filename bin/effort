@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Effort branch lifecycle on bairf. An effort is a project, task or sidequest; its branch is <kind>/<name>.
+# Effort branch lifecycle on bairf. An effort is a project, task, sidequest or review; its branch is <kind>/<name>.
 #   effort start <kind> <name> [dir]  orphan branch + worktree (default dir: <bairf parent>/bairf-<name>)
 #   effort path <kind>/<name>         print the worktree path
 #   effort list                       live effort branches and archived tags
@@ -8,7 +8,7 @@
 set -euo pipefail
 root=$(cat "$HOME/.claude/bairf-root" 2>/dev/null || git rev-parse --show-toplevel)
 cmd=${1:-}
-kinds='project|task|sidequest'
+kinds='project|task|sidequest|review'
 
 case "$cmd" in
   start)

@@ -39,6 +39,7 @@ Reach for `openedx/GLOSSARY.md` for the words in anything Open edX.
 - One tool call per GitHub mutation; Brian approves each.
 - When reviewing a diff, the change is its `+`/`-` lines; context lines are not part of it.
 - Brian replies on review threads. After a review fix lands, the report is the diff and where it landed; no reply is posted or offered.
+- Reviewing someone else's PR is a `review` effort (`bin/review`); its record is the worktree's `review-<n>.md`. A comment on the PR is what the author should act on or answer; everything else is a ledger entry there.
 - CI: one-shot checks only. Brian watches CI.
 - Issue bodies stay dense: a confirmation is a clause on the existing bullet; extra findings go in chat.
 - Cross-repo references are `owner/repo#N`. Work is named by PR number, not layer label.

@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+# Reviewing someone else's PR as a bairf effort (kind: review). Everything lives under <bairf parent>/reviews:
+#   .repos/<repo>      hub clone of upstream, blobless, never worked in, push disabled
+#   <repo>-<n>/code    worktree of the hub on branch pr-<n>, at the PR head
+#   <repo>-<n>/bairf   effort worktree, branch review/<repo>-<n>, holding review-<n>.md
+#   review open <owner>/<repo> <n>                     hub if missing, both worktrees, CLAUDE.local.md, TAG.md prs:, review-<n>.md
+#   review sync <repo>-<n>                             reset code to the PR's current head, append a passes row
+#   review close <repo>-<n> <merged|closed|abandoned>  final state line, remove code worktree and hub branch, effort close
+set -euo pipefail
+root=$(cat "$HOME/.claude/bairf-root" 2>/dev/null || git rev-parse --show-toplevel)
+reviews=$(dirname "$root")/reviews
+cmd=${1:-}
+
+usage() { sed -n '2,9p' "$0" >&2; exit 1; }
+
+# A passes-table row for the PR as checked out in $1 (PR number $2): today, base SHA (merge-base with the PR's base branch), head SHA.
+pass_row() {
+  local code=$1 n=$2 baseref
+  baseref=$(cd "$code" && gh pr view "$n" --json baseRefName --jq .baseRefName)
+  git -C "$code" fetch -q origin
+  printf '| %s | %s | %s | | |\n' "$(date +%F)" \
+    "$(git -C "$code" rev-parse --short=10 "$(git -C "$code" merge-base HEAD "origin/$baseref")")" \
+    "$(git -C "$code" rev-parse --short=10 HEAD)"
+}
+
+case "$cmd" in
+  open)
+    full=${2:-}; n=${3:-}
+    { [[ $full == */* ]] && [[ $n =~ ^[0-9]+$ ]]; } || usage
+    repo=${full#*/}; name="$repo-$n"; dir="$reviews/$name"; hub="$reviews/.repos/$repo"
+    [ ! -e "$dir" ] || { echo "$dir exists" >&2; exit 1; }
+    if [ ! -d "$hub/.git" ]; then
+      mkdir -p "$reviews/.repos"
+      gh repo clone "$full" "$hub" -- --filter=blob:none >&2
+      git -C "$hub" config remote.origin.pushurl DISABLED
+    fi
+    git -C "$hub" fetch -q origin
+    mkdir -p "$dir"
+    (cd "$hub" && gh pr checkout "$n" --branch "pr-$n" --worktree "$dir/code") >&2
+    printf 'bairf branch: review/%s\n' "$name" > "$dir/code/CLAUDE.local.md"
+    "$root/bin/effort" start review "$name" "$dir/bairf" >/dev/null
+    printf '  %s#%s\n' "$full" "$n" >> "$dir/bairf/TAG.md"
+    IFS=$'\t' read -r title url < <(cd "$dir/code" && gh pr view "$n" --json title,url --jq '[.title, .url] | @tsv')
+    cat > "$dir/bairf/review-$n.md" <<MD
+# Review: $full#$n — $title
+
+$url
+
+The record of this review. The state is rewritten, never appended; the passes table and the ledger grow. A comment on the PR is what the author should act on or answer; everything else is a ledger entry.
+
+## State
+
+(current read of the PR)
+
+## Passes
+
+One row per pass. \`bin/review sync\` appends the row with the new head; scope (whole diff, named files or commits) and outcome (none, comments, approve, request changes) are filled in by hand. Since the last pass: \`git diff <previous head>..<head>\` in the code worktree, or \`git range-diff\` across a rebase.
+
+| date | base | head | scope | outcome |
+|------|------|------|-------|---------|
+$(pass_row "$dir/code" "$n")
+
+## Ledger
+
+One entry per question, newest last: \`### N. <question>\`, a \`Status:\` line, a \`Rests on:\` line, then what was found, why no comment was needed, or what was posted. Status is one of: open; resolved, no comment; posted <thread url>; parked; stale. "Rests on" names the files and the head SHA the answer was reached at; a pass marks an entry stale when those files changed since.
+MD
+    git -C "$dir/bairf" add -A && git -C "$dir/bairf" commit -qm "open review $full#$n"
+    echo "$dir"
+    echo "next: cd $dir/code && nvm use && npm ci" >&2
+    ;;
+  sync)
+    name=${2:-}; dir="$reviews/$name"; n=${name##*-}; code="$dir/code"
+    [ -d "$code" ] || usage
+    old=$(git -C "$code" rev-parse --short=10 HEAD)
+    (cd "$code" && gh pr checkout "$n" --force) >&2
+    new=$(git -C "$code" rev-parse --short=10 HEAD)
+    row=$(pass_row "$code" "$n")
+    file="$dir/bairf/review-$n.md"
+    awk -v row="$row" '{ l[NR]=$0; if ($0 ~ /^\| 20[0-9][0-9]-/) last=NR } END { for (i=1;i<=NR;i++) { print l[i]; if (i==last) print row } }' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    git -C "$dir/bairf" add -A && git -C "$dir/bairf" commit -qm "sync review $name at $new"
+    if [ "$old" = "$new" ]; then echo "no change since $old"; else echo "$old -> $new  (git -C $code diff $old..$new)"; fi
+    ;;
+  close)
+    name=${2:-}; reason=${3:-}
+    printf '%s' "$reason" | grep -Eqx 'merged|closed|abandoned' || usage
+    dir="$reviews/$name"; n=${name##*-}; repo=${name%-*}; hub="$reviews/.repos/$repo"; bairf="$dir/bairf"
+    [ -d "$bairf" ] || usage
+    file="$bairf/review-$n.md"
+    awk -v line="Closed $(date +%F): $reason." '
+      { l[NR]=$0; if ($0 ~ /^## Passes/) p=NR }
+      END { e=p-1; while (e>1 && l[e]=="") e--; for (i=1;i<=NR;i++) { print l[i]; if (i==e) { print ""; print line } } }' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    git -C "$bairf" add -A && git -C "$bairf" commit -qm "close review $name: $reason"
+    git -C "$hub" worktree remove "$dir/code"
+    git -C "$hub" branch -D "pr-$n" >/dev/null
+    "$root/bin/effort" close "review/$name"
+    rmdir "$dir" 2>/dev/null || echo "left $dir (not empty)" >&2
+    ;;
+  *)
+    usage ;;
+esac
