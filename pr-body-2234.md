@@ -16,7 +16,26 @@ Five commits, squashed on merge:
 
 ## Testing
 
-At each of the five commits, in `frontend-base/`: `npm ci`, lint, the tests and `build:ci` pass, and the package meets its 96.15% line-coverage bar (97.57% at the data commit; 100% at the top, 258 tests, one skipped: the streak-celebration case kept as `it.skip` under #2201). Of the 21 patch lines Codecov listed, the checks no `master` test reaches each get a test in the commit that ports their file, and three are dropped: one its own function makes always true and two that only moved a throw (decision log entry 32). Six lines keep a branch no test takes, each tested on `master` only through a suite a later port brings: `api.ts` line 53 (`isMasquerading`), `TabPage.tsx` line 94 and `ShiftDatesAlert.tsx` line 26 (the `hasEnded` default) through `OutlineTab.test.jsx` (#2191); `LoadedTabPage.tsx` lines 57 and 58 (#2201); `LoadedTabPage.tsx` line 75 through the live tab's suite (#2203). Lint ran with the package's `.jsx` files included (openedx/frontend-base#327; decision log entry 20). Manual testing on tutor dev has not been done yet; its record will be added here.
+At each of the five commits, in `frontend-base/`: `npm ci`, lint, the tests and `build:ci` pass. Lint ran with the package's `.jsx` files included (openedx/frontend-base#327; decision log entry 20).
+
+**Coverage.** The package meets its 96.15% line bar at every commit: 97.57% at the data commit, 100% at the top (258 tests, one skipped: the streak-celebration case kept as `it.skip` under #2201).
+
+**Codecov's patch lines.** Codecov's first report on this PR listed 21 lines with a miss or a branch no test takes (decision log entry 32):
+
+- Checks no `master` test reaches each get a test in the commit that ports their file.
+- Three checks are dropped: `Timeline`'s check for an empty list of days, which its own loop makes always true, and the `?? {}` after the dates query read in `Timeline` and `UpgradeToCompleteAlert`, which only moved a throw.
+- Six lines keep a branch no test takes. `master` tests each through a suite a later port brings:
+
+| Line | Branch no test takes | Tested with |
+|---|---|---|
+| `course-home/data/api.ts:53` | `isMasquerading`'s `!data.isStaff`, read only when `originalUserIsStaff` is true | `OutlineTab.test.jsx`, #2191 |
+| `tab-page/TabPage.tsx:94` | a denied learner `getAccessDeniedRedirectUrl` gives no redirect, as on the outline tab | `OutlineTab.test.jsx`, #2191 |
+| `course-home/suggested-schedule-messaging/ShiftDatesAlert.tsx:26` | the `hasEnded = false` default, for a render whose `hasEnded` is undefined | `OutlineTab.test.jsx`, #2191 |
+| `tab-page/LoadedTabPage.tsx:57` | `celebrations.streakLengthToCelebrate`, read only when the metadata has `celebrations` | the streak celebration, #2201 |
+| `tab-page/LoadedTabPage.tsx:58` | `celebrations.streakDiscountEnabled && verifiedMode`, likewise | the streak celebration, #2201 |
+| `tab-page/LoadedTabPage.tsx:75` | the page title with no tab title, when the metadata's tabs have none for the active slug | the live tab's suite, #2203 |
+
+**Manual testing** on tutor dev has not been done yet; its record will be added here.
 
 ## Decisions
 
