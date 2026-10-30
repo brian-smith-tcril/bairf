@@ -70,12 +70,11 @@ they show up, not counted against a box.
       tab reloads for that learner.
 - [ ] **Console** — no error or warning from the app's own code on any of the above.
 
-## Known gaps, recorded not fixed
+## Known gaps, not checked here
 
-- [ ] **Encoded course id** — a course id with an encoded character in the path (for
-      example `course-v1:OpenedX%2BDemoX%2BDemoCourse`): record what renders. `master`
-      decodes it in a wrapper around the course routes, which #2195 brings back as a
-      layout route.
+- **Encoded course id** — a course id with an encoded character in the path (for example
+  `course-v1:OpenedX%2BDemoX%2BDemoCourse`). `master` decodes it in a wrapper around the
+  course routes, which #2195 brings back as a layout route and checks.
 
 ## Left to the automated suite
 
