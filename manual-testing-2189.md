@@ -150,4 +150,5 @@ differences on the dates tab:
   wraps the tabs in `<div id="courseTabsNavigation" className="mb-3 course-tabs-navigation">`,
   so every tab page starts 1rem below the bar before the heading's own `my-3`; the shell's
   course bar (a Paragon `Navbar` with `course-tabs-navigation pb-0`) sets no bottom margin,
-  so the gap is the heading's 1rem alone, where `master`'s is 2rem.
+  so the gap is the heading's 1rem alone, where `master`'s is 2rem. Fixed by decision log
+  entry 35: the frame's `Container` takes `mt-3`.

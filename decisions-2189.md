@@ -781,3 +781,20 @@ and are not repeated.
     - The container stays on the page, not around `Main.tsx`'s outlet;
       #2188's decision log, entry 9, records why, and the stubs take the
       same container there.
+
+35. **The frame's container restores `master`'s 1rem below the course
+    tabs.** Decided 2026-10-30. With entry 34's edges lined up, the
+    manual pass found the "Important dates" heading closer to the course
+    tabs than on `master`. `master`'s `CourseTabsNavigation` wrapped its
+    tabs in `<div id="courseTabsNavigation" className="mb-3
+    course-tabs-navigation">`, so every tab page began 1rem below the bar,
+    and the dates heading's own `my-3` added another 1rem. The shell's
+    course bar, a Paragon `Navbar` with `course-tabs-navigation pb-0`, sets
+    no bottom margin.
+    - `LoadedTabPage`'s `Container` takes `mt-3`, in the frame commit, so
+      every tab page gets back the 1rem `master`'s bar gave it.
+      `AlertList` renders nothing when it has no message, so on a page
+      without alerts nothing else sits between the bar and the container.
+    - The shell is left as it is: openedx/frontend-app-instructor-dashboard
+      sets its own spacing below the same course bar (`PageWrapper`'s
+      heading, `m-4`), and a margin on the bar would move its content too.
