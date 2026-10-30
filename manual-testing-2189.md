@@ -12,28 +12,43 @@ behavior the test client's `retry: false` hides. The other tabs are still stubs.
   tutor dev's `mfe` service stopped so the port is free.
 - Tutor dev, the LMS's learning URL pointing at `apps.local.openedx.io:2000/learning`, as
   for #2188.
-- Courses: the demo course `course-v1:OpenedX+DemoX+DemoCourse`. The suggested-schedule
-  boxes run on it with faked responses, below, rather than a self-paced course with
-  content gating, a verified mode and a missed deadline set up in the LMS.
-- Faked responses: in Chrome's Network panel, right-click the request, **Override
-  content**, edit the JSON and reload. The fake is of the LMS's snake_case response,
-  which `camelCaseObject` converts. Each suggested-schedule box starts from the same
-  base, since the alerts render only when `isSelfPaced && hasDeadlines` (`DatesTab.jsx`):
-  - `GET /api/course_home/course_metadata/<courseId>`: `"is_self_paced": true`.
-  - `GET /api/course_home/dates/<courseId>`: `"has_ended": false`, and a block with
-    `"date_type": "assignment-due-date"` added to `course_date_blocks`:
-    ```json
-    {
-      "assignment_type": "Homework", "complete": false, "date": "2026-10-20T00:00:00Z",
-      "date_type": "assignment-due-date", "description": "", "learner_has_access": true,
-      "link": "", "link_text": "", "title": "Faked assignment", "extra_info": null,
-      "first_component_block_id": ""
-    }
-    ```
-  Each box then sets `dates_banner_info` on the dates response as it says. Results
-  record which boxes ran on faked responses and the exact values used.
+- Courses: the demo course `course-v1:OpenedX+DemoX+DemoCourse`. The three alert boxes and
+  the shift-dates box run on it with faked responses (next section), not on a course set
+  up in the LMS.
 - Users: a staff user, an enrolled audit learner, a signed-in unenrolled learner, and an
   anonymous session.
+
+## Faking responses
+
+Chrome's local overrides replace a response's body before the app reads it.
+
+1. Open DevTools, Network panel, and load `/learning/course/<courseId>/dates`.
+2. Right-click the request named below, **Override content**. The first time, Chrome asks
+   for a folder to keep overrides in; pick an empty one and allow access.
+3. The response opens in the Sources panel. Edit it, save (Ctrl+S), and reload the page.
+4. To undo, untick **Enable Local Overrides** in Sources, Overrides.
+
+Edit the LMS's own snake_case response; the app converts it. Two requests are overridden:
+
+- **The metadata request**: `course_metadata/course-v1:OpenedX+DemoX+DemoCourse?browser_timezone=…`.
+  Learning's request carries `?browser_timezone=`; the one without it is the shell's
+  course bar, which these boxes leave alone.
+- **The dates request**: `dates/course-v1:OpenedX+DemoX+DemoCourse`.
+
+The demo course has no assignment, and the alerts render only for a self-paced course
+with one (`isSelfPaced && hasDeadlines` in `DatesTab.jsx`), so each faked box adds this
+block to the dates response's `course_date_blocks` list:
+
+```json
+{
+  "assignment_type": "Homework", "complete": false, "date": "2026-10-20T00:00:00Z",
+  "date_type": "assignment-due-date", "description": "", "learner_has_access": true,
+  "link": "", "link_text": "", "title": "Faked assignment", "extra_info": null,
+  "first_component_block_id": ""
+}
+```
+
+Results record which boxes ran on faked responses.
 
 ## Verify by hand
 
@@ -45,33 +60,61 @@ they show up, not counted against a box.
       "Important dates" heading and the timeline grouped by day, with today's marker,
       inside the shell header and course bar, and the browser tab titled
       `<dates tab title> | <course title> | <site name>`, the tab title as the course bar shows it.
-- [ ] **Upgrade alert** — faked, on the base above with `"dates_banner_info":
-      {"content_type_gating_enabled": true, "missed_deadlines": false,
-      "missed_gated_content": false, "verified_upgrade_link": "https://example.com/upgrade"}`:
-      the suggested-schedule header and the "Upgrade to unlock" alert with "Upgrade now"
-      (`UpgradeToCompleteAlert` through `BannerDatesUpgradeSlot`), and no other
-      suggested-schedule alert.
-- [ ] **Shift-dates alert** — faked, with `"dates_banner_info":
-      {"content_type_gating_enabled": false, "missed_deadlines": true,
-      "missed_gated_content": false}`: the suggested-schedule header and "It looks like you
-      missed some important deadlines…" with "Shift due dates" (`ShiftDatesAlert`), and no
-      upgrade alert.
-- [ ] **Upgrade-to-shift alert** — faked, with `"dates_banner_info":
-      {"content_type_gating_enabled": true, "missed_deadlines": true,
-      "missed_gated_content": true, "verified_upgrade_link": "https://example.com/upgrade"}`:
-      the suggested-schedule header and the alert with "Upgrade to shift due dates"
-      (`UpgradeToShiftDatesAlert`), and no shift-dates alert.
-- [ ] **Shift dates and the toast** — on the shift-dates fake, as an enrolled learner, click
-      "Shift due dates": a real `POST /api/course_experience/v1/reset_course_deadlines` with
-      `course_key` and `research_event_data: {"location": "dates-tab"}` answers 200, a toast
-      shows "Your due dates have been successfully shifted to help you stay on track." with
-      "View all dates", and a new `GET` to the dates endpoint follows. The LMS answers 200
-      with that body whether or not it had a schedule to shift; the refetch gets the
-      override again, so the alert stays and the dates do not move, which is the LMS's part
-      and not checked here.
-- [ ] **Providers persist across a tab switch** — in the same session, with the toast open,
-      switch to another tab in the course bar and back within the toast's display time: the
-      toast is still open, and the network panel shows no document request.
+- [ ] **Upgrade alert** — faked, as an enrolled learner.
+      - Metadata request: set `"is_self_paced": true`.
+      - Dates request: set `"has_ended": false`, add the faked assignment block to
+        `course_date_blocks`, and replace `dates_banner_info` with:
+        ```json
+        {
+          "content_type_gating_enabled": true,
+          "missed_deadlines": false,
+          "missed_gated_content": false,
+          "verified_upgrade_link": "https://example.com/upgrade"
+        }
+        ```
+      - Expect the suggested-schedule header and the "Upgrade to unlock" alert with "Upgrade now"
+        (`UpgradeToCompleteAlert`), and neither shift alert.
+- [ ] **Shift-dates alert** — faked, as an enrolled learner.
+      - Metadata request: set `"is_self_paced": true`.
+      - Dates request: set `"has_ended": false`, add the faked assignment block to
+        `course_date_blocks`, and replace `dates_banner_info` with:
+        ```json
+        {
+          "content_type_gating_enabled": false,
+          "missed_deadlines": true,
+          "missed_gated_content": false
+        }
+        ```
+      - Expect the suggested-schedule header and "It looks like you missed some important
+        deadlines…" with "Shift due dates" (`ShiftDatesAlert`), and neither upgrade alert.
+- [ ] **Upgrade-to-shift alert** — faked, as an enrolled learner.
+      - Metadata request: set `"is_self_paced": true`.
+      - Dates request: set `"has_ended": false`, add the faked assignment block to
+        `course_date_blocks`, and replace `dates_banner_info` with:
+        ```json
+        {
+          "content_type_gating_enabled": true,
+          "missed_deadlines": true,
+          "missed_gated_content": true,
+          "verified_upgrade_link": "https://example.com/upgrade"
+        }
+        ```
+      - Expect the suggested-schedule header and the alert with "Upgrade to shift due dates"
+        (`UpgradeToShiftDatesAlert`), and neither of the other two.
+- [ ] **Shift dates and the toast** — faked, with the **Shift-dates alert** overrides still
+      in place. Nothing else is overridden: the POST goes to the LMS.
+      - Click "Shift due dates".
+      - Expect `POST /api/course_experience/v1/reset_course_deadlines` with `course_key` and
+        `research_event_data: {"location": "dates-tab"}`, answered 200; a toast reading
+        "Your due dates have been successfully shifted to help you stay on track." with
+        "View all dates"; then a new dates request.
+      - The alert stays and the dates do not move: the LMS answers 200 with that body
+        whether or not it had a schedule to shift, and the refetch gets the override
+        again. Moving the dates is the LMS's part, not checked here.
+- [ ] **Providers persist across a tab switch** — right after the toast box, with the toast
+      open and the same overrides in place, switch to another tab in the course bar and
+      back within the toast's display time: the toast is still open, and the network
+      panel shows no document request.
 - [x] **Signed-in unenrolled learner redirects** — on the dates path: redirected to the
       course home stub at `/learning/course/<courseId>/home`, with no flash of the dates
       page. `enrollment_required` takes `getAccessDeniedRedirectUrl`'s default case, which
