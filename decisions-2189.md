@@ -720,12 +720,12 @@ and are not repeated.
       arrives, not by whether it arrives today. One its own function
       makes always true, like `Timeline`'s `if (groupedDates.length)`
       above, is removed. One that only moves a throw, like the two
-      `?? {}` above, is dropped:
-      making those components render without data is a larger refactor
-      than the port. One that changes the outcome gets a test that feeds
-      it the input. `courseHomeOutline.ts` reads the outline response as
-      `getOutlineTabData` receives it, and its guards turn a malformed
-      block into an empty child list where the parent walk would throw:
+      `?? {}` above, is dropped: making those components render without
+      data is a larger refactor than the port. One that changes the
+      outcome gets a test that feeds it the input. `courseHomeOutline.ts`
+      reads the outline response as `getOutlineTabData` receives it, and
+      its guards turn a malformed block into an empty child list where
+      the parent walk would throw:
       `block.children || []` (lines 188 and 199) for a block with no
       `children`, and `Array.isArray` (lines 230 and 239) for a
       `children` that is not an array. openedx-platform's
