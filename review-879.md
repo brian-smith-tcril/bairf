@@ -10,7 +10,7 @@ Second of the PRs split out of openedx/frontend-app-learner-dashboard#875 (Chris
 
 kdmccormick approved 2026-10-29 and asked Brian for the technical review; both review threads (message description, backend link) are resolved. Decisions carried in from #875: the `ENABLE_PATHWAY_PILOT_UI` flag was dropped at kdmccormick's request (an operator with no enrollable pathways sees no panel), `ItemBadge` became `CategoryBadge`, counts are `itemCount`/`completedItemCount` to keep pathways content-agnostic, no translations of category labels for the pilot but a `title_plural` field (Willow Pathways Decision Log, rpenido on #875). Links from the cards and the backend wiring are declared TODOs for later PRs.
 
-Brian's pass started 2026-10-31: local run with the author's patch applied, then the diff.
+Brian's first pass, 2026-10-31: local run with the author's patch applied, then the diff for dealbreakers and bigger conversations. The big questions are posted as review https://github.com/openedx/frontend-app-learner-dashboard/pull/879#pullrequestreview-5723298330 (icon source, admin-set badge colors with no a11y guard, the Course badge showing for everyone) and wait on ChrisChV. Held for the replies: the colors implementation and a hook (entry 4), the #875 evidence on the badge (entry 6). The code-quality pass has not started.
 
 ## Passes
 
