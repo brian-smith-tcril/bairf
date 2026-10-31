@@ -76,7 +76,7 @@ One to three sentences. A question, or a fact plus what follows from it. A `sugg
 
 ### Phrases that are not his
 
-"must" and "never" without a cited policy, "please fix", "wrong", "obviously", sarcasm, a rewrite of the author's style, a suggestion on a line the PR did not change, a comment that restates the diff.
+"must" and "never" without a cited policy, "please fix", "wrong", "obviously", an opener that announces the comment ("I'd like to kick off a conversation about ...") where he starts on the fact or the question, sarcasm, a rewrite of the author's style, a suggestion on a line the PR did not change, a comment that restates the diff.
 
 ## 3. Applying this to a draft
 
