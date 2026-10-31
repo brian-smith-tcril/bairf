@@ -1,3 +1,16 @@
+diff --git a/shell/dev/slotShowcase/SlotShowcasePage.tsx b/shell/dev/slotShowcase/SlotShowcasePage.tsx
+index 8f300738..66ef20c8 100644
+--- a/shell/dev/slotShowcase/SlotShowcasePage.tsx
++++ b/shell/dev/slotShowcase/SlotShowcasePage.tsx
+@@ -93,7 +93,7 @@ export default function SlotShowcasePage() {
+         </SlotContainer>
+       </Section>
+ 
+-      <h2 className="showcase-divider">UI Widget Operations</h2>
++      <h2 className="showcase-divider">UI Widget Operations (alias edit live)</h2>
+ 
+       <Section title="Slot with prepended element">
+         <p>This slot has a prepended element (and two appended elements).</p>
 diff --git a/shell/dev/slotShowcase/app.tsx b/shell/dev/slotShowcase/app.tsx
 index f5ddb4bd..678885a3 100644
 --- a/shell/dev/slotShowcase/app.tsx
