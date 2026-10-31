@@ -19,7 +19,7 @@ These get "changes requested", a bold heading, or "To merge this PR ...". They a
 
 ### Bigger conversations
 
-Raised in the review summary or a PR comment, usually with options and his lean, and usually not blocking the PR on their own. He loops in the right person by handle rather than deciding alone.
+Raised in the review summary or a PR comment, usually with options and his lean, and usually not blocking the PR on their own. He loops in the right person by handle rather than deciding alone; who to tag is his call, so a draft never adds an @handle.
 
 - **Who owns the decision.** Product and design calls go to product or UX (sarina, Sam Daitzman); a11y calls go to kblemel; platform questions to feanil; frontend-base to arbrandes. "This feels like a product call" ends his part of it (frontend-app-catalog#162, #18, frontend-app-authoring#1758).
 - **Config versus slots.** New config variables are not the customization path; slots are (frontend-component-footer#520, the discuss.openedx thread). Legacy config exposed to an MFE needs a DEPR plan (openedx-platform#37130, frontend-app-authoring#2370).
