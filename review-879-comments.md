@@ -8,7 +8,7 @@ The review summary carries the disclosure; the inline comments do not repeat it.
 
 Status: draft
 
-> Three things from a first pass, all inline: the heading icon, the category colors, and the Course badge. The icon one is what I'd want changed before merge; the other two are conversations that reach past this PR. The inline comments were drafted with Claude Code and reviewed before posting.
+> Thanks for splitting this out of #875! I did a first pass focused on the bigger questions and left three comments. The icon one is blocking, the other two are things I'd like to get settled before digging into the details. The inline comments were drafted with Claude Code and reviewed before posting.
 
 ## 1. Icon
 
