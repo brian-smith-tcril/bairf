@@ -60,7 +60,7 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
   26 | +    <Badge
 ```
 
-> I can see `categoryBackgroundColor` and `categoryTextColor` are expected to come from the backend, and I'm assuming the plan is for them to be configurable per category by an admin. Are we cool with admins being able to set colors that make the badges not readable? `isValidCssColor` only checks that the value is a color, so nothing stops both of them from being `#FFFFFF`. I'd like to hear @kblemel's thoughts on this.
+> I can see `categoryBackgroundColor` and `categoryTextColor` are expected to come from the backend, and I'm assuming the plan is for them to be configurable per category by an admin. Are we cool with admins being able to set colors that make the badges not readable? `isValidCssColor` only checks that the value is a color, so nothing stops both of them from being `#FFFFFF`.
 >
 > Assuming we're ok with setting any color for these on the backend without any a11y guards, the current implementation feels like it's adding quite a bit of complexity (the validity check, the `!important` workaround, and the `className` escape hatch all living in this component). Maybe this could be simplified by moving the color handling into a hook that returns the `className`/`style` pair, so this component is just a `Badge`?
 
