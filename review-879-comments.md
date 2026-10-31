@@ -6,7 +6,7 @@ The review summary carries the disclosure; the inline comments do not repeat it.
 
 ## Review summary
 
-Status: draft
+Status: pending in review https://github.com/openedx/frontend-app-learner-dashboard/pull/879#pullrequestreview-5723298330 (2026-10-31)
 
 > I tested this out locally and it looks great! When looking through the code I noticed a few things I had questions about and left a couple comments.
 > 
@@ -17,7 +17,7 @@ Status: draft
 File: `src/utils/icons/CardsStackIcon.tsx`
 Line: 3 (`export const CardsStackIcon`), side RIGHT
 Ledger: entry 5
-Status: draft
+Status: pending as https://github.com/openedx/frontend-app-learner-dashboard/pull/879#discussion_r4432047456 (2026-10-31)
 
 Diff context (new file, every line is `+`; `>` marks the anchor):
 
@@ -45,7 +45,7 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
 File: `src/components/CategoryBadge.tsx`
 Lines: 20 to 23 (`const hasCustomColors = ...` through `isValidCssColor(categoryTextColor)`), side RIGHT
 Ledger: entry 4
-Status: draft
+Status: pending as https://github.com/openedx/frontend-app-learner-dashboard/pull/879#discussion_r4432047461 (2026-10-31)
 
 Diff context (new file, every line is `+`; `>` marks the anchor):
 
@@ -69,7 +69,7 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
 File: `src/containers/CourseCard/components/CourseHeaderActions.tsx`
 Lines: 10 to 13 (the `<CategoryBadge ... />` for the Course label), side RIGHT
 Ledger: entry 6, finding A
-Status: draft
+Status: pending as https://github.com/openedx/frontend-app-learner-dashboard/pull/879#discussion_r4432047465 (2026-10-31)
 
 Diff context (new file, every line is `+`; `>` marks the anchor):
 
