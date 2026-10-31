@@ -43,7 +43,7 @@ Labeled as such and never blocking: naming (offered with "I'd recommend" and an 
 
 ### Shape of a review summary
 
-One line of overall verdict, one line on what the inline comments are, and an explicit sort into blocking and not. Then thanks.
+One line on what he tested and how it went ("I tested this out locally and it looks great!"), one line on what the inline comments are, and, when any of them is a change request, an explicit sort into blocking and not. When every comment is a question there is nothing to sort and the word "blocking" waits for the answer. Then thanks.
 
 > Overall this looks great! I left one comment with a change request that I consider blocking, but the rest of the comments don't need to be addressed for this to land. Thank you so much for all the great work on this!
 
