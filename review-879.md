@@ -18,7 +18,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
-| 2026-10-31 | 162fad7fde | f4852b343a | | |
+| 2026-10-31 | 162fad7fde | f4852b343a | whole diff, dealbreakers and bigger conversations only (not the code-quality pass) | pending: Brian picks what to post from entries 4, 5 and 6 |
 
 ## Ledger
 
@@ -105,3 +105,22 @@ Rendered side by side (reference first), file for Brian: `/tmp/claude-1000/-var-
 Pathway-semantic but not visually similar: `Route`, `Signpost`, `Timeline`, `AccountTree`. Not recommended: `Style` (fanned swatches with a hole), `Queue` (stack with a plus), `CopyAll`, `WebStories`.
 
 Candidate comment: either switch the heading icon to a Paragon icon (`LibraryBooks` first choice) so it matches the icon set the rest of the dashboard uses and themes with it, or, if the design team wants the Material Symbols glyph kept, add the source and licence to `CardsStackIcon.tsx`.
+
+### 6. Full pass for dealbreakers and bigger conversations
+
+Status: open (Brian picks what to post)
+Rests on: the whole diff 162fad7fde..f4852b343a (3 commits, 37 files); #875 review threads (rpenido and ChrisChV on `src/components/ItemBadge.tsx`, kdmccormick on `README.rst`), read 2026-10-31; openedx/openedx-platform#39204 diff and body, read 2026-10-31
+
+Scope: what should block or needs a conversation beyond this PR. Code-quality findings are deferred to the next pass. Already carried: colours (entry 4, bigger conversation), icon (entry 5, dealbreaker), panel placement (entry 2, resolved), cards not interactable (entry 3, resolved).
+
+**A. The "Course" badge ships to every learner on every site now, before any pathway exists.** `CourseHeaderActions` renders `CategoryBadge` with the fixed "Course" label unconditionally on every course card. In #875 it was behind `ENABLE_PATHWAY_PILOT_UI`; rpenido asked to move the flag check out of the badge, ChrisChV answered that "using that card for courses only makes sense if another item exists, in this case, the pathways", and kdmccormick then asked to drop the flag with the reasoning that an operator who does not want pathways "will not create enrollable pathways". That reasoning holds for the panel, which renders nothing with no pathways, and not for the badge, which has no such gate. Result: a visible change on every Open edX dashboard for a pilot feature, labelling every card "Course" on sites that will never have a second kind of card, by the author's own account of when the badge makes sense. Conversation: gate the badge on the learner having at least one pathway (the data is already on the page), or accept the badge as a permanent design change and say so in the body.
+
+**B. The data contract is a frontend guess that already disagrees with the backend draft, and it is frozen into a `.v1` slot.** `PathwayData` and `PathwaysInCategoryData` are defined in `src/hooks/usePathwayData.ts` with `itemCount`, `progress.completedItemCount`, per-pathway `categoryLabelPlural` and the two colour fields; the grouping has no field of its own, so the panel reads the plural label off `pathways[0]`. openedx-platform#39204's serializers emit `courseCount` and `completedCourseCount`, put `categoryLabelPlural` on the group, carry no colours, and its body says the item-count fields are "for design discussion" and that the plural "temporarily returns the localized singular". The TODO in `api.ts` says the response "must be mapped here", so the mapping is deferred to a PR that does not exist. Meanwhile `PathwaysPanelSlot` publishes `pathwaysByCategory` in that shape as the prop of `org.openedx.frontend.slot.learnerDashboard.pathwaysPanel.v1`, and the slot README documents plugins reading `pathways[0].pathway.categoryLabelPlural`. A `.v1` plugin contract whose shape is expected to change when the backend lands is the same conversation as openedx/frontend-base#336 from #878: what an app's slot props promise. Conversation: settle the shape with #39204 before the slot is public, or ship the slot without the prop, or mark it unstable.
+
+**C. The panel loads separately, fails silently, and pushes the courses down when it arrives.** `usePathwaysByCategory` is its own query; the dashboard renders `DashboardLayout` once `useInitializeLearnerHome` resolves, and the panel is inserted above `CoursesPanel` whenever the pathways query resolves, so with a real backend the course list jumps down after first paint (compounded by entry 2). `data ?? []` also hides `isError`: a failed pathways request shows no panel and nothing else, with react-query's default retries. For the pilot that may be acceptable; it should be a decision rather than a default. Smaller conversation.
+
+**D. Shipped mock data names real institutions.** `src/data/services/lms/__mocks__/pathways.ts` ships in `src/` with "MIT OpenCourseWare", "Stanford" and "OpenCraft" as providers. It is test-only unless the dev patch is applied, but it is in the repo. Small; placeholder names would do.
+
+Not dealbreakers, parked for the quality pass: the hard-coded `width: '250px'` on the card actions (narrow screens), `className="h3"` on a `Stack` and the non-heading category labels (entry 2), the `key={categoryLabelPlural}` collision if two categories share a plural, the `jest.config.js` ignore pattern widening from `src/__mocks__` to `__mocks__`.
+
+Summary for Brian: dealbreaker is the icon (entry 5). Bigger conversations are the colours (entry 4), the Course badge for everyone (A) and the unsettled contract behind a `.v1` slot (B). C and D are smaller.
