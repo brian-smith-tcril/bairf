@@ -11,7 +11,7 @@ What the automated suite cannot show: the slot showcase rendering in a browser w
 ## Verify by hand
 
 - [x] **Baseline, unedited** — load `/slots`. Inserted: Widget One, Widget Five (`WidgetOperationTypes.INSERT_BEFORE`), Widget Two, Widget Four (`WidgetOperationTypes.INSERT_AFTER`), Widget Three. Replaced: Widget One, Widget Four (`WidgetOperationTypes.REPLACE`), Widget Three. Removed: Widget One, Widget Three. Widget options: Foo, Bar.
-- [ ] **The edit is live** — apply the edit, reload. The heading reads "UI Widget Operations (alias edit live)". Note whether the dev server rebuilt on its own or needed a restart.
+- [x] **The edit is live** — apply the edit, reload. The heading reads "UI Widget Operations (alias edit live)". Note whether the dev server rebuilt on its own or needed a restart.
 - [ ] **`INSERT_AFTER` and `INSERT_BEFORE` through the alias** — "Slot with inserted elements" is unchanged from the baseline: Widget One, Widget Five, Widget Two, Widget Four, Widget Three.
 - [ ] **`REPLACE` through the alias** — "Slot with replaced element" is unchanged: Widget One, Widget Four, Widget Three.
 - [ ] **`REMOVE` through the alias** — "Slot with removed element" is unchanged: Widget One, Widget Three.
