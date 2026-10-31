@@ -28,15 +28,15 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
    6 | +    width={24}
 ```
 
-> This is the Material Symbols Outlined `cards_stack` glyph: the path is byte-identical to https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/cards_stack/default/24px.svg, including the `0 -960 960 960` viewBox. It is inlined with no source or licence note, and this repo has no other inlined icon components (the SVGs under `src/assets` are illustrations).
+> Is there a specific reason for using an inline SVG here? From the conversation in Figma I can see that it's [from Material Symbols](https://fonts.google.com/icons?selected=Material+Symbols+Outlined:cards_stack:FILL@0;wght@400;GRAD@0;opsz@24&icon.query=card&icon.size=24&icon.color=%23e3e3e3&icon.set=Material+Symbols). I'd much prefer to use an [existing Paragon icon](https://paragon-openedx.netlify.app/foundations/icons/) here instead. The ones that seem the most visually similar to me are:
 >
-> Paragon's icon set is Material Icons (the sharp variant, copied from `@material-icons/svg`), not Material Symbols, so there is no exact match. There are close ones at the same filled weight as the `MenuBook` the Courses heading gets in #878:
+> - [`LibraryBooks`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/library_books.svg) <img src="https://raw.githubusercontent.com/openedx/paragon/release-23.x/icons/svg/library_books.svg" width="32" alt="LibraryBooks">
+> - [`DynamicFeed`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/dynamic_feed.svg) <img src="https://raw.githubusercontent.com/openedx/paragon/release-23.x/icons/svg/dynamic_feed.svg" width="32" alt="DynamicFeed">
+> - [`AutoAwesomeMotion`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/auto_awesome_motion.svg) <img src="https://raw.githubusercontent.com/openedx/paragon/release-23.x/icons/svg/auto_awesome_motion.svg" width="32" alt="AutoAwesomeMotion">
+> - [`Collections`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/collections.svg) <img src="https://raw.githubusercontent.com/openedx/paragon/release-23.x/icons/svg/collections.svg" width="32" alt="Collections">
+> - [`FilterNone`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/filter_none.svg) <img src="https://raw.githubusercontent.com/openedx/paragon/release-23.x/icons/svg/filter_none.svg" width="32" alt="FilterNone">
 >
-> - `LibraryBooks`: a card with text lines over a trailing card, the nearest silhouette, and "library" fits a collection of learning content.
-> - `DynamicFeed`: stacked cards with a header bar.
-> - `AutoAwesomeMotion`: three stacked rounded squares.
->
-> Could you switch to one of those, `LibraryBooks` for preference, so the heading icon comes from the same set as the rest of the dashboard and themes with it? If the design team wants the Material Symbols glyph specifically, then this file needs the source URL and the Apache 2.0 attribution, plus a line on why Paragon's set doesn't cover it.
+> If none of those are acceptable from a design perspective I can look into adding the specific material symbol icon for this to Paragon as we've done with some other SVGs in the past.
 
 ## 2. Category colors
 
