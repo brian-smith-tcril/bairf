@@ -85,3 +85,23 @@ Asked by Brian (2026-10-31).
 **Small inconsistencies.** The default text token is `text-info-800` here while the decision log says info/900 (`#004C77`). The decision log's Explore section gives a different default ("dark blue with white text"), which is what catalog#176's mock uses (`#000cb0` on `#ffffff`), so the two apps' defaults diverge inside the same document.
 
 Candidate comments: (1) the colour props have no backend producer in #39204 or openedx-core#820, so either the serializer grows the pair or the props are premature; (2) no contrast guard anywhere, and where one should live (admin validation, since the frontend cannot refuse an operator's colour without a policy); (3) `#RRGGBB` canonical form versus "any CSS colour". (1) and (2) are cross-repo and may belong on the decision log or #39204 rather than here.
+
+### 5. The inlined `CardsStackIcon` cites no source; Paragon alternatives
+
+Status: open (candidate comment: cite the source or switch to a Paragon icon; Brian's call on which icon)
+Rests on: src/utils/icons/CardsStackIcon.tsx, src/containers/PathwaysPanel/PathwaysList.tsx at f4852b343a; @openedx/paragon icons in the code worktree's node_modules (`icons/copy-mui-icons.js`, `icons/es5/*`); Figma comment thread (ChrisChV asked, cassiezamparini answered: "I used an icon from Google", Material Symbols `cards_stack`), pasted by Brian 2026-10-31; #878 at aca7e36 (`CoursesPanel/index.jsx`)
+
+Source: the path in `CardsStackIcon.tsx` is byte-identical to Material Symbols Outlined `cards_stack` at weight 400, 24px (`fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/cards_stack/default/24px.svg`, fetched 2026-10-31), including the `0 -960 960 960` viewBox. Material Symbols is Apache 2.0, so inlining is allowed, but the file carries no attribution or licence note. The repo has no precedent for inlined icon components: `src/utils/icons/` is new in this PR, and the three `.svg` files under `src/assets` on master are illustrations. The only use is the category heading in `PathwaysList.tsx`, next to where #878 puts Paragon's `MenuBook` on the Courses heading.
+
+What Paragon has: its icon set is copied from `@material-icons/svg` (Material Icons, the `sharp` variant, by `copy-mui-icons.js`), not Material Symbols. 2319 icon modules, three of them `*Outlined`; everything is the filled weight. There is no `cards_stack` equivalent by name.
+
+Rendered side by side (reference first), file for Brian: `/tmp/claude-1000/-var-home-bsmith-code-reviews/9b317eef-413d-4b14-988b-c22d0db5876f/scratchpad/icons/montage.png`. Ranked by visual closeness to `cards_stack` with semantics that fit a pathways category heading:
+
+1. `LibraryBooks`: a card with text lines over a trailing card, the same composition as `cards_stack`; "library" reads as a collection of learning content; filled, so it pairs with `MenuBook` on the Courses heading.
+2. `DynamicFeed`: stacked cards with a header bar, very close in silhouette; "feed" is neutral.
+3. `AutoAwesomeMotion`: three stacked rounded squares, the plainest "stack"; name is about an effect but the glyph is neutral.
+4. `Collections` (overlapping frames with an image, reads as photos) and `FilterNone` (two overlapping outline squares, the one outline-weight candidate, but it reads as "copy").
+
+Pathway-semantic but not visually similar: `Route`, `Signpost`, `Timeline`, `AccountTree`. Not recommended: `Style` (fanned swatches with a hole), `Queue` (stack with a plus), `CopyAll`, `WebStories`.
+
+Candidate comment: either switch the heading icon to a Paragon icon (`LibraryBooks` first choice) so it matches the icon set the rest of the dashboard uses and themes with it, or, if the design team wants the Material Symbols glyph kept, add the source and licence to `CardsStackIcon.tsx`.
