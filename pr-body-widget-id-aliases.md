@@ -11,7 +11,7 @@ Resolves #334.
 - `createIdentifiedWidget` copies `idAliases` onto the identified widget and passes it to `WidgetProvider`, whose `WidgetContext` gains `widgetIdAliases`.
 - `useWidgetOptionsForId(slotId, widgetId, widgetIdAliases?)` takes the aliases as an optional third parameter; `useWidgetOptions` reads them from the context. Two-argument callers are unchanged.
 - Precedence when an id and an alias both match a `relatedId`: the first widget in list order, as duplicate ids resolve today.
-- Tests: alias cases for every relative operation, `byId`/`withoutId`, precedence in both orders and `identified` in `runtime/slots/widget/utils.test.tsx`; a new `runtime/slots/widget/hooks.test.tsx` for the sort and the options hooks; a `REMOVE` against an alias through site config in `runtime/slots/Slot.test.tsx`.
+- Tests: alias cases for every relative operation, `byId`/`withoutId`, precedence in both orders and `identified` in `runtime/slots/widget/utils.test.tsx`; a new `runtime/slots/widget/hooks.test.tsx` for the sort and the options hooks; each of the five relatedId operations against an alias through site config on a rendered `Slot` in `runtime/slots/Slot.test.tsx`.
 
 ## Testing
 
@@ -35,7 +35,7 @@ Six decisions made while implementing, recorded below.
 
 5. **Docs are the TSDoc on `WidgetIdentityProps.idAliases`.** Written in the style of the per-member comments on `WidgetOperationTypes` (one paragraph, two spaces after a period, "ID" capitalised as those comments do). Nothing under `docs/` or in the slot showcase documents slot `idAliases` either, so there was no prose to extend and no showcase entry is added.
 
-6. **Tests follow the three existing shapes.** The alias cases for `createWidgets` extend `runtime/slots/widget/utils.test.tsx` through its `makeAppendOp` helper plus a generic `makeRelativeOp<T>` (generic so each call's `op` stays a single literal and the result is assignable to `WidgetOperation`). The hooks get a new `runtime/slots/widget/hooks.test.tsx` in the shape of `runtime/slots/layout/hooks.test.tsx`, with `../hooks` mocked. The end-to-end case, a `REMOVE` whose `relatedId` is an alias, sits beside #178's site-config tests in `runtime/slots/Slot.test.tsx`.
+6. **Tests follow the three existing shapes.** The alias cases for `createWidgets` extend `runtime/slots/widget/utils.test.tsx` through its `makeAppendOp` helper plus a generic `makeRelativeOp<T>` (generic so each call's `op` stays a single literal and the result is assignable to `WidgetOperation`). The hooks get a new `runtime/slots/widget/hooks.test.tsx` in the shape of `runtime/slots/layout/hooks.test.tsx`, with `../hooks` mocked. The end-to-end cases, each of `INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE`, `REMOVE` and `OPTIONS` with an alias as its `relatedId` applied through site config to a rendered `Slot`, form a describe of their own in `runtime/slots/Slot.test.tsx` beside #178's slot-alias tests; the `OPTIONS` case reads the options back through `useWidgetOptions` in the aliased widget. Every test name says which operation it runs.
 
 </details>
 
