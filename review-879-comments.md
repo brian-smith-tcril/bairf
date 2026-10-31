@@ -8,7 +8,9 @@ The review summary carries the disclosure; the inline comments do not repeat it.
 
 Status: draft
 
-> Thanks for splitting this out of #875! I did a first pass focused on the bigger questions and left three comments. The icon one is blocking, the other two are things I'd like to get settled before digging into the details. The inline comments were drafted with Claude Code and reviewed before posting.
+> I tested this out locally and it looks great! When looking through the code I noticed a few things I had questions about and left a couple comments.
+> 
+> The inline comments were drafted with Claude Code and reviewed before posting.
 
 ## 1. Icon
 
