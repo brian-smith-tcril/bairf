@@ -60,7 +60,7 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
   26 | +    <Badge
 ```
 
-> I'd like to kick off a conversation about the custom colors. I see `categoryBackgroundColor` and `categoryTextColor` are expected to come from the backend (they're on `PathwayData` in `usePathwayData.ts`), and I'm assuming the plan is for them to be configurable per category by an admin. I don't see them in the serializer in openedx/openedx-platform#39204 though, is there a backend PR adding them?
+> I see `categoryBackgroundColor` and `categoryTextColor` are expected to come from the backend (they're on `PathwayData` in `usePathwayData.ts`), and I'm assuming the plan is for them to be configurable per category by an admin. I don't see them in the serializer in openedx/openedx-platform#39204 though, is there a backend PR adding them?
 >
 > Are we ok with making this configurable in a way that could lead to text that isn't accessible? `isValidCssColor` only checks that the value is a color, so nothing stops `categoryTextColor` and `categoryBackgroundColor` from both being `#FFFFFF`. I'd like to hear @kblemel's thoughts on this.
 >
