@@ -1,4 +1,4 @@
-**Goal:** decide whether an app is allowed to break plugins by changing its default widgets (renaming or removing an id, or reordering them). If it is, document that, along with what the app publishes when it makes such a change and what a site operator is expected to do about it.
+**Goal:** decide whether an app changing its default widgets (renaming or removing an id, or reordering them) counts as a breaking API change, given that it breaks plugins targeting those widgets by `relatedId`. If it does not count, document that, along with what the app publishes when it makes such a change and what a site operator is expected to do about it.
 
 **Why:** "default content is not part of the slot contract" is more complicated than it sounds once operations take a `relatedId`.
 
@@ -17,19 +17,19 @@ Concrete case: openedx/frontend-app-learner-dashboard#878 keeps the three header
 <details>
 <summary> Claude Plan </summary>
 
-Written 2026-10-31 against `ae5ec93` on `main`. Three questions; the second and third only matter if the first is answered yes.
+Written 2026-10-31 against `ae5ec93` on `main`. Three questions; the second and third only matter if the first is answered no.
 
-### 1. Are we cool with it?
+### 1. Does it count as a breaking API change?
 
-Yes: default widgets may change between app versions, and a plugin that names one accepts that. The slot's version is unaffected, ADR 0009 stands as written, and the cost lands on operators at upgrade time.
+No: default widgets may change between app versions, and a plugin that names one accepts that. The slot's version is unaffected, ADR 0009 stands as written, and the cost lands on operators at upgrade time.
 
-No: an app's default widget ids, and possibly their order, are part of that app's public surface, versioned by the app's package. A rename, removal or reorder is a breaking change of the app. Ids and order can be decided separately: keeping ids while allowing reorders makes `REPLACE`, `REMOVE` and `OPTIONS` stable and leaves `INSERT_AFTER` and `INSERT_BEFORE` placing against a target that may have moved.
+Yes: an app's default widget ids, and possibly their order, are part of that app's public surface, versioned by the app's package. A rename, removal or reorder is a breaking change of the app. Ids and order can be decided separately: keeping ids while allowing reorders makes `REPLACE`, `REMOVE` and `OPTIONS` stable and leaves `INSERT_AFTER` and `INSERT_BEFORE` placing against a target that may have moved.
 
-### 2. If yes, what does a site operator do when it happens?
+### 2. If not, what does a site operator do when it happens?
 
 They need to find out, then fix their site config. Finding out is the hard part because the failure is silent. Options, not exclusive: a console warning from `findRelatedWidgetIndex` on a miss (today it returns `null` quietly); a documented expectation that operators re-check targeted ids on every app upgrade; aliases (#334) so an id rename keeps working for a release while the operator migrates.
 
-### 3. If yes, what does an app publish so the operator can find out?
+### 3. If not, what does an app publish so the operator can find out?
 
 Where the change is announced, and in what form, so that an operator upgrading an app knows which `relatedId`s to re-check. Candidates: the conventional-commits footer (`BREAKING CHANGE:` naming old and new ids and order), which lands in the generated release notes; a changelog section per release listing default widget ids added, removed, renamed and reordered; a per-app list of default widget ids and their order in the app's docs, so the diff is visible. The expectation should also say whether a reorder counts, since a reorder touches no id.
 
