@@ -108,7 +108,7 @@ Candidate comment: either switch the heading icon to a Paragon icon (`LibraryBoo
 
 ### 6. Full pass for dealbreakers and bigger conversations
 
-Status: A drafted as comment 3 in `review-879-comments.md` (2026-10-31); B, C, D not posted
+Status: A drafted as comment 3 in `review-879-comments.md` (2026-10-31), the comment asks only whether showing the badge everywhere is intended. Held for the reply: the flag-drop reasoning in https://github.com/openedx/frontend-app-learner-dashboard/pull/875#discussion_r4393046991 (an operator who doesn't want pathways won't create any, which gates the panel but not the badge) and the author's own https://github.com/openedx/frontend-app-learner-dashboard/pull/875#discussion_r4175039413 (using the badge for courses "only makes sense if another item exists"). B, C, D not posted
 Rests on: the whole diff 162fad7fde..f4852b343a (3 commits, 37 files); #875 review threads (rpenido and ChrisChV on `src/components/ItemBadge.tsx`, kdmccormick on `README.rst`), read 2026-10-31; openedx/openedx-platform#39204 diff and body, read 2026-10-31
 
 Scope: what should block or needs a conversation beyond this PR. Code-quality findings are deferred to the next pass. Already carried: colors (entry 4, bigger conversation), icon (entry 5, dealbreaker), panel placement (entry 2, resolved), cards not interactable (entry 3, resolved).
