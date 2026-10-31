@@ -18,7 +18,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
-| 2026-10-31 | 162fad7fde | f4852b343a | whole diff, dealbreakers and bigger conversations only (not the code-quality pass) | pending: Brian picks what to post from entries 4, 5 and 6 |
+| 2026-10-31 | 162fad7fde | f4852b343a | whole diff, dealbreakers and bigger conversations only (not the code-quality pass) | three inline comments drafted in `review-879-comments.md` (icon, colours, Course badge), not yet posted |
 
 ## Ledger
 
@@ -69,7 +69,7 @@ Follow-up (Brian, 2026-10-31): beyond the link, the card shows "N/M complete" wi
 
 ### 4. The custom category colours: where defined, how configured, how they reach the app, what UI, are they accessible
 
-Status: open (candidate comments below, Brian's call)
+Status: drafted as comment 2 in `review-879-comments.md` (2026-10-31)
 Rests on: src/components/CategoryBadge.tsx, src/utils/colors.ts, src/containers/CourseCard/components/CourseHeaderActions.tsx, src/hooks/usePathwayData.ts, src/data/services/lms/__mocks__/pathways.ts at f4852b343a; openedx-core main `src/openedx_catalog/models/pathway_category.py` and `admin.py`, openedx/openedx-core#820 and openedx/openedx-platform#39204 diffs, openedx/frontend-app-catalog#176 diff, openedx/frontend-app-learning#2159 diff, and the Willow Pathways Decision Log (Confluence 6630834191), all read 2026-10-31
 
 Asked by Brian (2026-10-31).
@@ -88,7 +88,7 @@ Candidate comments: (1) the colour props have no backend producer in #39204 or o
 
 ### 5. The inlined `CardsStackIcon` cites no source; Paragon alternatives
 
-Status: open (candidate comment: cite the source or switch to a Paragon icon; Brian's call on which icon)
+Status: drafted as comment 1 in `review-879-comments.md` (2026-10-31)
 Rests on: src/utils/icons/CardsStackIcon.tsx, src/containers/PathwaysPanel/PathwaysList.tsx at f4852b343a; @openedx/paragon icons in the code worktree's node_modules (`icons/copy-mui-icons.js`, `icons/es5/*`); Figma comment thread (ChrisChV asked, cassiezamparini answered: "I used an icon from Google", Material Symbols `cards_stack`), pasted by Brian 2026-10-31; #878 at aca7e36 (`CoursesPanel/index.jsx`)
 
 Source: the path in `CardsStackIcon.tsx` is byte-identical to Material Symbols Outlined `cards_stack` at weight 400, 24px (`fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/cards_stack/default/24px.svg`, fetched 2026-10-31), including the `0 -960 960 960` viewBox. Material Symbols is Apache 2.0, so inlining is allowed, but the file carries no attribution or licence note. The repo has no precedent for inlined icon components: `src/utils/icons/` is new in this PR, and the three `.svg` files under `src/assets` on master are illustrations. The only use is the category heading in `PathwaysList.tsx`, next to where #878 puts Paragon's `MenuBook` on the Courses heading.
@@ -108,7 +108,7 @@ Candidate comment: either switch the heading icon to a Paragon icon (`LibraryBoo
 
 ### 6. Full pass for dealbreakers and bigger conversations
 
-Status: open (Brian picks what to post)
+Status: A drafted as comment 3 in `review-879-comments.md` (2026-10-31); B, C, D not posted
 Rests on: the whole diff 162fad7fde..f4852b343a (3 commits, 37 files); #875 review threads (rpenido and ChrisChV on `src/components/ItemBadge.tsx`, kdmccormick on `README.rst`), read 2026-10-31; openedx/openedx-platform#39204 diff and body, read 2026-10-31
 
 Scope: what should block or needs a conversation beyond this PR. Code-quality findings are deferred to the next pass. Already carried: colours (entry 4, bigger conversation), icon (entry 5, dealbreaker), panel placement (entry 2, resolved), cards not interactable (entry 3, resolved).
