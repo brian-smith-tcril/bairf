@@ -93,11 +93,14 @@ reviews/<repo>-<n>/bairf   the effort worktree
 bin/review open <owner>/<repo> <n>                     clone the hub if missing, create both worktrees, write TAG.md and review-<n>.md
 bin/review sync <repo>-<n>                             reset code to the PR's current head (survives rebases), append a passes row
 bin/review close <repo>-<n> <merged|closed|abandoned>  write the reason as the last line of State, remove code worktree and hub branch, effort close
+bin/review hunk <repo>-<n> <path> <line> [<last line>]   print the diff-context block for a draft comment anchored at those new-side lines
 ```
 
 `ls reviews` is the list of open reviews; the hub's `git branch` is the same list by number. Each code worktree needs its own `npm ci`.
 
 `review-<n>.md` is the whole record, in three parts. **State** is free text, rewritten rather than appended: the current read of the PR, whatever that needs to be. **Passes** is a table with one row per pass (date, base and head SHA, scope, outcome); `sync` adds the row, the pass fills scope and outcome, and "since last pass" is the diff between consecutive heads. **Ledger** has one entry per question with a status (open; resolved, no comment; posted with the thread link; parked; stale) and a "rests on" line naming the files and head SHA the answer was reached at, so the next pass marks stale only what moved. A comment on the PR is what the author should act on or answer; everything else is a ledger entry.
+
+Comments are drafted before they are posted, in `review-<n>-comments.md` beside the record, so Brian reads them as the review will render. The file opens with the head SHA the anchors refer to, then a **Review summary** block (the one place the Claude disclosure goes) and one section per comment: `File:`, `Lines:` (new-side line or range, with what the lines are), `Ledger:` (the entry it rests on), `Status:` (`draft`, then `posted <thread url>`), a **Diff context** block from `bin/review hunk` (three lines either side, `>` on the anchor lines, `+`/`-` per the diff), and the body as a blockquote, verbatim. Posting is one call per comment on Brian's word; the thread URL then goes on the comment's status line and on the ledger entry. After a rebase, `sync` first, then regenerate each block and re-check the anchors.
 
 A PR Brian authored is not reviewed this way. Its self-review happens inside the task or project effort that owns it; what it changes lands in that effort's decisions doc and README like any other work there.
 
