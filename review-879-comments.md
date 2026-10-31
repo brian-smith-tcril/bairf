@@ -84,8 +84,4 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
   16 | +);
 ```
 
-> This renders the "Course" badge on every course card unconditionally, so it ships to every learner on every site as soon as this merges, before any pathway exists anywhere.
->
-> In #875 it sat behind the pilot flag. When the flag was dropped (https://github.com/openedx/frontend-app-learner-dashboard/pull/875#discussion_r4393046991) the reasoning was that an operator who doesn't want pathways won't create any. That holds for the panel, which renders nothing without pathways, but this badge has no such gate. You made the point yourself on the ItemBadge thread (https://github.com/openedx/frontend-app-learner-dashboard/pull/875#discussion_r4175039413): using the badge for courses "only makes sense if another item exists".
->
-> Could it be gated on the learner having at least one pathway? `usePathwaysByCategory` is already on the page. If instead the Course badge is meant as a permanent design change regardless of pathways, could the description say so, so it's a deliberate call rather than a side effect of dropping the flag?
+> Is there a specific reason the "Course" badge isn't gated on the learner having at least one pathway? As written it shows up on every course card for every learner as soon as this merges, whether or not the site has any pathways. When the pilot flag was dropped in #875 (https://github.com/openedx/frontend-app-learner-dashboard/pull/875#discussion_r4393046991) the reasoning was that an operator who doesn't want pathways won't create any, which works for the panel but not for this badge. You also mentioned in https://github.com/openedx/frontend-app-learner-dashboard/pull/875#discussion_r4175039413 that using the badge for courses "only makes sense if another item exists", which matches my expectation. If showing it everywhere is intentional it'd be great to have that called out in the PR description.
