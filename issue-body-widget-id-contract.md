@@ -10,7 +10,14 @@
 In frontend-base the default content of a slot is a list of widgets, each with an id the app chooses, and placement is relative to those ids. Five of the seven `WidgetOperationTypes` take a `relatedId` (`INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE`, `REMOVE`, `OPTIONS`), and the only widgets a plugin can name are the ones in the slot, which in practice means the app's defaults. So under the same words, the app now controls every name a plugin depends on, and when it changes them the plugin breaks:
 
 - A renamed or removed id: `findRelatedWidgetIndex` returns `null` and the operation is a silent no-op. The operator's override, removal or options stop applying with nothing to see.
-- A reorder: every id still matches, so the operation still applies, but it no longer puts the widget where the operator meant. Take defaults Courses, Discover New and an operator who wants a link between them. They write `INSERT_AFTER` Courses or `INSERT_BEFORE` Discover New; either works. The app reorders to Discover New, Courses. The first operation now puts the link at the end, the second at the beginning. (`PREPEND` and `APPEND` are not the answer here: they place at the edges, in `siteConfig.apps` order. The relative operations exist for placing next to a specific default, and that is the intent a reorder changes.)
+- A reorder: every id still matches, so the operation still applies, but it no longer puts the widget where the operator meant.
+
+The relative operations exist for placing next to a specific default (`PREPEND` and `APPEND` cover the edges, in `siteConfig.apps` order), so the second case is the common one. An operator who wants a link between Courses and Discover New has two equivalent ways to say it, and a reorder splits them:
+
+| Operation | Defaults: Courses, Discover New | Defaults: Discover New, Courses |
+|---|---|---|
+| `INSERT_AFTER` Courses | between the two | at the end |
+| `INSERT_BEFORE` Discover New | between the two | at the beginning |
 
 This is not hypothetical. frontend-app-learner-dashboard inserts its order-history link with `INSERT_BEFORE` on `org.openedx.frontend.widget.header.desktopAuthenticatedMenuLogout.v1`, a shell default from `shell/header/app.tsx`, and ships its own default header link ids that operators target the same way. [ADR 0016](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0016-shell-layout-replacement-seams.rst), for the shell's header and footer, went out of its way to keep "all existing inner slot ids and default widget ids" so that "plugins that target [them] continue to work without modification", which is frontend-base treating its own defaults as something plugins may depend on, without saying that in general.
 
