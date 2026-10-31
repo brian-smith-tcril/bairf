@@ -60,14 +60,11 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
   26 | +    <Badge
 ```
 
-> The color pair this reads (`categoryBackgroundColor`, `categoryTextColor`) has no producer yet. `PathwayCategory` in openedx-core (`src/openedx_catalog/models/pathway_category.py`) has `category_code`, `title` and `title_plural` and no color fields; openedx/openedx-core#820 adds none; the `PathwaySerializer` in openedx/openedx-platform#39204 emits `category` and `categoryLabel` only. The Willow Pathways Decision Log does say each category gets its own badge color, set by the instance admin, so the intent is there; nothing in the open backend work carries it yet.
+> I'd like to kick off a conversation about the custom colors. I see `categoryBackgroundColor` and `categoryTextColor` are expected to come from the backend (they're on `PathwayData` in `usePathwayData.ts`), and I'm assuming the plan is for them to be configurable per category by an admin. I don't see them in the serializer in openedx/openedx-platform#39204 though, is there a backend PR adding them?
 >
-> Two things I'd like settled across those PRs before the frontend relies on the pair:
+> Are we ok with making this configurable in a way that could lead to text that isn't accessible? `isValidCssColor` only checks that the value is a color, so nothing stops `categoryTextColor` and `categoryBackgroundColor` from both being `#FFFFFF`. I'd like to hear @kblemel's thoughts on this.
 >
-> 1. Where it is defined and validated. The decision log puts it in the Django admin per category. `isValidCssColor` here only answers "is this a CSS color", so any contrast guard has to live on the admin side, and that side has no field today.
-> 2. The shape. openedx/frontend-app-catalog#176 documents the same pair as canonical `#RRGGBB` from a "category registry"; this accepts any CSS color (`red`, `rgb(...)`). One rule for both apps, decided where the field is added.
->
-> Not blocking this PR on its own. Small thing while here: the default text utility is `text-info-800` where the decision log gives info/900 (`#004C77`).
+> Assuming we're ok with setting any color for these on the backend without any a11y guards, the current implementation feels like it's adding quite a bit of complexity (the validity check, the `!important` workaround, and the `className` escape hatch all living in this component). Maybe this could be simplified by moving the color handling into a hook that returns the `className`/`style` pair, so this component is just a `Badge`?
 
 ## 3. Course badge
 
