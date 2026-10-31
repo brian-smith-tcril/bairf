@@ -61,8 +61,6 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
 ```
 
 > I can see `categoryBackgroundColor` and `categoryTextColor` are expected to come from the backend, and I'm assuming the plan is for them to be configurable per category by an admin. This means (unless there's a11y validation in a configuration UI) admins would be able to configure the badge colors in a way that makes the text unreadable. Is that something we're ok with?
->
-> Assuming we're ok with setting any color for these on the backend without any a11y guards, the current implementation feels like it's adding quite a bit of complexity (the validity check, the `!important` workaround, and the `className` escape hatch all living in this component). Maybe this could be simplified by moving the color handling into a hook that returns the `className`/`style` pair, so this component is just a `Badge`?
 
 ## 3. Course badge
 

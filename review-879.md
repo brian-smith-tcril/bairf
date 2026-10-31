@@ -69,7 +69,7 @@ Follow-up (Brian, 2026-10-31): beyond the link, the card shows "N/M complete" wi
 
 ### 4. The custom category colors: where defined, how configured, how they reach the app, what UI, are they accessible
 
-Status: drafted as comment 2 in `review-879-comments.md` (2026-10-31)
+Status: drafted as comment 2 in `review-879-comments.md` (2026-10-31); the comment asks only whether admin-set colors with no a11y guard are acceptable. Held until that settles: the implementation's complexity (validity check, `!important` workaround and `className` escape hatch all in `CategoryBadge`) and whether a hook returning the `className`/`style` pair would simplify it
 Rests on: src/components/CategoryBadge.tsx, src/utils/colors.ts, src/containers/CourseCard/components/CourseHeaderActions.tsx, src/hooks/usePathwayData.ts, src/data/services/lms/__mocks__/pathways.ts at f4852b343a; openedx-core main `src/openedx_catalog/models/pathway_category.py` and `admin.py`, openedx/openedx-core#820 and openedx/openedx-platform#39204 diffs, openedx/frontend-app-catalog#176 diff, openedx/frontend-app-learning#2159 diff, and the Willow Pathways Decision Log (Confluence 6630834191), all read 2026-10-31
 
 Asked by Brian (2026-10-31).
