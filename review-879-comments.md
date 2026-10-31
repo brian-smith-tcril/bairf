@@ -8,7 +8,7 @@ The review summary carries the disclosure; the inline comments do not repeat it.
 
 Status: draft
 
-> Three things from a first pass, all inline: the heading icon, the category colours, and the Course badge. The icon one is what I'd want changed before merge; the other two are conversations that reach past this PR. The inline comments were drafted with Claude Code and reviewed before posting.
+> Three things from a first pass, all inline: the heading icon, the category colors, and the Course badge. The icon one is what I'd want changed before merge; the other two are conversations that reach past this PR. The inline comments were drafted with Claude Code and reviewed before posting.
 
 ## 1. Icon
 
@@ -38,7 +38,7 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
 >
 > Could you switch to one of those, `LibraryBooks` for preference, so the heading icon comes from the same set as the rest of the dashboard and themes with it? If the design team wants the Material Symbols glyph specifically, then this file needs the source URL and the Apache 2.0 attribution, plus a line on why Paragon's set doesn't cover it.
 
-## 2. Category colours
+## 2. Category colors
 
 File: `src/components/CategoryBadge.tsx`
 Lines: 20 to 23 (`const hasCustomColors = ...` through `isValidCssColor(categoryTextColor)`), side RIGHT
@@ -60,12 +60,12 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
   26 | +    <Badge
 ```
 
-> The colour pair this reads (`categoryBackgroundColor`, `categoryTextColor`) has no producer yet. `PathwayCategory` in openedx-core (`src/openedx_catalog/models/pathway_category.py`) has `category_code`, `title` and `title_plural` and no colour fields; openedx/openedx-core#820 adds none; the `PathwaySerializer` in openedx/openedx-platform#39204 emits `category` and `categoryLabel` only. The Willow Pathways Decision Log does say each category gets its own badge colour, set by the instance admin, so the intent is there; nothing in the open backend work carries it yet.
+> The color pair this reads (`categoryBackgroundColor`, `categoryTextColor`) has no producer yet. `PathwayCategory` in openedx-core (`src/openedx_catalog/models/pathway_category.py`) has `category_code`, `title` and `title_plural` and no color fields; openedx/openedx-core#820 adds none; the `PathwaySerializer` in openedx/openedx-platform#39204 emits `category` and `categoryLabel` only. The Willow Pathways Decision Log does say each category gets its own badge color, set by the instance admin, so the intent is there; nothing in the open backend work carries it yet.
 >
 > Two things I'd like settled across those PRs before the frontend relies on the pair:
 >
-> 1. Where it is defined and validated. The decision log puts it in the Django admin per category. `isValidCssColor` here only answers "is this a CSS colour", so any contrast guard has to live on the admin side, and that side has no field today.
-> 2. The shape. openedx/frontend-app-catalog#176 documents the same pair as canonical `#RRGGBB` from a "category registry"; this accepts any CSS colour (`red`, `rgb(...)`). One rule for both apps, decided where the field is added.
+> 1. Where it is defined and validated. The decision log puts it in the Django admin per category. `isValidCssColor` here only answers "is this a CSS color", so any contrast guard has to live on the admin side, and that side has no field today.
+> 2. The shape. openedx/frontend-app-catalog#176 documents the same pair as canonical `#RRGGBB` from a "category registry"; this accepts any CSS color (`red`, `rgb(...)`). One rule for both apps, decided where the field is added.
 >
 > Not blocking this PR on its own. Small thing while here: the default text utility is `text-info-800` where the decision log gives info/900 (`#004C77`).
 
