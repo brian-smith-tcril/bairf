@@ -57,3 +57,10 @@ Above-the-courses is the design, not a split artifact: the PR body says "above t
 Separate point from the same files: the category labels are not heading elements, so the page outline is the sr-only `h1` then "My Courses" `h2`, with "Bootcamps" and the cards outside it; that holds with #878 too, where the outline becomes `h1`, "My Learning" `h2`, "Courses" (also a `Stack`, not a heading, in #878).
 
 Solution space: (a) accept the order as designed and have the body say the layout assumes #878, or stack #879 on #878 so the reviewed page is the designed one; (b) a panel heading in #879 so it stands alone, which the Figma does not show; (c) panel below courses, against the stated design; (d) nothing, since on a real site the API returns `[]` and the panel renders nothing until the backend lands. The heading-element point is a candidate comment on its own.
+
+### 3. The pathway cards are not interactable
+
+Status: resolved, no comment (declared in the PR body)
+Rests on: src/containers/PathwayCard/index.tsx, src/hooks/usePathwayData.ts, src/data/services/lms/__mocks__/pathways.ts at f4852b343a; bodies of #879, #880, #881 and #875 read 2026-10-31
+
+Asked by Brian (2026-10-31). `PathwayCard` is a Paragon `Card` with a `Card.Header` only (title, provider subtitle, progress count, category badge): no `onClick`, no `href`, no `isClickable`. `PathwayData` carries no URL field and the mock data has none, so there is nothing a card could link to yet. #879's body declares it under Notes: "TODO: Links leading to the pathway pages still need to be added", next to "TODO: The backend still needs to be connected once it's ready"; the same two lines are in #875, #880 and #881. Neither #880 (the "Included in" strip on course cards) nor #881 (the unenroll warning) adds a link, so the whole stack ships non-interactive pathway surfaces, and the PR that adds the links does not exist yet. The link presumably needs the backend (openedx/openedx-platform#39203) to say where a pathway page lives.
