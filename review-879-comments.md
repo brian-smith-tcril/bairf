@@ -84,4 +84,4 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
   16 | +);
 ```
 
-> This will show the "Course" badge on every course card for every learner as soon as it merges, whether or not the site has any pathways. Is that intentional?
+> This will show the "Course" badge on every course card for every learner, whether or not the site has any pathways. Is that intentional?
