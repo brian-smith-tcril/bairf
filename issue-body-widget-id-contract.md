@@ -12,7 +12,7 @@ In frontend-base the default content of a slot is a list of widgets, each with a
 - A renamed or removed id: `findRelatedWidgetIndex` returns `null` and the operation is a silent no-op. The operator's override, removal or options stop applying with nothing to see.
 - A reorder: every id still matches, so the operation still applies, but it no longer puts the widget where the operator meant.
 
-Example: an operator wants a link between Courses and Discover New. Either relative operation does that today; after a reorder, each lands somewhere else:
+Example, from frontend-app-learner-dashboard: it registers its header links, Courses and Discover New among them, as default widgets on `org.openedx.frontend.slot.header.primaryLinks.v1`. An operator wants a link between those two. Either relative operation does that today; if the app reorders them, each lands somewhere else:
 
 | Operation | Defaults: Courses, Discover New | Defaults: Discover New, Courses |
 |---|---|---|
