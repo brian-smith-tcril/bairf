@@ -10,6 +10,8 @@ First of the 5-PR split of openedx/frontend-app-catalog#169 (rpenido, open-craft
 
 Brian's read after the first pass (2026-10-30): looking good overall. Two things posted: the endpoint name is written two ways and nothing outside this ADR has decided it, so the author is asked which; and the rename stops short (`CoursesList`, `CatalogListSearchHook.data`), with the principles that non-course-specific things do not get course names and that names fit from endpoint to component. The answer on the name drives the rename round. Not yet done: the diff line by line, the slot props and slot names ask (entry 3), the `/catalog/courses` URL question (entry 5), and running the suite.
 
+2026-10-31: rpenido answered the same day (https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6524286800 thread): the name is `catalog_search`/`catalogSearch`, renamed across the data layer in 767011e12e (33 files, `src/data/catalog-list-search` to `src/data/catalog-search`); `CoursesList` stays here because it renders course cards only, with `CatalogList` offered in #176. Head is 767011e12e; the rename commit has not been read. #175 was rebased onto it.
+
 ## Passes
 
 One row per pass. `bin/review sync` appends the row with the new head; scope (whole diff, named files or commits) and outcome (none, comments, approve, request changes) are filled in by hand. Since the last pass: `git diff <previous head>..<head>` in the code worktree, or `git range-diff` across a rebase.
