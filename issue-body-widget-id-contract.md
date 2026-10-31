@@ -1,4 +1,4 @@
-**Goal:** decide, and write down, what an app promises about the widgets it registers by default: whether their ids are public surface, whether their order is, and what a change to each is called. Today two ADRs answer the first question in opposite directions and nothing answers the second.
+**Goal:** decide, and write down, what an app promises about the widgets it registers by default: whether their ids are public surface, whether their order is, and what a change to each is called. Today the only general answer to the first question is ADR 0009, which says no; frontend-base keeps its own shell defaults as if the answer were yes (ADR 0016); and nothing answers the second.
 
 **Why:** the one general statement and the one recorded practice point in opposite directions.
 
