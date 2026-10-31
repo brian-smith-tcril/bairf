@@ -6,7 +6,101 @@ What the automated suite cannot show: the slot showcase rendering in a browser w
 
 - The frontend-base checkout on `widget-id-aliases` at `565a8a9`, `npm run dev` (builds, then serves the shell's dev site at `http://apps.local.openedx.io:8080`).
 - A browser on `/slots` (the slot showcase). The four sections under "UI Widget Operations" that use a `relatedId` are "Slot with inserted elements", "Slot with replaced element", "Slot with removed element" and "Slot with widget options (default)".
-- One local, uncommitted edit to `shell/dev/slotShowcase/app.tsx` for the alias boxes: the four targeted widgets (`insertingChild2`, `replacingChild2`, `removingChild2`, `widgetOptionsChild2`) gain an `idAliases` of their own id with `.legacy` appended, and the five `relatedId`s (both inserts, the replace, the remove, the options) point at those `.legacy` ids. No widget id changes. As a change indicator, the "UI Widget Operations" heading in `shell/dev/slotShowcase/SlotShowcasePage.tsx` becomes "UI Widget Operations (alias edit live)". Reverted at the end.
+- One local, uncommitted edit to `shell/dev/slotShowcase/app.tsx` for the alias boxes: the four targeted widgets (`insertingChild2`, `replacingChild2`, `removingChild2`, `widgetOptionsChild2`) gain an `idAliases` of their own id with `.legacy` appended, and the five `relatedId`s (both inserts, the replace, the remove, the options) point at those `.legacy` ids. No widget id changes. As a change indicator, the "UI Widget Operations" heading in `shell/dev/slotShowcase/SlotShowcasePage.tsx` becomes "UI Widget Operations (alias edit live)". Reverted at the end. The edit as a diff:
+
+  ```diff
+  diff --git a/shell/dev/slotShowcase/SlotShowcasePage.tsx b/shell/dev/slotShowcase/SlotShowcasePage.tsx
+  index 8f300738..66ef20c8 100644
+  --- a/shell/dev/slotShowcase/SlotShowcasePage.tsx
+  +++ b/shell/dev/slotShowcase/SlotShowcasePage.tsx
+  @@ -93,7 +93,7 @@ export default function SlotShowcasePage() {
+           </SlotContainer>
+         </Section>
+   
+  -      <h2 className="showcase-divider">UI Widget Operations</h2>
+  +      <h2 className="showcase-divider">UI Widget Operations (alias edit live)</h2>
+   
+         <Section title="Slot with prepended element">
+           <p>This slot has a prepended element (and two appended elements).</p>
+  diff --git a/shell/dev/slotShowcase/app.tsx b/shell/dev/slotShowcase/app.tsx
+  index f5ddb4bd..678885a3 100644
+  --- a/shell/dev/slotShowcase/app.tsx
+  +++ b/shell/dev/slotShowcase/app.tsx
+  @@ -191,14 +191,14 @@ const app: App = {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseInserting',
+         id: 'slot-showcase.inserting.child4',
+         op: WidgetOperationTypes.INSERT_AFTER,
+  -      relatedId: 'org.openedx.frontend.widget.slotShowcase.insertingChild2',
+  +      relatedId: 'org.openedx.frontend.widget.slotShowcase.insertingChild2.legacy',
+         element: (<Widget title="Widget Four" op="WidgetOperationTypes.INSERT_AFTER" />)
+       },
+       {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseInserting',
+         id: 'slot-showcase.inserting.child5',
+         op: WidgetOperationTypes.INSERT_BEFORE,
+  -      relatedId: 'org.openedx.frontend.widget.slotShowcase.insertingChild2',
+  +      relatedId: 'org.openedx.frontend.widget.slotShowcase.insertingChild2.legacy',
+         element: (<Widget title="Widget Five" op="WidgetOperationTypes.INSERT_BEFORE" />)
+       },
+       {
+  @@ -210,6 +210,7 @@ const app: App = {
+       {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseInserting',
+         id: 'org.openedx.frontend.widget.slotShowcase.insertingChild2',
+  +      idAliases: ['org.openedx.frontend.widget.slotShowcase.insertingChild2.legacy'],
+         op: WidgetOperationTypes.APPEND,
+         element: (<Widget title="Widget Two" />)
+       },
+  @@ -230,6 +231,7 @@ const app: App = {
+       {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseReplacing',
+         id: 'org.openedx.frontend.widget.slotShowcase.replacingChild2',
+  +      idAliases: ['org.openedx.frontend.widget.slotShowcase.replacingChild2.legacy'],
+         op: WidgetOperationTypes.APPEND,
+         element: (<Widget title="Widget Two" />)
+       },
+  @@ -243,7 +245,7 @@ const app: App = {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseReplacing',
+         id: 'org.openedx.frontend.widget.slotShowcase.replacingChild4',
+         op: WidgetOperationTypes.REPLACE,
+  -      relatedId: 'org.openedx.frontend.widget.slotShowcase.replacingChild2',
+  +      relatedId: 'org.openedx.frontend.widget.slotShowcase.replacingChild2.legacy',
+         element: (<Widget title="Widget Four" op="WidgetOperationTypes.REPLACE" />)
+       },
+   
+  @@ -257,6 +259,7 @@ const app: App = {
+       {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseRemoving',
+         id: 'org.openedx.frontend.widget.slotShowcase.removingChild2',
+  +      idAliases: ['org.openedx.frontend.widget.slotShowcase.removingChild2.legacy'],
+         op: WidgetOperationTypes.APPEND,
+         element: (<Widget title="Widget Two" />)
+       },
+  @@ -269,7 +272,7 @@ const app: App = {
+       {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseRemoving',
+         op: WidgetOperationTypes.REMOVE,
+  -      relatedId: 'org.openedx.frontend.widget.slotShowcase.removingChild2',
+  +      relatedId: 'org.openedx.frontend.widget.slotShowcase.removingChild2.legacy',
+       },
+   
+       // Widget Options
+  @@ -282,12 +285,13 @@ const app: App = {
+       {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseWidgetOptions',
+         id: 'org.openedx.frontend.widget.slotShowcase.widgetOptionsChild2',
+  +      idAliases: ['org.openedx.frontend.widget.slotShowcase.widgetOptionsChild2.legacy'],
+         op: WidgetOperationTypes.APPEND,
+         component: WidgetWithOptions,
+       },
+       {
+         slotId: 'org.openedx.frontend.slot.dev.slotShowcaseWidgetOptions',
+  -      relatedId: 'org.openedx.frontend.widget.slotShowcase.widgetOptionsChild2',
+  +      relatedId: 'org.openedx.frontend.widget.slotShowcase.widgetOptionsChild2.legacy',
+         op: WidgetOperationTypes.OPTIONS,
+         options: {
+           title: 'Bar',
+  ```
 
 ## Verify by hand
 
