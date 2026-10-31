@@ -1,40 +1,29 @@
 # Manual testing — widget `idAliases` (openedx/frontend-base#334)
 
-Shell dev site, slot showcase page, branch `widget-id-aliases` at `565a8a9`. The showcase's four relative-operation sections are retargeted at aliases through a local, uncommitted edit; with aliases working, every section renders exactly as it does unedited. "Observed" lines are filled in during the pass; a step not watched says so.
+What the automated suite cannot show: the slot showcase rendering in a browser with its relative operations retargeted at widget id aliases, through the dev server and the real site config path.
 
-## Setup
+## Environment
 
-1. In the frontend-base checkout on `widget-id-aliases`: `nvm use`, then `npm run dev`. Open `http://apps.local.openedx.io:8080/slots`.
-   Observed:
+- The frontend-base checkout on `widget-id-aliases` at `565a8a9`, `npm run dev` (builds, then serves the shell's dev site at `http://apps.local.openedx.io:8080`).
+- A browser on `/slots` (the slot showcase). The four sections under "UI Widget Operations" that use a `relatedId` are "Slot with inserted elements", "Slot with replaced element", "Slot with removed element" and "Slot with widget options (default)".
+- One local, uncommitted edit to `shell/dev/slotShowcase/app.tsx` for the alias boxes: the four targeted widgets (`insertingChild2`, `replacingChild2`, `removingChild2`, `widgetOptionsChild2`) gain an `idAliases` of their own id with `.legacy` appended, and the five `relatedId`s (both inserts, the replace, the remove, the options) point at those `.legacy` ids. No widget id changes. Reverted at the end.
 
-## Baseline, unedited
+## Verify by hand
 
-2. Under "UI Widget Operations", the four sections render these widgets, in this order, left to right:
-   - "Slot with inserted elements": Widget One, Widget Five (`WidgetOperationTypes.INSERT_BEFORE`), Widget Two, Widget Four (`WidgetOperationTypes.INSERT_AFTER`), Widget Three.
-   - "Slot with replaced element": Widget One, Widget Four (`WidgetOperationTypes.REPLACE`), Widget Three.
-   - "Slot with removed element": Widget One, Widget Three.
-   - "Slot with widget options (default)": Foo, Bar.
-   Observed:
+- [ ] **Baseline, unedited** — load `/slots`. Inserted: Widget One, Widget Five (`WidgetOperationTypes.INSERT_BEFORE`), Widget Two, Widget Four (`WidgetOperationTypes.INSERT_AFTER`), Widget Three. Replaced: Widget One, Widget Four (`WidgetOperationTypes.REPLACE`), Widget Three. Removed: Widget One, Widget Three. Widget options: Foo, Bar.
+- [ ] **The edit is live** — apply the edit, reload. Note whether the dev server rebuilt on its own or needed a restart.
+- [ ] **`INSERT_AFTER` and `INSERT_BEFORE` through the alias** — "Slot with inserted elements" is unchanged from the baseline: Widget One, Widget Five, Widget Two, Widget Four, Widget Three.
+- [ ] **`REPLACE` through the alias** — "Slot with replaced element" is unchanged: Widget One, Widget Four, Widget Three.
+- [ ] **`REMOVE` through the alias** — "Slot with removed element" is unchanged: Widget One, Widget Three.
+- [ ] **`OPTIONS` through the alias** — "Slot with widget options (default)" is unchanged: Foo, Bar.
+- [ ] **Control: an id nothing declares is a no-op** — change the `REMOVE` operation's `relatedId` from `...removingChild2.legacy` to `...removingChild2.missing`, reload. "Slot with removed element" shows Widget One, Widget Two, Widget Three. So the previous box matched through the alias and nothing else.
+- [ ] **Clean up** — `git checkout -- shell/dev/slotShowcase/app.tsx`; `git status` reports a clean tree.
 
-## Aliases
+## Left to the automated suite
 
-3. Edit `shell/dev/slotShowcase/app.tsx`, uncommitted: give the four targeted widgets (`insertingChild2`, `replacingChild2`, `removingChild2`, `widgetOptionsChild2`) an `idAliases` of their own id with `.legacy` appended, and point the five `relatedId`s (both inserts, the replace, the remove, the options) at those `.legacy` ids. No widget id changes. Reload the page.
-   Observed (note whether the dev server picked the edit up on its own or needed a restart):
-4. "Slot with inserted elements": Widget One, Widget Five (`INSERT_BEFORE`), Widget Two, Widget Four (`INSERT_AFTER`), Widget Three. Both inserts landed through the alias.
-   Observed:
-5. "Slot with replaced element": Widget One, Widget Four (`REPLACE`), Widget Three.
-   Observed:
-6. "Slot with removed element": Widget One, Widget Three.
-   Observed:
-7. "Slot with widget options (default)": Foo, Bar. The options reached the second widget through its alias.
-   Observed:
+- Each relative operation against an alias and against the primary id, `byId` and `withoutId`, precedence when an id and an alias both match, `identified` carrying `idAliases`: `runtime/slots/widget/utils.test.tsx`.
+- The sort placing operations that target the alias or the id after the operation declaring the widget, and `useWidgetOptions` reading aliases from `WidgetContext`: `runtime/slots/widget/hooks.test.tsx`.
+- Each of the five operations against an alias through site config on a rendered `Slot`: `runtime/slots/Slot.test.tsx`.
 
-## Control
+## Results
 
-8. Change the `REMOVE` operation's `relatedId` from `...removingChild2.legacy` to `...removingChild2.missing`, an id nothing declares, and reload. "Slot with removed element" shows Widget One, Widget Two, Widget Three: the operation is a no-op, so step 6 was the alias at work and not a match on anything else.
-   Observed:
-
-## Clean up
-
-9. `git checkout -- shell/dev/slotShowcase/app.tsx`; `git status` reports a clean tree.
-   Observed:
