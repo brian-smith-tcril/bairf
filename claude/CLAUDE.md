@@ -22,6 +22,10 @@ Reach for `openedx/GLOSSARY.md` for the words in anything Open edX.
 - When two checkouts, or dev and a deploy, behave differently and the tracked code doesn't explain it, untracked local files (workspace config, env or site config) are on the suspect list.
 - Reading a repo through `gh api`, file reads or code search, is fine for a quick answer; once the calls pile up, clone it into the session scratchpad instead: `gh repo clone <owner>/<repo> <scratchpad>/ref/<repo> -- --filter=blob:none`. Blobless, not shallow: the current tree's files are checked out and the download stays quick. A history search (`git log -S`, blame across many commits) fetches old blobs one by one and crawls; before one, replace the blobless clone with a regular clone of the same repo. Check out whatever branches the question needs, from upstream or a fork's remote. Nothing is pushed from a clone under `/tmp`; work that grows out of one starts from a fork clone in the project directory.
 
+## Shell
+
+- No wildcard or variable-rooted `rm` (`rm -f *`, `rm -rf "$DIR"/*`), and never `cd` chained with `rm`. `/tmp`, and the session scratchpad under it, can vanish between calls, so a failed `cd` leaves the `rm` pointed at whatever directory the shell is in; an earlier model wiped Brian's home directory this way. Overwrite outputs by name, write into a fresh directory, or `rm` an explicit list of full paths.
+
 ## Deciding
 
 - A settled decision is written into the issue or PR body and the decisions doc, not only into a comment or the chat. When a decision changes mid-implementation, the body and doc are updated before the code.
