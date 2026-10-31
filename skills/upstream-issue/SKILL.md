@@ -28,7 +28,7 @@ Show Brian the body. Stop.
 
 ## 2. Create
 
-On Brian's word only. One `gh issue create --body-file` against the project repo, with assignee, milestone and epic linking as `github-bodies.md` describes (a sub-issue of the epic only when the work blocks the epic). Record the `owner/repo#N` in the row, under `issues:` in `<worktree>/TAG.md`, and on the source ticket's `Upstream:` line as `<owner/repo#N> (in review)` in place of the body-file pointer; set `status: in-review`, commit. Stop.
+On Brian's word only. One `gh issue create --body-file` against the project repo, with epic linking as `github-bodies.md` describes (a sub-issue of the epic only when the work blocks the epic). Record the `owner/repo#N` in the row, under `issues:` in `<worktree>/TAG.md`, and on the source ticket's `Upstream:` line as `<owner/repo#N> (in review)` in place of the body-file pointer; set `status: in-review`, commit. Stop.
 
 ## 3. Review
 
