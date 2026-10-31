@@ -32,11 +32,11 @@ Diff context (new file, every line is `+`; `>` marks the anchor):
 
 > Is there a specific reason for using an inline SVG here? From the conversation in Figma I can see that it's [from Material Symbols](https://fonts.google.com/icons?selected=Material+Symbols+Outlined:cards_stack:FILL@0;wght@400;GRAD@0;opsz@24&icon.query=card&icon.size=24&icon.color=%23e3e3e3&icon.set=Material+Symbols). I'd much prefer to use an [existing Paragon icon](https://paragon-openedx.netlify.app/foundations/icons/) here instead. The ones that seem the most visually similar to me are:
 >
-> - [`LibraryBooks`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/library_books.svg) <img src="https://github.com/user-attachments/assets/7d5bb0aa-c5cb-4abd-8527-09d2174a66dc" width="64" alt="LibraryBooks">
-> - [`DynamicFeed`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/dynamic_feed.svg) <img src="https://github.com/user-attachments/assets/975cef85-d8af-4290-9ad4-e617279c0982" width="64" alt="DynamicFeed">
-> - [`AutoAwesomeMotion`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/auto_awesome_motion.svg) <img src="https://github.com/user-attachments/assets/c6b96d65-c5aa-4454-a041-aa5749f140ff" width="64" alt="AutoAwesomeMotion">
-> - [`Collections`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/collections.svg) <img src="https://github.com/user-attachments/assets/0db8fef9-8b41-40a4-99f9-6a7b139191ef" width="64" alt="Collections">
-> - [`FilterNone`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/filter_none.svg) <img src="https://github.com/user-attachments/assets/9fae5821-7c50-48dc-ae87-98de42bbbc19" width="64" alt="FilterNone">
+> - [`LibraryBooks`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/library_books.svg) <img src="https://github.com/user-attachments/assets/9fae5821-7c50-48dc-ae87-98de42bbbc19" width="64" alt="LibraryBooks">
+> - [`DynamicFeed`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/dynamic_feed.svg) <img src="https://github.com/user-attachments/assets/c6b96d65-c5aa-4454-a041-aa5749f140ff" width="64" alt="DynamicFeed">
+> - [`AutoAwesomeMotion`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/auto_awesome_motion.svg) <img src="https://github.com/user-attachments/assets/7d5bb0aa-c5cb-4abd-8527-09d2174a66dc" width="64" alt="AutoAwesomeMotion">
+> - [`Collections`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/collections.svg) <img src="https://github.com/user-attachments/assets/975cef85-d8af-4290-9ad4-e617279c0982" width="64" alt="Collections">
+> - [`FilterNone`](https://github.com/openedx/paragon/blob/release-23.x/icons/svg/filter_none.svg) <img src="https://github.com/user-attachments/assets/0db8fef9-8b41-40a4-99f9-6a7b139191ef" width="64" alt="FilterNone">
 >
 > If none of those are acceptable from a design perspective I can look into adding the specific material symbol icon for this to Paragon as we've done with some other SVGs in the past.
 
