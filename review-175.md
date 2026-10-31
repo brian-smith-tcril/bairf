@@ -10,6 +10,8 @@ PR 2 of 5 in the split of openedx/frontend-app-catalog#169, stacked on #174 by c
 
 2026-10-30: Claude read the commit line by line (entries 1 to 6); Brian has not done his own pass yet. Brian noticed one name thing, `CatalogListSearchMixedResponse`, and put it in the 174 comment's edit rather than here. Nothing posted on 175. Open from Claude's read: the normalizer is a fix of a master bug and the body does not say so (entry 2, candidate comment); the suite has not been run. Waits on the #174 review and the endpoint-name answer.
 
+2026-10-31: the endpoint name is answered on #174 (`catalog_search`, rename commit 767011e12e). #175 was rebased onto it: head 089a0cda88, the one commit re-created on top of the rename; not re-read since, so the entries rest on e87d4fd2d7.
+
 ## Passes
 
 One row per pass. `bin/review sync` appends the row with the new head; scope (whole diff, named files or commits) and outcome (none, comments, approve, request changes) are filled in by hand. Since the last pass: `git diff <previous head>..<head>` in the code worktree, or `git range-diff` across a rebase.
