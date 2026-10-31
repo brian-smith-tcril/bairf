@@ -6,7 +6,7 @@ The record of this review. The state is rewritten, never appended; the passes ta
 
 ## State
 
-First of the PRs split out of openedx/frontend-app-learner-dashboard#875 (ChrisChV, open-craft fork). Covers the dashboard heading only ("My Learning" title, "Courses" heading, sticky heading and Refine filter, header links renamed to Explore and My Learning) and depends on no pathways code; #879 is independent of it by its own body and by branch content (diverged, neither contains the other). kdmccormick approved 2026-10-29. Brian is doing his own pass (2026-10-30); findings arrive from him as he goes.
+First of the PRs split out of openedx/frontend-app-learner-dashboard#875 (ChrisChV, open-craft fork). Covers the dashboard heading only ("My Learning" title, "Courses" heading, sticky heading and Refine filter, header links renamed to Explore and My Learning) and depends on no pathways code; #879 is independent of it by its own body and by branch content (diverged, neither contains the other). kdmccormick approved 2026-10-29. Brian's pass (2026-10-30 to 31) is done and posted: two PR comments (entries 3 and 5) and one thread (entry 2). Waiting (2026-10-31): Brian will not approve without the widget id rename and the reorder question answered, and both rest on frontend-base: openedx/frontend-base#334 (widget id aliases, PR #335 open) and openedx/frontend-base#336 (whether default widget ids and order are an app's contract). The author dropping the rename or the reorder would avoid the wait but undo what earlier reviewers asked for (kdmccormick's My Learning thread; the Figma order). Next pass on 878 once #334 and #336 resolve, or the author replies.
 
 ## Passes
 
@@ -14,7 +14,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
-| 2026-10-30 | 162fad7fde | aca7e369ba | | |
+| 2026-10-30 | 162fad7fde | aca7e369ba | whole diff | comments (entries 2, 3, 5) |
 
 ## Ledger
 
@@ -40,7 +40,7 @@ Rests on: src/widgets/LearnerDashboardHeader/messages.js at aca7e369ba
 
 ### 3. Naming is split between discover/explore and courses/myLearning after the rename commit
 
-Status: open, candidate comment
+Status: posted https://github.com/openedx/frontend-app-learner-dashboard/pull/878#issuecomment-6539158727 (2026-10-31; the widget id half: `headerLinkCourses.v1` should become `headerLinkMyLearning.v1` once openedx/frontend-base#334 / PR #335 lets the old id stay as an alias; the code-level rename half of the candidate was not posted)
 Rests on: src/widgets/LearnerDashboardHeader/{app.tsx, DiscoverLinkMenuItem.jsx, DiscoverLinkMenuItem.test.jsx, MyLearningLink.jsx, messages.js}, src/data/services/lms/urls.js, src/tracking/constants.js at aca7e369ba; npm versions of @openedx/frontend-app-learner-dashboard; tags v1.0.0 and v2.0.0-alpha.1
 
 Brian's finding (2026-10-30). Enumerated:
@@ -62,13 +62,13 @@ Widget ids are a targeting surface: of the seven `WidgetOperationTypes`, five ta
 
 The written contract covers slots, not widgets. ADR 0009 defines the id format (`org.openedx.frontend.slot.<module>.<identifier>.<version>`), says a slot's contract is its props, its page location and the general kind of content, and states that "the presence, absence, shape, or implementation of child widgets ... is explicitly not part of the slot's contract, and may change at any time". That sentence is about what bumps a slot's version, not a licence to rename widget ids. ADR 0016 treats default widget ids as public in practice: "All existing inner slot ids and default widget ids are preserved", and a new widget id is counted as "the public surface gains ... one new widget id ... following the reverse-DNS-versioned convention from ADR 0009". No ADR gives widget ids a deprecation path, and with no alias a renamed widget id simply stops matching old `relatedId`s.
 
-Net for entry 3: renaming the two header widget ids is a break for any 1.0.0 site config that targets them, with no compatibility shim available, so it is a documented `!` change in the 2.0.0 line or not done. Adding `idAliases` for widgets in frontend-base is the shim that does not exist yet; filed as openedx/frontend-base#334 (2026-10-30).
+Net for entry 3: renaming the two header widget ids is a break for any 1.0.0 site config that targets them, with no compatibility shim available, so it is a documented `!` change in the 2.0.0 line or not done. Adding `idAliases` for widgets in frontend-base is the shim that does not exist yet; filed as openedx/frontend-base#334 (2026-10-30), implemented in openedx/frontend-base#335 (open, 2026-10-31).
 
 Follow-up (Brian asked whether several operations could stand in for a widget alias). Checked in `runtime/slots/widget/utils.tsx` and `runtime/slots/utils.ts` at ae5ec93: `findRelatedWidgetIndex` returns null on a miss and every relative operation (`insertAfter`, `insertBefore`, `replace`, `remove`) is then a silent no-op; a widget carries exactly one `id`; and operations are gathered app by app in `siteConfig.apps` order, so the app's own operations run before an operator's and the app cannot sequence anything after them. The one shape that resembles an alias is a second, empty widget registered under the old id beside the real one under the new id: positional inserts against the old id keep working, but `REMOVE` on the old id removes only the empty anchor (the operator's hide stops hiding) and `REPLACE` on it renders the operator's widget next to the app's (a duplicate). Not a workaround. The real shim is `idAliases` on widgets in frontend-base: `findRelatedWidgetIndex` matching `relatedId` against `[id, ...idAliases]`, the mirror of #178.
 
 ### 5. Reordering the default header links moves plugins that insert relative to them
 
-Status: open, candidate comment (disclosure); contract question parked for frontend-base
+Status: posted https://github.com/openedx/frontend-app-learner-dashboard/pull/878#issuecomment-6540498868 (2026-10-31, points at the contract question); contract question filed as openedx/frontend-base#336 (settled 2026-10-31)
 Rests on: src/widgets/LearnerDashboardHeader/app.tsx at aca7e369ba and at v1.0.0; PR body as of 2026-10-31; openedx/frontend-base at ae5ec93: runtime/slots/widget/types.ts, docs/decisions/0009-slot-naming-and-lifecycle.rst, docs/decisions/0016-shell-layout-replacement-seams.rst
 
 Brian's question (2026-10-31): default content is outside the slot contract, but a plugin that wanted "after the last link" would `INSERT_AFTER` the Discover widget and one that wanted "before the first" would `INSERT_BEFORE` the Courses widget; after the reorder both land in the wrong place, which feels breaking unless it is explicitly said not to be.

@@ -5,4 +5,5 @@ issues:
   openedx/frontend-base#336
 
 prs:
+  openedx/frontend-base#335
   openedx/frontend-app-learner-dashboard#878
