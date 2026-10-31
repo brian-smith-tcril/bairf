@@ -8,3 +8,14 @@ State, 2026-10-30: openedx/frontend-base#335 open against `main`, one commit, se
 - `decisions-334.md`: decisions made while implementing, embedded whole in the PR
 - `manual-testing-334.md`: the dev-site showcase pass, embedded whole in the PR; `manual-testing-334.patch` is its local edit, ready for `git apply`
 - `pr-body-335.md`: mirror of the PR description
+
+## Self-review of #335, 2026-10-30, at `565a8a9`
+
+Fixed: decision 6 described a `makeRelativeOp` helper that was never written, and decision 1 did not say `matchesWidgetId` becomes package API through the `export *` chain. Both corrected in the body and `decisions-334.md`.
+
+Open, awaiting Brian's pick between fixing here and a follow-up:
+
+- `runtime/slots/widget/WidgetContext.tsx:6`: the default context value lists `role: undefined` but not the new `widgetIdAliases`. From this change; one line.
+- `runtime/slots/widget/utils.tsx:126`: `createIdentifiedWidget` destructures `id` for `key` but reads `operation.id` for `widgetId`; the new `widgetIdAliases={idAliases}` sits between them on the destructured side. Pre-existing; zero-size.
+
+Checked and found fine: no exact widget id comparison remains in `runtime` outside the widget directory; the sort test's declaring operation is an `INSERT_AFTER`, so it exercises the new comparison inside the relative branch; the `useMemo` dependency on the aliases array is the operation's own reference, as stable as `operations`; precedence is the pre-existing first-match loop; scope mirrors #178 (runtime code and tests only); CI green on commitlint, tests and both version checks; openedx/frontend-app-learner-dashboard#878 exists and is open; the Slot test's `renderedWidgetTexts` sees only widget divs because the default layout is a fragment and `Slot` renders no wrapper.
