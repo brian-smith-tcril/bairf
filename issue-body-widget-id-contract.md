@@ -1,41 +1,40 @@
-**Goal:** decide, and write down, what an app promises about the widgets it registers by default: whether their ids are public surface, whether their order is, and what a change to each is called. Today the only general answer to the first question is ADR 0009, which says no; frontend-base keeps its own shell defaults as if the answer were yes (ADR 0016); and nothing answers the second.
+**Goal:** decide whether we accept that changing an app's default widgets (their ids or their order) breaks plugins, and if we do, say so explicitly: what a site operator is expected to do when it happens, and what an app is expected to publish so the operator finds out.
 
-**Why:** the one general statement and the one recorded practice point in opposite directions.
+**Why:** "default content is not part of the slot contract" is more complicated than it sounds once operations take a `relatedId`.
 
-- [ADR 0009](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) (Accepted), section 2, lists what a slot's contract is comprised of and adds: "though this does not include the presence, absence, shape, or implementation of child widgets: a given slot's content, default or otherwise, is explicitly *not* part of the slot's contract, and may change at any time". This is the only statement that applies to every slot and every app.
-- [ADR 0016](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0016-shell-layout-replacement-seams.rst) (Proposed) is scoped to the shell's header and footer. For that restructuring it promises: "All existing inner slot ids and default widget ids are preserved. Plugins that target ``desktopCenterLinks.v1``, [...] continue to work without modification", and counts the change as "The public surface gains one new slot id [...] and one new widget id". It does not say this is a rule, or that it applies outside the shell.
+[ADR 0009](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst), section 2, excludes default content from a slot's contract: "a given slot's content, default or otherwise, is explicitly *not* part of the slot's contract, and may change at any time". That is the right rule for the slot's own version. But five of the seven `WidgetOperationTypes` take a `relatedId` (`INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE`, `REMOVE`, `OPTIONS`), and the only widgets a plugin can name are the ones that exist in the slot, which in practice means the app's defaults. So plugins will often depend on default content, and when the app changes it the plugin breaks:
 
-Read literally, ADR 0009 says a default widget may be removed, renamed or moved at any time, so a plugin whose `relatedId` names one is outside any contract. For its own shell, frontend-base does not act that way: ADR 0016 preserves default widget ids precisely so that plugins targeting them keep working. For every other app there is nothing but the ADR 0009 clause, which promises nothing. Neither matches what plugin authors rely on: five of the seven `WidgetOperationTypes` take a `relatedId` (`INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE`, `REMOVE`, `OPTIONS`), a miss in `findRelatedWidgetIndex` is a silent no-op, and apps target defaults in both directions (frontend-app-learner-dashboard inserts its order-history link with `INSERT_BEFORE` on `org.openedx.frontend.widget.header.desktopAuthenticatedMenuLogout.v1`, a shell default registered in `shell/header/app.tsx`, and ships its own default header link ids that operators target the same way).
+- A renamed or removed id: `findRelatedWidgetIndex` returns `null` and the operation is a silent no-op. The operator's override, removal or options stop applying with nothing to see.
+- A reorder: every id still matches, but a plugin that wrote `INSERT_AFTER` the last default to mean "at the end" (the only way to say "last" without depending on `siteConfig.apps` order) now renders in the middle.
 
-Order is the same question one step further, and neither ADR reaches it. Given a slot whose defaults are widgets A, B, C, a plugin meaning "at the end" writes `INSERT_AFTER` C, because `APPEND` from another app is ordered by `siteConfig.apps` and cannot say "last" on its own. If the app reorders its defaults to C, B, A, every id is preserved and the plugin renders, in the middle. ADR 0016's "continue to work without modification" has two readings, still renders and still renders where the author put it, and that ADR never had to pick because its change moved JSX verbatim and kept the order.
+This is not hypothetical. frontend-app-learner-dashboard inserts its order-history link with `INSERT_BEFORE` on `org.openedx.frontend.widget.header.desktopAuthenticatedMenuLogout.v1`, a shell default from `shell/header/app.tsx`, and ships its own default header link ids that operators target the same way. [ADR 0016](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0016-shell-layout-replacement-seams.rst), for the shell's header and footer, went out of its way to keep "all existing inner slot ids and default widget ids" so that "plugins that target [them] continue to work without modification", which is frontend-base treating its own defaults as something plugins may depend on, without saying that in general.
 
-Concrete case: openedx/frontend-app-learner-dashboard#878 keeps the three header link widget ids and changes their order from Courses, Programs, Discover to Explore, My Learning, Programs. Whether that is a `feat` or a `feat!` for the package depends on the answer here. openedx/frontend-base#334 (widget id aliases) is the deprecation mechanism for ids once ids are decided to be public; it does not touch order.
+Concrete case: openedx/frontend-app-learner-dashboard#878 keeps the three header link widget ids and changes their order from Courses, Programs, Discover to Explore, My Learning, Programs. Whether that is a `feat` or a `feat!`, and what the release notes owe operators, depends on the answer here. openedx/frontend-base#334 (widget id aliases) is a mechanism for softening id renames; it does nothing for order.
 
 > [!NOTE]
-> The proposal below was generated by Claude (Claude Code) and reviewed before posting.
+> The questions below were generated by Claude (Claude Code) and reviewed before posting.
 
 <details>
 <summary> Claude Plan </summary>
 
-Written 2026-10-31 against `ae5ec93` on `main`. Three independent decisions, then where they are written.
+Written 2026-10-31 against `ae5ec93` on `main`. Three questions; the second and third only matter if the first is answered yes.
 
-### 1. Are an app's default widget ids part of its public surface?
+### 1. Are we cool with it?
 
-ADR 0016 says yes for the shell's header and footer; nothing says it for any other app, and ADR 0009 says no for all of them. If yes: renaming or removing a default widget id is a breaking change of the app that registers it, versioned by that app's package, not by the slot's `.vN`; the deprecation path is `idAliases` on the widget (#334) kept for at least one release, the mirror of slot aliases (#178). If no, ADR 0016's preservation promise is a one-off and the practice above is unsupported, and relative operations against defaults are documented as best-effort.
+Yes: default widgets may change between app versions, and a plugin that names one accepts that. The slot's version is unaffected, ADR 0009 stands as written, and the cost lands on operators at upgrade time.
 
-### 2. Is the order of an app's default widgets part of its public surface?
+No: an app's default widget ids, and possibly their order, are part of that app's public surface, versioned by the app's package. A rename, removal or reorder is a breaking change of the app. Ids and order can be decided separately: keeping ids while allowing reorders makes `REPLACE`, `REMOVE` and `OPTIONS` stable and leaves `INSERT_AFTER` and `INSERT_BEFORE` placing against a target that may have moved.
 
-Separate from 1, because preserving an id keeps `REPLACE`, `REMOVE` and `OPTIONS` whole but only keeps `INSERT_AFTER` and `INSERT_BEFORE` placing against the right widget, not in the right place.
+### 2. If yes, what does a site operator do when it happens?
 
-- (a) Order is not promised. A relative operation places against the target's current position; an app may reorder its defaults in a minor release. "First" and "last" are expressed with `PREPEND` and `APPEND`, and a plugin that needs "last" regardless of `siteConfig.apps` order has no way to say it. Cheapest for apps, and the reading closest to ADR 0009's clause.
-- (b) Order is promised. A reorder of default widgets is a breaking change of the app, disclosed like a rename. Plugins can rely on `INSERT_AFTER` the last default; apps carry a major bump for navigation reorders.
+They need to find out, then fix their site config. Finding out is the hard part because the failure is silent. Options, not exclusive: a console warning from `findRelatedWidgetIndex` on a miss (today it returns `null` quietly); a documented expectation that operators re-check targeted ids on every app upgrade; aliases (#334) so an id rename keeps working for a release while the operator migrates.
 
-Either way the TSDoc on `INSERT_AFTER` and `INSERT_BEFORE` in `runtime/slots/widget/types.ts` states the rule, since that comment is where a plugin author reads what the operation promises.
+### 3. If yes, what does an app publish so the operator can find out?
 
-### 3. Where it is written
+Where the change is announced, and in what form, so that an operator upgrading an app knows which `relatedId`s to re-check. Candidates: the conventional-commits footer (`BREAKING CHANGE:` naming old and new ids and order), which lands in the generated release notes; a changelog section per release listing default widget ids added, removed, renamed and reordered; a per-app list of default widget ids and their order in the app's docs, so the diff is visible. The expectation should also say whether a reorder counts, since a reorder touches no id.
 
-The ADR 0009 clause stays true for its own purpose (what bumps a slot's version) and is amended to say what it does not cover: the registering app's contract over its default widgets, which is the outcome of 1 and 2. Either an amendment to ADR 0009 section 2 with ADR 0016 updated to cite it, or a short new ADR that both reference. ADR 0016 is still Proposed, so its wording can change in the same pass.
+### Where the answer is written
 
-Not here: the alias mechanism itself (#334); dependency ordering between relative operations.
+The ADR 0009 clause stays true for its purpose (what bumps a slot's version) and is amended to say what it does not cover, with the answers to 1 to 3 beside it; or a short new ADR that ADR 0009 and ADR 0016 both reference. Either way the TSDoc on the relative operations in `runtime/slots/widget/types.ts` states the rule, since that comment is where a plugin author reads what the operation promises.
 
 </details>
