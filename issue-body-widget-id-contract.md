@@ -1,4 +1,4 @@
-**Goal:** decide whether we accept that changing an app's default widgets (their ids or their order) breaks plugins, and if we do, say so explicitly: what a site operator is expected to do when it happens, and what an app is expected to publish so the operator finds out.
+**Goal:** decide whether an app is allowed to break plugins by changing its default widgets (renaming or removing an id, or reordering them). If it is, document that, along with what the app publishes when it makes such a change and what a site operator is expected to do about it.
 
 **Why:** "default content is not part of the slot contract" is more complicated than it sounds once operations take a `relatedId`.
 
