@@ -24,6 +24,8 @@ Open from the pass, not changed: the "key moves to `commonAppConfig`" table row 
 
 ## Second review pass, 2026-11-02
 
+Amended into the same commit and force-pushed: `brian-smith-tcril/frontend-base@0a26d82`.
+
 15. **A section's intro is one sentence naming what is contract.** It never explains another ADR and never says what is not contract; "not contract" is the "Not breaking" list's job. Applied to every Decision section: the ADR 0009 commentary left section 2, "order is not" left section 3, the examples note left section 4, "including the types its slot props are built from" left section 6 (how a type is used does not matter, only that it is exported), and section 7 gained the intro it lacked, with the `@openedx/frontend-base` range folded in.
 16. **Section 8, DEPRs**, holds the branch model, moved out of Consequences. It answers two questions: a DEPR is filed when the breaking changes on main land on `stable` as a new major; it lists every breaking change since the previous major, from the release notes, with what changed and what a consumer has to do. Framed around the landing on `stable`, not around what main does not get.
 17. **Consequences is four bullets**: every frontend app follows these rules; the shell follows these rules (moved out of section 1, where it was a scope note stuck onto the definition); a maintainer classifies by diff; a relative placement accepts that the default may move. Cut: the rename-is-two-changes bullet (not always true: a rename done at once is simply breaking), the TSDoc pointer, and the parked-topics bullet (decision 7's last trace; the parked topics go in the PR body only).
