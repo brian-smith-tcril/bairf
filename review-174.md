@@ -118,7 +118,7 @@ Options:
 
 ### 10. Is there a frontend-base guide for renaming or changing a slot prop?
 
-Status: resolved as a finding, 2026-11-02; Brian is considering an issue, none drafted
+Status: resolved: openedx/frontend-base#340 "Write a how-to for renaming or changing a slot prop", opened 2026-11-02 from `issue-body-slot-prop-howto.md`
 Rests on: openedx/frontend-base at ae5ec93 (`docs/how_tos/`, `docs/decisions/0009`, `0011`, `0016`); `gh search issues --repo openedx/frontend-base slot` on 2026-11-02
 
 No. `docs/how_tos/` holds six guides (automatic-case-conversion, caching, i18n, migrate-frontend-app, permissions, theming); the migration how-to's slot section says only to rename `plugin-slots` to `slots`, switch `<PluginSlot />` to `<Slot />` and re-id per ADR 0009. ADR 0009 is the whole of the guidance: props are the contract (section 2), a change that would break widgets bumps the version (`v1` → `v2`) and the old version goes through the DEPR process and stays one release (section 3). It does not describe the additive path (new prop beside the old, old one marked deprecated, removed at the next version), how to mark a prop deprecated in TypeScript and in the slot README, what a plugin author should see, or how a prop type change (frontend-base#339) differs from a prop rename. ADR 0011 and 0016 say nothing about props. No open or closed frontend-base issue asks for such a guide; the nearest are #339 (prop types) and #336 (default widget ids and order), both Brian's "Decide ..." issues from this and the learner-dashboard review, and closed #64 "Rename slots" and #62 "Simplify slot types", neither of which mentions props or deprecation.
