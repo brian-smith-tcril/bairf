@@ -90,6 +90,8 @@ One short section, in the order a plugin author meets it: the release note; the 
 
 ## Prior art: every v1/v2 pair in the openedx org, read 2026-11-02
 
+Background only. The how-to does not mention FPF or any of these slots (Brian, 2026-11-02); they show what shape the examples need.
+
 `gh search code "org.openedx.frontend" ".v2" --owner openedx` finds three slots with two live versions, all FPF-era (`PluginSlot`). No frontend-base `<Slot>` has a `v2` yet. No FPF or frontend-base slot has ever had a prop renamed across versions: each v2 changed what the slot wraps or when it renders, and kept or extended the props.
 
 | Slot | Repo, PR, date | Why v2 | Arrangement | v1 marked deprecated | DEPR |
@@ -105,3 +107,16 @@ What the three settle for the how-to:
 - **Deprecation marking.** #682 is the full set and the only one with a code-level mark; the DEPR ticket itself asked "Is there no native way to deprecate a plugin slot?". #2000 shows the cost of README-only marking: nothing nudged anyone to file the DEPR.
 - **DEPR timing.** #681 was filed at v2 time, per ADR 0009 section 3 as written (FPF ADR 0003 is the same text), with the named-release field filled in. That is candidate (a) of open question 1, in practice.
 - **Compat.** `frontend-base-compat`'s header map carries `header_desktop_secondary_menu.v2` and `learning_header_actions.v1` only (`src/mappings/slotMaps/header.ts`), so an app's FPF-era version pairs do not all survive the port; not the how-to's concern, noted for the migration how-to.
+
+## Examples the how-to carries
+
+Derived from the three pairs, written in frontend-base terms only, one running case: `courseCatalogIntro` with `courseDataResultsLength` becoming `resultsCount`. Each is a diff the maintainer or plugin author can apply.
+
+1. **The slot component, before and after.** v1 alone; then v2 wrapping v1, the value computed once and passed as `resultsCount` to v2 and `courseDataResultsLength` to v1, default content unchanged inside v1.
+2. **The props interfaces.** v2's new interface; v1's unchanged but `@deprecated`, the TSDoc naming the v2 id and the prop mapping (naming per open question 2).
+3. **The README.** The v2 section with the "uses the slot's props" example retargeted; the v1 section headed by the deprecation admonition, the mapping and the DEPR link, its examples left as they were.
+4. **The plugin author's move.** A site-config diff: `slotId` from `.v1` to `.v2`, the destructured prop from the old name to the new one, the type annotation to the v2 interface.
+5. **Coexistence, in prose.** A v1 operation keeps working inside v2's default content; a v2 `REPLACE` of `defaultContent`, or a v2 layout replacement, takes v1 and its widgets with it. No code.
+6. **The removal.** The diff deleting the inner `Slot`, the v1 interface and the v1 README section, with the `feat!:` subject and `BREAKING CHANGE:` footer text.
+
+Not carried over from the pairs: a v2 whose only purpose is a new default child (default content is outside the contract under ADR 0009 section 2, and layouts replace FPF's `Modify`), and a v2 that double-wraps a single existing slot with the same contract (adds nothing; stated once under classification). A second worked example for a non-prop trigger, a slot that grows to wrap more of the page, is open: one sentence under classification, or a short second case.
