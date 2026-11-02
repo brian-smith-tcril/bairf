@@ -10,7 +10,7 @@
 
 ## Review pass on the first draft, 2026-11-02
 
-First draft as pushed to the fork: `brian-smith-tcril/frontend-base@a9ef976`.
+First draft as pushed to the fork: `brian-smith-tcril/frontend-base@a9ef976`. Rewritten draft, amended into the same commit and force-pushed: `brian-smith-tcril/frontend-base@d73064d`.
 
 8. **Context is two sentences**: "A maintainer of an app needs to know which changes to it are breaking." and "This ADR lists what an app promises." The release machinery (semantic-release, alphas, graduation) is not context; the branch model appears once, in Consequences, as the reason the markings matter. The history of where the question came up (ADR 0009's exclusion, ADR 0016, the Paragon range bumps) was tried as a bulleted Context and dropped: a "nothing says" or "was undecided" framing is not how the sibling ADRs open, and the facts are already in the Decision and the rejected alternatives.
 9. **Every Decision section has one shape**: a sentence naming what is contract, then a "Breaking:" list and a "Not breaking:" list. Route roles and `provides` moved out of the config section into their own section 5 so the config section is the sentence and the table. The six config examples are a third column of the table instead of prose.
