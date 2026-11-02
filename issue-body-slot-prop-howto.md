@@ -7,8 +7,6 @@
 
 The gap shows in review. openedx/frontend-app-catalog#174 renames the catalog page's data layer and its internals but keeps the slot props `courseDataResultsLength` and `totalCourses` under their old names "so existing site plugins keep working", because there is no documented way to do otherwise. The additive path (add the new prop beside the old one, mark the old one deprecated, remove it at the next slot version) fits ADR 0009 as written, but a maintainer has to work that out from the ADR each time, and nothing says how to mark the deprecation so a plugin author notices.
 
-This issue covers the prop rename and prop change case. Its scope may grow.
-
 <details>
 <summary> Claude Plan </summary>
 
