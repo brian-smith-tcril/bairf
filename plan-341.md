@@ -1,6 +1,6 @@
 # Plan for openedx/frontend-base#341
 
-Written 2026-11-02 against `72d7053` on `main`, settled with Brian in a grilling session the same day. The ADR is written on Brian's word.
+Written 2026-11-02 against `72d7053` on `main`, settled with Brian the same day; mirrored in `issue-body-341.md`. The ADR is written on Brian's word.
 
 ## What the ADR decides
 
@@ -54,7 +54,7 @@ Narrowing a range so a major it accepts today falls out (`react: ^18` to `^19`) 
 
 ### Where it lands
 
-- A new ADR in `docs/decisions/`, rst. Number free at write time: `0017` is taken by an unmerged commit (`97241feb`, `App.defaultConfig`) and `0018` by openedx/frontend-base#326. References ADR 0009, ADR 0011, ADR 0013, ADR 0016 and OEP-10 ADR 0002; none is edited, since none records a decision this one changes. Clarifications of 0009 (roles are slot API; the default-content exclusion governs the slot's version only) live in the new ADR's text.
+- A new ADR in `docs/decisions/`, rst. Number free at write time (`0018` is claimed by openedx/frontend-base#326; `0017` landed in #298). References ADR 0009, ADR 0011, ADR 0013, ADR 0016 and OEP-10 ADR 0002; none is edited, since none records a decision this one changes. Clarifications of 0009 (roles are slot API; the default-content exclusion governs the slot's version only) live in the new ADR's text.
 - In the same PR: the TSDoc on the relative widget operations in `runtime/slots/widget/types.ts` gets the order rule, and the `idAliases` TSDoc's "at least one release" becomes "until a breaking change removes it".
 - Procedures (rename path, deprecation marking) stay in #340.
 
@@ -71,4 +71,4 @@ Left out of the ADR on purpose, to be named in the ADR PR's body so they are par
 
 - **Message ids.** Removing or adding one is not breaking on its own; renames have not been treated as breaking before. Not mentioned in the ADR at all, rather than declared out.
 - **Route paths.** Whether changing a URL is an app-contract break (with a redirect exception) or a product and deployment concern. Route roles are in; paths are not decided.
-- **Regular `dependencies`.** A non-peer major bump is the app's own business unless its types leak through an export, but Brian recalls these get tricky; not decided.
+- **Regular `dependencies`.** A non-peer major bump is the app's own business unless its types leak through an export, but these get tricky in practice; not decided.
