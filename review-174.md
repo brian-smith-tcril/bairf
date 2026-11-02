@@ -19,6 +19,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
 | 2026-10-30 | 586f5f6d7f | ead6afdfbd | ADR threads and history; endpoint name across app, ADR and backend; enumeration of course-named things; not the diff line by line | comments: one summary comment, two items |
+| 2026-11-02 | 586f5f6d7f | 767011e12e | | |
 
 ## Ledger
 
