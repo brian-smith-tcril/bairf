@@ -66,3 +66,10 @@ Rests on: e87d4fd2d7
 
 Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6524286800 (as the edit on the 174 comment: `CatalogSearchResponse` suggested, tied to the endpoint-name question)
 Rests on: src/data/catalog-list-search/types.ts at e87d4fd2d7
+
+### 7. The response type's shape changes here, and it is what `CourseCatalogDataTableSlotProps.displayData` exposes to plugins
+
+Status: open: carried from the #174 review (its entry 9) on Brian's word 2026-11-02; to be worked out on the re-read of the rebased commit
+Rests on: #174 at 767011e12e (src/index.ts, package.json `exports`); this PR's types change at e87d4fd2d7, not re-read at 089a0cda88
+
+In #174 the `displayData` type on `CourseCatalogDataTableSlotProps` only changes name (`CourseListSearchResponse` → `CatalogSearchResponse`), with an identical shape, and no data-layer type is exported from `src/index.ts` or reachable through the `exports` map, so a plugin typed through the slot props sees nothing. This PR is where the shape itself moves: `results[]` becomes the mixed union, so a plugin that reads `displayData.results[i].data` as a course through `CourseCatalogDataTableSlotProps['displayData']` gets a union it must narrow, and its type check fails with no name having changed at all. That is the backwards-compatibility question #174 does not have. To settle on the re-read: what exactly a plugin typed from the slot props loses when the union lands (which member accesses stop compiling); whether the slot prop keeps the mixed type or the slot narrows for its consumers; whether a `v2` slot is the frontend-base pattern for a prop whose type changes (the rule is for a slot that changes what it wraps); and whether the alpha-only-release argument from #174 entry 3 is enough to just document it in the body and the slot READMEs.
