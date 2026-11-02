@@ -21,3 +21,14 @@ First draft as pushed to the fork: `brian-smith-tcril/frontend-base@a9ef976`. Re
 14. **rst checked with docutils** (`rst2html`, brew): the only messages are the Sphinx-only `:doc:` role in References, which ADR 0016 produces too.
 
 Open from the pass, not changed: the "key moves to `commonAppConfig`" table row describes a diff an app cannot make in its own code, and ADR 0009 section 3's deprecation process is not reconciled with "no DEPR on main". Section 6's "including the types its slot props are built from" is a how-used clause by the reasoning that removed the Context bullet.
+
+## Second review pass, 2026-11-02
+
+15. **A section's intro is one sentence naming what is contract.** It never explains another ADR and never says what is not contract; "not contract" is the "Not breaking" list's job. Applied to every Decision section: the ADR 0009 commentary left section 2, "order is not" left section 3, the examples note left section 4, "including the types its slot props are built from" left section 6 (how a type is used does not matter, only that it is exported), and section 7 gained the intro it lacked, with the `@openedx/frontend-base` range folded in.
+16. **Section 8, DEPRs**, holds the branch model, moved out of Consequences. It answers two questions: a DEPR is filed when the breaking changes on main land on `stable` as a new major; it lists every breaking change since the previous major, from the release notes, with what changed and what a consumer has to do. Framed around the landing on `stable`, not around what main does not get.
+17. **Consequences is four bullets**: every frontend app follows these rules; the shell follows these rules (moved out of section 1, where it was a scope note stuck onto the definition); a maintainer classifies by diff; a relative placement accepts that the default may move. Cut: the rename-is-two-changes bullet (not always true: a rename done at once is simply breaking), the TSDoc pointer, and the parked-topics bullet (decision 7's last trace; the parked topics go in the PR body only).
+18. **Rejected alternatives dropped entirely.** Neither of the two with substance (order as contract; a fixed alias window) fully explained its rejection, and doing so gets complicated. Nine of the eighteen sibling ADRs have no such section. The PR body notes that none were added and that they can be if wanted.
+19. **ADR 0016 is no longer referenced**; its last mention went with the rejected alternatives. Decision 3's list is now ADR 0009, 0011 and 0013 plus OEP-10 ADR 0002.
+20. **"An exported context is an export (section 6)" cut** from the slot surroundings bullet: section 6 already covers it.
+
+Open, unchanged: the "key moves to `commonAppConfig`" table row, and ADR 0009 section 3's deprecation process against section 8.
