@@ -1,6 +1,6 @@
 # Decisions while writing the ADR for openedx/frontend-base#341
 
-1. **Number 0019.** `0017` landed in #298 after the plan was first written; `0018` is the file in the open PR #326. Taking `0019` avoids a clash with #326 whichever lands first; a gap if #326 never lands is harmless.
+1. **Number 0019.** `0017` landed in #298 after the plan was first written; `0018` is the file in the open PR #326. Taking `0019` avoids a clash with #326 whichever lands first; a gap if #326 never lands is harmless.  Superseded by decision 21.
 2. **Status Proposed**, as ADR 0016 is; ADR 0017 landed as Accepted but was proposed in the same PR that implemented it. This one has no implementation to carry it.
 3. **No edits to ADR 0009, 0013 or 0016.** None records a decision this ADR changes; the clarifications of 0009 (roles are slot API; the default-content exclusion governs the slot's version only) are stated in 0019 section 2 and the References link both ways only from 0019.
 4. **ADR 0012 is not referenced.** It is marked Moved; the reference goes to OEP-10 ADR 0002 directly, as the README does.
@@ -34,3 +34,7 @@ Amended into the same commit and force-pushed: `brian-smith-tcril/frontend-base@
 20. **"An exported context is an export (section 6)" cut** from the slot surroundings bullet: section 6 already covers it.
 
 Open, unchanged: the "key moves to `commonAppConfig`" table row, and ADR 0009 section 3's deprecation process against section 8.
+
+## Renumbered to 0018, 2026-11-02
+
+21. **Number 0018, superseding decision 1.** Whether openedx/frontend-base#326 lands first is not assumed; this ADR takes `0018` now, and whichever PR lands second renumbers. The file is `docs/decisions/0018-app-breaking-changes.rst`, the three TSDoc references in `runtime/slots/widget/types.ts` say ADR 0018, and the commit subject names 0018. Amended and force-pushed: `brian-smith-tcril/frontend-base@ef8835c`.
