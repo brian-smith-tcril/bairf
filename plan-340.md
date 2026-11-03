@@ -151,7 +151,7 @@ Why: the examples stay inline in the markdown for readability; tests verify that
 | `GreetingSlotV1V2.tsx` | v2 wrapping v1, after step 3 | `GreetingSlotV1Props`, `GreetingSlotProps` alias, `GreetingSlotV2Props`, default |
 | `GreetingSlotV2.tsx` | after removal | `GreetingSlotV2Props`, default |
 | `BannerSlotV1.tsx` / `BannerSlotV1V2.tsx` / `BannerSlotV2.tsx` | same three | same shape plus `Notice`; a minimal local `Banner` component (not shown in the markdown) renders `message` or `notice.message` |
-| `FilterSlotV1.tsx` / `FilterSlotV1V2.tsx` / `FilterSlotV2.tsx` | same three | `selectedTag` becoming `selectedTags`; `v1` gains `selectedTags` too (decision 14) |
+| `TaggableItemSlotV1.tsx` / `TaggableItemSlotV1V2.tsx` / `TaggableItemSlotV2.tsx` | same three | `selectedTag` becoming `selectedTags`; `v1` gains `selectedTags` too (decision 14) |
 | `GreetingSlotRenamedInPlace.tsx` / `GreetingSlotBumpedInPlace.tsx` | the two what-not-to-do diffs' after-states | `GreetingSlotProps { displayName }` on the `v1` id / on the `v2` id (decision 13) |
 | `greetingWidgets.tsx` | the operator diff's before and after | `customGreetingV1`, `customGreetingV2` (decision 13) |
 
@@ -176,7 +176,7 @@ Cases, run with `describe.each` over the states where they must hold:
 
 Banner: the same table with `notice={{ message: 'Hi', severity: 'info', onDismiss }}`; case 2 asserts the v1 widget received `message === 'Hi'`, case 6 that a v1 layout reads `message` from context, case 3/7 that v2 sees `notice.severity`.
 
-Filter: the same table with `selectedTags={['red']}`, plus one case on v1+v2 with `['red', 'blue']`: a v1 widget reading both props prints "red of red, blue" (decision 14).
+Taggable item: the same table with `selectedTags={['red']}`, plus one case on v1+v2 with `['red', 'blue']`: a v1 widget reading both props prints "red of red, blue" (decision 14).
 
 Added after the review round (decision 13): the operator's widget from the how-to's diff (a `component` `REPLACE` of `defaultContent`) replaces the default content on v1 only and v1+v2 before the move, on v1+v2 and v2 only after it, and does nothing to v2 only before the move; the renamed-in-place slot gives a widget reading `userName` undefined, with `@ts-expect-error` on that widget so the typecheck enforces "would stop compiling"; the bumped-in-place slot renders the default content and not the operator's v1 widget.
 
