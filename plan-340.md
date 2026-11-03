@@ -129,6 +129,8 @@ Carry these into `pr-body-<n>.md` when the PR is opened (Brian, 2026-11-03):
 
 ## Example to write later in this how-to: a slot whose default widget takes widget options (Brian, 2026-11-03; after the banner example, in this PR)
 
+Also set aside for a later example (Brian, 2026-11-03, while shaping the list example): a prop whose set of allowed values widens, where a `v1` widget typed against the narrow union can receive a value it was never written for.
+
 The FPF "modify props" pattern now lives in widget `OPTIONS` handled by the app's default widget: openedx/frontend-app-catalog `src/slots/CourseAboutSidebarSocialSlot` (frontend-base version; the FPF one at `legacy-mfe:src/plugin-slots/CourseAboutSidebarSocialSlot` had "modify items"). Mechanism checked in frontend-base `runtime/slots/widget/hooks.ts`: `useWidgetOptions()` reads `slotId`/`widgetId` from `WidgetContext` and collects `OPTIONS` operations for that slot id only. In the v2-wraps-v1 arrangement the default widget sits inside the v1 `<Slot>`, so a v2 operator's `OPTIONS` on `defaultContent` targets the inner `<Slot>` element and is read by nothing. An example with options has to show the default widget reading both ids (`useWidgetOptionsForId` on the v2 id, if exported) or another arrangement. Not needed for the banner example: its default widget takes no options, so v1 operators reach the message only through a `component` widget or a layout calling `useSlotContext()`, and both keep working wrapped.
 
 ## Tests for the how-to's examples (Brian, 2026-11-03; implemented the same day, decision 12)
@@ -149,6 +151,9 @@ Why: the examples stay inline in the markdown for readability; tests verify that
 | `GreetingSlotV1V2.tsx` | v2 wrapping v1, after step 3 | `GreetingSlotV1Props`, `GreetingSlotProps` alias, `GreetingSlotV2Props`, default |
 | `GreetingSlotV2.tsx` | after removal | `GreetingSlotV2Props`, default |
 | `BannerSlotV1.tsx` / `BannerSlotV1V2.tsx` / `BannerSlotV2.tsx` | same three | same shape plus `Notice`; a minimal local `Banner` component (not shown in the markdown) renders `message` or `notice.message` |
+| `FilterSlotV1.tsx` / `FilterSlotV1V2.tsx` / `FilterSlotV2.tsx` | same three | `selectedTag` becoming `selectedTags`; `v1` gains `selectedTags` too (decision 14) |
+| `GreetingSlotRenamedInPlace.tsx` / `GreetingSlotBumpedInPlace.tsx` | the two what-not-to-do diffs' after-states | `GreetingSlotProps { displayName }` on the `v1` id / on the `v2` id (decision 13) |
+| `greetingWidgets.tsx` | the operator diff's before and after | `customGreetingV1`, `customGreetingV2` (decision 13) |
 
 Each fixture's non-import text contains the markdown's blocks verbatim, so a fixture is written by pasting the blocks and adding only imports and the local `Banner`.
 
@@ -170,6 +175,10 @@ Cases, run with `describe.each` over the states where they must hold:
 | 8 | v1 widget typed `GreetingSlotProps` (deprecated alias) | compiles under `npm run types`; no runtime assertion beyond case 2 | | x | |
 
 Banner: the same table with `notice={{ message: 'Hi', severity: 'info', onDismiss }}`; case 2 asserts the v1 widget received `message === 'Hi'`, case 6 that a v1 layout reads `message` from context, case 3/7 that v2 sees `notice.severity`.
+
+Filter: the same table with `selectedTags={['red']}`, plus one case on v1+v2 with `['red', 'blue']`: a v1 widget reading both props prints "red of red, blue" (decision 14).
+
+Added after the review round (decision 13): the operator's widget from the how-to's diff (a `component` `REPLACE` of `defaultContent`) replaces the default content on v1 only and v1+v2 before the move, on v1+v2 and v2 only after it, and does nothing to v2 only before the move; the renamed-in-place slot gives a widget reading `userName` undefined, with `@ts-expect-error` on that widget so the typecheck enforces "would stop compiling"; the bumped-in-place slot renders the default content and not the operator's v1 widget.
 
 ### Drift test: `runtime/slots/howToExamples.drift.test.ts`
 
