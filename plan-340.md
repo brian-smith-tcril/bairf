@@ -152,6 +152,7 @@ Why: the examples stay inline in the markdown for readability; tests verify that
 | `GreetingSlotV2.tsx` | after removal | `GreetingSlotV2Props`, default |
 | `BannerSlotV1.tsx` / `BannerSlotV1V2.tsx` / `BannerSlotV2.tsx` | same three | same shape plus `Notice`; a minimal local `Banner` component (not shown in the markdown) renders `message` or `notice.message` |
 | `TaggableItemSlotV1.tsx` / `TaggableItemSlotV1V2.tsx` / `TaggableItemSlotV2.tsx` | same three | `selectedTag` becoming `selectedTags`; `v1` gains `selectedTags` too (decision 14) |
+| `TaggableItemSlotV1V2FirstTagOnly.tsx` | v2 wrapping v1 before `selectedTags` is added to `v1`: step 1's first block and the before side of its diff | `TaggableItemSlotV1Props { selectedTag }`, alias, `TaggableItemSlotV2Props` (decision 16) |
 | `GreetingSlotRenamedInPlace.tsx` / `GreetingSlotBumpedInPlace.tsx` | the two what-not-to-do diffs' after-states | `GreetingSlotProps { displayName }` on the `v1` id / on the `v2` id (decision 13) |
 | `greetingWidgets.tsx` | the operator diff's before and after | `customGreetingV1`, `customGreetingV2` (decision 13) |
 
