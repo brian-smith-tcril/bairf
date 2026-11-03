@@ -131,7 +131,7 @@ Carry these into `pr-body-<n>.md` when the PR is opened (Brian, 2026-11-03):
 
 The FPF "modify props" pattern now lives in widget `OPTIONS` handled by the app's default widget: openedx/frontend-app-catalog `src/slots/CourseAboutSidebarSocialSlot` (frontend-base version; the FPF one at `legacy-mfe:src/plugin-slots/CourseAboutSidebarSocialSlot` had "modify items"). Mechanism checked in frontend-base `runtime/slots/widget/hooks.ts`: `useWidgetOptions()` reads `slotId`/`widgetId` from `WidgetContext` and collects `OPTIONS` operations for that slot id only. In the v2-wraps-v1 arrangement the default widget sits inside the v1 `<Slot>`, so a v2 operator's `OPTIONS` on `defaultContent` targets the inner `<Slot>` element and is read by nothing. An example with options has to show the default widget reading both ids (`useWidgetOptionsForId` on the v2 id, if exported) or another arrangement. Not needed for the banner example: its default widget takes no options, so v1 operators reach the message only through a `component` widget or a layout calling `useSlotContext()`, and both keep working wrapped.
 
-## Tests for the how-to's examples (Brian, 2026-11-03: "put together a plan for the tests part and then we can implement")
+## Tests for the how-to's examples (Brian, 2026-11-03; implemented the same day, decision 12)
 
 Why: the examples stay inline in the markdown for readability; tests verify that each example works and that the markdown has not drifted from the code the tests exercise.
 
