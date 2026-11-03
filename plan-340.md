@@ -120,3 +120,9 @@ Derived from the three pairs, written in frontend-base terms only, one running c
 6. **The removal.** The diff deleting the inner `Slot`, the v1 interface and the v1 README section, with the `feat!:` subject and `BREAKING CHANGE:` footer text.
 
 Not carried over from the pairs: a v2 whose only purpose is a new default child (default content is outside the contract under ADR 0009 section 2, and layouts replace FPF's `Modify`), and a v2 that double-wraps a single existing slot with the same contract (adds nothing; stated once under classification). A second worked example for a non-prop trigger, a slot that grows to wrap more of the page, is open: one sentence under classification, or a short second case.
+
+## Open questions for the PR body
+
+Carry these into `pr-body-<n>.md` when the PR is opened (Brian, 2026-11-03):
+
+1. **How do people find out a slot version is deprecated?** A `feat!:` subject or a `BREAKING CHANGE:` footer is easy to search for, but the `feat:` commit that adds `v2` and deprecates `v1` is not, and the deprecation sits there for at least a named release before the breaking removal. Should deprecations be tracked somewhere findable: a commit convention, a list in the repo, the DEPR ticket alone, or something else?
