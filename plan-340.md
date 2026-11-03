@@ -130,3 +130,61 @@ Carry these into `pr-body-<n>.md` when the PR is opened (Brian, 2026-11-03):
 ## Example to write later in this how-to: a slot whose default widget takes widget options (Brian, 2026-11-03; after the banner example, in this PR)
 
 The FPF "modify props" pattern now lives in widget `OPTIONS` handled by the app's default widget: openedx/frontend-app-catalog `src/slots/CourseAboutSidebarSocialSlot` (frontend-base version; the FPF one at `legacy-mfe:src/plugin-slots/CourseAboutSidebarSocialSlot` had "modify items"). Mechanism checked in frontend-base `runtime/slots/widget/hooks.ts`: `useWidgetOptions()` reads `slotId`/`widgetId` from `WidgetContext` and collects `OPTIONS` operations for that slot id only. In the v2-wraps-v1 arrangement the default widget sits inside the v1 `<Slot>`, so a v2 operator's `OPTIONS` on `defaultContent` targets the inner `<Slot>` element and is read by nothing. An example with options has to show the default widget reading both ids (`useWidgetOptionsForId` on the v2 id, if exported) or another arrangement. Not needed for the banner example: its default widget takes no options, so v1 operators reach the message only through a `component` widget or a layout calling `useSlotContext()`, and both keep working wrapped.
+
+## Tests for the how-to's examples (Brian, 2026-11-03: "put together a plan for the tests part and then we can implement")
+
+Why: the examples stay inline in the markdown for readability; tests verify that each example works and that the markdown has not drifted from the code the tests exercise.
+
+### Where
+
+- Fixtures: `runtime/slots/testMocks/` (excluded from the published build by `tsconfig.build.json`'s `**/testMocks/**`; precedent `runtime/testMocks/`, `shell/testMocks/`). Nothing under `docs/` runs or type-checks: jest's projects are `tools`, `runtime`, `shell`; `tsconfig.json` includes `runtime/**` and `shell/**`.
+- Tests: beside `runtime/slots/Slot.test.tsx`. No config change.
+- Imports: no `paths` mapping for `@openedx/frontend-base` inside the repo, so fixtures import `Slot` from the relative path. The drift test therefore ignores `import` lines.
+
+### Fixtures, one module per state the markdown shows
+
+| File | State | Exports |
+|---|---|---|
+| `GreetingSlotV1.tsx` | before | `GreetingSlotProps`, default `GreetingSlot` |
+| `GreetingSlotV1V2.tsx` | v2 wrapping v1, after step 3 | `GreetingSlotV1Props`, `GreetingSlotProps` alias, `GreetingSlotV2Props`, default |
+| `GreetingSlotV2.tsx` | after removal | `GreetingSlotV2Props`, default |
+| `BannerSlotV1.tsx` / `BannerSlotV1V2.tsx` / `BannerSlotV2.tsx` | same three | same shape plus `Notice`; a minimal local `Banner` component (not shown in the markdown) renders `message` or `notice.message` |
+
+Each fixture's non-import text contains the markdown's blocks verbatim, so a fixture is written by pasting the blocks and adding only imports and the local `Banner`.
+
+### Behaviour tests: `runtime/slots/howToExamples.test.tsx`
+
+Setup as in `Slot.test.tsx`: `setSiteConfig({ ...getSiteConfig(), apps: [{ appId, slots: [...] }] })`, render inside `MemoryRouter`, `afterEach` resets `apps`. Do not mock `useLayoutForSlotId`; it resolves layout operations from site config (`runtime/slots/layout/hooks.ts`), so real `LayoutOperationTypes.REPLACE` operations work. Check during implementation whether `useActiveRoles` needs a provider in tests.
+
+Cases, run with `describe.each` over the states where they must hold:
+
+| # | Operation in site config | Assert | v1 only | v1+v2 | v2 only |
+|---|---|---|---|---|---|
+| 1 | none | default content renders the value ("Hello, Ada") | x | x | x |
+| 2 | v1 `APPEND` `component: ({ userName }) => ...` | widget rendered with the value under the old name | x | x | |
+| 3 | v2 `APPEND` `component: ({ displayName }) => ...` | widget rendered with the value under the new name | | x | x |
+| 4 | v1 `REPLACE` `defaultContent` | replacement rendered, default content gone | x | x | |
+| 5 | v2 `REPLACE` `defaultContent` plus a v1 `APPEND` | replacement rendered; default content and the v1 widget both gone (the inner slot went with it) | | x | x (without the v1 op) |
+| 6 | v1 layout `REPLACE` whose component reads `useSlotContext()` | layout sees the old prop name | x | x | |
+| 7 | v2 layout `REPLACE` reading `useSlotContext()` | layout sees the new prop name; v1 default content still rendered inside it | | x | x |
+| 8 | v1 widget typed `GreetingSlotProps` (deprecated alias) | compiles under `npm run types`; no runtime assertion beyond case 2 | | x | |
+
+Banner: the same table with `notice={{ message: 'Hi', severity: 'info', onDismiss }}`; case 2 asserts the v1 widget received `message === 'Hi'`, case 6 that a v1 layout reads `message` from context, case 3/7 that v2 sees `notice.severity`.
+
+### Drift test: `runtime/slots/howToExamples.drift.test.ts`
+
+- Reads `docs/how_tos/add-a-slot-version.md` via `path.resolve(__dirname, '../../docs/how_tos/add-a-slot-version.md')`; a comment names the doc it guards. Fails if the file is missing.
+- Splits on `## Example:` headings; maps each heading to its fixture files (`renaming a prop` → the three Greeting files, `changing a prop's type` → the three Banner files). An example heading with no mapping, or a mapped heading absent from the doc, fails, so a retitle is caught.
+- From each example's section, takes every fenced block tagged `tsx` (not `diff`, `markdown`, or untagged commit blocks). Strips `import` lines, collapses whitespace. Asserts each block is a substring of at least one of that example's fixtures, normalised the same way; the failure message names the example and the block's first line.
+- Asserts each example has at least one `tsx` block.
+
+### Checks and commit
+
+- `nvm use`, `npm ci` (not yet run in this clone), then `npm run types`, `npm run lint`, `npm run test -- runtime/slots`. No `no-deprecated` lint rule is configured (checked `eslint.config.js`), so case 8 needs no disable comment.
+- Second commit on `slot-versioning-how-to`: `test: cover the slot versioning how-to examples`, body naming the fixtures, the case table's intent and the drift guard. Same PR as the docs commit.
+
+### Open while implementing
+
+- Whether a `Banner` local component in a fixture trips a lint rule (one component per file, display name).
+- Whether `useActiveRoles` needs a wrapper; `Slot.test.tsx` renders bare in `MemoryRouter`, so probably not.
+- Case 5's "v1 widget gone" assertion depends on `v2` `REPLACE` of `defaultContent` removing the inner `<Slot>` element: the how-to's step 2 states this; the test is what confirms it.
