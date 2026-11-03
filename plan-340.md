@@ -177,7 +177,7 @@ Cases, run with `describe.each` over the states where they must hold:
 
 Banner: the same table with `notice={{ message: 'Hi', severity: 'info', onDismiss }}`; case 2 asserts the v1 widget received `message === 'Hi'`, case 6 that a v1 layout reads `message` from context, case 3/7 that v2 sees `notice.severity`.
 
-Taggable item: the same table with `selectedTags={['red']}`, plus one case on v1+v2 with `['red', 'blue']`: a v1 widget reading both props prints "red of red, blue" (decision 14).
+Taggable item: the same table with `selectedTags={['red']}`, plus three cases: on v2 wrapping v1 before the list is added to v1, a v1 widget sees only the first of `['red', 'blue']` (decision 16); on v1+v2 with `['red', 'blue']`, a v1 widget reading both props prints "red of red, blue" (decision 14); on v1+v2 with `[]`, a v1 widget reading `selectedTag` gets `""` (decision 17).
 
 Added after the review round (decision 13): the operator's widget from the how-to's diff (a `component` `REPLACE` of `defaultContent`) replaces the default content on v1 only and v1+v2 before the move, on v1+v2 and v2 only after it, and does nothing to v2 only before the move; the renamed-in-place slot gives a widget reading `userName` undefined, with `@ts-expect-error` on that widget so the typecheck enforces "would stop compiling"; the bumped-in-place slot renders the default content and not the operator's v1 widget.
 
