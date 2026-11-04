@@ -70,7 +70,7 @@ One short section, in the order a plugin author meets it: the release note; the 
 ## Where it lives and what links to it
 
 - `docs/how_tos/slot-versioning.md` (issue's candidates were `slot-props.md` or `slots.md`; the content is the version path, with props as the usual trigger). Markdown, as `migrate-frontend-app.md`, `permissions.md` and `theming.md` are.
-- Linked from the migration how-to's "Refactor slots" section (line 1088), which today points only at ADR 0009 and `src/shell/dev`.
+- Not linked from the migration how-to's "Refactor slots" section: that how-to is about migrating FPF slots, and this one is not (Brian, 2026-11-04, decision 35). The how-to is reached from the `docs/how_tos/` listing only.
 - Not linked from ADR 0009: `adr-policy` amends an ADR only when a decision changes, and a how-to link is not one. The issue body proposed the link; this plan drops it (open question 5 if Brian wants it anyway).
 - No code change in frontend-base. The worked example is catalog's; #174 may be the first slot to walk the path, and the how-to can be updated to cite it once it has.
 
