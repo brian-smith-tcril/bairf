@@ -155,8 +155,8 @@ Why: the examples stay inline in the markdown for readability; tests verify that
 | `TaggableItemSlotV1V2FirstTagOnly.tsx` | v2 wrapping v1 before `selectedTags` is added to `v1`: step 1's first two blocks and the before side of its diff | `TaggableItemSlotV1Props { selectedTag }`, alias, `TaggableItemSlotV2Props`, default (decision 16) |
 | `GreetingSlotRenamedInPlace.tsx` / `GreetingSlotBumpedInPlace.tsx` | the two what-not-to-do diffs' after-states | `GreetingSlotProps { displayName }` on the `v1` id / on the `v2` id (decision 13) |
 | `greetingWidgets.tsx` | the operator diff's before and after | `customGreetingV1`, `customGreetingV2` (decision 13) |
-| `RelatedLinksSlotV1.tsx` / `RelatedLinksSlotV1V2.tsx` / `RelatedLinksSlotV2.tsx` | same three | `links` becoming `relatedLinks`; a `DefaultLinks` widget reading the `max` option, by `v2`'s id too while wrapped (decision 20) |
-| `relatedLinksOptions.ts` | the operator's `OPTIONS` operation | `capRelatedLinksV1` (decision 20) |
+| `TreeListSlotV1.tsx` / `TreeListSlotV1V2.tsx` / `TreeListSlotV2.tsx` | same three | trees gaining a required `foliage`; `DefaultTrees` applies `v2`'s option to the `v2` list, then `v1`'s to `v1`-shaped trees, 🪾 for a `v1`-added tree (decision 21, replacing related links from decision 20) |
+| `treeListOptions.ts` | the operator's `OPTIONS` operation | `addOliveV1` (decision 21) |
 
 Each fixture's non-import text contains the markdown's blocks verbatim, so a fixture is written by pasting the blocks and adding only imports and the local `Banner`.
 
