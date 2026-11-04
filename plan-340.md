@@ -189,8 +189,10 @@ Added after the review round (decision 13): the operator's widget from the how-t
 
 - Reads `docs/how_tos/add-a-slot-version.md` via `path.resolve(__dirname, '../../docs/how_tos/add-a-slot-version.md')`; a comment names the doc it guards. Fails if the file is missing.
 - Splits on `## Example:` headings; maps each heading to its fixture files (`renaming a prop` → the three Greeting files, `changing a prop's type` → the three Banner files). An example heading with no mapping, or a mapped heading absent from the doc, fails, so a retitle is caught.
-- From each example's section, takes every fenced block tagged `tsx` (not `diff`, `markdown`, or untagged commit blocks). Strips `import` lines, collapses whitespace. Asserts each block is a substring of at least one of that example's fixtures, normalised the same way; the failure message names the example and the block's first line.
-- Asserts each example has at least one `tsx` block.
+- From each example's section, takes every fenced block tagged `ts` or `tsx`, and both sides of every `diff` block (context plus `-` lines, context plus `+` lines). Strips `import` and comment lines, collapses whitespace. Asserts each block is a substring of at least one of that example's fixtures, normalised the same way; the test name carries the how-to line number and the block's first line, and a failure prints the wanted text.
+- Checks every `/**` and `//` comment line of those blocks verbatim against the fixtures, once per distinct line, and that every doc comment is on one line.
+- Asserts every fence opener in an example section is one of `ts`, `tsx`, `diff`, `markdown`, `text`, so a block the guard does not read cannot slip in untagged or retagged (decision 33).
+- Asserts each example has at least one code block.
 
 ### Checks and commit
 
