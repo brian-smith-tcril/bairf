@@ -157,6 +157,7 @@ Why: the examples stay inline in the markdown for readability; tests verify that
 | `greetingWidgets.tsx` | the operator diff's before and after | `customGreetingV1`, `customGreetingV2` (decision 13) |
 | `TreeListSlotV1.tsx` / `TreeListSlotV1V2.tsx` / `TreeListSlotV2.tsx` | same three | trees gaining a required `foliage`; `DefaultTrees` applies `v2`'s option to the `v2` list, then `v1`'s to `v1`-shaped trees, 🪾 for a `v1`-added tree (decision 21, replacing related links from decision 20) |
 | `treeListOptions.ts` | the operator's `OPTIONS` operation | `addOliveV1` (decision 21) |
+| `TreeListPageV1.tsx` / `TreeListPageV2.tsx` | where the app renders the slot with its default list, before the change and after step 2 | default `TreeListPage` (decision 23) |
 
 Each fixture's non-import text contains the markdown's blocks verbatim, so a fixture is written by pasting the blocks and adding only imports and the local `Banner`.
 
