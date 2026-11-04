@@ -126,6 +126,7 @@ Not carried over from the pairs: a v2 whose only purpose is a new default child 
 Carry these into `pr-body-<n>.md` when the PR is opened (Brian, 2026-11-03):
 
 1. **How do people find out a slot version is deprecated?** A `feat!:` subject or a `BREAKING CHANGE:` footer is easy to search for, but the `feat:` commit that adds `v2` and deprecates `v1` is not, and the deprecation sits there for at least a named release before the breaking removal. Should deprecations be tracked somewhere findable: a commit convention, a list in the repo, the DEPR ticket alone, or something else?
+2. **Where does the rule for renaming an exported type with its shape unchanged live?** The #339 answer is that apps export the types their slot props are built from, beside the `*SlotProps` interfaces. Renaming one keeps the old name as a `@deprecated` alias until the next breaking release of the app. That is the lifecycle of an export, not of a slot version, so it was taken out of this how-to (decision 32); it still needs a home, the ADR 0018 draft (openedx/frontend-base#343) or a note of its own.
 
 ## Example to write later in this how-to: a slot whose default widget takes widget options (Brian, 2026-11-03; after the banner example, in this PR; written 2026-11-04, decision 20)
 
