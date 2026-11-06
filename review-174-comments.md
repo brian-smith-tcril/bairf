@@ -31,16 +31,55 @@ Claude portion, posted verbatim:
 
 > *This portion was written by Claude Code and reviewed before posting.*
 >
-> **Types the slot props are built from.** The two data table slots' props use `CatalogSearchResponse` and `DataTableParams` from `src/data/catalog-search/types.ts`, and `TableColumn` and `TableColumnFilterChoice` declared in `CourseCatalogDataTableSlot/index.tsx`. `src/index.ts` exports only the `*SlotProps` interfaces, and the package's `exports` map rules out deep imports, so none of the four can be imported by a widget today, even though the slot READMEs name three of them. Exporting all four from `src/index.ts` beside the `*SlotProps` closes that. Since the READMEs showed `CourseListSearchResponse` until this PR, keeping it beside the new name as a deprecated alias gives anything that picked the name up a pointer to the rename, and it can be removed in a later `feat!:`:
+> **Types the slot props are built from**
 >
-> ```ts
-> /** @deprecated Renamed to `CatalogSearchResponse`. */
-> export type CourseListSearchResponse = CatalogSearchResponse;
-> ```
+> `src/index.ts` exports only the `*SlotProps` interfaces, and the package's `exports` map rules out deep imports, so a widget can't import any of the types those interfaces use. For the slots this PR touches, that is:
 >
-> The course-about slots have the same gap (`CourseAboutData`, `SinglePaidMode`, `SocialLink` and two more), but nothing in this PR touches them, so that is a follow-up.
+> | Type | Declared in | Used by | Named in a README |
+> |---|---|---|---|
+> | `CatalogSearchResponse` | `src/data/catalog-search/types.ts` | `displayData` on the data table and card view slots | yes |
+> | `DataTableParams` | `src/data/catalog-search/types.ts` | `handleFetchData` on the data table slot | yes |
+> | `TableColumn` | `CourseCatalogDataTableSlot/index.tsx` | `tableColumns` on the data table slot | yes |
+> | `TableColumnFilterChoice` | `CourseCatalogDataTableSlot/index.tsx` | `TableColumn.filterChoices` | no |
 >
-> **The two slot props, and the slot names.** The how-to's path for `courseDataResultsLength` → `resultsCount` and `totalCourses` → `totalItems` would be a `v2` of `CourseCatalogIntroSlot` and `CourseCatalogDataTableSlot`. But [ADR 0009 §2](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) only increments the version "if it still make sense to use the same Identifier", and `courseCatalog*` stops making sense once the table holds pathways (#175) and a pathway card renders under it (#177). So the change is a new identifier rather than a version bump, with the prefix dropped from the whole family. Each slot should get exactly one new identifier across the stack, so where it happens depends on where the slot's contract last changes. Five slots have no contract change after this PR, so they can be done here: `CatalogIntroSlot` (`org.openedx.frontend.slot.catalog.catalogIntro.v1`, with `resultsCount`), `CatalogSearchFieldSlot`, `CatalogDataTableControlBarSlot`, `CatalogDataTableTableFooterSlot` and `CatalogDataTableCourseCardSlot` (`catalogDataTableCourseCard.v1`; the card itself is still a course card). The data table and card view slots are different: #175 changes the shape of `CatalogSearchResponse` (results become a course-or-pathway union), which changes `displayData`'s contract on both even though the slot files are untouched, so #175 needs a new version of each anyway. Doing `CatalogDataTableSlot` (`catalogDataTable.v1`, with `totalItems`) and `CatalogDataTableCardViewSlot` there, born with the union type, gives each one bump instead of two. The pathway card slot added in #177 then lands as `catalogDataTablePathwayCard.v1` under the new prefix. The steps are otherwise the how-to's: the new slot renders around the old one as its default content so existing widgets and operations keep working, the old interface and props get `@deprecated` notes, each version keeps its own README, it lands as `feat:` and the old slots go in a later `feat!:`. `idAliases` does not fit here, since an alias makes old and new one slot with one props interface.
+> What makes sense in this PR:
+>
+> - Export all four from `src/index.ts` beside the `*SlotProps`.
+> - Keep the old name beside the new one as a deprecated alias, since the READMEs showed `CourseListSearchResponse` until this PR. It can go in a later `feat!:`.
+>
+>   ```ts
+>   /** @deprecated Renamed to `CatalogSearchResponse`. */
+>   export type CourseListSearchResponse = CatalogSearchResponse;
+>   ```
+>
+> - Leave the course-about slots for a follow-up. They have the same gap (`CourseAboutData`, `SinglePaidMode`, `SocialLink` and two more), but nothing in this PR touches them.
+>
+> **The two slot props, and the slot names**
+>
+> The how-to's path for `courseDataResultsLength` → `resultsCount` and `totalCourses` → `totalItems` would be a `v2` of the intro and data table slots. But [ADR 0009 §2](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) only increments the version "if it still make sense to use the same Identifier", and `courseCatalog*` stops making sense once the table holds pathways (#175) and a pathway card renders under it (#177). So each of these is a new identifier with the prefix dropped, not a version bump.
+>
+> Each slot should get exactly one new identifier across the stack, so the PR it happens in is the one where the slot's contract last changes:
+>
+> | Slot today | New identifier | Props change | Last contract change | Lands in |
+> |---|---|---|---|---|
+> | `CourseCatalogIntroSlot` | `catalog.catalogIntro.v1` | `courseDataResultsLength` → `resultsCount` | none after this PR | #174 |
+> | `CourseCatalogSearchFieldSlot` | `catalog.catalogSearchField.v1` | none | none after this PR | #174 |
+> | `CourseCatalogDataTableControlBarSlot` | `catalog.catalogDataTableControlBar.v1` | none | none after this PR | #174 |
+> | `CourseCatalogDataTableTableFooterSlot` | `catalog.catalogDataTableTableFooter.v1` | none | none after this PR | #174 |
+> | `CourseCatalogDataTableCourseCardSlot` | `catalog.catalogDataTableCourseCard.v1` | none (it is still a course card) | none after this PR | #174 |
+> | `CourseCatalogDataTableSlot` | `catalog.catalogDataTable.v1` | `totalCourses` → `totalItems` | `displayData`'s type becomes the course-or-pathway union | #175 |
+> | `CourseCatalogDataTableCardViewSlot` | `catalog.catalogDataTableCardView.v1` | none | `displayData`'s type becomes the union | #175 |
+> | pathway card (new) | `catalog.catalogDataTablePathwayCard.v1` | — | born | #177 |
+>
+> The data table and card view files are untouched by #175, but the type they name changes shape there, which is the how-to's "changing a prop's type" case, so #175 needs a new version of each anyway. Doing their renames there, born with the union type, gives each one bump instead of two.
+>
+> The steps are otherwise the how-to's:
+>
+> - The new slot renders around the old one as its default content, so existing widgets and operations keep working.
+> - The old interface and props get `@deprecated` notes pointing at the new ones.
+> - Each version keeps its own README.
+> - It lands as `feat:`; the old slots go in a later `feat!:`.
+> - No `idAliases`: an alias makes old and new one slot with one props interface.
 
 Close, Brian's voice (suggested):
 
