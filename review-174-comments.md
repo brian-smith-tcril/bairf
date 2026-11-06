@@ -55,7 +55,11 @@ Claude portion, posted verbatim:
 >
 > **The two slot props, and the slot names**
 >
-> The how-to's path for `courseDataResultsLength` → `resultsCount` and `totalCourses` → `totalItems` would be a `v2` of the intro and data table slots. But [ADR 0009 §2](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) only increments the version "if it still make sense to use the same Identifier", and `courseCatalog*` stops making sense once the table holds pathways (#175) and a pathway card renders under it (#177). So each of these is a new identifier with the prefix dropped, not a version bump.
+> Renaming the two props would normally mean a `v2` of each slot. Here it means a new identifier instead:
+>
+> - [ADR 0009 §2](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) bumps the version only "if it still make sense to use the same Identifier".
+> - `courseCatalog*` stops making sense once the table holds pathways (#175) and a pathway card renders under it (#177).
+> - So every slot in the family gets a new identifier with the prefix dropped, not a `v2`.
 >
 > Each slot should get exactly one new identifier across the stack, so the PR it happens in is the one where the slot's contract last changes:
 >
