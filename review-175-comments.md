@@ -6,10 +6,7 @@ Drafted 2026-11-06 against head `089a0cda88`. Six inline comments and a summary.
 
 Status: pending https://github.com/openedx/frontend-app-catalog/pull/175#pullrequestreview-5805667419 (2026-11-06, review created PENDING on 089a0cda88 with the six comments; Brian submits from the review pane and pastes the summary there)
 
-Suggested, Brian's voice, edit freely:
-
-> I read through the one commit this PR adds on top of #174 and left a few comments. None of them are blocking on their own. The slot change for `displayData` that we're working through on #174 will carry into this PR once it's rebased, so I'll do another pass then.
->
+Posted as the review body, Brian's section then the disclosure line:
 
 # ***THIS SECTION WRITTEN BY BRIAN DO NOT EDIT***
 
