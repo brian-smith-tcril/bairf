@@ -8,9 +8,9 @@ The review summary carries the disclosure; the inline comments do not repeat it.
 
 Status: draft
 
-> Thanks for the quick turnaround on the naming! The rename itself reads as mechanical to me, and `npm run lint`, `npm run test` and `npm run build` all pass locally at 767011e. I left two comments, both change requests, and I'd like both addressed before this lands: one on exporting the types the slot props are built from, and one on the slot names and the two props the description leaves under their old names. Both lean on things that landed or are in review in frontend-base since the first pass, and the comments link to them.
+> Thanks for the quick turnaround on the naming! The rename reads as mechanical to me, and lint, test and build all pass locally at 767011e. I left two comments: one about exporting the types the slot props are built from, and one about the slot names and the two props that stayed under their old names. The second is the one I'd consider blocking, mostly because #177 is about to publish a new slot id under the current prefix; the first is small.
 >
-> A few things I'm deliberately not asking for here: `CoursesList` → `CatalogList` in #176 sounds right to me since that's where it starts rendering pathway cards (the `HomeCoursesListSlot` rename would go the same way as the slots below); the course-about slot types can stay as they are until something in this stack touches them; and the page copy and the `/catalog/courses` URL are a question for the PR that makes the page mixed, not this one.
+> `CoursesList` → `CatalogList` in #176 sounds right to me since that's where it starts rendering pathway cards, and I'd expect the `HomeCoursesListSlot` rename to go the same way as the slots in my comment. The course-about types and the page copy / `/catalog/courses` URL I'm leaving alone until a PR actually touches them.
 >
 > The inline comments were drafted with Claude Code and reviewed before posting.
 
@@ -24,26 +24,16 @@ Status: draft
 Diff context (renamed file, every line is `+`; `>` marks the anchor):
 
 ```
->  1 | +export interface CatalogSearchResponse {
->  2 | +  took: number;
->  3 | +  total: number;
-   4 | +  results: {
-   5 | +    id: string;
-   6 | +    index: string;
-```
-
-> This type is what `CourseCatalogDataTableSlotProps.displayData` and `CourseCatalogDataTableCardViewSlotProps.displayData` are built from, and the slot READMEs name it, but nothing exports it: `src/index.ts` exports the `*SlotProps` interfaces and nothing else type-wise, and `package.json`'s `exports` map blocks deep imports. So a widget author can read the name in the README and can't import it. The same goes for `DataTableParams` here and for `TableColumn` and `TableColumnFilterChoice` in the data table slot's `index.tsx`.
+> Noticed while reading this: the slot READMEs name this type (`CourseListSearchResponse` before, `CatalogSearchResponse` now) as what `displayData` is, but `src/index.ts` only exports the `*SlotProps` interfaces, so someone writing a widget can read the name and can't import it. Same for `DataTableParams`, `TableColumn` and `TableColumnFilterChoice`. I asked about this in openedx/frontend-base#339 after my first pass here, and the answer was that apps should export the types their slot props are built from.
 >
-> I raised this as openedx/frontend-base#339 after the first pass on this PR, and the answer is that apps export the types their slot props are built from. openedx/frontend-base#343 (ADR 0018, in review) makes every export part of the app's contract, and says that renaming one without keeping the old name as a deprecated alias is breaking.
->
-> I'd like to see `CatalogSearchResponse`, `DataTableParams`, `TableColumn` and `TableColumnFilterChoice` exported from `src/index.ts` beside the `*SlotProps`, and the old name kept next to the new one here:
+> It'd be great to export those four from `src/index.ts` as part of this. And since openedx/frontend-base#343 (ADR 0018, still in review) treats renaming an export without a deprecated alias as breaking, I think the old name wants to stick around next to the new one:
 >
 > ```ts
 > /** @deprecated Renamed to `CatalogSearchResponse`. */
 > export type CourseListSearchResponse = CatalogSearchResponse;
 > ```
 >
-> The old name was never importable, so the alias is there for the README readers and in-repo site configs that met it, and it goes out in a later `feat!:`. I'm not asking for the course-about slot types in this PR since nothing here touches them.
+> Exporting and deprecating in the same PR feels a bit odd, but the old name is the one README readers and in-repo site configs have seen, and it can go in a later `feat!:`. Not worried about the course-about types for this PR since nothing here touches them.
 
 ## 2. Slot names and props
 
@@ -58,21 +48,8 @@ Diff context (`>` marks the anchor; `+`/`-` per the diff):
   26 |    filterChoices: TableColumnFilterChoice[];
   27 |  }
   28 |  
-> 29 |  export interface CourseCatalogDataTableSlotProps {
-    | -  displayData?: CourseListSearchResponse;
-> 30 | +  displayData?: CatalogSearchResponse;
-> 31 |    totalCourses: number;
-> 32 |    pageCount: number;
-> 33 |    pageIndex: number;
-> 34 |    tableColumns: TableColumn[];
-> 35 |    handleFetchData: (params: DataTableParams) => void;
-> 36 |  }
-```
-
-> The description keeps `totalCourses` here and `courseDataResultsLength` on the intro slot "so existing site plugins keep working", and leaves the seven `CourseCatalog*` slots and their ids (`org.openedx.frontend.slot.catalog.courseCatalog*.v1`) as they are. I'd like to see both change in this PR, and I think it can be done without breaking anyone.
+> I was going to ask for a `v2` of this slot with `totalItems` (and of the intro slot with `resultsCount`), but a `v2` of a `CourseCatalog*` slot felt wrong when the whole point is moving away from "course catalog". [ADR 0009 §2](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) only bumps the version "if it still make sense to use the same Identifier", and I don't think it does once this table holds pathways too. So I think what we actually want is new slots: `CatalogDataTableSlot` (`org.openedx.frontend.slot.catalog.catalogDataTable.v1`, with `totalItems`), `CatalogIntroSlot` (with `resultsCount`), and the same for the search field, control bar, card view, footer and course card, dropping the prefix everywhere. I'm open to other thoughts on the names.
 >
-> On the names: "course catalog" isn't a term the app should keep once this table holds pathways too, and #177 is about to add a pathway card slot under the `courseCatalogDataTable` prefix, so this is the last cheap moment to settle it. [ADR 0009 §2](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) bumps the version only "if it still make sense to use the same Identifier", and here it doesn't, so these are new identifiers rather than `v2`s: `CatalogDataTableSlot` with id `org.openedx.frontend.slot.catalog.catalogDataTable.v1` and `totalItems`, `CatalogIntroSlot` with `catalogIntro.v1` and `resultsCount`, and likewise for the search field, control bar, card view, footer and the course card (`catalogDataTableCourseCard.v1`, the card itself is still a course card).
+> openedx/frontend-base#344 has a how-to for doing this without breaking existing widgets: the new slot renders around the old one as its default content, the old interface and props get `@deprecated` notes, each keeps its own README, and it lands as `feat:` with the old slots removed in a later `feat!:`. It's written for the same-identifier case, but the steps are the same with a new name instead of a new version suffix. (No `idAliases` for this one; that would make old and new a single slot with a single props interface.)
 >
-> On how: openedx/frontend-base#344 adds a how-to for exactly this shape, a new slot rendered around the old one as its default content, so every existing widget and operation on the old id keeps working, the old interface and the renamed props get `@deprecated` notes pointing at the new ones, each version keeps its own README, and it lands as `feat:`. The how-to walks the same-identifier case; the only difference here is that the new slot's name changes instead of its version suffix. No `idAliases` for this, since an alias would make old and new one slot with one props interface and we want the old props to go away eventually.
->
-> The old slots then get removed in a later `feat!:`. I opened #184 to track deprecations like these so each one has a DEPR ticket by the time it reaches `stable`; when this lands I'll add everything from it there.
+> #177 is about to add a pathway card slot under the `courseCatalogDataTable` prefix, so I'd prefer to sort this out here before that lands. I made #184 to keep track of deprecations like these so each has a DEPR ticket by the time it reaches `stable`; when this lands I'll add everything from it there.
