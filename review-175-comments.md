@@ -58,7 +58,7 @@ Body:
 > })}
 > ```
 >
-> This makes the "anything we don't recognize is a course" behavior explicit, and `isCourseResult` and `CourseResult` can go away (TypeScript narrows `result` to the course arm in `default`). It also sets up a `pathway` case for #176 and #177 to fill in.
+> This makes the "anything we don't recognize is a course" behavior explicit, and the `isCourseResult` guard and the `CourseResult` type can go away since the `switch` narrows the type for us. It also sets up a `pathway` case for #176 and #177 to fill in.
 
 ## Comment 2: build the union from `Course` and `Pathway`
 
