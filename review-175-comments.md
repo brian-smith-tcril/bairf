@@ -116,29 +116,46 @@ Body:
 >
 > On the course side the only fallout I found is `mockCourseResponse` in `src/__mocks__/course.ts`, which doesn't set `type` today and would need `type: '_doc'`. This also drops `title`, which nothing reads and which the ADR's new response shape leaves out anyway.
 
-## Comment 3: the mock says "courses" up front
+## Comment 3: type the mock rows instead of filtering in the tests
 
-File: `src/__mocks__/catalogSearch.ts`
-Lines: 3 (the mock typed as `CatalogSearchResponse`)
+File: `src/home/HomePage.test.tsx`
+Lines: 36-42 (the `CourseResult` type, the `isCourseResult` guard and the `courseResults` filter)
 Ledger: entry 9
 Status: draft
 
 Diff context:
 
 ```
-   1 | +import type { CatalogSearchResponse } from '@src/data/catalog-search/types';
-   2 | +
->  3 | +export const mockCatalogSearchResponse: CatalogSearchResponse = {
-   4 | +  took: 1,
-   5 | +  total: 3,
-   6 | +  results: [
+  33 |  const { getAppConfig: actualGetAppConfig } = jest.requireActual('@openedx/frontend-base');
+  34 |  const mockedGetAppConfig = getAppConfig as jest.Mock;
+    | -const mockCourseListSearch = useCourseListSearch as jest.Mock;
+  35 | +const mockCatalogSearch = useCatalogSearch as jest.Mock;
+> 36 | +/**
+> 37 | + * The search response can mix courses and pathways; narrow to the course arm
+> 38 | + * before reading course-only fields off `data`.
+> 39 | + */
+> 40 | +type CourseResult = Extract<CatalogSearchResult, { type: 'course' | '_doc' }>;
+> 41 | +const isCourseResult = (result: CatalogSearchResult): result is CourseResult => result.type !== 'pathway';
+> 42 | +const courseResults = mockCatalogSearchResponse.results.filter(isCourseResult);
+  43 |  
+  44 |  const formatDateForTest = (dateString: string) => new Intl.DateTimeFormat(
+  45 |    'en-US',
 ```
 
 Body:
 
-> Typing the mock as the union is what makes `CatalogPage.test.tsx` and `HomePage.test.tsx` each add an `isCourseResult` guard and filter the results before reading course fields, and the filter removes nothing at runtime since every row here is a course. It'd be nice for the mock to say that up front: export the rows as `mockCourseResults: Course[]` and build `mockCatalogSearchResponse` around them, so the tests iterate the typed rows and both guard blocks go.
+> Could the mock export its course rows with the course type already on them?
 >
-> When pathway rows arrive in #176 they can be a `mockPathwayResults` and a mixed response beside this one, and the course-only assertions (the `Showing 1 - 3` ones, the org counts) don't have to move.
+> ```ts
+> export const mockCourseResults: Course[] = [ /* the three rows */ ];
+>
+> export const mockCatalogSearchResponse: CatalogSearchResponse = {
+>   // ...
+>   results: mockCourseResults,
+> };
+> ```
+>
+> Then this test can read `mockCourseResults[index]` and this block isn't needed. When #176 adds pathway rows, they can go in a `mockPathwayResults` next to it, and the tests that only care about courses don't have to change.
 
 ## Comment 4: "Future" and the required category fields
 
