@@ -76,13 +76,7 @@ Claude portion, posted verbatim:
 >
 > The data table and card view files are untouched by #175, but the type they name changes shape there, which is the how-to's "changing a prop's type" case, so #175 needs a new version of each anyway. Doing their renames there, born with the union type, gives each one bump instead of two.
 >
-> The steps are otherwise the how-to's:
->
-> - The new slot renders around the old one as its default content, so existing widgets and operations keep working.
-> - The old interface and props get `@deprecated` notes pointing at the new ones.
-> - Each version keeps its own README.
-> - It lands as `feat:`; the old slots go in a later `feat!:`.
-> - No `idAliases`: an alias makes old and new one slot with one props interface.
+> The steps are the how-to's, with the new name standing in for the new version suffix. `idAliases` doesn't fit here: an alias would make old and new one slot with one props interface.
 
 Close, Brian's voice (suggested):
 
