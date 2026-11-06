@@ -45,7 +45,7 @@ Claude portion, posted verbatim:
 > What makes sense in this PR:
 >
 > - Export all four from `src/index.ts` beside the `*SlotProps`.
-> - Keep the old name beside the new one as a deprecated alias, since the READMEs showed `CourseListSearchResponse` until this PR. It can go in a later `feat!:`.
+> - Keep the old name beside the new one as a deprecated alias.
 >
 >   ```ts
 >   /** @deprecated Renamed to `CatalogSearchResponse`. */
