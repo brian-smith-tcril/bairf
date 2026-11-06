@@ -4,7 +4,7 @@ Drafted 2026-11-06 against head `767011e12e`. This review is one body with no in
 
 ## Review summary
 
-Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#pullrequestreview-5803908229 (posted 2026-11-06 as one body, no inline comments; Brian submits from the review pane)
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#pullrequestreview-5803908229 (2026-11-06, submitted as a comment review, no inline comments)
 
 # ***THIS SECTION WRITTEN BY BRIAN DO NOT EDIT***
 
