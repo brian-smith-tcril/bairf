@@ -95,20 +95,26 @@ Diff context:
 
 Body:
 
-> Could this be built from the wrappers that already exist instead of inline members? `Course` (`course-card/types.ts`) and `Pathway` (`pathway-card/types.ts`) are this shape already, and the card slots read them as `original?: Course` (and `original?: Pathway` from #176 on). Narrowing their `type` fields is enough for the union to discriminate, with no new names:
+> Could this be `Course | Pathway` instead of two new object types? They already have the same fields (`id`, `index?`, `type`, `data`), and the card slots already take them as `original?: Course` (and `original?: Pathway` once #176 lands). The only thing missing is for `type` to be specific enough to tell them apart:
 >
 > ```ts
-> // course-card/types.ts
-> type: 'course' | '_doc';
+> // src/generic/course-card/types.ts
+> export interface Course {
+>   // ...
+>   type: 'course' | '_doc';
+> }
 >
-> // pathway-card/types.ts
-> type: 'pathway';
+> // src/generic/pathway-card/types.ts
+> export interface Pathway {
+>   // ...
+>   type: 'pathway';
+> }
 >
-> // here
+> // src/data/catalog-search/types.ts
 > export type CatalogSearchResult = Course | Pathway;
 > ```
 >
-> On the course side the only thing that has to change is `mockCourseResponse` in `src/__mocks__/course.ts`, which sets no `type` today. `title` isn't on either wrapper and nothing reads it, which lines up with the ADR's new shape omitting it.
+> On the course side the only fallout I found is `mockCourseResponse` in `src/__mocks__/course.ts`, which doesn't set `type` today and would need `type: '_doc'`. This also drops `title`, which nothing reads and which the ADR's new response shape leaves out anyway.
 
 ## Comment 3: the mock says "courses" up front
 
