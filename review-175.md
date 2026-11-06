@@ -21,6 +21,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
 | 2026-10-30 | 586f5f6d7f | e87d4fd2d7 | the one commit, line by line (`git diff pr-174..pr-175`), plus the legacy engines' `_type` and frontend-base's `camelCaseObject`; suite not run (permission refused for code from the PR checkout) | none yet |
+| 2026-11-06 | 586f5f6d7f | 089a0cda88 | | |
 
 ## Ledger
 
