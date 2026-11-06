@@ -187,7 +187,7 @@ Body:
 > Also, the ADR's [Category registry](https://github.com/openedx/frontend-app-catalog/blob/089a0cda88/docs/decisions/0003-use-a-generic-catalog-search-endpoint.rst#L123-L137) section says
 > > Pathway `data` includes required `category` and `category_label` and optional `category_background_color`/`category_text_color`.
 >
-> so I'd expect `category: string` and `categoryLabel: string` here, with just the color pair optional.
+> but all four are optional here. I'm not sure which one is right, but we should make sure they're aligned.
 
 ## Comment 5: `PathwayCardProps` has no reader here
 
