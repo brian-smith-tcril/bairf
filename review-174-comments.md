@@ -52,7 +52,6 @@ Claude portion, posted verbatim:
 >   export type CourseListSearchResponse = CatalogSearchResponse;
 >   ```
 >
->
 > **The two slot props, and the slot names**
 >
 > Renaming the two props would normally mean a `v2` of each slot. Here it means a new identifier instead:
@@ -76,19 +75,9 @@ Claude portion, posted verbatim:
 >
 > The data table and card view files are untouched by #175, but the type they name changes shape there, which is the how-to's "changing a prop's type" case, so #175 needs a new version of each anyway. Doing their renames there, born with the union type, gives each one bump instead of two.
 >
-> The steps are otherwise the how-to's:
->
-> - The new slot renders around the old one as its default content, so existing widgets and operations keep working.
-> - The old interface and props get `@deprecated` notes pointing at the new ones.
-> - Each version keeps its own README.
-> - It lands as `feat:`; the old slots go in a later `feat!:`.
-> - No `idAliases`: an alias makes old and new one slot with one props interface.
+> The steps are the how-to's, with the new name standing in for the new version suffix. `idAliases` doesn't fit here: an alias would make old and new one slot with one props interface.
 >
 > _____
-
-Close, Brian's voice (suggested):
-
-> I'm open to other thoughts on the names, but I'd prefer to settle them now so #175 and #177 can build on the new ones. I made #184 to keep track of deprecations like these so each one has a DEPR ticket by the time it reaches `stable`; once this lands I'll add everything from it there. Thanks for working through this with me!
 
 # ***THIS SECTION WRITTEN BY BRIAN DO NOT EDIT***
 
