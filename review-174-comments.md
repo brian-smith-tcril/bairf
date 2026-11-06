@@ -1,8 +1,6 @@
 # Draft review comments for openedx/frontend-app-catalog#174
 
-Drafted 2026-11-06 against head `767011e12e`. Each comment is posted as an inline review comment on the PR, on the `RIGHT` side at the line given; the body under each heading is the text to post, verbatim. The ledger entry each one rests on is named so the record stays in `review-174.md`. Status per comment: `draft`, `pending <thread url>`, `posted <thread url>`.
-
-The review summary carries the disclosure; the inline comments do not repeat it. Under each comment, "Diff context" shows the hunk the way the review will, with the anchor lines marked, so the draft reads as the review will.
+Drafted 2026-11-06 against head `767011e12e`. This review is one body with no inline comments: the asks are about the PR's scope (what gets exported, which slots are renamed), not about a line. Brian's section is his; the Claude portion is written as Claude's and labeled so in the body. Rests on ledger entries 3 and 9 in `review-174.md`. Status: `draft`, then `posted <review url>`.
 
 ## Review summary
 
@@ -21,66 +19,29 @@ Status: draft
 >
 > In the process of that, I also realized the existing slots have slot props being built using types we aren't exporting (https://github.com/openedx/frontend-base/issues/339#issuecomment-6581552081)
 > 
-> something about claude comments for what makes sense to do in this PR with those in mind
+> _____
 
 # ***END WRITTEN BY BRIAN SECTION***
 
-> The inline comments were drafted with Claude Code and reviewed before posting.
+Lead-in, Brian's voice (suggested; outside the do-not-edit section so edit freely):
 
-## 1. Exports
+> With both of those in mind, I had Claude look through the PR and write up what it thinks makes sense to do here. Its write-up is below; I've read through it and agree with it.
 
-File: `src/data/catalog-search/types.ts`
-Lines: 1 to 3 (`export interface CatalogSearchResponse {` and its first two members), side RIGHT
-Ledger: entry 9
-Status: draft
+Claude portion, posted verbatim:
 
-Diff context (renamed file, every line is `+`; `>` marks the anchor):
-
-```
->  1 | +export interface CatalogSearchResponse {
->  2 | +  took: number;
->  3 | +  total: number;
-   4 | +  results: {
-   5 | +    id: string;
-   6 | +    index: string;
-```
-
-> For this PR I think that's `CatalogSearchResponse` and `DataTableParams` from here, plus `TableColumn` and `TableColumnFilterChoice` from the data table slot, all exported from `src/index.ts` next to the `*SlotProps`. Since the old name is the one the slot READMEs have been showing, it'd be nice to keep it next to the new one so a site config that picked it up gets pointed at the rename instead of a missing type:
+> *This portion was written by Claude Code and reviewed before posting.*
+>
+> **Types the slot props are built from.** The two data table slots' props use `CatalogSearchResponse` and `DataTableParams` from `src/data/catalog-search/types.ts`, and `TableColumn` and `TableColumnFilterChoice` declared in `CourseCatalogDataTableSlot/index.tsx`. `src/index.ts` exports only the `*SlotProps` interfaces, and the package's `exports` map rules out deep imports, so none of the four can be imported by a widget today, even though the slot READMEs name three of them. Exporting all four from `src/index.ts` beside the `*SlotProps` closes that. Since the READMEs showed `CourseListSearchResponse` until this PR, keeping it beside the new name as a deprecated alias gives anything that picked the name up a pointer to the rename, and it can be removed in a later `feat!:`:
 >
 > ```ts
 > /** @deprecated Renamed to `CatalogSearchResponse`. */
 > export type CourseListSearchResponse = CatalogSearchResponse;
 > ```
 >
-> Exporting and deprecating in the same PR feels a little odd, but it goes away in a later `feat!:`. The course-about slots have the same gap, but nothing here touches them so I'd leave those for a follow-up.
-
-## 2. Slot names and props
-
-File: `src/slots/CourseCatalogDataTableSlots/CourseCatalogDataTableSlot/index.tsx`
-Lines: 29 to 36 (the `CourseCatalogDataTableSlotProps` interface), side RIGHT
-Ledger: entry 3
-Status: draft
-
-Diff context (`>` marks the anchor; `+`/`-` per the diff):
-
-```
-  26 |    filterChoices: TableColumnFilterChoice[];
-  27 |  }
-  28 |  
-> 29 |  export interface CourseCatalogDataTableSlotProps {
-    | -  displayData?: CourseListSearchResponse;
-> 30 | +  displayData?: CatalogSearchResponse;
-> 31 |    totalCourses: number;
-> 32 |    pageCount: number;
-> 33 |    pageIndex: number;
-> 34 |    tableColumns: TableColumn[];
-> 35 |    handleFetchData: (params: DataTableParams) => void;
-> 36 |  }
-  37 |  
-  38 |  const CourseCatalogDataTableSlot = ({
-  39 |    displayData,
-```
-
-> Working through what the how-to would look like here, I first had a `v2` of this slot with `totalItems` (and of `CourseCatalogIntroSlot` with `resultsCount`), but a `v2` of a `CourseCatalog*` slot felt wrong when the point is moving away from "course catalog". [ADR 0009 §2](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) only bumps the version "if it still make sense to use the same Identifier", and I don't think it does once the table holds pathways too, so I think these end up as new slots instead: `CatalogDataTableSlot` (`org.openedx.frontend.slot.catalog.catalogDataTable.v1`, `totalItems`), `CatalogIntroSlot` (`catalogIntro.v1`, `resultsCount`), and the same prefix drop for the search field, control bar, card view, footer and course card. The steps from the how-to are the same, just with a new name instead of a new version suffix: new slot rendered around the old one, `@deprecated` on the old interface and props, a README each, `feat:` now and `feat!:` later. (No `idAliases` for this, that'd make them one slot with one props interface.) I'm open to other thoughts on the names!
+> The course-about slots have the same gap (`CourseAboutData`, `SinglePaidMode`, `SocialLink` and two more), but nothing in this PR touches them, so that is a follow-up.
 >
-> #177 adds a pathway card slot under the `courseCatalogDataTable` prefix, so I'd prefer to settle this before that lands. I made #184 to keep track of deprecations like these so each one has a DEPR ticket by the time it reaches `stable`; once this lands I'll add everything from it there.
+> **The two slot props, and the slot names.** The how-to's path for `courseDataResultsLength` → `resultsCount` and `totalCourses` → `totalItems` would be a `v2` of `CourseCatalogIntroSlot` and `CourseCatalogDataTableSlot`. But [ADR 0009 §2](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) only increments the version "if it still make sense to use the same Identifier", and `courseCatalog*` stops making sense once the table holds pathways (#175) and a pathway card renders under it (#177). So the change is a new identifier rather than a version bump: `CatalogIntroSlot` (`org.openedx.frontend.slot.catalog.catalogIntro.v1`, with `resultsCount`), `CatalogDataTableSlot` (`...catalogDataTable.v1`, with `totalItems`), and the same prefix drop for the search field, control bar, card view, footer and course card (`catalogDataTableCourseCard.v1`; the card itself is still a course card). The steps are otherwise the how-to's: the new slot renders around the old one as its default content so existing widgets and operations keep working, the old interface and props get `@deprecated` notes, each version keeps its own README, it lands as `feat:` and the old slots go in a later `feat!:`. `idAliases` does not fit here, since an alias makes old and new one slot with one props interface. #177 adds `courseCatalogDataTablePathwayCard.v1` under the current prefix, so settling the names before it lands avoids renaming twice.
+
+Close, Brian's voice (suggested):
+
+> I'm open to other thoughts on the names, but I'd prefer to settle them here before #177 builds on the current ones. I made #184 to keep track of deprecations like these so each one has a DEPR ticket by the time it reaches `stable`; once this lands I'll add everything from it there. Thanks for working through this with me!
