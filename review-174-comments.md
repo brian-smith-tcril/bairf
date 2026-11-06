@@ -52,7 +52,6 @@ Claude portion, posted verbatim:
 >   export type CourseListSearchResponse = CatalogSearchResponse;
 >   ```
 >
-> - Leave the course-about slots for a follow-up. They have the same gap (`CourseAboutData`, `SinglePaidMode`, `SocialLink` and two more), but nothing in this PR touches them.
 >
 > **The two slot props, and the slot names**
 >
