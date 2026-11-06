@@ -4,7 +4,7 @@ Drafted 2026-11-06 against head `089a0cda88`. Six inline comments and a summary.
 
 ## Review summary
 
-Status: draft
+Status: pending https://github.com/openedx/frontend-app-catalog/pull/175#pullrequestreview-5805667419 (2026-11-06, review created PENDING on 089a0cda88 with the six comments; Brian submits from the review pane and pastes the summary there)
 
 Suggested, Brian's voice, edit freely:
 
@@ -25,7 +25,7 @@ Suggested, Brian's voice, edit freely:
 File: `src/home/components/courses-list/CoursesList.tsx`
 Lines: 21-24 (the `CourseResult` extract and the `isCourseResult` guard)
 Ledger: entry 8
-Status: draft
+Status: pending https://github.com/openedx/frontend-app-catalog/pull/175#discussion_r4496568930
 
 Diff context:
 
@@ -65,7 +65,7 @@ Body:
 File: `src/data/catalog-search/types.ts`
 Lines: 24-38 (the `CatalogSearchResult` union)
 Ledger: entry 9
-Status: draft
+Status: pending https://github.com/openedx/frontend-app-catalog/pull/175#discussion_r4496568944
 
 Diff context:
 
@@ -121,7 +121,7 @@ Body:
 File: `src/home/HomePage.test.tsx`
 Lines: 36-42 (the `CourseResult` type, the `isCourseResult` guard and the `courseResults` filter)
 Ledger: entry 9
-Status: draft
+Status: pending https://github.com/openedx/frontend-app-catalog/pull/175#discussion_r4496568957
 
 Diff context:
 
@@ -162,7 +162,7 @@ Body:
 File: `src/generic/pathway-card/types.ts`
 Lines: 27-31 (the category fields on `PathwayData`)
 Ledger: entry 10
-Status: draft
+Status: pending https://github.com/openedx/frontend-app-catalog/pull/175#discussion_r4496568972
 
 Diff context:
 
@@ -194,7 +194,7 @@ Body:
 File: `src/generic/pathway-card/types.ts`
 Lines: 1 (`PathwayCardProps`)
 Ledger: entry 10
-Status: draft
+Status: pending https://github.com/openedx/frontend-app-catalog/pull/175#discussion_r4496568991
 
 Diff context:
 
@@ -214,7 +214,7 @@ Body:
 File: `src/data/catalog-search/api.ts`
 Lines: 36-40 (`terms` and `labels` kept verbatim)
 Ledger: entry 2
-Status: draft
+Status: pending https://github.com/openedx/frontend-app-catalog/pull/175#discussion_r4496569006
 
 Diff context:
 
