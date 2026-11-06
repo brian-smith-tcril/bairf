@@ -207,7 +207,7 @@ Diff context:
 
 Body:
 
-> Nothing in this PR reads `PathwayCardProps` (its first reader is `PathwayCard` in #176). Would you mind moving it there with the card, so this PR stays on the data layer?
+> Nothing in this PR reads `PathwayCardProps` (its first reader is `PathwayCard` in #176). Can we wait until there's something using it to add it?
 
 ## Comment 6: the `terms` fix is its own PR
 
