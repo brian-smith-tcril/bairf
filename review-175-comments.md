@@ -58,7 +58,7 @@ Body:
 > })}
 > ```
 >
-> This makes the "anything we don't recognize is a course" behavior explicit. It also means the `isCourseResult` guard and the `CourseResult` type can go away since the `switch` narrows the type for us. It also sets up a `pathway` case for #176 and #177 to fill in.
+> This makes the "anything we don't recognize is a course" behavior explicit. It also means the `isCourseResult` guard and the `CourseResult` type can go away since the `switch` narrows the type for us (and sets up a `pathway` case for #176 and #177 to use).
 
 ## Comment 2: build the union from `Course` and `Pathway`
 
