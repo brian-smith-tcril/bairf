@@ -10,9 +10,15 @@ Suggested, Brian's voice, edit freely:
 
 > I read through the one commit this PR adds on top of #174 and left a few comments. None of them are blocking on their own. The slot change for `displayData` that we're working through on #174 will carry into this PR once it's rebased, so I'll do another pass then.
 >
+
+# ***THIS SECTION WRITTEN BY BRIAN DO NOT EDIT***
+
+> Thanks for splitting these PRs up! I looked through a bit of the diff against #174 and things are mostly looking good! I did notice a couple things, so I had Claude write up a few inline comments.
+
+# ***END WRITTEN BY BRIAN SECTION***
+
 > The inline comments were drafted with Claude Code and reviewed before posting.
 >
-> Thanks for the PR!
 
 ## Comment 1: switch on `type` in the home list
 
@@ -38,7 +44,7 @@ Diff context:
 
 Body:
 
-> I'd prefer a `switch` on `result.type` in the render over filtering with `!== 'pathway'` up here, with `pathway` rendering nothing for now and `course` plus `default` rendering the course card:
+> I think we could use `switch`/`case` to clarify the intention here, with `pathway` rendering nothing for now and `course` plus `default` rendering the course card:
 >
 > ```tsx
 > {catalogData?.results?.map((result) => {
