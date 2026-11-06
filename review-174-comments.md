@@ -76,8 +76,26 @@ Claude portion, posted verbatim:
 >
 > The data table and card view files are untouched by #175, but the type they name changes shape there, which is the how-to's "changing a prop's type" case, so #175 needs a new version of each anyway. Doing their renames there, born with the union type, gives each one bump instead of two.
 >
-> The steps are the how-to's, with the new name standing in for the new version suffix. `idAliases` doesn't fit here: an alias would make old and new one slot with one props interface.
+> The steps are otherwise the how-to's:
+>
+> - The new slot renders around the old one as its default content, so existing widgets and operations keep working.
+> - The old interface and props get `@deprecated` notes pointing at the new ones.
+> - Each version keeps its own README.
+> - It lands as `feat:`; the old slots go in a later `feat!:`.
+> - No `idAliases`: an alias makes old and new one slot with one props interface.
+>
+> _____
 
 Close, Brian's voice (suggested):
 
 > I'm open to other thoughts on the names, but I'd prefer to settle them now so #175 and #177 can build on the new ones. I made #184 to keep track of deprecations like these so each one has a DEPR ticket by the time it reaches `stable`; once this lands I'll add everything from it there. Thanks for working through this with me!
+
+# ***THIS SECTION WRITTEN BY BRIAN DO NOT EDIT***
+
+> I'm open to other names (my goal was just "don't say 'Course Catalog' anymore"), and other thoughts on when to make new slots/slot versions (you have a better sense of what's yet-to-come than I do).
+> 
+> Let me know if you have any questions/concerns (or suggestions for how to improve the `frontend-base` docs I PR'd!)
+> 
+> I know this review has gotten a little bigger/gone a little deeper than either of us expected at first, so I want to say thank you for being so patient and understanding. Looking forward to getting this one landed!
+
+# ***END WRITTEN BY BRIAN SECTION***
