@@ -88,3 +88,28 @@ Claude portion, posted verbatim:
 > I know this review has gotten a little bigger/gone a little deeper than either of us expected at first, so I want to say thank you for being so patient and understanding. Looking forward to getting this one landed!
 
 # ***END WRITTEN BY BRIAN SECTION***
+
+## Reply to rpenido's 2026-11-06 comment
+
+Status: draft (2026-11-07). Goes up as a PR comment, not a review, after openedx/frontend-base#344 carries the fifth example (the new-identifier case) and the alias sentence, so "added a section" is true when posted. Rests on ledger entries 3 and 12. Anchors: rpenido's comment https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6693801468, head `1e1c048994`.
+
+# ***THIS SECTION WRITTEN BY BRIAN DO NOT EDIT***
+
+> (quote about renames not covered in how-to)
+> great call! i added a section to the how-to to cover those.
+>
+> i also realized that some of these are *pure* renames (with no prop changes), so we can skip the wrapping and just use aliases instead.
+
+# ***END WRITTEN BY BRIAN SECTION***
+
+The quote to fill in, from rpenido's comment:
+
+> Note that we have a case still not covered by https://github.com/openedx/frontend-base/pull/344: Since this is not a new version, we are deprecating one slot in favor of another. Since I renamed the old folder, I kept the older documentation as `README.deprecated.md` in each (new) slot folder, and the README links to it.
+
+Facts the comment can carry, for Brian to fold in or leave out (not Claude-voiced; no disclosure needed unless he keeps the list verbatim):
+
+- The pure renames at `1e1c048994`, props identical old to new, old `*SlotProps` declared as a type alias of the new: `CatalogSearchFieldSlot`, `CatalogDataTableControlBarSlot`, `CatalogDataTableTableFooterSlot` (no props), `CatalogDataTableCourseCardSlot`.
+- What each becomes: one `<Slot id="<new id>" idAliases={['<old id>']} ...props>`, no inner `<Slot>`, no `README.deprecated.md`; the one README notes the old id as a deprecated alias. The deprecated `*SlotProps` type alias stays as is (the type name changed even though the shape did not).
+- The intro stays wrapped: `courseDataResultsLength` → `resultsCount` is a prop change, so one props interface cannot serve both ids. The data table in #175 is the same case.
+- The `idAliases` mechanism is openedx/frontend-base#178 (merged 2026-02-26): operations under an alias id apply to the slot as if under its id.
+- The PR body still lists the slot props and ids as unchanged (entry 12); worth a line asking for the body to catch up, if Brian wants it in this comment.
