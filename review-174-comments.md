@@ -91,7 +91,7 @@ Claude portion, posted verbatim:
 
 ## Reply to rpenido's 2026-11-06 comment
 
-Status: draft (2026-11-07). Goes up as a PR comment, not a review. openedx/frontend-base#344 carries the two rename examples as of `079dc92` (pushed 2026-11-07), so "added a section" is true. Rests on ledger entries 3 and 12. Anchors: rpenido's comment https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6693801468, head `1e1c048994`.
+Status: posted by Brian in his own words https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6714097028 (2026-11-07 22:51Z). His comment: #344 gained slot rename examples; #346 is the "how to document slots" issue; README names as `README.{oldSlotName}.{oldSlotVersion}.md`; some of these are pure renames, so `idAliases` instead of wrapping. Not in it, from the draft below: which four slots are the pure renames, the alias code, the single-README consequence, the #175 data table and card view staying wrapped, and the stale PR body. Those are open for the next pass. Rests on ledger entries 3 and 12. Anchors: rpenido's comment https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6693801468, head `1e1c048994`.
 
 # ***THIS SECTION WRITTEN BY BRIAN DO NOT EDIT***
 
