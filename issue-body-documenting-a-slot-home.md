@@ -11,8 +11,6 @@ Decide where a "documenting a slot" doc lives
 
 `docs/` in this repo has two kinds of document: `how_tos/` and `decisions/`. Neither fits. [ADR 0009](https://github.com/openedx/frontend-base/blob/main/docs/decisions/0009-slot-naming-and-lifecycle.rst) is the slot naming and lifecycle record and says nothing about documentation; a file-naming convention is not a behaviour decision, so it does not belong in that ADR or in a new one. The sibling repos have the same two kinds (frontend-plugin-framework, frontend-platform and frontend-app-authoring have `decisions/` and `how_tos/`; frontend-app-learning and paragon have `decisions/` only), so there is no precedent in the ecosystem's frontend repos for a third kind.
 
-**My lean:** a reference document in this repo, as a third kind of document beside how-tos and ADRs (docs.openedx.org already separates how-tos from references). The #344 how-to would then link to it from its README steps.
-
 <details>
 <summary> Claude Plan </summary>
 
