@@ -91,7 +91,7 @@ Claude portion, posted verbatim:
 
 ## Reply to rpenido's 2026-11-06 comment
 
-Status: draft (2026-11-07). Goes up as a PR comment, not a review, after openedx/frontend-base#344 carries the fifth example (the new-identifier case) and the alias sentence, so "added a section" is true when posted. Rests on ledger entries 3 and 12. Anchors: rpenido's comment https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6693801468, head `1e1c048994`.
+Status: draft (2026-11-07). Goes up as a PR comment, not a review. openedx/frontend-base#344 carries the two rename examples as of `079dc92` (pushed 2026-11-07), so "added a section" is true. Rests on ledger entries 3 and 12. Anchors: rpenido's comment https://github.com/openedx/frontend-app-catalog/pull/174#issuecomment-6693801468, head `1e1c048994`.
 
 # ***THIS SECTION WRITTEN BY BRIAN DO NOT EDIT***
 
@@ -113,3 +113,43 @@ Facts the comment can carry, for Brian to fold in or leave out (not Claude-voice
 - The intro stays wrapped: `courseDataResultsLength` → `resultsCount` is a prop change, so one props interface cannot serve both ids. The data table in #175 is the same case.
 - The `idAliases` mechanism is openedx/frontend-base#178 (merged 2026-02-26): operations under an alias id apply to the slot as if under its id.
 - The PR body still lists the slot props and ids as unchanged (entry 12); worth a line asking for the body to catch up, if Brian wants it in this comment.
+
+Draft of the whole comment, Brian's voice, his two sentences kept verbatim (capitalization is his call). Nothing here is Claude-voiced unless he keeps it as is, in which case the disclosure line from the review goes at the top:
+
+> > Note that we have a case still not covered by https://github.com/openedx/frontend-base/pull/344: Since this is not a new version, we are deprecating one slot in favor of another. Since I renamed the old folder, I kept the older documentation as `README.deprecated.md` in each (new) slot folder, and the README links to it.
+>
+> great call! i added a section to the how-to to cover those.
+>
+> i also realized that some of these are *pure* renames (with no prop changes), so we can skip the wrapping and just use aliases instead.
+>
+> The how-to now has two rename examples: [renaming a slot](https://github.com/brian-smith-tcril/frontend-base/blob/079dc92/docs/how_tos/add-a-slot-version.md#example-renaming-a-slot), where nothing about the slot's props changes and the old id is kept in `idAliases`, and [renaming a slot when its props change](https://github.com/brian-smith-tcril/frontend-base/blob/079dc92/docs/how_tos/add-a-slot-version.md#example-renaming-a-slot-when-its-props-change), which is the wrapping you did here.
+>
+> For this PR that works out to:
+>
+> | Slot | Props change | Approach |
+> |---|---|---|
+> | `catalogIntro` | `courseDataResultsLength` → `resultsCount` | wrap, as you have it |
+> | `catalogSearchField` | none | `idAliases` |
+> | `catalogDataTableControlBar` | none | `idAliases` |
+> | `catalogDataTableTableFooter` | none | `idAliases` |
+> | `catalogDataTableCourseCard` | none | `idAliases` |
+>
+> So for those four, would you mind swapping the inner `<Slot>` for an alias on the outer one, e.g.
+>
+> ```tsx
+> <Slot
+>   id="org.openedx.frontend.slot.catalog.catalogSearchField.v1"
+>   idAliases={['org.openedx.frontend.slot.catalog.courseCatalogSearchField.v1']}
+>   ...
+> ```
+>
+> With that there's one slot per folder again, so each of those goes back to a single `README.md` (with a note at the top that the old id is a deprecated alias) instead of `README.md` + `README.deprecated.md`. The deprecated `CourseCatalog*SlotProps` type aliases are good as they are.
+>
+> For the intro (and the data table and card view in #175, since `displayData`'s type changes there), the wrapping is right. On the README naming for those, the how-to names the old one after the old slot, so `README.courseCatalogIntro.v1.md` rather than `README.deprecated.md`. That convention is only shown by example at the moment; writing it down properly is https://github.com/openedx/frontend-base/issues/346.
+>
+> One last small thing: it'd be great to update the PR body, it still lists the slot ids and the two props as unchanged.
+>
+> Thanks again for working through all of this with me!
+
+Facts behind the table, checked at `1e1c048994`: `CatalogSearchFieldSlot`, `CatalogDataTableControlBarSlot`, `CatalogDataTableTableFooterSlot` and `CatalogDataTableCourseCardSlot` each render the new id around the old, with the old `*SlotProps` declared as a type alias of the new (the footer has no props), and each folder holds `README.md`, `README.deprecated.md`, `images/` and `index.tsx`. The intro renames `courseDataResultsLength` to `resultsCount`. The alias mechanism is openedx/frontend-base#178. The anchors are GitHub's for the `## Example:` headings on `079dc92`.
+
