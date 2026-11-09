@@ -6,7 +6,13 @@ The record of this review. The state is rewritten, never appended; the passes ta
 
 ## State
 
-First of the PRs split out of openedx/frontend-app-learner-dashboard#875 (ChrisChV, open-craft fork). Covers the dashboard heading only ("My Learning" title, "Courses" heading, sticky heading and Refine filter, header links renamed to Explore and My Learning) and depends on no pathways code; #879 is independent of it by its own body and by branch content (diverged, neither contains the other). kdmccormick approved 2026-10-29. Brian's pass (2026-10-30 to 31) is done and posted: two PR comments (entries 3 and 5) and one thread (entry 2). Waiting (2026-10-31): Brian will not approve without the widget id rename and the reorder question answered, and both rest on frontend-base: openedx/frontend-base#334 (widget id aliases, PR #335 open) and openedx/frontend-base#336 (whether default widget ids and order are an app's contract). The author dropping the rename or the reorder would avoid the wait but undo what earlier reviewers asked for (kdmccormick's My Learning thread; the Figma order). Next pass on 878 once #334 and #336 resolve, or the author replies.
+First of the PRs split out of openedx/frontend-app-learner-dashboard#875 (ChrisChV, open-craft fork). Covers the dashboard heading only ("My Learning" title, "Courses" heading, sticky heading and Refine filter, header links renamed to Explore and My Learning) and depends on no pathways code; #879 is independent of it by its own body and by branch content (diverged, neither contains the other). kdmccormick approved 2026-10-29. Brian's pass (2026-10-30 to 31) is done and posted: two PR comments (entries 3 and 5). Entry 2 (the `explore` description still says "discover") was recorded as posted but never was; no review or review comment by Brian exists on #878 (checked 2026-11-09).
+
+Head aca7e369ba, unchanged since 2026-10-30; no reply from ChrisChV to either comment. On 2026-11-06 itsjeyd relabeled it from "waiting for eng review" to "waiting on author" plus "product review". CI: codecov/patch fails (85.71% of diff hit, target 92.46%; project coverage up to 92.50%), the other four checks pass; not something Brian holds a PR for.
+
+Both frontend-base blockers are resolved (2026-11-02). #335 merged and shipped as @openedx/frontend-base 2.0.0-alpha.19: `idAliases?: string[]` on `WidgetIdentityProps`, so an `APPEND` can declare the ids it also answers to for `INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE`, `REMOVE` and `OPTIONS`; the TSDoc says to keep a renamed id as an alias for at least one release. #336 settled by Brian: existence of a default widget id is contract, order is not; documentation goes to frontend-base#341. So the rename lands with the old id as an alias, and the reorder stays a plain `feat:`. No app in the org uses widget `idAliases` yet (code search 2026-11-09: every hit is a slot alias); #878 would be the first. frontend-base#344's how-to covers slots only; the TSDoc is the written guidance for widgets.
+
+The dashboard pins `@openedx/frontend-base` at `^2.0.0-alpha.15 || 0.0.0-dev` with the lock at alpha.15 (master too; nothing on master since the base but a maintainer chore), so the alias field does not type-check until the lock moves to alpha.19. alpha.16 to alpha.19 are three fixes (symlinked workspace packages, paragon as a workspace package, typescript as a peer dependency; the skip link's focus target; `getAppConfig` always returning an object, which is the #337 crash the #879 review hit) and the alias feature. Next pass is on Brian's picks in entry 6: one id or both, the code-level rename half, where the dependency bump goes, and the PR body naming the header link changes.
 
 ## Passes
 
@@ -14,7 +20,8 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
-| 2026-10-30 | 162fad7fde | aca7e369ba | whole diff | comments (entries 2, 3, 5) |
+| 2026-10-30 | 162fad7fde | aca7e369ba | whole diff | comments (entries 3, 5); entry 2 drafted, not posted |
+| 2026-11-09 | 162fad7fde | aca7e369ba | frontend-base #334, #335, #336 outcomes against `app.tsx`; the dependency range and lock; PR body; GitHub activity since 2026-10-31; entry 2 checked against GitHub | none yet: entry 6 waits for Brian |
 
 ## Ledger
 
@@ -35,7 +42,7 @@ Also from the commit: the widget ids were swapped so that `headerLinkDiscover.v1
 
 ### 2. The `explore` message description still says "discover"
 
-Status: posted https://github.com/openedx/frontend-app-learner-dashboard/pull/878#discussion (thread on src/widgets/LearnerDashboardHeader/messages.js line 57, 2026-10-30 14:42)
+Status: open, not posted. Recorded on 2026-10-30 as posted with a placeholder URL; GitHub has no review or review comment by Brian on #878 (checked 2026-11-09). Folds into the rename comment in entry 6
 Rests on: src/widgets/LearnerDashboardHeader/messages.js at aca7e369ba
 
 ### 3. Naming is split between discover/explore and courses/myLearning after the rename commit
@@ -80,3 +87,18 @@ Contract text. ADR 0009 section 2: "a given slot's content, default or otherwise
 The PR body says it "only covers the new dashboard heading" and does not mention the header links being renamed or reordered; only the commit subject does.
 
 Two axes. (a) frontend-base: write down either that relative operations place against the target's current position and an app's default order may change between versions, or that default ids and their order are public surface and a reorder is a major; a docs issue beside #334, not for 878. (b) 878 regardless: the repo is on 2.0.0-alpha and marks majors `feat!:` with a footer (aed66d1, 70576cf), so `feat!:` on aca7e36 with the old and new order in a BREAKING CHANGE footer costs nothing; the floor is the PR body naming the change.
+
+### 6. With widget `idAliases` shipped, what does #878 need?
+
+Status: open: candidate comment, waits for Brian's picks below
+Rests on: src/widgets/LearnerDashboardHeader/app.tsx, messages.js, DiscoverLinkMenuItem.jsx, MyLearningLink.jsx, package.json, package-lock.json at aca7e369ba; openedx/frontend-base runtime/slots/widget/types.ts at 72d70535cf (v2.0.0-alpha.19); frontend-base#336 (settled 2026-11-02); the PR body as of 2026-11-09
+
+Mechanism. `WidgetAppendOperation` is `BaseWidgetOperation & WidgetIdentityProps & WidgetRendererProps`, and `WidgetIdentityProps.idAliases?: string[]` (alpha.19) is matched by `findRelatedWidgetIndex`, `byId`, `withoutId`, the relative-operation sort and `useWidgetOptionsForId`. So each header link `APPEND` in `app.tsx` can take its new id and list the old one under `idAliases`, and every site-config operation keyed on the old id keeps applying. #336 (existence: yes, order: no) means the id change needs the alias and the reorder needs nothing beyond being named.
+
+What the PR has at aca7e369ba: ids unchanged (`headerLinkCourses.v1` renders My Learning, `headerLinkDiscover.v1` renders Explore), declaration order Discover, Courses, Programs; message keys renamed; `CoursesLink.jsx` renamed to `MyLearningLink.jsx`; `DiscoverLinkMenuItem.jsx`, `DiscoverLink` and the `explore` description ("switching to discover page") still say discover; PR body describes the heading only and does not mention the header links.
+
+Brian's picks:
+- Ids: `headerLinkCourses.v1` to `headerLinkMyLearning.v1` is what the posted comment (entry 3) asked for. Whether `headerLinkDiscover.v1` becomes `headerLinkExplore.v1` the same way is not asked yet; the label, message key and tracking names all say explore.
+- Code-level rename half (entry 3, withheld 2026-10-31): `DiscoverLinkMenuItem.jsx` and its component and inner function, plus the entry 2 description.
+- Dependency: the field does not exist at the locked alpha.15. Either this PR carries the bump (lock-only commit first, then `package.json` to `^2.0.0-alpha.19 || 0.0.0-dev`), or a separate bump PR lands ahead and #878 to #881 rebase onto it; alpha.18 also fixes the #337 crash that #879's local run hit.
+- PR body: a line for the header link rename, the alias, and the new order; commit type stays `feat:`.
