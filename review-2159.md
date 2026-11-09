@@ -35,7 +35,7 @@ Gating: `TabPage` renders the slot only under `shouldRenderContent` (metadata re
 
 ### 2. Which pages is the strip intended for? Today it renders on every `TabPage` page
 
-Status: open: placement below the instructor toolbar was decided (2026-11-09) and then reopened the same day with entry 10 (is below-the-title design's want?); the intended set of pages still his call
+Status: open: placement below the instructor toolbar decided (2026-11-09), reaffirmed after entry 10; comment to draft. The intended set of pages still his call; the design mock being a unit page is a data point for all pages
 Rests on: src/tab-page/TabPage.tsx, src/tab-page/TabWithTimer.tsx, src/courseware/CoursewareContainer.tsx, src/course-home/{outline,dates,progress,discussion,live}-tab, src/courseware/course/course-exit/CourseExit.jsx at 696901a030; issue #2165; PR body; src/plugin-slots/CourseInfoStripSlot/README.md and screenshot_default.png
 
 The slot sits in `TabPage`, so the strip renders on every page that goes through it: outline, dates, progress, discussion and live tabs and `CourseExit` via `TabWithTimer`, and the courseware unit pages via `CoursewareContainer`. Nothing in writing picks a set: issue #2165 says "rendered in the course outline", the PR body and slot README say "below the course header", and every screenshot (body, slot README, rpenido's approval) is the outline tab. kdmccormick's "visual changes ... look good" rests on those outline screenshots. Asking "is the unit page intentional?" is backwards (Brian, 2026-11-09): the author decides page by page what the strip is for, and dates, progress and the rest are as open as units. Shape if asked: "This renders on every page that goes through `TabPage` (outline, dates, progress, discussion, live, course exit and the courseware units). Which of those is the strip meant for?" If the answer is "outline only", the slot moves or is gated by tab; the record's entry 1 (slot always rendered, default conditional) still holds either way. Not asked: whether the strip belongs on #2231's pathway pages, which do not use `TabPage`.
@@ -105,7 +105,7 @@ Why it matters (Brian, 2026-11-09): every custom rule is one more thing a theme 
 
 ### 10. Port to frontend-base: where would the strip sit between the header and the course tabs?
 
-Status: open: Brian questions whether a `PREPEND` into the course navigation bar slot is semantically right, and whether the below-title position is design's want or an accommodation (2026-11-09); his call on reopening the thread
+Status: Brian's position (2026-11-09): below the header is his preference too, since a strip above it would move the header up and down between the learner dashboard and the learning pages; he will reply on the thread himself that frontend-base can also carry it above everything if design really wants that. The move in entry 2 (below the instructor toolbar) stands.
 Rests on: src/tab-page/TabPage.tsx and LoadedTabPage.tsx at 696901a030; frontend-base 72d7053 (alpha.19 head) shell/DefaultLayout.tsx, shell/header/Header.tsx, shell/header/app.tsx, shell/header/course-bar/navigation/CourseTabsNavigation.tsx, shell/header/course-bar/utils.ts, runtime/slots/widget/types.ts
 
 Here today: `TabPage` renders `HeaderSlot`, then `CourseInfoStripSlot`, then `LoadedTabPage`, which renders `InstructorToolbar`, `AlertList` and then `CourseTabsNavigationSlot`. So the strip already sits between the header and the course tabs, with the instructor toolbar and alerts between it and the tabs. The app owns that whole column.
