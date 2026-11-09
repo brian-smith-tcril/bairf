@@ -100,3 +100,17 @@ Rule by rule against Paragon 23.23.1's `core.css`:
 - `.course-pathways-strip-measure` (hidden copy for measuring): `position-absolute` and `invisible` exist; `top/left: 0`, `width: max-content`, `pointer-events: none` have no Paragon 23 utility (`top-0`, `pe-none` are Bootstrap 5). Stays SCSS, and the measuring approach itself is entry 6's "+N" reserve question.
 
 Why it matters (Brian, 2026-11-09): every custom rule is one more thing a theme author has to find and override; a repo already carrying custom SCSS is no licence to add more. The file's size relative to siblings is not a consideration. The ask is therefore the whole file, not the Badge block alone: utilities where Paragon has them, and for the lines Paragon cannot express (`min-width: 0`, the separator, the measuring block) the question is whether the design needs them at all.
+
+### 10. Port to frontend-base: where would the strip sit between the header and the course tabs?
+
+Status: open: Brian's question during the local run (2026-11-09); no comment, context for entries 2 and 4
+Rests on: src/tab-page/TabPage.tsx and LoadedTabPage.tsx at 696901a030; frontend-base 72d7053 (alpha.19 head) shell/DefaultLayout.tsx, shell/header/Header.tsx, shell/header/app.tsx, shell/header/course-bar/navigation/CourseTabsNavigation.tsx, shell/header/course-bar/utils.ts, runtime/slots/widget/types.ts
+
+Here today: `TabPage` renders `HeaderSlot`, then `CourseInfoStripSlot`, then `LoadedTabPage`, which renders `InstructorToolbar`, `AlertList` and then `CourseTabsNavigationSlot`. So the strip already sits between the header and the course tabs, with the instructor toolbar and alerts between it and the tabs. The app owns that whole column.
+
+In frontend-base the app does not. `DefaultLayout` is header.main → content.main → footer.main, and the shell's `Header` component renders `<header>` (desktop and mobile slots), then the `header.masqueradeBar.v1` slot, then the `header.courseNavigationBar.v1` slot. The course tabs are the shell's `CourseTabsNavigation` widget, appended to `courseNavigationBar.v1` under a `condition.callback` of `isCourseBarRoute()` (apps opt in by `provides: { [providesCourseBarRolesId]: [...] }`), reading `courseId` from `useParams()`. There is no slot named for "between the header and the tabs", but two existing slots put a widget there:
+
+- `PREPEND` (or an insert-before relative to `org.openedx.frontend.widget.header.courseNavigationBar.v1`) into `header.courseNavigationBar.v1`: renders above the tabs, below the masquerade bar, inside the same slot.
+- `APPEND` into `header.masqueradeBar.v1`: same visual position, different slot; semantically wrong, the slot is the masquerade bar.
+
+Either way the strip becomes a header-level widget, mounted by the app's config with a route condition, not a slot the app renders in its page body; the `courseId` comes from the route params as `CourseTabsNavigation` does. The ordering question that stays open: the instructor toolbar (today between the strip and the tabs) has no frontend-base home yet, so the relative order of strip, masquerade bar, toolbar and tabs is undecided there. `courseNavigationBar.extraContent.v1` is inside the `Nav`, beside the tab links, not a row above them.
