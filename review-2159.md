@@ -132,3 +132,10 @@ Header replacement flows (Brian's question, 2026-11-09; frontend-base 72d7053 sh
 | remove or replace the tabs widget | strip stays (ops are per widget id); its own `REMOVE` hides it | n/a |
 
 Weight of this (corrected the same day after Brian asked): the normal header replacement is seam (a), which leaves the course tabs and the strip alone in either position, so the two placements do not differ for the common flow. Only seam (b), the whole-region replacement that already takes the course bar with it, tells them apart, and whether the course bar belongs to the header region is a frontend-base question that predates this PR. So this is a minor point, not a second reason; the header moving vertically between the learner dashboard and learning is the reason for below the header.
+
+### 11. frontend-base issue: the course bar and masquerade bar slots live inside the `Header` widget
+
+Status: drafted, not filed; Brian's word to create it in openedx/frontend-base
+Rests on: frontend-base 72d7053 shell/header/Header.tsx, shell/app.ts, shell/DefaultLayout.tsx, shell/header/desktop/DesktopLayout.tsx, shell/header/mobile/MobileLayout.tsx, docs/decisions/0016-shell-layout-replacement-seams.rst; `gh search issues` on frontend-base for courseNavigationBar, masqueradeBar, header.main.v1 (2026-11-09: only #265, closed, on the masquerade bar's conditions)
+
+Brian's premise (2026-11-09): replacing `org.openedx.frontend.widget.header.main.v1` loses `masqueradeBar.v1` and, more importantly, `courseNavigationBar.v1`, so a site must target the desktop and mobile layout widgets instead, which is less than ideal. Draft body in `issue-body-frontend-base-header-region-slots.md`: the two slots move from `Header` to `DefaultLayout` as siblings of `header.main.v1`, ids unchanged, default DOM order unchanged; the plan lists the consequences to check (chrome gating, ADR 0009 naming, ADR 0016 note). ADR 0016's own rule ("a shell region that callers might want to replace wholesale belongs in its own top-level slot") is the framing. No existing frontend-base issue covers it.
