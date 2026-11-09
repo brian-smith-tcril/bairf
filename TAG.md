@@ -4,3 +4,4 @@ issues:
 
 prs:
   openedx/frontend-app-learning#2159
+openedx/frontend-base#347
