@@ -21,8 +21,6 @@ A site that replaces the header with a `WidgetOperationTypes.REPLACE` against `o
 
 ADR 0016 already states the rule this runs against: "A shell region that callers might want to replace wholesale belongs in its own top-level slot, with the default composition in a layout widget." The course navigation bar and the masquerade bar are regions in their own right (they appear only on routes an app opts into via `provides`), but they live inside the header's layout widget rather than beside it.
 
-Came up while reviewing openedx/frontend-app-learning#2159, which adds a course info strip that would be ported as a widget in this area: https://github.com/openedx/frontend-app-learning/pull/2159#discussion_r4234023949
-
 <details>
 <summary> Claude Plan </summary>
 
