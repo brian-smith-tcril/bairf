@@ -89,7 +89,7 @@ Every file is under `src/pathways/`, `src/plugin-slots/CourseInfoStripSlot/`, th
 
 ### 9. `CoursePathwaysStrip.scss`: what Paragon already provides, what it does not
 
-Status: open: Brian flagged the file on his read (2026-11-09), picks pending
+Status: open: Brian flagged the file on his read (2026-11-09): custom styles are a cost to theme authors; comment shape pending
 Rests on: src/pathways/pathways-strip/CoursePathwaysStrip.scss (53 lines), CoursePathwaysStrip.tsx, MorePathwaysPopover.tsx at 696901a030; @openedx/paragon 23.23.1 dist/core.css (installed; package.json `^23.4.5`); `git ls-files 'src/**/*.scss'`
 
 Rule by rule against Paragon 23.23.1's `core.css`:
@@ -99,4 +99,4 @@ Rule by rule against Paragon 23.23.1's `core.css`:
 - `.course-pathways-strip-trigger` on the Paragon `Button`: `py-0` and `rounded-0` exist as utilities (Paragon utilities are `!important`, so they beat `.btn-sm`); the `border-inline-start` is the same separator as above. Then it reaches into Paragon component internals: `.badge` is rebuilt (`inline-flex`, `min-width`/`height` 1.25rem, `padding: 0`, margin) against Paragon's own badge tokens (`--pgn-spacing-badge-padding-*`, `--pgn-size-badge-border-radius-pill`), and `.btn-icon-after`'s 0.5rem gap is zeroed. No other SCSS file in this repo targets `.badge` or `.btn-icon-after` (`git grep` over `src/**/*.scss`, none). This block is the "custom where the system provides" item: the system's `Badge pill` and the button's icon spacing are provided and then overridden.
 - `.course-pathways-strip-measure` (hidden copy for measuring): `position-absolute` and `invisible` exist; `top/left: 0`, `width: max-content`, `pointer-events: none` have no Paragon 23 utility (`top-0`, `pe-none` are Bootstrap 5). Stays SCSS, and the measuring approach itself is entry 6's "+N" reserve question.
 
-Size context: 53 lines sits mid-table among the repo's feature SCSS files (26 to 181 lines, 11 files). The chunk is big for what it does, not for this repo. Roughly half the lines are utilities Paragon ships; the separator and the measuring block are legitimately custom; the Badge/icon overrides are the part to raise.
+Why it matters (Brian, 2026-11-09): every custom rule is one more thing a theme author has to find and override; a repo already carrying custom SCSS is no licence to add more. The file's size relative to siblings is not a consideration. The ask is therefore the whole file, not the Badge block alone: utilities where Paragon has them, and for the lines Paragon cannot express (`min-width: 0`, the separator, the measuring block) the question is whether the design needs them at all.
