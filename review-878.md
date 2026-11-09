@@ -12,7 +12,7 @@ Head aca7e369ba, unchanged since 2026-10-30; no reply from ChrisChV to either co
 
 Both frontend-base blockers are resolved (2026-11-02). #335 merged and shipped as @openedx/frontend-base 2.0.0-alpha.19: `idAliases?: string[]` on `WidgetIdentityProps`, so an `APPEND` can declare the ids it also answers to for `INSERT_AFTER`, `INSERT_BEFORE`, `REPLACE`, `REMOVE` and `OPTIONS`; the TSDoc says to keep a renamed id as an alias for at least one release. #336 settled by Brian: existence of a default widget id is contract, order is not; documentation goes to frontend-base#341. So the rename lands with the old id as an alias, and the reorder stays a plain `feat:`. No app in the org uses widget `idAliases` yet (code search 2026-11-09: every hit is a slot alias); #878 would be the first. frontend-base#344's how-to covers slots only; the TSDoc is the written guidance for widgets.
 
-The dashboard pins `@openedx/frontend-base` at `^2.0.0-alpha.15 || 0.0.0-dev` with the lock at alpha.15 (master too; nothing on master since the base but a maintainer chore), so the alias field does not type-check until the lock moves to alpha.19. alpha.16 to alpha.19 are three fixes (symlinked workspace packages, paragon as a workspace package, typescript as a peer dependency; the skip link's focus target; `getAppConfig` always returning an object, which is the #337 crash the #879 review hit) and the alias feature. Next pass is on Brian's picks in entry 6: one id or both, the code-level rename half, where the dependency bump goes, and the PR body naming the header link changes.
+The dashboard pins `@openedx/frontend-base` at `^2.0.0-alpha.15 || 0.0.0-dev` with the lock at alpha.15 (master too; nothing on master since the base but a maintainer chore), so the alias field does not type-check until the lock moves to alpha.19. alpha.16 to alpha.19 are three fixes (symlinked workspace packages, paragon as a workspace package, typescript as a peer dependency; the skip link's focus target; `getAppConfig` always returning an object, which is the #337 crash the #879 review hit) and the alias feature. Brian's review went up 2026-11-09 (https://github.com/openedx/frontend-app-learner-dashboard/pull/878#pullrequestreview-5827822352): both ids renamed with the old ones as aliases, as suggestion blocks on `app.tsx`, and the reorder called fine under #336. Waiting on ChrisChV; the next pass reads the alias commit and whatever the dependency bump looks like, and checks the two threads.
 
 ## Passes
 
@@ -21,7 +21,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
 | 2026-10-30 | 162fad7fde | aca7e369ba | whole diff | comments (entries 3, 5); entry 2 drafted, not posted |
-| 2026-11-09 | 162fad7fde | aca7e369ba | frontend-base #334, #335, #336 outcomes against `app.tsx`; the dependency range and lock; PR body; GitHub activity since 2026-10-31; entry 2 checked against GitHub | none yet: entry 6 waits for Brian |
+| 2026-11-09 | 162fad7fde | aca7e369ba | frontend-base #334, #335, #336 outcomes against `app.tsx`; the dependency range and lock; PR body; GitHub activity since 2026-10-31; entry 2 checked against GitHub | comment review https://github.com/openedx/frontend-app-learner-dashboard/pull/878#pullrequestreview-5827822352: two suggestions (entry 6) |
 
 ## Ledger
 
@@ -90,7 +90,7 @@ Two axes. (a) frontend-base: write down either that relative operations place ag
 
 ### 6. With widget `idAliases` shipped, what does #878 need?
 
-Status: drafted as comment 1 in `review-878-comments.md` (2026-11-09), a PR comment following up the 2026-10-31 one; goes up on Brian's word
+Status: posted by Brian as a comment review https://github.com/openedx/frontend-app-learner-dashboard/pull/878#pullrequestreview-5827822352 (2026-11-09): suggestion blocks on `app.tsx` lines 26 (https://github.com/openedx/frontend-app-learner-dashboard/pull/878#discussion_r4514229119) and 39 (https://github.com/openedx/frontend-app-learner-dashboard/pull/878#discussion_r4514238858) with the new ids and aliases, body naming the #336 decision and the alpha.19 release
 Rests on: src/widgets/LearnerDashboardHeader/app.tsx, messages.js, DiscoverLinkMenuItem.jsx, MyLearningLink.jsx, package.json, package-lock.json at aca7e369ba; openedx/frontend-base runtime/slots/widget/types.ts at 72d70535cf (v2.0.0-alpha.19); frontend-base#336 (settled 2026-11-02); the PR body as of 2026-11-09
 
 Mechanism. `WidgetAppendOperation` is `BaseWidgetOperation & WidgetIdentityProps & WidgetRendererProps`, and `WidgetIdentityProps.idAliases?: string[]` (alpha.19) is matched by `findRelatedWidgetIndex`, `byId`, `withoutId`, the relative-operation sort and `useWidgetOptionsForId`. So each header link `APPEND` in `app.tsx` can take its new id and list the old one under `idAliases`, and every site-config operation keyed on the old id keeps applying. #336 (existence: yes, order: no) means the id change needs the alias and the reorder needs nothing beyond being named.

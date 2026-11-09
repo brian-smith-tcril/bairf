@@ -7,7 +7,7 @@ Drafted 2026-11-09 against head `aca7e369ba`. This one is a PR comment, a follow
 File: `src/widgets/LearnerDashboardHeader/app.tsx`
 Lines: 26 (`headerLinkDiscover.v1`, now rendering Explore) and 39 (`headerLinkCourses.v1`, now rendering My Learning)
 Ledger: entry 6 (decided 2026-11-09: both ids), entries 3 and 5 (the posted comments it follows up)
-Status: draft
+Status: posted by Brian in his own form, as a comment review https://github.com/openedx/frontend-app-learner-dashboard/pull/878#pullrequestreview-5827822352 (2026-11-09 15:12Z): two inline `suggestion` blocks on `app.tsx`, line 26 (https://github.com/openedx/frontend-app-learner-dashboard/pull/878#discussion_r4514229119) and line 39 (https://github.com/openedx/frontend-app-learner-dashboard/pull/878#discussion_r4514238858), each the new id plus `idAliases` with the old id, and a review body: thanks for the patience, #336 decided ids are contract and order is not so the reorder is fine, #335 landed in `frontend-base` 2.0.0-alpha.19, "let me know if you hit any snags". Not in it, from the draft below: the TSDoc link. Same ids and aliases as the draft.
 
 Diff context (`bin/review hunk`, `>` on the anchor lines):
 
