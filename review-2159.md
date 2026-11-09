@@ -86,3 +86,17 @@ Status: resolved, no comment
 Rests on: the whole diff at 696901a030; the PR body
 
 Every file is under `src/pathways/`, `src/plugin-slots/CourseInfoStripSlot/`, the slot index, `src/index.scss` (one import) and `TabPage` (one import, one line, two tests). Nothing out of scope. The head is a merge commit (master merged in 2026-10-28); the repo merges by squash or rebase, so it does not land as is.
+
+### 9. `CoursePathwaysStrip.scss`: what Paragon already provides, what it does not
+
+Status: open: Brian flagged the file on his read (2026-11-09), picks pending
+Rests on: src/pathways/pathways-strip/CoursePathwaysStrip.scss (53 lines), CoursePathwaysStrip.tsx, MorePathwaysPopover.tsx at 696901a030; @openedx/paragon 23.23.1 dist/core.css (installed; package.json `^23.4.5`); `git ls-files 'src/**/*.scss'`
+
+Rule by rule against Paragon 23.23.1's `core.css`:
+
+- `.course-pathways-strip-container` (`position: relative; flex: 1; min-width: 0; overflow: hidden`): `position-relative`, `flex-grow-1`, `overflow-hidden` exist as utilities; no utility sets `min-width: 0` (`mw-100` is max-width), and that line is what lets the label row shrink under its content. One line needs SCSS.
+- `.course-pathways-strip-label` (`flex-shrink: 0; white-space: nowrap`): `flex-shrink-0` and `text-nowrap` exist. The `& + .label` separator (0.75rem margin and padding, 1px `--pgn-color-light-700` border, logical `inline-start`): Paragon's spacer scale is 1..6 = .25/.5/1/1.5/3/5rem, no .75; `border-left` exists but is `--pgn-color-border` with `!important` and there is no `border-light-700` colour utility; so the separator is SCSS either way. Design question, not a Paragon one: is `light-700` the divider colour the Figma wants on `bg-primary`?
+- `.course-pathways-strip-trigger` on the Paragon `Button`: `py-0` and `rounded-0` exist as utilities (Paragon utilities are `!important`, so they beat `.btn-sm`); the `border-inline-start` is the same separator as above. Then it reaches into Paragon component internals: `.badge` is rebuilt (`inline-flex`, `min-width`/`height` 1.25rem, `padding: 0`, margin) against Paragon's own badge tokens (`--pgn-spacing-badge-padding-*`, `--pgn-size-badge-border-radius-pill`), and `.btn-icon-after`'s 0.5rem gap is zeroed. No other SCSS file in this repo targets `.badge` or `.btn-icon-after` (`git grep` over `src/**/*.scss`, none). This block is the "custom where the system provides" item: the system's `Badge pill` and the button's icon spacing are provided and then overridden.
+- `.course-pathways-strip-measure` (hidden copy for measuring): `position-absolute` and `invisible` exist; `top/left: 0`, `width: max-content`, `pointer-events: none` have no Paragon 23 utility (`top-0`, `pe-none` are Bootstrap 5). Stays SCSS, and the measuring approach itself is entry 6's "+N" reserve question.
+
+Size context: 53 lines sits mid-table among the repo's feature SCSS files (26 to 181 lines, 11 files). The chunk is big for what it does, not for this repo. Roughly half the lines are utilities Paragon ships; the separator and the measuring block are legitimately custom; the Badge/icon overrides are the part to raise.
