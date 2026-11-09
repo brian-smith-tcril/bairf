@@ -24,6 +24,12 @@ Settled while preparing a deeper dive on bairf for colleagues, after a shareout 
 
 11. **"Keeps a public record separate from the working record" is not an item.** It is a property of the whole, enforced by the first hook; its sentence lives in that hook's bullet.
 
+12. **A one-line definition of bairf: "stuff Brian uses to make Claude work the way he likes (and a home for 'for Claude by Claude' text)".** The second half is not a second category: recording context is part of working the way Brian likes, and could happen in local files or fork branches; what bairf distinctly is, is the *home* for that text. The talk's explanation defines the coinage and the name: Claude writes a lot of text ("Claude vomit"), Claude needs it, Brian needs a home for it, hence bairf (barf + AI). A cold reader's objection that "the way he likes" is too soft was rejected: "make" carries the force, and "make ... the way he likes" is true of all five parts where "by his rules" is true of three.
+
+13. **A cold read by a fresh agent in a non-technical persona is the test of a draft.** First run recorded in `cold-read-1.md` (nonprofit marketer, browser Claude, no code). Result: the five ideas landed, bairf itself was undefined, repo terms in code font read as "not for me", and the plain-English sentences carried each section.
+
+14. **`what-bairf-is.md` stays the reference and is not rewritten for the room.** The audience gets a separate doc, `something-like-bairf.md`, whose question is "how can a non-technical person do something like bairf": each part as what Brian does, what it gets him, and the equivalent without a terminal. Ordered by what the cold reader said landed.
+
 ## Open
 
 - Item 1's body under "Established practices" has not been worked through.
