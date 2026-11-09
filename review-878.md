@@ -90,15 +90,11 @@ Two axes. (a) frontend-base: write down either that relative operations place ag
 
 ### 6. With widget `idAliases` shipped, what does #878 need?
 
-Status: open: candidate comment, waits for Brian's picks below
+Status: drafted as comment 1 in `review-878-comments.md` (2026-11-09), a PR comment following up the 2026-10-31 one; goes up on Brian's word
 Rests on: src/widgets/LearnerDashboardHeader/app.tsx, messages.js, DiscoverLinkMenuItem.jsx, MyLearningLink.jsx, package.json, package-lock.json at aca7e369ba; openedx/frontend-base runtime/slots/widget/types.ts at 72d70535cf (v2.0.0-alpha.19); frontend-base#336 (settled 2026-11-02); the PR body as of 2026-11-09
 
 Mechanism. `WidgetAppendOperation` is `BaseWidgetOperation & WidgetIdentityProps & WidgetRendererProps`, and `WidgetIdentityProps.idAliases?: string[]` (alpha.19) is matched by `findRelatedWidgetIndex`, `byId`, `withoutId`, the relative-operation sort and `useWidgetOptionsForId`. So each header link `APPEND` in `app.tsx` can take its new id and list the old one under `idAliases`, and every site-config operation keyed on the old id keeps applying. #336 (existence: yes, order: no) means the id change needs the alias and the reorder needs nothing beyond being named.
 
 What the PR has at aca7e369ba: ids unchanged (`headerLinkCourses.v1` renders My Learning, `headerLinkDiscover.v1` renders Explore), declaration order Discover, Courses, Programs; message keys renamed; `CoursesLink.jsx` renamed to `MyLearningLink.jsx`; `DiscoverLinkMenuItem.jsx`, `DiscoverLink` and the `explore` description ("switching to discover page") still say discover; PR body describes the heading only and does not mention the header links.
 
-Brian's picks:
-- Ids: `headerLinkCourses.v1` to `headerLinkMyLearning.v1` is what the posted comment (entry 3) asked for. Whether `headerLinkDiscover.v1` becomes `headerLinkExplore.v1` the same way is not asked yet; the label, message key and tracking names all say explore.
-- Code-level rename half (entry 3, withheld 2026-10-31): `DiscoverLinkMenuItem.jsx` and its component and inner function, plus the entry 2 description.
-- Dependency: the field does not exist at the locked alpha.15. Either this PR carries the bump (lock-only commit first, then `package.json` to `^2.0.0-alpha.19 || 0.0.0-dev`), or a separate bump PR lands ahead and #878 to #881 rebase onto it; alpha.18 also fixes the #337 crash that #879's local run hit.
-- PR body: a line for the header link rename, the alias, and the new order; commit type stays `feat:`.
+Decided (Brian, 2026-11-09): both ids are renamed, `headerLinkDiscover.v1` to `headerLinkExplore.v1` and `headerLinkCourses.v1` to `headerLinkMyLearning.v1`, each keeping the old id under `idAliases`. The comment states the alpha.19 requirement as a fact and says nothing about how the author structures the dependency bump or what the PR body says; neither is Brian's to direct. The reorder is named as settled by frontend-base#336. Not in the comment: the names that still say discover after the rename (`DiscoverLinkMenuItem.jsx`, the `DiscoverLinkMenuItem` component, the inner `DiscoverLink` function) and the entry 2 description; entry 3's withheld half stays withheld.
