@@ -6,7 +6,11 @@ The record of this review. The state is rewritten, never appended; the passes ta
 
 ## State
 
-(current read of the PR)
+First of a four-PR stack (ChrisChV, open-craft fork; #2231 pathway pages and the strip's links, #2232 achievements, #2233 progress, each "review only the changes" against the previous branch). Adds a strip below the course header listing the learner's pathways that include the course, as the default content of a new `org.openedx.frontend.learning.course_info_strip.v1` slot, with a "+N" popover for labels that do not fit. The data layer is a stub: `getPathwaysByCourse` returns `{}` until openedx-platform has the endpoint, so on a real site nothing renders; the body's `dev-pathways-dummy-data-2.patch` makes every course get five fixture pathways (downloaded to `/tmp/claude-1000/-var-home-bsmith-code-reviews/6f1523c0-5704-4fae-b797-b660a6af9c9e/scratchpad/downloads-2159/`, touches `src/pathways/data/api.ts` only). Twin of the learner-dashboard strip from openedx/frontend-app-learner-dashboard#875.
+
+Review history: rpenido requested changes 2026-10-06 (RTL fix missing, since shown present; asked about a shared `@openedx/frontend-component-pathways` package, unanswered), kdmccormick requested changes 2026-10-09 (drop the `ENABLE_PATHWAY_PILOT_UI` flag, `itemCount` not `courseCount`, a generic info-strip slot; Brian agreed to the generic slot and raised that frontend-base assumes the header is topmost, so cassiezamparini settled "below the course header"). All three landed by 2026-10-16. rpenido approved 2026-10-29 (notes: patch path stale, since fixed; strip blends with the instructor toolbar, follow-up for design), kdmccormick approved 2026-10-29 and handed Brian the technical sweep. One open thread: rpenido on `types.ts` line 12, the optional category fields are safe to assume present, "revisit when we add the backend". Head 696901a030 is a merge of master into the branch (repo allows squash and rebase only); base 230799eb25; CI green, codecov full patch coverage.
+
+Claude's first pass (2026-11-09), whole diff for dealbreakers and bigger conversations; Brian has not read it yet and the local run is his. No dealbreaker found (entries 1, 5, 8). Two things for Brian: the strip renders on every page that uses `TabPage`, courseware unit pages included, while the issue, the Figma node and every screenshot show the course outline (entry 2); and the data shape carries fields nothing in this PR reads, with rpenido's shared-package question still open (entries 3, 4). Small things parked in entry 6. Next: Brian's read and local run (entry 7), then his picks.
 
 ## Passes
 
@@ -14,8 +18,71 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 
 | date | base | head | scope | outcome |
 |------|------|------|-------|---------|
-| 2026-11-09 | 230799eb25 | 696901a030 | | |
+| 2026-11-09 | 230799eb25 | 696901a030 | whole diff (`git diff origin/master...HEAD`), dealbreakers and bigger conversations; slot gating against learning#1713 and #1943; FPF 1.8.0 `PluginSlot`; `TabPage` consumers; sibling slots, hooks and message ids; rpenido's reviews and open thread; screenshots; suite not run | none yet: entries 2, 3, 4 wait for Brian |
 
 ## Ledger
 
 One entry per question, newest last: `### N. <question>`, a `Status:` line, a `Rests on:` line, then what was found, why no comment was needed, or what was posted. Status is one of: open; resolved, no comment; posted <thread url>; parked; stale. "Rests on" names the files and the head SHA the answer was reached at; a pass marks an entry stale when those files changed since.
+
+### 1. Is the new slot's contract right: id, aliases, props, rendering?
+
+Status: resolved, no comment
+Rests on: src/plugin-slots/CourseInfoStripSlot/{index.tsx, README.md}, src/tab-page/TabPage.tsx, src/plugin-slots/README.md at 696901a030; node_modules/@openedx/frontend-plugin-framework@1.8.0 dist/plugins/PluginSlot.js; Brian's comments on openedx/frontend-app-learning#1713 (https://github.com/openedx/frontend-app-learning/pull/1713#discussion_r2128909259) and #1943 (https://github.com/openedx/frontend-app-learning/pull/1943#discussion_r3631800950)
+
+Id `org.openedx.frontend.learning.course_info_strip.v1` follows the 29 siblings in `src/plugin-slots/README.md` (`org.openedx.frontend.learning.<snake_case>.v1`) and is listed there in order. No `idAliases`, right for a new slot. One plugin prop, `courseId`, which the README's own examples (trial access, archived run) need; the README documents it, shows default and replacement, and says how to hide (`Hide` on `default_contents`). FPF's `PluginSlot` renders through `as = React.Fragment` by default, so when `CoursePathwaysStrip` returns `null` (no pathways, or still loading) nothing is left in the DOM; no empty band on sites without pathways. `slotOptions={{ mergeProps: true }}` is on 11 of 35 sibling slots and absent here; the default content takes `courseId` directly, so nothing is lost.
+
+Gating: `TabPage` renders the slot only under `shouldRenderContent` (metadata resolved without error), the same gate as the toast, the tour button and the tab body; the header renders regardless. Brian's #1713 line ("the slot should always be rendered. The goal is to render nothing *in* the slot by default") was about a config flag deciding whether a slot exists; #1943 is the closer case, where he leaned that a page-level condition may gate the slot and "whatever component operators put in there can assume it's supposed to render when it's rendering". Loading and error are page-level. No comment.
+
+### 2. The strip renders on every `TabPage` page, courseware units included; the issue and screenshots show the outline
+
+Status: open: candidate question, Brian's call
+Rests on: src/tab-page/TabPage.tsx, src/tab-page/TabWithTimer.tsx, src/courseware/CoursewareContainer.tsx at 696901a030; issue #2165; PR body screenshots; src/plugin-slots/CourseInfoStripSlot/screenshot_default.png
+
+`TabPage` is used by `TabWithTimer` (outline, dates, progress, discussion, live tabs and `CourseExit`) and directly by `CoursewareContainer` for unit pages, so the strip sits under the header on all of them. Issue #2165 says "rendered in the course outline"; the PR body says "below the course header"; both body screenshots and the slot's `screenshot_default.png` are the outline tab. rpenido's approval screenshot shows it above the instructor toolbar (which is on every page). Nobody has said in writing whether the unit pages are meant to carry it; kdmccormick's "visual changes ... look good" rests on the outline screenshots. Shape if asked: "This renders on the courseware unit pages too, not just the outline. Is that intentional?" Not asked: whether the strip belongs on #2231's pathway pages, which do not use `TabPage`.
+
+### 3. `PathwayData` carries fields nothing here reads, and rpenido's optionality note is open
+
+Status: open: Brian's call
+Rests on: src/pathways/data/types.ts, src/pathways/pathways-strip/{CoursePathwaysStrip.tsx, MorePathwaysPopover.tsx} at 696901a030; openedx/frontend-app-learner-dashboard#879 src/hooks/usePathwayData.ts at f4852b343a; rpenido's thread https://github.com/openedx/frontend-app-learning/pull/2159#discussion_r4412725979; Brian's #175 comment 5 (https://github.com/openedx/frontend-app-catalog/pull/175#discussion_r4496568991)
+
+The strip and the popover read `pathway.id` and `pathway.content.displayName` only. `itemCount`, the four `category*` fields, `progress` and `provider` have no reader in this PR; they appear in the fixtures. The type is the learner-dashboard's `PathwayData` (#879) minus `categoryLabelPlural`, so this is the shared shape being copied in, not invented here; #2231 to #2233 presumably read the rest. Brian's rule from #175 ("Nothing in this PR reads `PathwayCardProps` ... wait until there's something using it") applies by the letter; against it, the comment at the top of `types.ts` declares it the UI's contract with the API layer, and trimming it here would diverge the two copies rpenido wants merged (entry 4). rpenido's open thread says the category fields are safe to assume present; in #175 Brian asked for `category` and `categoryLabel` required per the catalog ADR, with the color pair optional. Same question across three repos; where it gets answered is Brian's call.
+
+### 4. Shared code with the learner dashboard: rpenido's `@openedx/frontend-component-pathways` question
+
+Status: open: bigger conversation, Brian's call
+Rests on: rpenido's review https://github.com/openedx/frontend-app-learning/pull/2159#pullrequestreview (2026-10-06 body); openedx/frontend-app-learner-dashboard#875, #879
+
+rpenido's 2026-10-06 review: "This and openedx/frontend-app-learner-dashboard#875 share a lot of components and functions. Handling it in two places in the long term would be a pain." No reply on the PR. What is shared today: the `PathwayData` type (entry 3), the fixtures' shape, and the strip's measuring approach (#875's strip is the "twin"). Where it would live (a component package, or frontend-base once both apps are on it) is the "where something should live" conversation Brian usually routes to the right owner; not a blocker for this PR.
+
+### 5. Do the tests test the thing?
+
+Status: resolved, no comment
+Rests on: every `*.test.*` under src/pathways and src/plugin-slots/CourseInfoStripSlot, src/tab-page/TabPage.test.jsx at 696901a030
+
+All new. `hooks.test.tsx` drives `useVisiblePathways` through a harness with mocked layout getters and a mocked `ResizeObserver`: fit, overflow, cut label, nothing fits, RTL, container resize, label resize, same-count rerender, no `ResizeObserver`, unmount. `CoursePathwaysStrip.test.tsx` mocks the hook and the popover and asserts the visible labels by class selector, the measure row's `aria-hidden` and child count. `MorePathwaysPopover.test.tsx` uses `userEvent` and the accessible name, singular and plural, click and Escape. The slot test asserts the default content renders inside the slot with the prop; `TabPage.test.jsx` asserts the slot renders with `courseId` and not while loading. `api.test.ts` asserts the stub returns `{}` ("Until the backend exists"), a placeholder that will be rewritten with the endpoint. Nothing claims more than it asserts.
+
+### 6. Small things, held
+
+Status: parked
+Rests on: src/pathways/pathways-strip/{hooks.ts, CoursePathwaysStrip.scss, MorePathwaysPopover.tsx}, src/pathways/data/{api.ts, apiHooks.ts} at 696901a030; src/courseware/course/breadcrumbs/BreadcrumbItem.tsx; src/course-home/data/apiHooks.ts
+
+- `COUNTER_RESERVED_WIDTH = 74` in `hooks.ts`: the space kept for the "+N" trigger is a hard-coded pixel width rather than the trigger's measured width; a longer count or a different font changes it.
+- `CoursePathwaysStrip.scss` uses `var(--pgn-color-light-700)` for borders but raw `0.75rem`, `1.25rem`, `0.5rem` for spacing where `--pgn-spacing-spacer-*` exists, and restyles Paragon's `.badge` and `.btn-icon-after` inside the trigger.
+- The "+N" `Button` has `aria-label` but no `aria-expanded`/`aria-haspopup`; the repo's other `ModalPopup` trigger (`BreadcrumbItem.tsx`) has neither either. Same pattern, so a repo-wide note if anything.
+- `courseId!` twice in `apiHooks.ts` with `skipToken`: `skipToken` is new to this repo, but `courseId!` is how `course-home/data/apiHooks.ts` and `courseware/data/apiHooks.ts` already pass an optional id into a query-options builder (23 `!` in src). Matches siblings; no comment.
+- `// eslint-disable-next-line @typescript-eslint/no-unused-vars` on the stub's `_courseIds`; the repo's `.eslintrc.js` sets no `argsIgnorePattern`, and whether `@openedx/frontend-build`'s config does was not checked.
+- Message ids `learning.coursePathways.*` fit `learning.outline.*`, `learning.loading`.
+
+### 7. Local run
+
+Status: open: Brian's
+Rests on: the body's testing instructions; the downloaded patch
+
+Needs tutor (course page, login). `git apply` of the downloaded patch in the code worktree makes `getPathwaysByCourse` return five fixture pathways for every course, enough to overflow the strip and show the popover; it is not applied yet. Things to watch, from the diff: the strip on a unit page (entry 2); the "+N" trigger at narrow widths and in RTL; the popover's Escape and outside-click; the instructor toolbar directly below the strip (rpenido's screenshot).
+
+### 8. Anything in the diff the body does not account for?
+
+Status: resolved, no comment
+Rests on: the whole diff at 696901a030; the PR body
+
+Every file is under `src/pathways/`, `src/plugin-slots/CourseInfoStripSlot/`, the slot index, `src/index.scss` (one import) and `TabPage` (one import, one line, two tests). Nothing out of scope. The head is a merge commit (master merged in 2026-10-28); the repo merges by squash or rebase, so it does not land as is.
