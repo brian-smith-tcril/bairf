@@ -59,3 +59,13 @@ repeated.
    which adds a passing package-only status but leaves the whole-repo
    one red, or with `default: false` drops it for `master` PRs too; no
    status key selects a PR's target branch.
+
+6. **Two commits, landed by rebase merge.** Decided 2026-11-10 with
+   entry 5, Brian's call. The validate trigger and the console hook are
+   separate facts for `frontend-base`'s history, so the PR lands as a
+   rebase merge rather than the squash a layer usually gets. The
+   throwaway test and its removal, the branch's first two commits, are
+   squashed into the hook commit beforehand, so neither the failing test
+   nor its removal lands; the PR's first CI run, red on the throwaway,
+   stays the evidence that the hook fails a test. The hook commit's
+   package tree is unchanged by the squash.

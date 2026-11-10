@@ -8,7 +8,7 @@ Part of #1905. Resolves #2218. Stacked above #2217.
 
 - `frontend-base/package.json`, lockfile: `jest-fail-on-console` as a dev dependency.
 - `frontend-base/src/setupTest.js`: `failOnConsole` with a `silenceMessage` list, one regex per silenced message grouped under the URL of the issue that owns it; its only group is the two react-router flags.
-- A throwaway test warned once in the first commit so the `test` job showed the failure; the second commit removes it. The PR squashes.
+- A throwaway test warned once in the branch's first CI run so the `test` job showed the failure; it is squashed out of the branch. The PR lands as a rebase merge, two commits (decision 6).
 - `.github/workflows/validate.yml`: `frontend-base` joins `master` in the push branches, the bottom commit, added 2026-11-10 (decision 5).
 
 ## Testing
@@ -93,6 +93,16 @@ runs on openedx/frontend-app-learning#2219, in the fail-then-pass shape.
    which adds a passing package-only status but leaves the whole-repo
    one red, or with `default: false` drops it for `master` PRs too; no
    status key selects a PR's target branch.
+
+6. **Two commits, landed by rebase merge.** Decided 2026-11-10 with
+   entry 5, Brian's call. The validate trigger and the console hook are
+   separate facts for `frontend-base`'s history, so the PR lands as a
+   rebase merge rather than the squash a layer usually gets. The
+   throwaway test and its removal, the branch's first two commits, are
+   squashed into the hook commit beforehand, so neither the failing test
+   nor its removal lands; the PR's first CI run, red on the throwaway,
+   stays the evidence that the hook fails a test. The hook commit's
+   package tree is unchanged by the squash.
 
 ## Verify
 
