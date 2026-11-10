@@ -649,3 +649,33 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     library import that cannot be stubbed at its path (the special-exams
     timer in `TabWithTimer`) is the exception and is said so in the plan.
 
+
+38. **Learning's links to its own pages resolve Learning's roles; the
+    LMS's tab list gates presence.** Decided 2026-11-10 with Brian while
+    planning openedx/frontend-app-learning#2190. On `master` the
+    course-tabs hooks (`useDatesTabUrl`, `useCourseOutlineUrl`,
+    `useProgressTabUrl`) return `tabs[].url` from the course metadata
+    response, which the LMS builds from its learning URL setting
+    (`lms/djangoapps/courseware/tabs.py` in openedx/edx-platform: dates
+    and courseware are `get_learning_mfe_home_url`, progress is the same
+    when its flag is on), rendered as anchors, so switching tabs through
+    them reloads the page. Under the shell the hooks resolve
+    `courseDatesRole`, `courseOutlineRole` and `courseProgressRole` with
+    `resolveRouteByRole(role, { courseId })` when the tab is in `tabs`,
+    and the readers render through `getLinkProps`, so the switch stays in
+    the client and the root providers (decision 30) stay mounted, as the
+    shell's course bar and `TabPage`'s redirect prefix already do. The
+    LMS setting stays required for the LMS's own redirects into Learning.
+    Open: block-level links the LMS builds (`jump_to` URLs on the progress
+    subsections, `lms_web_url` on outline blocks) are anchors as on
+    `master` until the courseware routes exist; #2195 or #2191 decides
+    their rule. Also open, a frontend-base fact found here: Brian wants a
+    site to be able to point one of these roles at a URL the LMS provides
+    instead, but `getUrlByRouteRole` (`dist/runtime/routing/utils.js`,
+    2.0.0-alpha.17) returns the first installed app's route carrying the
+    role and consults `externalRoutes` only when no app does, and the
+    migration how-to (`docs/how_tos/migrate-frontend-app.md`) names both
+    sources without a precedence rule; since Learning declares the three
+    roles on its routes for the course bar, no site config can override
+    them today. That is a question for frontend-base, not something
+    Learning routes around.
