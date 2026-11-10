@@ -677,5 +677,5 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     three for the course bar. The override works once frontend-base gives
     a site a way to raise an external route above an app's route; the
     discovery issue is drafted in this worktree
-    (`issue-body-frontend-base-role-override.md`), filed on Brian's word,
+    (drafted here as `issue-body-frontend-base-348.md`),
     and #2190's PR body names the gap and the issue.
