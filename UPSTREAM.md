@@ -33,4 +33,4 @@
 | jsx-lint | issue-body-jsx-lint.md | openedx/frontend-base#327 | settled |
 | skip-target | issue-body-skip-target.md | openedx/frontend-base#328 | settled |
 | react-bootstrap-warnings | issue-body-react-bootstrap-warnings.md | openedx/paragon#4523 | settled |
-| external-route-params | issue-body-external-route-params.md | | unpublished |
+| external-route-params | issue-body-external-route-params.md | openedx/frontend-base#349 | in-review |

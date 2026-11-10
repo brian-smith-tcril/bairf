@@ -119,8 +119,8 @@ in #2190's plan and are not repeated.
      the dates, outline, progress or courseware role cannot name the
      course.
    - Settled with Brian 2026-11-10: it is frontend-base's question, so
-     it goes there as a discovery issue of its own, beside
-     openedx/frontend-base#348, and #2190 does nothing for the external
+     it goes there as a discovery issue of its own,
+     openedx/frontend-base#349, beside openedx/frontend-base#348, and #2190 does nothing for the external
      case. `getCoursewareUrl` joins the segments onto the resolved URL
      with no trailing-slash handling, and its test asserts the three
      forms against Learning's routes only. Nobody can reach the

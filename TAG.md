@@ -39,6 +39,7 @@ issues:
   openedx/frontend-base#332
   openedx/frontend-base#333
   openedx/frontend-base#348
+  openedx/frontend-base#349
   openedx/paragon#4523
 
 prs:
