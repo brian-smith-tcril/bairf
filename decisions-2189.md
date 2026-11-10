@@ -820,4 +820,5 @@ and are not repeated.
     (query-core's `sleep` is a `setTimeout`); no ported test and none of
     those three use them. Amended into the retry commit, with no comment
     in the code. `apiHooks.test.tsx`'s private client already set the
-    same, with a comment; switching it to the shared client is left open.
+    same, with a comment; it now calls `createTestQueryClient`, amended
+    into the same commit.
