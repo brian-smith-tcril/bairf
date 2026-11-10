@@ -213,3 +213,22 @@ the test approach are in #2188's plan and are not repeated.
    - #2189's frame takes the same container (its decision log, entry 34).
      Each later port that replaces a stub outside the frame decides its
      page's width then.
+
+10. **The bare preview path throws a 404 from an index route.** Added
+    2026-11-10 on arbrandes's review of #2221; fixed here rather than
+    listed as a known difference, Brian's call. `master` has no
+    `/preview/course/:courseId` route: `DECODE_ROUTES.COURSEWARE` lists
+    the sequence and unit shapes only, so its `*` route renders
+    `PageNotFound`, and `CoursewareRedirects.tsx` never prefixes a root
+    destination with `/preview`. The preview layout route here has a
+    path and an `Outlet`, so the bare path matched the layout alone and
+    rendered the course bar over nothing. An index route under
+    `previewCoursewareRoutes` now throws `new Response(null, { status:
+    404 })` from its loader, which the shell's `RouteError` renders as
+    its `NotFoundPage`, as it does for `/learning/nope`. The route also
+    sets `element: null`: react-router's dev build warns when a matched
+    leaf has no element, and the console hook fails on the warning. The
+    test wraps the array in a route whose test-only `errorElement`
+    prints the response status, the wrapper entry 2 did without; the
+    route-table test keys the preview children by `(index)` as it does
+    the course children.
