@@ -42,3 +42,38 @@ in #2190's plan and are not repeated.
      `/learning/course/:courseId/:sequenceId` returns the subsection's
      path. As planned, every subsection title would link to the course's
      courseware entry, not to the subsection.
+
+2. **The shared-modules commit (2026-11-10).** Made while porting:
+   - `utils.test.ts` gets the `logClick` and `logVisit` cases and no
+     `GetCourseExitNavigation` case (entry 1). Its lines are the
+     package's only uncovered ones after this commit: the
+     `course-exit` directory is at 54.76% of lines, the package at
+     97.53 against the 96.15 bar.
+   - The courseware stub is a hook type with two functions assigned to
+     it, `(courseId, options?) => { data: undefined }`, not functions
+     with unused parameters: the package's lint reports an unused
+     parameter even with a leading underscore
+     (`@typescript-eslint/no-unused-vars`), and the toolbar stub
+     declares its props the same way, through `FC<InstructorToolbarProps>`.
+   - Eight messages in `course-exit/messages.ts` gain a `description`:
+     the package's lint enforces `formatjs/enforce-description`, and
+     `endOfCourseHeader`, `endOfCourseTitle`, `microBachelorsLearnMore`,
+     `microMastersLearnMore`, `microMastersMessage`, `upgradeButton`,
+     `upgradeLink` and `viewGradesButton` had none on `master`. Each
+     says where the course exit page shows the string; ids and default
+     messages are untouched.
+   - `getCourseExitMode`'s two `indexOf` comparisons become `includes`,
+     the autofix for `@typescript-eslint/prefer-includes`.
+   - `links.test` is `links.test.tsx`, not the plan's `.jsx`: a new file
+     is TypeScript.
+   - The profile link drops one trailing slash from the role's URL
+     before appending `/u/<username>`, as `ProfileLinkMenuItem` does
+     (`shell/menus/ProfileLinkMenuItem.tsx` in openedx/frontend-base,
+     read in the installed `2.0.0-alpha.17`).
+   - The hooks return `resolveRouteByRole(role, { courseId })?.url`.
+     The `?.` covers a site whose `apps` no longer carry Learning's
+     routes, which cannot be the site running this code; no test feeds
+     it.
+   - The links test restores the site config after each case with
+     `setSiteConfig` of the object read at load: `mergeSiteConfig`
+     builds a new object and leaves the old one untouched.
