@@ -28,7 +28,7 @@ in #2190's plan and are not repeated.
      `PassingGradeTooltip`), which React 18.3 warns about and the
      package's console hook fails on, as it did for the dates tab's
      `Day` and `UpgradeToCompleteAlert`.
-   - Open, Brian's call before the progress commit: the plan's
+   - The plan's
      subsection link, `resolveRouteByRole(coursewareRole, { courseId,
      sequenceId: blockKey }).url`, resolves to the bare course path and
      drops the block key. `coursewareRole` is declared on three routes
@@ -42,6 +42,13 @@ in #2190's plan and are not repeated.
      `/learning/course/:courseId/:sequenceId` returns the subsection's
      path. As planned, every subsection title would link to the course's
      courseware entry, not to the subsection.
+     Settled with Brian 2026-11-10: the role's URL is taken as the base
+     of `/:sequenceId` and `/:sequenceId/:unitId`, and one function,
+     `getCoursewareUrl(courseId, sequenceId?, unitId?)` in
+     `courseware/urls.ts`, builds every courseware URL from it, so the
+     assumption has one home, a comment where the role is declared and
+     a test against the route array. #2190's plan is amended (What
+     moves, the subsection bullet, the tests, commit 1).
 
 2. **The shared-modules commit (2026-11-10).** Made while porting:
    - `utils.test.ts` gets the `logClick` and `logVisit` cases and no

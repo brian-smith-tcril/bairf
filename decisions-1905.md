@@ -696,6 +696,28 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     discovery issue is openedx/frontend-base#348 (drafted here as
     `issue-body-frontend-base-348.md`), and #2190's PR body names the
     gap and the issue.
+    Amended 2026-11-10 with Brian, while implementing #2190: the
+    subsection link cannot be `resolveRouteByRole(coursewareRole,
+    { courseId, sequenceId })`. `coursewareRole` is on three routes
+    (index, `:sequenceId`, `:sequenceId/:unitId`), `getUrlByRouteRole`
+    returns the first, the index route, as `src/app.test.ts` pins, and
+    `generatePath` ignores a param the path does not name, so the call
+    returns the course's courseware path with the block key dropped
+    (measured on react-router 6.30.6). Learning instead treats the
+    role's URL as the base of `/:sequenceId` and `/:sequenceId/:unitId`
+    and builds every courseware URL in one function,
+    `getCoursewareUrl(courseId, sequenceId?, unitId?)` in
+    `courseware/urls.ts`, with all three ids past the course optional so
+    no caller reads the role itself. The assumption is a comment on
+    `coursewareRole` in `constants.ts` and a test that matches the
+    function's URLs against the exported route array. Weighed and not
+    taken: keeping `master`'s `jump_to` anchor until #2195 (a full page
+    load for one link on a page whose other links stay in the client),
+    and a role of its own on the `:sequenceId` route (a new public role
+    string, and an external route for it could not carry the block key
+    at all, since an external URL has no params to fill). `master`
+    builds the same path inline in seven files; their ports call the
+    function.
 
 39. **A `master` bug the shell would turn into an inconsistency is fixed
     in the port, and the `master` issue points at the port.** Decided
