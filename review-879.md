@@ -129,7 +129,7 @@ Summary for Brian: dealbreaker is the icon (entry 5). Bigger conversations are t
 
 ### 7. Material Symbols in Paragon: prior art, and whether an issue exists for Paragon 24
 
-Status: resolved, filed 2026-11-10 as openedx/paragon#4543 ("Make all Material Symbols available from Paragon icons"), sub-issue of the Paragon 24 epic openedx/public-engineering#555; body mirrored in `issue-body-material-symbols.md`
+Status: resolved, filed 2026-11-10 as openedx/paragon#4543 ("Make all Material Symbols available from Paragon icons"), sub-issue of the Paragon 24 epic openedx/public-engineering#555; body mirrored in `issue-body-material-symbols.md`. openedx/paragon#4542 is a duplicate from a create call the harness reported as rejected after it had run (the first, curated-list body); closed as duplicate 2026-11-10 with a comment pointing at #4543
 Rests on: openedx/paragon `release-23.x` at 3617e1b8a4 (`icons/README.md`, `icons/copy-mui-icons.js`, `icons/copy-brand-icons.js`, `icons/package.json`, `icons/svg/`, `src/Icon/index.tsx`, `src/Icon/README.md`), the head of openedx/paragon#3045, `@material-icons/svg` 1.0.33 and `@material-symbols/svg-400` 0.48.3 from npm, all read 2026-11-10
 
 Asked by Brian (2026-11-10) after cassiezamparini's Courses-icon question (entry 5). Searched openedx/paragon issues and PRs for "material symbols", "material-symbols", "material icons", icon-titled issues, and the org for "paragon 24"; read the Paragon 24 epic and the `next` branch.
