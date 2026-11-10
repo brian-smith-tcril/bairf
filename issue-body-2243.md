@@ -1,4 +1,4 @@
-The progress tab's certificate card takes the learner's entrance exam status into account, but it never has it: the card reads the courseware metadata from the query cache without fetching, and nothing on the progress page fetches it. A learner who has not passed the entrance exam sees the certificate card the course would show without an exam. This has been so since #1429 added the check. This issue is the learner viewing their own progress; staff viewing another learner's progress is a separate issue, since the endpoint cannot answer for that learner.
+The progress tab's certificate card takes the learner's entrance exam status into account, but it never has it: the card reads the courseware metadata from the query cache without fetching, and nothing on the progress page fetches it. A learner who has not passed the entrance exam sees the certificate card the course would show without an exam. This has been so since #1429 added the check. This issue is the learner viewing their own progress; staff viewing another learner's progress is #2244, since the endpoint cannot answer for that learner.
 
 > [!NOTE]
 > This issue was written by Claude (Claude Code) and reviewed before posting.
@@ -25,7 +25,7 @@ With the entrance exam not passed, the card renders as for a course without one:
 
 - `ProgressTab` runs `useCoursewareMetadata(courseId)` as a fetching query beside the progress query and passes `tabDataQueries: [tabDataQuery, coursewareMetadataQuery]` to `TabWithTimer`, the array form [`TabPage`](https://github.com/openedx/frontend-app-learning/blob/363bc1e43a1c62199c35f0bf5d83fcd1a8fdf90a/src/tab-page/TabPage.tsx#L22-L27) already takes and the outline tab uses. The card keeps its cache read of a cache the page now fills.
 - The gate matters: without it the card mounts before the response, computes its state with `null`, sends its `visited` event from that render (its effect runs once), and then re-renders; a gated learner sees the card paint and vanish.
-- Only when no `targetUserId` is in the route. On `progress/:targetUserId` the courseware metadata endpoint answers for the requester, not the learner, so that page does not fetch and keeps `null`; see the companion issue.
+- Only when no `targetUserId` is in the route. On `progress/:targetUserId` the courseware metadata endpoint answers for the requester, not the learner, so that page does not fetch and keeps `null`; see #2244.
 - Costs to weigh in the pull request: one more request per progress load; a failure of that endpoint becomes the tab's error page where today the card ignores it; the endpoint records user activity for the requester ([L717](https://github.com/openedx/edx-platform/blob/d3a86602dcf70bbf4f7925727bcc50ff10e51109/openedx/core/djangoapps/courseware_api/views.py#L717)).
 - Tests: the progress suite gains the gated case (no certificate card, and the `visited` event's `certificate_status_variant` for it), the ungated case, and the request count.
 

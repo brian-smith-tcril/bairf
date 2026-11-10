@@ -1,4 +1,4 @@
-When staff open a learner's progress page (`progress/:targetUserId`), the certificate card cannot learn that learner's entrance exam status: the only endpoint that reports it answers for the requester, honors a `username` override only for global staff, and wants a username the page learns only from the progress response. The companion issue fixes the learner's own page; this one is the staff view, where the frontend has to leave the status unknown on purpose until the backend carries it in the progress response.
+When staff open a learner's progress page (`progress/:targetUserId`), the certificate card cannot learn that learner's entrance exam status: the only endpoint that reports it answers for the requester, honors a `username` override only for global staff, and wants a username the page learns only from the progress response. #2243 fixes the learner's own page; this one is the staff view, where the frontend has to leave the status unknown on purpose until the backend carries it in the progress response.
 
 > [!NOTE]
 > This issue was written by Claude (Claude Code) and reviewed before posting.
@@ -25,7 +25,7 @@ If the progress tab fetched the courseware metadata on this page as it does for 
 
 ## Backend side, a separate issue when picked up
 
-The progress response adding `entrance_exam_passed` for the learner it already resolves. The card then reads it from the progress data on both pages, the own-page fetch and gate from the companion issue become unnecessary, and the staff view is right for course staff as well as global staff. That is an openedx/edx-platform change (`lms/djangoapps/course_home_api/progress/`), filed there by whoever takes this up, with this issue updated to depend on it.
+The progress response adding `entrance_exam_passed` for the learner it already resolves. The card then reads it from the progress data on both pages, the own-page fetch and gate from #2243 become unnecessary, and the staff view is right for course staff as well as global staff. That is an openedx/edx-platform change (`lms/djangoapps/course_home_api/progress/`), filed there by whoever takes this up, with this issue updated to depend on it.
 
 ## Acceptance
 
