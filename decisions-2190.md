@@ -28,3 +28,17 @@ in #2190's plan and are not repeated.
      `PassingGradeTooltip`), which React 18.3 warns about and the
      package's console hook fails on, as it did for the dates tab's
      `Day` and `UpgradeToCompleteAlert`.
+   - Open, Brian's call before the progress commit: the plan's
+     subsection link, `resolveRouteByRole(coursewareRole, { courseId,
+     sequenceId: blockKey }).url`, resolves to the bare course path and
+     drops the block key. `coursewareRole` is declared on three routes
+     and `getUrlByRouteRole` returns the first, the index route, as
+     `src/app.test.ts` pins (`/learning/course/:courseId/`, "not a
+     sequence, unit or preview path"); react-router's `generatePath`
+     fills the params the path names and ignores the rest. Measured
+     2026-11-10 with react-router 6.30.6:
+     `generatePath('/learning/course/:courseId/', { courseId, sequenceId })`
+     returns `/learning/course/<courseId>`, where
+     `/learning/course/:courseId/:sequenceId` returns the subsection's
+     path. As planned, every subsection title would link to the course's
+     courseware entry, not to the subsection.
