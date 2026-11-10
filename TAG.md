@@ -34,6 +34,8 @@ issues:
   openedx/frontend-base#325
   openedx/frontend-base#327
   openedx/frontend-base#328
+  openedx/frontend-base#332
+  openedx/frontend-base#333
   openedx/paragon#4523
 
 prs:
@@ -42,5 +44,3 @@ prs:
   openedx/frontend-app-learning#2221
   openedx/frontend-app-learning#2234
   openedx/frontend-base#329
-  openedx/frontend-base#332
-  openedx/frontend-base#333
