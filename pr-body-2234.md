@@ -908,6 +908,29 @@ and are not repeated.
       sets its own spacing below the same course bar (`PageWrapper`'s
       heading, `m-4`), and a margin on the bar would move its content too.
 
+36. **The shared test client sets `retryDelay: 0`.** Added 2026-11-10 on
+    arbrandes's review of #2234, Brian's call after walking the options.
+    Since entry 30 every Learning query spreads `queryDefaults`, so its
+    `retry: shouldRetryQuery` beats `createTestQueryClient`'s
+    `retry: false`: a 5xx or a network error on that client retries
+    three times at TanStack's default 1, 2 and 4 second delays, past
+    jest's 5 second timeout. `retry` cannot be won back from the client,
+    a query's own option wins; `retryDelay` can, since no query sets it.
+    Zero keeps the app's attempt count (four on a 5xx) and drops the
+    waiting. On a 4xx, a `NonRetryableError` or
+    `proctoringInfoDataQuery`'s own `retry: false` the predicate refuses
+    the first retry, so the delay is never slept and those tests already
+    matched the app. Nothing in #2234 sends a 5xx through a Learning
+    query on the shared client (`api.test.js` calls the fetch functions
+    directly); `master`'s `CoursewareContainer.test.jsx`,
+    `CourseExit.test.jsx` and `Sequence.test.jsx` reply 500 through it,
+    none asserting a request count on that path, so the courseware ports
+    are its first readers. Fake timers would stall a zero-delay retry
+    (query-core's `sleep` is a `setTimeout`); no ported test and none of
+    those three use them. Amended into the retry commit, with no comment
+    in the code. `apiHooks.test.tsx`'s private client already set the
+    same, with a comment; switching it to the shared client is left open.
+
 </details>
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
