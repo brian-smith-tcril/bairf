@@ -684,3 +684,21 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     discovery issue is openedx/frontend-base#348 (drafted here as
     `issue-body-frontend-base-348.md`), and #2190's PR body names the
     gap and the issue.
+
+39. **A `master` bug the shell would turn into an inconsistency is fixed
+    in the port, and the `master` issue points at the port.** Decided
+    2026-11-10 with Brian. #2190's certificate status reads the
+    courseware metadata cache for the entrance exam result; on `master`
+    the read is always empty on the progress tab
+    (openedx/frontend-app-learning#2243, the staff view #2244), so the
+    card is consistently uninformed. Under the shell a tab switch is
+    client-side, so once #2195 fills that cache from the courseware page
+    the card would differ between a hard load and a switch. Two positions
+    were weighed: port the card with the read forced empty until the
+    `master` fix is ported (the file changes twice, and #2195 has to know
+    why the forcing is there), or fix it in the port. The fix lands in
+    #2190: the fetch and gate from #2243, the target-user condition from
+    #2244, with the metadata slice of the courseware data module ported
+    early to support it. #2243 and #2244 get a comment saying the fix is
+    on `frontend-base`, linking the PR; no separate `master` PR, since the
+    branch lands on `master` at the end of epic 1 (decision 2).
