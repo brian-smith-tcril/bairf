@@ -668,8 +668,8 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     Block-level links the LMS builds (`jump_to` URLs on the progress
     subsections, `lms_web_url` on outline blocks) stay anchors until the
     courseware routes exist; #2195 or #2191 decides their rule.
-    Known gap, carried: a site cannot point one of these roles at a URL
-    the LMS provides. frontend-base's `getUrlByRouteRole`
+    Known gap, carried: a site cannot point one of these roles
+    elsewhere. frontend-base's `getUrlByRouteRole`
     (`runtime/routing/utils.ts`) returns the first installed app's route
     carrying the role, in `apps` order, and reads `externalRoutes` only
     when no app declares it, so an app that declares a role always wins
