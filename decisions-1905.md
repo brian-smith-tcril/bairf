@@ -663,19 +663,19 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     `courseDatesRole`, `courseOutlineRole` and `courseProgressRole` with
     `resolveRouteByRole(role, { courseId })` when the tab is in `tabs`,
     and the readers render through `getLinkProps`, so the switch stays in
-    the client and the root providers (decision 30) stay mounted, as the
-    shell's course bar and `TabPage`'s redirect prefix already do. The
+    the client and the root providers (decision 30) stay mounted. The
     LMS setting stays required for the LMS's own redirects into Learning.
-    Open: block-level links the LMS builds (`jump_to` URLs on the progress
-    subsections, `lms_web_url` on outline blocks) are anchors as on
-    `master` until the courseware routes exist; #2195 or #2191 decides
-    their rule. Also open, a frontend-base fact found here: Brian wants a
-    site to be able to point one of these roles at a URL the LMS provides
-    instead, but `getUrlByRouteRole` (`dist/runtime/routing/utils.js`,
-    2.0.0-alpha.17) returns the first installed app's route carrying the
-    role and consults `externalRoutes` only when no app does, and the
-    migration how-to (`docs/how_tos/migrate-frontend-app.md`) names both
-    sources without a precedence rule; since Learning declares the three
-    roles on its routes for the course bar, no site config can override
-    them today. That is a question for frontend-base, not something
-    Learning routes around.
+    Block-level links the LMS builds (`jump_to` URLs on the progress
+    subsections, `lms_web_url` on outline blocks) stay anchors until the
+    courseware routes exist; #2195 or #2191 decides their rule.
+    Known gap, carried: a site cannot point one of these roles at a URL
+    the LMS provides. frontend-base's `getUrlByRouteRole`
+    (`runtime/routing/utils.ts`) returns the first installed app's route
+    carrying the role, in `apps` order, and reads `externalRoutes` only
+    when no app declares it, so an app that declares a role always wins
+    over the site's external route for it, and Learning declares these
+    three for the course bar. The override works once frontend-base gives
+    a site a way to raise an external route above an app's route; the
+    discovery issue is drafted in this worktree
+    (`issue-body-frontend-base-role-override.md`), filed on Brian's word,
+    and #2190's PR body names the gap and the issue.
