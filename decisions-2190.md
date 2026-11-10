@@ -84,3 +84,37 @@ in #2190's plan and are not repeated.
    - The links test restores the site config after each case with
      `setSiteConfig` of the object read at load: `mergeSiteConfig`
      builds a new object and leaves the old one untouched.
+
+3. **An external route cannot carry a route param, by an unrecorded
+   narrowing (read 2026-11-10).** Found while settling
+   `getCoursewareUrl`; no decision taken on it yet.
+   - openedx/frontend-base at `72d7053` (`main`, 2026-11-02),
+     `runtime/routing/utils.ts`: `resolveRouteByRole` returns
+     `isInternal ? generatePath(path, params) : path`, and
+     `utils.test.ts` pins it ("resolves an external route to its URL as
+     configured", called with `{ courseId: 'c1' }`). `ExternalRoute` is
+     `{ role, url }`. An external entry written as a path (a single
+     leading `/`) is classed internal and does get its params filled.
+   - No ADR covers it: of `docs/decisions/`, only 0013 mentions roles,
+     for the course bar's `provides`. The helper came in with
+     openedx/frontend-base#320 (arbrandes, merged 2026-09-22, closing
+     #317 and #319); its body states the behavior ("an external URL is
+     returned as configured") without a reason, and it has no review
+     comments.
+   - The two hand-rolled versions #320 replaced did substitute params
+     into an external URL: openedx/frontend-app-gradebook#627 called
+     `getUrlByRouteRole(role)?.replace(':courseId', courseId)`, and
+     `src/utils/routeByRole.ts` in
+     openedx/frontend-app-instructor-dashboard#246 ran
+     `url.replace(`:${name}`, value)` for each param before testing
+     whether the URL was absolute. Neither tested an external URL with
+     a param.
+   - A likely mechanical cause, not stated anywhere: `generatePath`
+     cannot take an absolute URL. On react-router 6.30.6,
+     `generatePath('https://lms.example.com/courses/:courseId/progress', { courseId })`
+     returns `https:/lms.example.com/courses/<courseId>/progress`, the
+     `//` collapsed.
+   - Consequence for Learning: even once openedx/frontend-base#348
+     lets a site point a role at an external route, an absolute URL for
+     the dates, outline, progress or courseware role cannot name the
+     course.
