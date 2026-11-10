@@ -465,6 +465,12 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     is a chain. Breadcrumbs and the unit tab strip are not rendered on the
     branch: since #1716 and #1685 both are operator-inserted plugins with no
     default content, so master out of the box has neither either.
+    Amended 2026-11-10 (openedx/frontend-app-learning#2190): the
+    course-exit mode helper and messages (`course-exit/utils.js`,
+    `messages.ts`) port with the progress tab, their first consumer in
+    page order (the certificate status reads the helper, the shared links
+    read three messages), not with CW2; `utils.js` ports whole, its
+    navigation and tracking helpers waiting for #2196 and #2202.
 
 30. **Learning-wide providers go on the root route.** The user-messages,
     toast, notices and plugin-overrides providers become the root `learning`
@@ -605,6 +611,12 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     lines are dead under that DEPR; their removal is a pull-request call.
     A site that wants the LMS hop points the role at the LMS URL as an
     external route.
+    Amended 2026-11-10 (#2190's plan): the links resolve the roles with
+    `getUrlByRouteRole` and render through `getLinkProps`; the profile
+    link appends `/u/<username>` as the shell's `ProfileLinkMenuItem`
+    does; when the site declares no route for the role the link renders
+    nothing, as the shell does, with no LMS fallback. The two role strings
+    live in Learning's `constants.ts`.
 
 35. **Redirect-only routes port as route loaders.** A route whose only
     job is to send the learner elsewhere (the five children of the
