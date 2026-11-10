@@ -36,3 +36,26 @@ repeated.
    acceptance box for it was dropped. The jest config does not restore
    mocks automatically, so a test that mocks a console method restores it
    at its end.
+
+5. **The validate workflow runs on pushes to `frontend-base`.** Added
+   2026-11-10 as the bottom commit of this PR, Brian's call, after #2217
+   merged and this PR's `codecov/project` status went red: "96.16%
+   (-3.84%) compared to 2764e40". `validate.yml` ran on pushes to
+   `master` and on every pull request; `frontend-base.yml` runs on pushes
+   to `frontend-base` that touch `frontend-base/`. So the merge commit's
+   Codecov report held one upload, the `frontend-base` flag (6 files, 9
+   lines, 100%), while this PR's head held that plus the unflagged root
+   suite (374 files, 6028 lines, 96.16%), and the project status
+   (`target: auto`, `threshold: 0%` in `codecov.yml`) read a whole-repo
+   number against a package-only one. #2221 and #2234 compare against
+   the PR below each and pass; every PR into `frontend-base` would show
+   this once the PR below it merged. With the branch in the push list,
+   every merge into it uploads the root suite. GitHub reads the workflow
+   file from the pushed commit, so the merge of this PR is the first such
+   push and `master`'s file is untouched; the list rides into `master`
+   at the swap. Considered and not taken: a project status scoped with
+   `flags: [frontend-base]` (Codecov docs, "Commit status", heading
+   "flags": "the combined coverage from those flags will be reported"),
+   which adds a passing package-only status but leaves the whole-repo
+   one red, or with `default: false` drops it for `master` PRs too; no
+   status key selects a PR's target branch.

@@ -9,6 +9,7 @@ Part of #1905. Resolves #2218. Stacked above #2217.
 - `frontend-base/package.json`, lockfile: `jest-fail-on-console` as a dev dependency.
 - `frontend-base/src/setupTest.js`: `failOnConsole` with a `silenceMessage` list, one regex per silenced message grouped under the URL of the issue that owns it; its only group is the two react-router flags.
 - A throwaway test warned once in the first commit so the `test` job showed the failure; the second commit removes it. The PR squashes.
+- `.github/workflows/validate.yml`: `frontend-base` joins `master` in the push branches, the bottom commit, added 2026-11-10 (decision 5).
 
 ## Testing
 
@@ -69,6 +70,29 @@ repeated.
 
 Test tooling only; nothing renders differently. The evidence is two CI
 runs on openedx/frontend-app-learning#2219, in the fail-then-pass shape.
+
+5. **The validate workflow runs on pushes to `frontend-base`.** Added
+   2026-11-10 as the bottom commit of this PR, Brian's call, after #2217
+   merged and this PR's `codecov/project` status went red: "96.16%
+   (-3.84%) compared to 2764e40". `validate.yml` ran on pushes to
+   `master` and on every pull request; `frontend-base.yml` runs on pushes
+   to `frontend-base` that touch `frontend-base/`. So the merge commit's
+   Codecov report held one upload, the `frontend-base` flag (6 files, 9
+   lines, 100%), while this PR's head held that plus the unflagged root
+   suite (374 files, 6028 lines, 96.16%), and the project status
+   (`target: auto`, `threshold: 0%` in `codecov.yml`) read a whole-repo
+   number against a package-only one. #2221 and #2234 compare against
+   the PR below each and pass; every PR into `frontend-base` would show
+   this once the PR below it merged. With the branch in the push list,
+   every merge into it uploads the root suite. GitHub reads the workflow
+   file from the pushed commit, so the merge of this PR is the first such
+   push and `master`'s file is untouched; the list rides into `master`
+   at the swap. Considered and not taken: a project status scoped with
+   `flags: [frontend-base]` (Codecov docs, "Commit status", heading
+   "flags": "the combined coverage from those flags will be reported"),
+   which adds a passing package-only status but leaves the whole-repo
+   one red, or with `default: false` drops it for `master` PRs too; no
+   status key selects a PR's target branch.
 
 ## Verify
 
