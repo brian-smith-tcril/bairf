@@ -665,9 +665,14 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     and the readers render through `getLinkProps`, so the switch stays in
     the client and the root providers (decision 30) stay mounted. The
     LMS setting stays required for the LMS's own redirects into Learning.
-    Block-level links the LMS builds (`jump_to` URLs on the progress
-    subsections, `lms_web_url` on outline blocks) stay anchors until the
-    courseware routes exist; #2195 or #2191 decides their rule.
+    The progress subsections (`SubsectionTitleCell.jsx`) resolve
+    `coursewareRole` with the subsection's block key, which is where the
+    LMS's `jump_to` URL for a subsection lands (`get_courseware_url` in
+    `openedx/features/course_experience/url_helpers.py`: the subsection is
+    the sequence, no unit), gated by the response's `url`, which the LMS
+    nulls when the learner may not open it; until #2195 the link lands on
+    the courseware stub. The outline's block links (`lms_web_url`) are
+    #2191's to decide under the same rule.
     Known gap, carried: a site cannot point one of these roles
     elsewhere. frontend-base's `getUrlByRouteRole`
     (`runtime/routing/utils.ts`) returns the first installed app's route
