@@ -840,3 +840,28 @@ in #2190's plan and are not repeated.
     (the `Hyperlink`), 23 (`setTabData`), 24 (event cases stop the
     navigation) and 26 (the layer's two commits and the tests'
     two kinds).
+
+28. **README wording restored; what each case of
+    `ProgressTabComponents.test.tsx` is the only test of
+    (2026-11-11).**
+    - The progress README keeps `master`'s "as in the example below"
+      (Brian): the example's place is held by the line pointing at
+      #2185, so the phrase is not wrong. Folded into the port commit;
+      the layer is now `b5965481` and `36928e7e`, unpushed, and the
+      entrance exam commit on `bsmith/progress-tab-wip` is rebased
+      onto it. A README-only change; checks not rerun.
+    - Measured as in entry 25, one case left out per run, at the
+      layer's head. The four default-parameter cases are each the
+      only test of their default (`PassingGradeTooltip.jsx` line 8,
+      `CurrentGradeTooltip.jsx` 10, `GradeRangeTooltip.jsx` 13,
+      `AssignmentTypeCell.jsx` 9): every caller in the tab passes
+      those props. "A divider at each end" is the only test of a
+      branch at `CompleteDonutSegment.jsx` line 69; the other two
+      divider cases lose nothing when left out. `CertificateStatus`
+      without course metadata is the only test of the branches at
+      `CertificateStatus.jsx` lines 29 (`?? {}`) and 69 (no time
+      zone).
+    - Put to Brian: drop the two divider cases that add nothing; for
+      the four defaults, keep them with their cases (entry 6) or drop
+      the defaults and require the props, which removes the cases at
+      the cost of an interface change from `master`. Open.
