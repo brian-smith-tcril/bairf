@@ -439,3 +439,20 @@ in #2190's plan and are not repeated.
     - With all nine applied the branch is `b6ea5f36`, `e1d63a35`,
       `5db789f1`; lint, the suite (37 suites, 412 passed, 7 skipped),
       `build` and `build:ci` pass at the tip.
+
+14. **The `logClick` and `logVisit` cases stay; their org is not
+    `edX` (settled with Brian 2026-11-11).** On `master` (the legacy
+    tree's `coverage/lcov.info`, run 2026-10-29) the two functions'
+    `sendTrackEvent` calls run only through `CourseExit.test.jsx`,
+    which asserts neither event name nor payload and ports with #2202,
+    and the two falsy-guard `return;` lines run in no test. By
+    decisions-2189 entry 32 the guard cases belong in this PR and the
+    two "sends" cases would have waited for #2202; nothing this PR
+    ports calls either function. Brian kept all four. The literals in
+    the four cases are `'OpenedX'` and
+    `'course-v1:OpenedX+DemoX+DemoCourse'`, the id `routes.test.tsx`
+    already uses; the `edX` in the other test files comes from
+    `master`'s tests and factories and is untouched. Folded into
+    commit 1: the branch is `0e5e9c19`, `fbf6b905`, `80d4ac32`; lint,
+    the suite (37 suites, 412 passed, 7 skipped; 99.04% of lines),
+    `build` and `build:ci` pass at the tip.
