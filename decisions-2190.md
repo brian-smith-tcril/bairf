@@ -436,6 +436,6 @@ in #2190's plan and are not repeated.
       one row in the requirements list), and the "(course credit)"
       parentheses copied from neighbouring descriptions had no reason
       anyone could give.
-    - With the five applied the branch is `0dd4b028`, `e2ecb97d`,
-      `291e73b0`; lint, the suite (37 suites, 412 passed, 7 skipped),
+    - With all nine applied the branch is `b6ea5f36`, `e1d63a35`,
+      `5db789f1`; lint, the suite (37 suites, 412 passed, 7 skipped),
       `build` and `build:ci` pass at the tip.
