@@ -334,3 +334,29 @@ in #2190's plan and are not repeated.
       holds and the body needs a PATCH (not done).
     - State: the change is in the working tree, uncommitted; lint
       passes; 37 suites, 413 passed, 7 skipped; 99.04% of lines.
+    - Findings 2026-11-11, openedx/openedx-platform at `d3a86602dc`,
+      on what `tabs` in the `course_metadata` response can hold (Brian
+      asked; entry 11's direction is under question again, nothing
+      committed). `CourseHomeMetadataView` serializes
+      `get_course_tab_list(user, course)`
+      (`lms/djangoapps/courseware/tabs.py`): the course's persisted
+      tabs plus the dynamic ones, of every type registered under the
+      `openedx.course_tab` entry point (`pyproject.toml`), which a
+      third-party plugin can add to. Each `url` is
+      `request.build_absolute_uri(tab.link_func(course, reverse))`.
+      By where the link points:
+      Learning pages, built from `LEARNING_MICROFRONTEND_URL`:
+      `courseware` (`default_course_url`, `/home`), `dates`,
+      `lti_live` (`/live`), and `progress` when
+      `course_home_mfe_progress_tab_is_active`, else the LMS's
+      `progress` view.
+      Another frontend or the LMS by a flag: `discussion`,
+      `instructor`, `ccx_coach`.
+      LMS pages: `static_tab` (a custom page, id
+      `static_tab_<url_slug>`), `wiki`, `teams`, `edxnotes`,
+      `syllabus`, the textbook tabs, `lti_tab`.
+      An arbitrary URL the course author enters: `external_link`
+      (`ExternalLinkCourseTab`, `allow_multiple`) and
+      `external_discussion`.
+      So a course can list tabs no frontend app serves, and the list
+      is open-ended.
