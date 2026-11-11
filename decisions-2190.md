@@ -671,3 +671,26 @@ in #2190's plan and are not repeated.
     - `bsmith/progress-tab-wip` keeps the entrance exam commit
       (`8110b077`) for the top layer.
     - The four diff-viewer servers are stopped.
+
+22. **The subsection title is a Paragon `Hyperlink` (settled with
+    Brian 2026-11-11).** The port kept `master`'s bare `<a>` and chose
+    its element by hand: `const { as: SubsectionLink = 'a', ...props }
+    = getLinkProps(...)`, since a bare anchor has no `as` prop. The
+    `= 'a'` default ran only for an external URL, which
+    `getSequenceUrl` never returns, and was the file's one partial
+    line (entry 8).
+    - Brian asked what the bare anchor bought. Nothing but `master`'s
+      exact markup: every other navigating link of the tab is a
+      `Hyperlink` on `master` (related links, the outline link, the
+      credit help link, the upgrade link), and the other three
+      `getLinkProps` call sites of this PR spread it onto one.
+    - Now `<Hyperlink variant="muted" className="small"
+      {...getLinkProps(getSequenceUrl(courseId, blockKey))}>`. It
+      renders `master`'s `muted-link small` classes plus Paragon's
+      `pgn__hyperlink standalone-link` and `target="_self"`.
+      `pgn__hyperlink` is `display: inline-flex`, so a long title
+      that wraps is checked in the manual pass.
+    - react-router's `Link` alone was the other candidate (it renders
+      the same anchor as `master` and leaves an absolute URL of
+      another origin to the browser, read in 6.30.6); not taken, as
+      a one-off in a tab of `Hyperlink`s.
