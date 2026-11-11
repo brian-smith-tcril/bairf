@@ -9,9 +9,8 @@ import and config mapping are in #2190's plan and are not repeated.
    port; as its own layer it lands as a separate commit on
    `frontend-base`. This layer holds the design questions (which URL
    a link resolves, entries 2 to 5) in 16 files, ahead of the tab's
-   port. Accepted costs: nothing here renders on a route, so there is
-   no manual pass, and the lines waiting on a later suite (entry 9)
-   are a large share of a small patch.
+   port. Accepted cost: nothing here renders on a route, so there is
+   no manual pass.
 
 2. **A link to a page Learning serves resolves Learning's role for it;
    the course metadata only says whether the tab exists.** On `master`
@@ -140,27 +139,40 @@ import and config mapping are in #2190's plan and are not repeated.
      `setSiteConfig` of the object read at load: `mergeSiteConfig`
      builds a new object and leaves the old one untouched.
 
-6. **`GetCourseExitNavigation` gets no test here.** Its first statement
-   destructures `entranceExamData: { entranceExamPassed }` from
-   `useCoursewareMetadata(courseId, { enabled: false }).data ?? {}`,
-   which throws when the data is missing, and in this layer both
-   courseware hooks are stubs that return no data. `master` has no
-   direct test of it either: it runs through the suites of its two
-   callers, `SequenceNavigation.jsx` and `UnitNavigation.jsx`, which
-   port with #2196. By the coverage policy in #2234 (its decision log,
-   entry 32), lines `master` tests only through a suite not ported yet
-   wait for that port.
+6. **`GetCourseExitNavigation` is tested here, with its courseware
+   hooks mocked.** Its first statement destructures
+   `entranceExamData: { entranceExamPassed }` from
+   `useCoursewareMetadata(courseId, { enabled: false }).data`, which
+   throws when the data is missing, and in this layer both courseware
+   hooks are stubs that return no data. `master` has no direct test of
+   it: it runs through the suites of its two callers,
+   `SequenceNavigation.jsx` and `UnitNavigation.jsx`, which port with
+   #2196.
+   - The first push of this layer left it untested until #2196, under
+     the coverage policy in #2234 (its decision log, entry 32: lines
+     `master` tests only through a suite not ported yet wait for that
+     port). Codecov's patch on this PR then came to 77.38%, every
+     missed line in `course-exit/utils.js`. With one layer per PR the
+     later suite is another PR, and each PR is judged alone, so the
+     layer carries its own tests.
+   - `utils.test.ts` mocks `courseware/data/apiHooks` so each case
+     supplies the metadata, and runs the function through
+     `renderHook`: five cases, one per outcome (the complete text,
+     the end-of-course text, active with no text, and inactive for a
+     learner who is not enrolled or has not passed the entrance exam).
+   - The `?? {}` after `.data` is dropped. Without metadata the nested
+     destructure throws on the next line either way, so the default
+     only moved the throw, as with the two #2234 dropped from
+     `Timeline` and `UpgradeToCompleteAlert`.
 
 7. **`logClick` and `logVisit` get direct cases.** On `master` (a
    coverage run of 2026-10-29) their `sendTrackEvent` calls run only
    through `CourseExit.test.jsx`, which asserts neither the event name
    nor the payload and ports with #2202, and the two falsy-guard
-   `return` lines run in no test. By the same policy the guard cases
-   belong here and the two "sends" cases could have waited for #2202;
-   all four are kept, since a suite that tests a guard and not the
-   call it guards reads worse than either extreme. Nothing in #2190
-   calls either function; they ride along because the file ports
-   whole.
+   `return` lines run in no test. Four cases: each function sending
+   its event with the expected name and payload, and sending nothing
+   for a falsy argument. Nothing in #2190 calls either function; they
+   ride along because the file ports whole.
 
 8. **The courseware stub is a hook type with two functions assigned to
    it**, `(courseId, options?) => { data: undefined }`, not functions
@@ -169,13 +181,20 @@ import and config mapping are in #2190's plan and are not repeated.
    (`@typescript-eslint/no-unused-vars`), and the instructor toolbar
    stub declares its props the same way.
 
-9. **`getCourseExitMode` is mostly covered from the layers above.**
-   `master`'s `utils.test.ts` has one case for it; the rest of the
-   function runs through the progress tab's suite on `master`, and
-   that suite ports in the next layer. At this layer lines 42, 46,
-   58-60, 64 and 72 of `course-exit/utils.js` run in no test, beside
-   `GetCourseExitNavigation`'s (83-116, entry 6). The package is at
-   97.55% of lines against its 96.15% bar.
+9. **`getCourseExitMode` gets a table of direct cases.** `master`'s
+   `utils.test.ts` has one case for it; the rest of the function runs
+   through the progress tab's suite on `master`, which ports in the
+   next layer (entry 6 has why this layer does not wait for it). Nine
+   cases, each changing one input from a baseline learner, reach
+   every return.
+   - The table calls the function through a cast,
+     `getCourseExitMode as (...inputs: unknown[]) => number`.
+     `utils.js` is untyped, and TypeScript reads its `= null` defaults
+     as null-only parameters, so the type check in `build:ci` rejects
+     the cases that pass `false`. Typing the function properly means
+     porting the file to TypeScript, which is more than this PR.
+   - With entries 6, 7 and this one `course-exit/utils.js` is fully
+     covered, and the package is at 100% of lines at this layer.
 
 10. **Lint.** Eight messages in `course-exit/messages.ts` had no
     `description` on `master`, which `formatjs/enforce-description`
