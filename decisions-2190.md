@@ -729,3 +729,29 @@ in #2190's plan and are not repeated.
       413 passed, 7 skipped; 100% of lines; `build` and `build:ci`
       pass. The entrance exam commit on `bsmith/progress-tab-wip` is
       rebased onto it, not rechecked.
+
+24. **A case about a click handler stops the navigation; where a link
+    goes is its own case (settled with Brian 2026-11-11).** With the
+    in-page links as route links and the test rendering the real route
+    array, clicking the dates, outline or subsection link in `master`'s
+    four "sends event on click" cases navigated, and each case ended
+    mid-navigation: React's act warning, which fails the suite. The
+    port had made the cases wait for the navigation and assert the new
+    path (the dates one also mocked the dates request and waited for
+    its heading). Brian: hacky, the cases are for the track events.
+    - The four cases have `master`'s bodies again plus
+      `preventNavigation(link)` before the click: it cancels the
+      click's default action, which react-router's `Link` respects,
+      and the `onClick` that sends the event still runs. The helper's
+      comment now covers route links as well as anchors that leave
+      the site.
+    - Where a link goes is asserted in the "Related links and
+      subsection titles" group: the existing case for the dates and
+      outline hrefs, a new case for the subsection title's href, and
+      one new case that follows the dates link and lands on the dates
+      tab without leaving the site.
+    - Amended into the local progress tab layer, now `24768643` (was
+      `1bc0a98b`), unpushed. Checks at the layer: lint clean; 35 suites,
+      415 passed, 7 skipped; 100% of lines; `build` and `build:ci`
+      pass. The entrance exam commit on `bsmith/progress-tab-wip` is
+      rebased onto it, not rechecked.
