@@ -10,25 +10,28 @@
 #     digit, that is a run of consecutive lines somewhere in the legacy file.
 #   - a file with neither: no base, shown as added
 #
-#   port-diff <rev> [-C <repo>] [--master <ref>] [-o <file.patch>]
+#   port-diff <rev> [-C <repo>] [--master <ref>] [-w] [-o <file.patch>]
 #
 # Deleted files are not listed. Added files identical to their legacy file are left out of the
 # patch and named on stderr. For an added file, a merge (several legacy files for one target)
 # stops the script: there is no single base to show.
+# -w leaves out changes in whitespace alone (git diff -w): a re-indented line reads as unchanged,
+# and a file whose only changes are whitespace is left out and named on stderr.
 # Defaults: -C ., --master upstream/master, the patch to stdout. View it with bin/diff-viewer/serve.py.
 set -euo pipefail
-repo=.; master=upstream/master; out=
+repo=.; master=upstream/master; out=; whitespace=
 args=()
 while [ $# -gt 0 ]; do
   case "$1" in
     -C) repo=$2; shift 2 ;;
     --master) master=$2; shift 2 ;;
+    -w) whitespace=-w; shift ;;
     -o) out=$2; shift 2 ;;
-    -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
     *) args+=("$1"); shift ;;
   esac
 done
-[ ${#args[@]} -eq 1 ] || { echo "usage: port-diff <rev> [-C <repo>] [--master <ref>] [-o <file.patch>]" >&2; exit 2; }
+[ ${#args[@]} -eq 1 ] || { echo "usage: port-diff <rev> [-C <repo>] [--master <ref>] [-w] [-o <file.patch>]" >&2; exit 2; }
 rev=${args[0]}
 manifest=$(git -C "$repo" show "$rev:frontend-base/manifest.tsv") || { echo "no manifest at $rev" >&2; exit 2; }
 
@@ -105,7 +108,11 @@ while IFS= read -r target; do
   else
     base=/dev/null
   fi
-  patch+=$(cd "$tmp" && git diff --no-index --no-prefix "$base" "port/$rel" || [ $? -eq 1 ])$'\n'
+  one=$(cd "$tmp" && git diff --no-index --no-prefix $whitespace "$base" "port/$rel" || [ $? -eq 1 ])
+  if [ -z "$one" ]; then
+    echo "whitespace changes only: $target" >&2; continue
+  fi
+  patch+=$one$'\n'
 done < <(git -C "$repo" diff-tree --no-commit-id --name-only -r --diff-filter=d "$rev" -- frontend-base/src)
 
 if [ -n "$out" ]; then printf '%s' "$patch" > "$out"; else printf '%s' "$patch"; fi

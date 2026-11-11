@@ -30,6 +30,8 @@ bin/port-diff <commit> -C ../frontend-app-learning -o dates.patch
 - Added files identical to their legacy file are left out of the patch and named on stderr.
 - An added target merged from several legacy files stops the script, since there is no
   single file to diff against.
+- `-w` leaves out changes in whitespace alone, such as lines the lint autofixer re-indented.
+  A file whose only changes are whitespace is left out and named on stderr.
 - `--master <ref>` diffs against another ref than `upstream/master`; without `-o` the patch
   goes to stdout.
 
