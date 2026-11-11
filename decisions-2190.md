@@ -513,3 +513,6 @@ in #2190's plan and are not repeated.
     - In the code the URL is a named const above the `return`, so a
       `resolveRouteByRole(role, { username })` can replace that line,
       and the comment above it carries #349's URL.
+    - Applied in commit 1. The branch is `75f7ba3b`, `f118985a`,
+      `4874b699`; lint, the suite (37 suites, 411 passed, 7 skipped),
+      `build` and `build:ci` pass at the tip.
