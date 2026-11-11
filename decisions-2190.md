@@ -308,9 +308,11 @@ in #2190's plan and are not repeated.
       now matches the returned URL against the exported route array
       and expects the matched route to carry the tab's role with
       `{ courseId }` as its params, the pattern of
-      `courseware/urls.test.ts`. The case is named "returns the url of
-      the tab's route for the course on the page": `master`'s "from
-      the course metadata" no longer says where the URL comes from.
+      `courseware/urls.test.ts`. The case keeps `master`'s name,
+      "returns the tab's url from the course metadata on the page":
+      Brian reads it as the URL built from the course metadata, which
+      holds here (no URL unless the metadata lists the tab), and a
+      rename to say where the URL comes from was too literal a reading.
       Folded into commit 1; the branch is now `bfb925df`, `ec231a2c`,
       `fc690428`, differing from the previous tip in that file only.
       Checks at the tip: lint passes; 37 suites, 412 passed, 7
