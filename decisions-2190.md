@@ -881,3 +881,30 @@ in #2190's plan and are not repeated.
       entrance exam commit on `bsmith/progress-tab-wip` is rebased
       onto it, not rechecked.
     - #2190's body is one sentence behind the mirror on this.
+
+30. **The four components get no defaults at all, and their four
+    cases go (settled with Brian 2026-11-11; replaces entry 6's first
+    bullet).** Brian found `expect(popover).not.toHaveClass('undefined')`
+    an odd pattern.
+    - It asserted the absence of a symptom: `PassingGradeTooltip` and
+      `GradeRangeTooltip` write the class name into a template string,
+      so without the default the element gets a class named
+      `undefined`.
+    - Checked by removing all four defaults and running the file: the
+      `PassingGradeTooltip` and `GradeRangeTooltip` cases fail
+      (`… bg-primary-500 undefined …`, `… mb-0 mt-n1 undefined`); the
+      `CurrentGradeTooltip` and `AssignmentTypeCell` cases still pass.
+      `CurrentGradeTooltip` hands `className={tooltipClassName}`
+      straight on, and `AssignmentTypeCell` only tests `footnoteId`
+      and `locked` for truthiness, so those defaults did nothing and
+      their cases could not fail.
+    - Now: `CurrentGradeTooltip` and `AssignmentTypeCell` have
+      `master`'s signatures with the `defaultProps` block gone;
+      `PassingGradeTooltip` and `GradeRangeTooltip` drop the default
+      and build the class list with `classNames` (already a
+      dependency, used in three files of the package), which skips an
+      absent value. The rendered classes are `master`'s. The four
+      cases leave `ProgressTabComponents.test.tsx`, which keeps the
+      three divider cases and `CertificateStatus` without metadata.
+    - Keeping the defaults and only fixing the tests was the
+      alternative, not taken.
