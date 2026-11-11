@@ -348,11 +348,11 @@ in #2190's plan and are not repeated.
       Learning pages, built from `LEARNING_MICROFRONTEND_URL`:
       `courseware` (`default_course_url`, `/home`), `dates`,
       `lti_live` (`/live`), and `progress` when
-      `course_home_mfe_progress_tab_is_active`, else the LMS's
-      `progress` view.
-      Another frontend or the LMS by a flag: `discussion`,
+      `course_home_mfe_progress_tab_is_active`, else the platform's
+      Django template `progress` view.
+      Another frontend or a Django template page by a flag: `discussion`,
       `instructor`, `ccx_coach`.
-      LMS pages: `static_tab` (a custom page, id
+      Legacy frontend (Django template) pages: `static_tab` (a custom page, id
       `static_tab_<url_slug>`), `wiki`, `teams`, `edxnotes`,
       `syllabus`, the textbook tabs, `lti_tab`.
       An arbitrary URL the course author enters: `external_link`
