@@ -110,7 +110,7 @@
   <div id="view"></div>
 </main>
 <script type="module">
-  import { CodeView, parsePatchFiles } from 'https://cdn.jsdelivr.net/npm/@pierre/diffs@1.5.2/+esm';
+  import { CodeView, parseDiffFromFile, parsePatchFiles } from 'https://cdn.jsdelivr.net/npm/@pierre/diffs@1.5.2/+esm';
 
   const view = document.getElementById('view');
 
@@ -176,33 +176,40 @@
     document.title = name;
     document.getElementById('title').textContent = name;
     const text = await response.text();
-    const files = parsePatchFiles(text).flatMap((p) => p.files);
+    const parsed = parsePatchFiles(text).flatMap((p) => p.files);
     const index = indexPatch(text);
-    if (index.length !== files.length) throw new Error(`the index has ${index.length} files, the view ${files.length}`);
-    const ids = files.map((fileDiff, at) => `${at}:${fileDiff.name}`);
+    if (index.length !== parsed.length) throw new Error(`the index has ${index.length} files, the view ${parsed.length}`);
+    const ids = parsed.map((fileDiff, at) => `${at}:${fileDiff.name}`);
 
-    let additions = 0;
-    let deletions = 0;
-    for (const file of files) {
-      for (const hunk of file.hunks) {
-        additions += hunk.additionLines;
-        deletions += hunk.deletionLines;
-      }
-    }
+    // A patch from `port-diff --whole` holds every line of each file. Both sides are rebuilt from
+    // it and diffed again here, so the view knows the whole file and can expand what it collapses.
+    const whole = text.startsWith('port-diff: whole files\n');
+    const side = (file, without) => file.lines.filter((line) => line.kind !== without).map((line) => `${line.text}\n`).join('');
+    const files = parsed.map((fileDiff, at) => {
+      const file = index[at];
+      if (!whole || file.base === 'new' || !file.lines.length) return fileDiff;
+      return parseDiffFromFile(
+        { name: fileDiff.name, contents: side(file, '+') },
+        { name: fileDiff.name, contents: side(file, '-') },
+      );
+    });
+
+    const additions = index.reduce((sum, file) => sum + file.additions, 0);
+    const deletions = index.reduce((sum, file) => sum + file.deletions, 0);
     document.getElementById('stats').textContent =
-      `${files.length} files, +${additions} −${deletions}`;
+      `${files.length} files, +${additions} −${deletions}${whole ? ', whole files' : ''}`;
 
     const split = document.getElementById('split');
     const wrap = document.getElementById('wrap');
     const showFiles = document.getElementById('files');
-    const side = document.getElementById('side');
+    const panel = document.getElementById('side');
     split.checked = pref('split', true);
     wrap.checked = pref('wrap', false);
     showFiles.checked = pref('files', true);
-    side.hidden = !showFiles.checked;
+    panel.hidden = !showFiles.checked;
     showFiles.addEventListener('change', () => {
       setPref('files', showFiles.checked);
-      side.hidden = !showFiles.checked;
+      panel.hidden = !showFiles.checked;
     });
     const options = () => ({
       theme: { light: 'pierre-light', dark: 'pierre-dark' },
@@ -215,6 +222,7 @@
     const codeView = new CodeView(options());
     codeView.setup(view);
     codeView.setItems(files.map((fileDiff, at) => ({ id: ids[at], type: 'diff', fileDiff })));
+    window.diffViewer = { codeView, files, index, ids }; // for the browser console
 
     const list = document.getElementById('list');
     const query = document.getElementById('query');
@@ -223,7 +231,26 @@
     let current = -1;
 
     const showFile = (at) => codeView.scrollTo({ type: 'item', id: ids[at], align: 'start' });
-    const showLine = (at, line) => {
+    const frame = () => new Promise((resolve) => { requestAnimationFrame(() => resolve()); });
+    // With whole files, a line can sit in a stretch the view has collapsed. The stretch before
+    // hunk n is expanded through that file's rendered instance, which exists once it is on screen.
+    async function expand(at, line) {
+      const { hunks } = files[at];
+      const shown = (hunk) => line.number >= hunk.additionStart && line.number < hunk.additionStart + hunk.additionCount;
+      if (line.kind !== ' ' || hunks.some(shown)) return;
+      codeView.scrollTo({ type: 'item', id: ids[at], align: 'start' });
+      let instance;
+      for (let tries = 0; tries < 60 && !instance; tries++) {
+        await frame();
+        instance = codeView.getRenderedItems().find((item) => item.id === ids[at])?.instance;
+      }
+      if (!instance || instance.isLineRenderable(line.number)) return;
+      const next = hunks.findIndex((hunk) => hunk.additionStart > line.number);
+      instance.expandHunk(next === -1 ? hunks.length : next, 'both', files[at].additionLines.length);
+      await frame();
+    }
+    const showLine = async (at, line) => {
+      await expand(at, line);
       codeView.scrollTo({ type: 'line', id: ids[at], lineNumber: line.number, side: line.side, align: 'center' });
       try {
         codeView.setSelectedLines({ id: ids[at], range: { start: line.number, end: line.number, side: line.side, endSide: line.side } });
@@ -317,7 +344,7 @@
       if ((event.ctrlKey || event.metaKey) && event.key === 'f' && document.activeElement !== query) {
         event.preventDefault();
         showFiles.checked = true;
-        side.hidden = false;
+        panel.hidden = false;
         query.focus();
         query.select();
       }

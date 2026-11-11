@@ -32,6 +32,9 @@ bin/port-diff <commit> -C ../frontend-app-learning -o dates.patch
   single file to diff against.
 - `-w` leaves out changes in whitespace alone, such as lines the lint autofixer re-indented.
   A file whose only changes are whitespace is left out and named on stderr.
+- `--whole` gives every line of each file as context, under a first line that says so. It
+  is for the viewer, which then shows the usual few lines around each change and can expand
+  the rest.
 - `--master <ref>` diffs against another ref than `upstream/master`; without `-o` the patch
   goes to stdout.
 
@@ -51,6 +54,10 @@ own find misses most of a large patch. The panel on the left stands in for it:
   and Shift+Enter, scrolls to that file or line; a line is selected. Escape clears the
   search. Unchanged lines that the patch leaves out, beyond the three lines of context
   around each change, are not searched.
+- A patch made with `port-diff --whole` holds whole files. The page rebuilds both sides of
+  each file from it and diffs them again, so each "N unmodified lines" bar expands, the
+  search covers every line of every file, and jumping to a match inside a collapsed stretch
+  expands it first.
 - Ctrl+F puts the cursor in the box; pressed again from inside it, the browser's own find
   opens. `?q=<text>` in the address starts with that search.
 - The `files` toggle hides the panel.
