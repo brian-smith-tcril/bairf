@@ -47,8 +47,45 @@
   header .spacer { flex: 1; }
   header label { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); }
   a { color: var(--accent); }
-  #view { flex: 1; min-height: 0; overflow: auto; }
+  main { flex: 1; min-height: 0; display: flex; }
+  #view { flex: 1; min-width: 0; overflow: auto; }
   .error { color: #cf222e; padding: 16px; white-space: pre-wrap; }
+  aside {
+    width: 380px;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    background: var(--bar);
+  }
+  aside[hidden] { display: none; }
+  aside .search { padding: 8px; border-bottom: 1px solid var(--border); display: flex; gap: 6px; align-items: center; }
+  aside input[type=search] {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 8px;
+    font: inherit;
+    color: var(--fg);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  aside .count { color: var(--muted); white-space: nowrap; font-size: 12px; }
+  aside button { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; cursor: pointer; }
+  #list { flex: 1; min-height: 0; overflow: auto; margin: 0; padding: 4px 0; list-style: none; font-size: 12px; }
+  #list li { padding: 2px 8px; cursor: pointer; display: flex; gap: 6px; align-items: baseline; white-space: nowrap; }
+  #list li:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  #list li.current { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+  #list li.file .path { flex: 1; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: left; }
+  #list li.group { cursor: pointer; font-weight: 600; margin-top: 6px; }
+  #list li.hit { font-family: ui-monospace, monospace; padding-left: 16px; }
+  #list li.hit .text { overflow: hidden; text-overflow: ellipsis; }
+  #list .base { color: var(--muted); width: 3.5em; flex: none; }
+  #list .adds { color: #1a7f37; }
+  #list .dels { color: #cf222e; }
+  #list .where { color: var(--muted); flex: none; }
+  #list mark { background: #fff8c5; color: #1f2328; }
+  #list .empty { color: var(--muted); cursor: default; }
 </style>
 </head>
 <body>
@@ -56,10 +93,22 @@
   <h1 id="title">Diff viewer</h1>
   <span class="stats" id="stats"></span>
   <span class="spacer"></span>
+  <label><input type="checkbox" id="files"> files</label>
   <label><input type="checkbox" id="split"> split</label>
   <label><input type="checkbox" id="wrap"> wrap</label>
 </header>
-<div id="view"></div>
+<main>
+  <aside id="side">
+    <div class="search">
+      <input type="search" id="query" placeholder="Search every line (Ctrl+F)" autocomplete="off" spellcheck="false">
+      <span class="count" id="count"></span>
+      <button id="prev" title="Previous match (Shift+Enter)">↑</button>
+      <button id="next" title="Next match (Enter)">↓</button>
+    </div>
+    <ul id="list"></ul>
+  </aside>
+  <div id="view"></div>
+</main>
 <script type="module">
   import { CodeView, parsePatchFiles } from 'https://cdn.jsdelivr.net/npm/@pierre/diffs@1.5.2/+esm';
 
@@ -77,13 +126,60 @@
     try { localStorage.setItem(`diff-viewer:${key}`, String(value)); } catch {}
   }
 
+  // The view is virtualized: only what is near the viewport is in the page, so the browser's own
+  // find misses the rest. This index holds every line of the patch for the search box to look in.
+  function indexPatch(text) {
+    const index = [];
+    let file;
+    let oldLine = 0;
+    let newLine = 0;
+    for (const raw of text.split('\n')) {
+      const header = /^diff --git (\S+) (\S+)$/.exec(raw);
+      if (header) {
+        const base = header[1].startsWith('master/') ? 'master' : header[1].startsWith('parent/') ? 'prev' : '';
+        file = { base, path: header[2].replace(/^port\/src\//, ''), lines: [], additions: 0, deletions: 0, inHunk: false };
+        index.push(file);
+      } else if (!file) {
+        continue;
+      } else if (raw.startsWith('@@ ')) {
+        const hunk = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/.exec(raw);
+        oldLine = Number(hunk[1]);
+        newLine = Number(hunk[2]);
+        file.inHunk = true;
+      } else if (!file.inHunk) {
+        if (raw.startsWith('new file mode')) file.base = 'new';
+      } else if (raw.startsWith('+')) {
+        file.lines.push({ kind: '+', side: 'additions', number: newLine++, text: raw.slice(1) });
+        file.additions++;
+      } else if (raw.startsWith('-')) {
+        file.lines.push({ kind: '-', side: 'deletions', number: oldLine++, text: raw.slice(1) });
+        file.deletions++;
+      } else if (raw.startsWith(' ')) {
+        file.lines.push({ kind: ' ', side: 'additions', number: newLine++, text: raw.slice(1) });
+        oldLine++;
+      }
+    }
+    return index;
+  }
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
   async function showPatch() {
     const response = await fetch('/patch');
     if (!response.ok) throw new Error(`/patch: ${response.status}`);
     const name = response.headers.get('X-Patch-Name');
     document.title = name;
     document.getElementById('title').textContent = name;
-    const files = parsePatchFiles(await response.text()).flatMap((p) => p.files);
+    const text = await response.text();
+    const files = parsePatchFiles(text).flatMap((p) => p.files);
+    const index = indexPatch(text);
+    if (index.length !== files.length) throw new Error(`the index has ${index.length} files, the view ${files.length}`);
+    const ids = files.map((fileDiff, at) => `${at}:${fileDiff.name}`);
 
     let additions = 0;
     let deletions = 0;
@@ -98,8 +194,16 @@
 
     const split = document.getElementById('split');
     const wrap = document.getElementById('wrap');
+    const showFiles = document.getElementById('files');
+    const side = document.getElementById('side');
     split.checked = pref('split', true);
     wrap.checked = pref('wrap', false);
+    showFiles.checked = pref('files', true);
+    side.hidden = !showFiles.checked;
+    showFiles.addEventListener('change', () => {
+      setPref('files', showFiles.checked);
+      side.hidden = !showFiles.checked;
+    });
     const options = () => ({
       theme: { light: 'pierre-light', dark: 'pierre-dark' },
       themeType: 'system',
@@ -110,11 +214,107 @@
 
     const codeView = new CodeView(options());
     codeView.setup(view);
-    codeView.setItems(files.map((fileDiff, index) => ({
-      id: `${index}:${fileDiff.name}`,
-      type: 'diff',
-      fileDiff,
-    })));
+    codeView.setItems(files.map((fileDiff, at) => ({ id: ids[at], type: 'diff', fileDiff })));
+
+    const list = document.getElementById('list');
+    const query = document.getElementById('query');
+    const count = document.getElementById('count');
+    let hits = [];
+    let current = -1;
+
+    const showFile = (at) => codeView.scrollTo({ type: 'item', id: ids[at], align: 'start' });
+    const showLine = (at, line) => {
+      codeView.scrollTo({ type: 'line', id: ids[at], lineNumber: line.number, side: line.side, align: 'center' });
+      try {
+        codeView.setSelectedLines({ id: ids[at], range: { start: line.number, end: line.number, side: line.side, endSide: line.side } });
+      } catch {}
+    };
+
+    function listFiles() {
+      list.replaceChildren(...index.map((file, at) => {
+        const row = element('li', 'file');
+        row.title = file.path;
+        row.append(
+          element('span', 'base', file.base),
+          element('span', 'path', file.path),
+          element('span', 'adds', `+${file.additions}`),
+          element('span', 'dels', `−${file.deletions}`),
+        );
+        row.addEventListener('click', () => showFile(at));
+        return row;
+      }));
+      count.textContent = '';
+    }
+
+    function go(to) {
+      if (!hits.length) return;
+      current = (to + hits.length) % hits.length;
+      const hit = hits[current];
+      list.querySelector('.current')?.classList.remove('current');
+      hit.row.classList.add('current');
+      hit.row.scrollIntoView({ block: 'nearest' });
+      count.textContent = `${current + 1} of ${hits.length}`;
+      showLine(hit.at, hit.line);
+    }
+
+    function search() {
+      const needle = query.value.toLowerCase();
+      hits = [];
+      current = -1;
+      if (!needle) return listFiles();
+      const rows = [];
+      index.forEach((file, at) => {
+        const found = file.lines.filter((line) => line.text.toLowerCase().includes(needle));
+        if (!found.length) return;
+        const group = element('li', 'group', `${file.path} (${found.length})`);
+        group.addEventListener('click', () => showFile(at));
+        rows.push(group);
+        for (const line of found) {
+          const row = element('li', 'hit');
+          const start = line.text.toLowerCase().indexOf(needle);
+          const shown = element('span', 'text');
+          shown.append(
+            line.text.slice(Math.max(0, start - 30), start).trimStart(),
+            element('mark', '', line.text.slice(start, start + needle.length)),
+            line.text.slice(start + needle.length),
+          );
+          row.append(element('span', 'where', `${line.kind}${line.number}`), shown);
+          row.title = line.text.trim();
+          const hit = { at, line, row };
+          row.addEventListener('click', () => go(hits.indexOf(hit)));
+          hits.push(hit);
+          rows.push(row);
+        }
+      });
+      if (!rows.length) rows.push(element('li', 'empty', 'No line of the patch has that text.'));
+      list.replaceChildren(...rows);
+      count.textContent = `${hits.length} found`;
+    }
+
+    query.addEventListener('input', search);
+    query.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        go(current + (event.shiftKey ? -1 : 1));
+      } else if (event.key === 'Escape') {
+        query.value = '';
+        search();
+      }
+    });
+    document.getElementById('next').addEventListener('click', () => go(current + 1));
+    document.getElementById('prev').addEventListener('click', () => go(current - 1));
+    // Ctrl+F goes to the search box; pressed again from inside it, the browser's own find opens.
+    document.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'f' && document.activeElement !== query) {
+        event.preventDefault();
+        showFiles.checked = true;
+        side.hidden = false;
+        query.focus();
+        query.select();
+      }
+    });
+    query.value = new URLSearchParams(location.search).get('q') ?? '';
+    search();
     for (const [key, input] of [['split', split], ['wrap', wrap]]) {
       input.addEventListener('change', () => {
         setPref(key, input.checked);

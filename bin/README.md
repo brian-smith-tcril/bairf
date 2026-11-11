@@ -38,6 +38,19 @@ To read the patch in a browser, serve it with `diff-viewer`. The page renders th
 split and wrap toggles. It rereads the file on each load, so after rerunning `port-diff`,
 reload the page.
 
+The view is virtualized: only the files near the viewport are in the page, so the browser's
+own find misses most of a large patch. The panel on the left stands in for it:
+
+- With the search box empty it lists every file, each with the base it is shown against
+  (`master`, `prev` for the commit's parent, `new`) and its added and removed line counts.
+  Clicking a file scrolls to it.
+- Typing in the box searches every line of the patch, context lines included, without
+  regard to case, and lists the matching lines by file. Clicking one, or Enter and
+  Shift+Enter, scrolls to that line and selects it. Escape clears the search.
+- Ctrl+F puts the cursor in the box; pressed again from inside it, the browser's own find
+  opens. `?q=<text>` in the address starts with that search.
+- The `files` toggle hides the panel.
+
 ```sh
 python3 bin/diff-viewer/serve.py dates.patch   # then open http://127.0.0.1:8765/
 ```
