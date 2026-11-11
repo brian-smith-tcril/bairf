@@ -34,3 +34,4 @@
 | skip-target | issue-body-skip-target.md | openedx/frontend-base#328 | settled |
 | react-bootstrap-warnings | issue-body-react-bootstrap-warnings.md | openedx/paragon#4523 | settled |
 | external-route-params | issue-body-external-route-params.md | openedx/frontend-base#349 | in-review |
+| is-client-route | issue-body-is-client-route.md | openedx/frontend-base (title: `isClientRoute` cannot be imported by apps) | unpublished |
