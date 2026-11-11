@@ -656,3 +656,18 @@ in #2190's plan and are not repeated.
       `build` and `build:ci` pass. The mock of the courseware hooks
       in `utils.test.ts` holds once the entrance exam commit makes
       `useCoursewareMetadata` real.
+
+21. **The progress tab layer exists locally (2026-11-11).**
+    `gh stack add bsmith/progress-tab` on top of
+    `bsmith/progress-shared-modules`, fast-forwarded to `44cdb593`
+    from `bsmith/progress-tab-wip`. Not pushed, no PR.
+    - Checks at the layer alone: lint passes; 35 suites, 413 passed,
+      7 skipped; 100% of lines; `build` and `build:ci` pass.
+    - Its patch, estimated from the local lcov the way Codecov counts
+      it: 469 lines, none missed, two partial (99.57%).
+      `SubsectionTitleCell.jsx` line 36 is the `= 'a'` default
+      (openedx/frontend-base#348, entry 8). `CertificateStatus.jsx`
+      line 108 has a branch the entrance exam layer's cases take.
+    - `bsmith/progress-tab-wip` keeps the entrance exam commit
+      (`8110b077`) for the top layer.
+    - The four diff-viewer servers are stopped.
