@@ -489,3 +489,27 @@ in #2190's plan and are not repeated.
       lines), `build` and `build:ci` pass at the tip. #2190's live
       body still names `getCoursewareUrl` until Brian approves the
       edit; the mirror is ahead of it.
+
+16. **`ProfileLink` builds the user's profile URL on its own line,
+    under a comment naming openedx/frontend-base#349 (settled with
+    Brian 2026-11-11).** Brian asked why Learning rebuilds what the
+    shell's `ProfileLinkMenuItem` does.
+    - `ProfileLinkMenuItem` is not exported (`shell/index.ts`, in the
+      installed `2.0.0-alpha.17` and on `main`); `LinkMenuItem` is, but
+      renders a bare `Hyperlink` and passes no props through, so the
+      `variant="muted" isInline` of `master`'s links would be lost.
+    - The trailing-slash step is needed because the role's URL has two
+      forms: `/profile` from the profile app's route, and whatever a
+      site writes in `externalRoutes`, which the six dev site configs
+      found by code search in the openedx org (frontend-app-account,
+      -learner-dashboard, -admin-console, -catalog,
+      -instructor-dashboard, and frontend-base's shell) write as
+      `http://apps.local.openedx.io:1995/profile/`.
+    - The generic problem is #349: the profile page is a route with a
+      param (`profile/u/:username`), an external route ignores params,
+      so the role sits on `profile` and each caller appends by hand.
+      #349's `ProfileLinkMenuItem` bullet already names the case. No
+      new issue; nothing added to #349.
+    - In the code the URL is a named const above the `return`, so a
+      `resolveRouteByRole(role, { username })` can replace that line,
+      and the comment above it carries #349's URL.
