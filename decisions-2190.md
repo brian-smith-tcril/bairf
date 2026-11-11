@@ -918,3 +918,17 @@ in #2190's plan and are not repeated.
       commit on `bsmith/progress-tab-wip` is rebased onto it, not
       rechecked. #2190's body is behind the mirror on this and on
       entry 29.
+
+31. **`LockedDonutSegment` drops `viewBox` from the lock icon's `<g>`
+    (confirmed with Brian 2026-11-11).** `master` has `<g width="6"
+    height="21" viewBox="0 0 21 6">` since the file's first commit
+    (`aca45fb2`, 2021-04-13, #407, the completion chart); five later
+    commits left the element alone and #407's three review comments on
+    the file do not mention it. With `master`'s line put back the
+    package's lint fails: `Invalid property 'viewBox' found on tag
+    'g', but it is only allowed on: marker, pattern, svg, symbol,
+    view` (`react/no-unknown-property`). A browser ignores the
+    attribute on a `<g>`, so nothing should change on screen; the
+    lock icon is looked at in the manual pass. `.jsx` is linted
+    locally only until openedx/frontend-base#327, so CI would pass
+    with the line in today.
