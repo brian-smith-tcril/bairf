@@ -376,15 +376,21 @@ in #2190's plan and are not repeated.
       shape of the existing `hasDiscussionTab`. The file ported with
       #2189 (merged as #2234), so this PR changes it; `utils.test.ts`
       follows.
-    - `course-tabs/hooks.ts`: `useTabs` is `master`'s again, and each
-      exported hook is a guard followed by the lookup:
-      `if (!hasDatesTab(useTabs())) { return undefined; }` then
-      `return getRouteUrl(courseDatesRole, courseId)`. `getRouteUrl` is
-      a plain function, so it runs after the guard. A first version
-      made the lookup a hook (`useRouteUrl`), which the rules of hooks
-      forced ahead of the check; Brian found that order hard to parse,
-      and turned down a variant with non-null assertions on the course
-      id and the resolved route.
+    - `course-tabs/hooks.ts`: `useTabs` is `master`'s again, and the
+      three exported hooks are one-liners over a shared
+      `useTabUrl(hasTab: boolean, role)`, which guards
+      (`if (!hasTab || !courseId) { return undefined; }`) and then
+      returns `resolveRouteByRole(role, { courseId })?.url`. Each call
+      site passes the check's result, as in
+      `useTabUrl(hasDatesTab(useTabs()), courseDatesRole)`, so
+      `master`'s `getDatesTabUrl(useTabs())` shape is still visible
+      and the file's diff against `master` is the helper and three
+      changed lines. How it got there, each step turned down by Brian
+      on reading the diff: a lookup hook (`useRouteUrl`) called ahead
+      of the check, which the rules of hooks force and which read
+      backwards; a variant with non-null assertions on the course id
+      and the resolved route; and three spelled-out hooks with a guard
+      each, which read clearly and repeated themselves.
     - Behaviour and `hooks.test.tsx` are unchanged.
     - Folded into commit 1, whose message names the change; the branch
       is now `2ec72e41`, `026a7c39`, `10a73f8c`, differing from
