@@ -604,9 +604,10 @@ in #2190's plan and are not repeated.
       unpushed SHAs, no worktree files) and embedded whole in #2246's
       body, which was read back equal to the file. This log stays the
       working record.
-    - #2190's body still describes one branch and no stack: the edit
-      from the mirror was not permitted in this session and waits for
-      Brian.
+    - #2190's body described one branch and no stack until Brian
+      approved the edit: updated from the mirror at 2026-11-11T19:30:33Z and
+      read back equal to it, with the three layers and with the
+      course exit helper tested in its own layer (entry 20).
 
 20. **The bottom layer tests `getCourseExitMode` and
     `GetCourseExitNavigation` itself (settled with Brian 2026-11-11;
