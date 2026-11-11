@@ -422,8 +422,16 @@ in #2190's plan and are not repeated.
       "Text for button that redirects to the upgrade page"; the first
       rewrite, "Button to upgrade in order to get a certificate", said
       nothing clear.
-    - Proposed, awaiting Brian's pass: `upgradeLink`,
-      `viewGradesButton`, `minimumGrade`.
+    - `viewGradesButton`: "Button to view the learner’s grades",
+      approved. `upgradeLink` ("upgrade now", a fragment inside the
+      upgrade footnote's sentence): "Anchor text for the link to the
+      upgrade page"; Brian turned down a version that quoted the
+      sentence it ends, and the sentence's own message shows the
+      `{upgradeLink}` placeholder. Applied without an explicit yes on
+      the trimmed wording.
+    - Awaiting Brian: `minimumGrade`, proposed as "Name of the minimum
+      grade requirement for (course credit)"; "Label" in the earlier
+      versions named nothing.
     - With the five applied the branch is `0dd4b028`, `e2ecb97d`,
       `291e73b0`; lint, the suite (37 suites, 412 passed, 7 skipped),
       `build` and `build:ci` pass at the tip.
