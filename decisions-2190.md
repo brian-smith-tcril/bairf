@@ -580,3 +580,26 @@ in #2190's plan and are not repeated.
       from.
     - The plan and body mirror are amended first (Layers, Coverage,
       Stack, Manual testing, and which PR states what).
+
+19. **The bottom layer is up as a draft: #2246 (2026-11-11).**
+    - `bsmith/progress-shared-modules` was created with `gh stack init
+      --base frontend-base` and fast-forwarded to commit 1
+      (`75f7ba3b`), then submitted to upstream as a draft. The local
+      branch with all three commits is `bsmith/progress-tab-wip`.
+    - Checks at the layer alone, before the push: lint passes; 31
+      suites, 283 passed, 1 skipped; 97.55% of lines; `build` and
+      `build:ci` pass.
+    - Found at the layer alone: `getCourseExitMode`'s branches (lines
+      42, 46, 58-60, 64, 72 of `course-exit/utils.js`) run in no test
+      of this layer. `master`'s `utils.test.ts` has one case; the rest
+      is covered through the progress tab's suite, which is the layers
+      above. The PR body names them beside `GetCourseExitNavigation`
+      (83-116). Codecov's patch on #2246 will list both groups.
+    - The PR body (`pr-body-2246.md`) has the Summary, What changed,
+      Known gaps and Testing sections, and no embedded decision log
+      yet. This log covers all three layers and names files and
+      branches that do not belong in a public body, so how it is
+      split and scrubbed across the three PRs is open with Brian.
+    - #2190's body still describes one branch and no stack: the edit
+      from the mirror was not permitted in this session and waits for
+      Brian.
