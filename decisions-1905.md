@@ -718,27 +718,25 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     at all, since an external URL has no params to fill). `master`
     builds the same path inline in seven files; their ports call the
     function.
-    Amended 2026-11-11 with Brian, reviewing #2190's diff: the hooks do
-    not resolve roles. An in-page link to a tab does what the tab
-    itself does in the shell's course bar: it takes `tabs[].url` from
-    the course metadata, and when the URL's path is a route in this site
-    the link is a react-router `Link` to the path, otherwise an anchor
-    to the URL. The course bar's `CourseTabsNavigation` decides with
-    `isClientRoute(pathname)` (`shell/header/course-bar/utils.ts`: the
-    path matches, as a prefix, the route of a role some app provides
-    under `providesCourseBarRolesId`), which frontend-base does not
-    export. Learning carries a copy in `course-tabs/utils.ts`, built
-    from the exported `getProvidesAsStrings`, `providesCourseBarRolesId`
-    and `getUrlByRouteRole`, with a frontend-base issue asking for the
-    export. The hooks return the path or the URL and the readers keep
-    `getLinkProps`. This drops the tab-id-to-role table and the known
-    gap for these three links: no role is resolved, and where a tab
-    lives is the LMS's to say through its learning URL setting. The
-    subsection link's half of this decision stands: it is not a tab,
-    the response's `jump_to` URL is an LMS redirect and never a route in
-    this site, and `getCoursewareUrl` keeps the click in the client; the
-    known gap remains for `coursewareRole`. The comment on
-    `coursewareRole` named above is gone (decisions-2190 entry 10).
+    Confirmed 2026-11-11 with Brian, reviewing #2190's diff: when
+    Learning has a role for the page a link points at, the role gives
+    the URL and the URL in the `course_metadata` response's `tabs` does
+    not matter (for now the result is always a path in this site, since
+    a site cannot override the role). Weighed the same day and not
+    taken: having the in-page links follow `tabs[].url` the way the
+    shell's `CourseTabsNavigation` does for the tabs themselves, with a
+    copy of frontend-base's unexported `isClientRoute`. It contradicts
+    the rule, and it costs a copied function, rewritten test fixtures
+    and two upstream issue changes, too much this early in the
+    conversion. A course's tab list is open-ended (custom pages,
+    author-entered external links, plugin tab types; decisions-2190
+    entry 11 has the list), and rendering every tab is the course
+    bar's job, which it does; the in-page links only ever point at
+    tabs Learning serves. The course bar itself follows `tabs[].url`
+    for every tab and consults no per-tab role; whether it should
+    prefer a role is frontend-base's question and is left alone. The
+    comment on `coursewareRole` named above is gone (decisions-2190
+    entry 10).
 
 39. **A `master` bug the shell would turn into an inconsistency is fixed
     in the port, and the `master` issue points at the port.** Decided

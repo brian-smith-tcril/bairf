@@ -288,56 +288,25 @@ in #2190's plan and are not repeated.
     the tip: lint passes; 37 suites, 412 passed, 7 skipped; 99.04% of
     lines; `build` and `build:ci` pass.
 
-11. **In-page links to a tab follow the tab's URL, as the course bar's
-    tabs do (settled with Brian 2026-11-11; effort decision 38 as
-    amended).** Reviewing the port diff of `course-tabs/hooks.test.tsx`,
-    Brian found the expected value hardcoded and the hooks' new rule
-    wrong: a link inside a page that points at a tab should be a `Link`
-    when the tab's URL is a route in this site and an `a` otherwise,
-    which is what the shell's `CourseTabsNavigation` does for the tabs
-    themselves.
-    - `course-tabs/hooks.ts` is `master`'s again plus one call: each
-      hook passes the tab's URL through `getTabLinkUrl`, new in
-      `course-tabs/utils.ts`, which returns the URL's pathname when
-      `isClientRoute(pathname)` and the URL otherwise. The readers
-      (`RelatedLinks.jsx`, `DetailedGrades.jsx`) are unchanged: they
-      already render through `getLinkProps`.
-    - `isClientRoute` is frontend-base's
-      (`shell/header/course-bar/utils.ts`), exported from that file
-      and not from the package. The copy in `course-tabs/utils.ts` has
-      the same body, written with the exported `getProvidesAsStrings`,
-      `providesCourseBarRolesId` and `getUrlByRouteRole`. The issue
-      asking for the export is drafted as
-      `issue-body-is-client-route.md` (unpublished); the copy's comment
-      carries its URL once it exists.
-    - Like the course bar, the test is on the pathname alone, so a tab
-      URL on another origin with a path under `/learning/course/:courseId`
-      is linked as a route in this site.
-    - `hooks.test.tsx` now differs from `master`'s only in its imports
-      and the dropped `initializeMockApp()` call. `utils.test.ts` gains
-      three `getTabLinkUrl` cases; the in-site URL is built from
-      `resolveRouteByRole(learningCourseRole, { courseId })`, not typed
-      out.
-    - The tab factory's URLs are LMS-hosted paths
-      (`http://localhost:18000/courses/<id>/...`), so with the default
-      metadata the progress suite's links are anchors. The three click
-      cases and the path case list the course and dates tabs at this
-      site's paths (`tabsInThisSite`), which is what the LMS sends when
-      its learning URL setting is this site; a new case asserts the
-      factory's URLs as the hrefs.
-    - The subsection title link is untouched: it is not a tab, and the
-      known gap (a site cannot point a role Learning declares
-      elsewhere, openedx/frontend-base#348) now applies to
-      `coursewareRole` only.
-    - openedx/frontend-base#348's body gives Learning's dates and
-      outline links as its example of the gap; that example no longer
-      holds and the body needs a PATCH (not done).
-    - State: the change is in the working tree, uncommitted; lint
-      passes; 37 suites, 413 passed, 7 skipped; 99.04% of lines.
+11. **The course-tabs hooks keep resolving Learning's roles (settled
+    with Brian 2026-11-11; effort decision 38, confirmed).** Reviewing
+    the port diff of `course-tabs/hooks.test.tsx`, Brian asked whether
+    the in-page links should instead do what the course bar's tabs do.
+    A version that followed `tabs[].url` (a `Link` to its path when
+    the path is a route in this site, an anchor otherwise, with a copy
+    of frontend-base's unexported `isClientRoute`) was written in the
+    working tree, tested, and discarded before any commit. Brian's
+    rule: if Learning has a role for the destination, the role gives
+    the URL and the metadata's URL does not matter; a tab nothing
+    serves is linked by its URL, and that only arises in the course
+    bar. The committed hooks already do the first half, and the
+    progress page links to no other tabs. Nothing was filed on
+    frontend-base and openedx/frontend-base#348 stands as written.
+    - Still open: the hooks test's expected value is a typed-out path
+      built from a `segment` column, which Brian flagged.
     - Findings 2026-11-11, openedx/openedx-platform at `d3a86602dc`,
       on what `tabs` in the `course_metadata` response can hold (Brian
-      asked; entry 11's direction is under question again, nothing
-      committed). `CourseHomeMetadataView` serializes
+      asked). `CourseHomeMetadataView` serializes
       `get_course_tab_list(user, course)`
       (`lms/djangoapps/courseware/tabs.py`): the course's persisted
       tabs plus the dynamic ones, of every type registered under the
