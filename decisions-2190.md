@@ -281,3 +281,9 @@ in #2190's plan and are not repeated.
     asserts the three forms match routes carrying the role. The
     reasoning is entry 3. The comment comes out of commit 1, and the
     plan and #2190's body lose the clause naming it.
+    Done 2026-11-11: the line is out of `src/constants.ts` and commit
+    1's message no longer names it. The branch is now `fa0757c1`,
+    `1cba4529`, `1d5eb961` (were `66ccbd91`, `a5517082`, `eba3a06e`);
+    the tip's tree differs from the old tip by that one line. Checks at
+    the tip: lint passes; 37 suites, 412 passed, 7 skipped; 99.04% of
+    lines; `build` and `build:ci` pass.
