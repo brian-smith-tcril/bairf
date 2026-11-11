@@ -44,9 +44,11 @@ own find misses most of a large patch. The panel on the left stands in for it:
 - With the search box empty it lists every file, each with the base it is shown against
   (`master`, `prev` for the commit's parent, `new`) and its added and removed line counts.
   Clicking a file scrolls to it.
-- Typing in the box searches every line of the patch, context lines included, without
-  regard to case, and lists the matching lines by file. Clicking one, or Enter and
-  Shift+Enter, scrolls to that line and selects it. Escape clears the search.
+- Typing in the box searches the file names and every line of the patch, context lines
+  included, without regard to case, and lists the matches by file. Clicking one, or Enter
+  and Shift+Enter, scrolls to that file or line; a line is selected. Escape clears the
+  search. Unchanged lines that the patch leaves out, beyond the three lines of context
+  around each change, are not searched.
 - Ctrl+F puts the cursor in the box; pressed again from inside it, the browser's own find
   opens. `?q=<text>` in the address starts with that search.
 - The `files` toggle hides the panel.

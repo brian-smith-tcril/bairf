@@ -100,7 +100,7 @@
 <main>
   <aside id="side">
     <div class="search">
-      <input type="search" id="query" placeholder="Search every line (Ctrl+F)" autocomplete="off" spellcheck="false">
+      <input type="search" id="query" placeholder="Search file names and lines (Ctrl+F)" autocomplete="off" spellcheck="false">
       <span class="count" id="count"></span>
       <button id="prev" title="Previous match (Shift+Enter)">↑</button>
       <button id="next" title="Next match (Enter)">↓</button>
@@ -254,7 +254,8 @@
       hit.row.classList.add('current');
       hit.row.scrollIntoView({ block: 'nearest' });
       count.textContent = `${current + 1} of ${hits.length}`;
-      showLine(hit.at, hit.line);
+      if (hit.line) showLine(hit.at, hit.line);
+      else showFile(hit.at);
     }
 
     function search() {
@@ -265,9 +266,17 @@
       const rows = [];
       index.forEach((file, at) => {
         const found = file.lines.filter((line) => line.text.toLowerCase().includes(needle));
-        if (!found.length) return;
-        const group = element('li', 'group', `${file.path} (${found.length})`);
-        group.addEventListener('click', () => showFile(at));
+        const named = file.path.toLowerCase().includes(needle);
+        if (!found.length && !named) return;
+        const group = element('li', 'group', `${file.path} (${named ? 'file name' : ''}${named && found.length ? ', ' : ''}${found.length || ''})`);
+        group.title = file.path;
+        if (named) {
+          const hit = { at, line: null, row: group };
+          group.addEventListener('click', () => go(hits.indexOf(hit)));
+          hits.push(hit);
+        } else {
+          group.addEventListener('click', () => showFile(at));
+        }
         rows.push(group);
         for (const line of found) {
           const row = element('li', 'hit');
@@ -286,7 +295,7 @@
           rows.push(row);
         }
       });
-      if (!rows.length) rows.push(element('li', 'empty', 'No line of the patch has that text.'));
+      if (!rows.length) rows.push(element('li', 'empty', 'No file name or line of the patch has that text.'));
       list.replaceChildren(...rows);
       count.textContent = `${hits.length} found`;
     }
