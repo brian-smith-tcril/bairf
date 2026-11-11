@@ -865,3 +865,19 @@ in #2190's plan and are not repeated.
       the four defaults, keep them with their cases (entry 6) or drop
       the defaults and require the props, which removes the cases at
       the cost of an interface change from `master`. Open.
+
+29. **`ProgressTabComponents.test.tsx` is whole in the coverage commit
+    (settled with Brian 2026-11-11; amends entry 26).** All eight of
+    its cases stay, the two divider cases that add nothing included.
+    Brian: none of the file is part of the port, the default-parameter
+    cases too; they belong in the commit that adds coverage. That
+    commit is therefore "tests that add coverage", most of them for
+    code `master`'s suite leaves unrun, and the four for defaults the
+    port rewrote from `defaultProps`.
+    - The layer is `8d2af02d` (the port) and `06f6514c` (the tests),
+      unpushed; the head's tree is unchanged, and both messages are
+      reworded. The port commit alone: lint clean; 33 suites, 364
+      passed, 7 skipped; 98.31% of lines; `build:ci` passes. The
+      entrance exam commit on `bsmith/progress-tab-wip` is rebased
+      onto it, not rechecked.
+    - #2190's body is one sentence behind the mirror on this.
