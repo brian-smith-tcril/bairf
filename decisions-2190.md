@@ -419,3 +419,6 @@ in #2190's plan and are not repeated.
       `microMastersMessage`.
     - Proposed, awaiting Brian's pass: `upgradeButton`, `upgradeLink`,
       `viewGradesButton`, `minimumGrade`.
+    - With the five applied the branch is `0dd4b028`, `e2ecb97d`,
+      `291e73b0`; lint, the suite (37 suites, 412 passed, 7 skipped),
+      `build` and `build:ci` pass at the tip.
