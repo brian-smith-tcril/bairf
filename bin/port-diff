@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
 # A patch of the files a commit changed under frontend-base/src, as they stand at that commit,
 # each against the file the commit's change is read from:
-#   - a file the commit ports (its manifest line is new in the commit): master's file at the
-#     legacy path, shown as master/<path>
-#   - any other file that was already there: the file in the commit's parent, shown as parent/<path>
+#   - a file the commit adds to the package, with a manifest line: master's file at the legacy
+#     path, shown as master/<path>
+#   - a file that was already in the package: the file in the commit's parent, shown as
+#     parent/<path>. Lines the commit copied verbatim from master's legacy file are put in that
+#     base too, so a copied block reads as unchanged and only lines in neither place read as added.
+#     A copied block is a run of consecutive added lines, at least two of them with a letter or
+#     digit, that is a run of consecutive lines somewhere in the legacy file.
 #   - a file with neither: no base, shown as added
 #
 #   port-diff <rev> [-C <repo>] [--master <ref>] [-o <file.patch>]
 #
-# Deleted files are not listed. Files identical to their legacy file are left out of the patch
-# and named on stderr. A merge (several legacy files for one target) stops the script: there is
-# no single base to show.
+# Deleted files are not listed. Added files identical to their legacy file are left out of the
+# patch and named on stderr. For an added file, a merge (several legacy files for one target)
+# stops the script: there is no single base to show.
 # Defaults: -C ., --master upstream/master, the patch to stdout. View it with bin/diff-viewer/serve.py.
 set -euo pipefail
 repo=.; master=upstream/master; out=
@@ -20,31 +24,66 @@ while [ $# -gt 0 ]; do
     -C) repo=$2; shift 2 ;;
     --master) master=$2; shift 2 ;;
     -o) out=$2; shift 2 ;;
-    -h|--help) sed -n '2,14p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
     *) args+=("$1"); shift ;;
   esac
 done
 [ ${#args[@]} -eq 1 ] || { echo "usage: port-diff <rev> [-C <repo>] [--master <ref>] [-o <file.patch>]" >&2; exit 2; }
 rev=${args[0]}
 manifest=$(git -C "$repo" show "$rev:frontend-base/manifest.tsv") || { echo "no manifest at $rev" >&2; exit 2; }
-manifest_before=$(git -C "$repo" show "$rev^:frontend-base/manifest.tsv" 2>/dev/null || true)
 
 tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
 mkdir -p "$tmp/master" "$tmp/parent" "$tmp/port"
 
 legacy_of() { printf '%s\n' "$1" | awk -F'\t' -v t="$2" '$2 == t { print $1 }'; }
 
+# with_copied_lines <parent file> <port file> <legacy file>: the parent file, plus the lines the
+# port file adds that are copied blocks of the legacy file, each where the port file has it.
+with_copied_lines() {
+  python3 - "$1" "$2" "$3" <<'PY'
+import difflib, re, sys
+
+parent, port, legacy = (open(p, encoding='utf-8', errors='surrogateescape').read().splitlines(keepends=True) for p in sys.argv[1:4])
+where = {}
+for at, line in enumerate(legacy):
+    where.setdefault(line, []).append(at)
+
+def copied(block):
+    kept, i = [], 0
+    while i < len(block):
+        longest = 0
+        for at in where.get(block[i], []):
+            n = 0
+            while i + n < len(block) and at + n < len(legacy) and block[i + n] == legacy[at + n]:
+                n += 1
+            longest = max(longest, n)
+        run = block[i:i + longest]
+        if sum(1 for line in run if re.search(r'[A-Za-z0-9]', line)) >= 2:
+            kept += run
+            i += longest
+        else:
+            i += 1
+    return kept
+
+base = []
+for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(None, parent, port, autojunk=False).get_opcodes():
+    base += parent[i1:i2]
+    if tag in ('insert', 'replace'):
+        base += copied(port[j1:j2])
+sys.stdout.write(''.join(base))
+PY
+}
+
 patch=
 while IFS= read -r target; do
   [ -n "$target" ] || continue
   rel=${target#frontend-base/}
   legacy=$(legacy_of "$manifest" "$target")
-  legacy_before=$(legacy_of "$manifest_before" "$target")
   in_parent=false
   git -C "$repo" cat-file -e "$rev^:$target" 2>/dev/null && in_parent=true
   mkdir -p "$tmp/port/$(dirname "$rel")"
   git -C "$repo" show "$rev:$target" > "$tmp/port/$rel"
-  if [ -n "$legacy" ] && { [ "$legacy" != "$legacy_before" ] || ! $in_parent; }; then
+  if [ -n "$legacy" ] && ! $in_parent; then
     if [ "$(printf '%s' "$legacy" | grep -c '')" -gt 1 ]; then
       echo "$target is a merge of several legacy files:" >&2; printf '  %s\n' $legacy >&2; exit 1
     fi
@@ -57,6 +96,11 @@ while IFS= read -r target; do
   elif $in_parent; then
     mkdir -p "$tmp/parent/$(dirname "$rel")"
     git -C "$repo" show "$rev^:$target" > "$tmp/parent/$rel"
+    if [ -n "$legacy" ]; then
+      for path in $legacy; do git -C "$repo" show "$master:$path"; done > "$tmp/legacy"
+      with_copied_lines "$tmp/parent/$rel" "$tmp/port/$rel" "$tmp/legacy" > "$tmp/base"
+      mv "$tmp/base" "$tmp/parent/$rel"
+    fi
     base=parent/$rel
   else
     base=/dev/null

@@ -16,14 +16,20 @@ git -C ../frontend-app-learning fetch upstream
 bin/port-diff <commit> -C ../frontend-app-learning -o dates.patch
 ```
 
-- A file the commit ports, meaning its manifest line is new in that commit, is diffed
-  against its legacy file on `master`. The patch names it `master/<path>`.
-- Any other file that already existed is diffed against the commit's parent, so the patch
-  holds only the commit's own change. The patch names it `parent/<path>`.
+- A file the commit adds to the package, with a manifest line, is diffed against its
+  legacy file on `master`. The patch names it `master/<path>`.
+- A file that was already in the package is diffed against the commit's parent, so the
+  patch holds only the commit's own change. The patch names it `parent/<path>`.
+- In such a file, a block the commit copied verbatim from the legacy file on `master` is
+  put in the base as well, so it reads as unchanged lines and only lines found in neither
+  place read as added. A block is a run of consecutive added lines, at least two of them
+  with a letter or digit, that is a run of consecutive lines in the legacy file. A line
+  the port changed relative to `master` reads as added; the `master` line it replaced is
+  not shown.
 - A file with neither, such as a new test, shows as added.
-- Files identical to their legacy file are left out of the patch and named on stderr.
-- A target merged from several legacy files stops the script, since there is no single
-  file to diff against.
+- Added files identical to their legacy file are left out of the patch and named on stderr.
+- An added target merged from several legacy files stops the script, since there is no
+  single file to diff against.
 - `--master <ref>` diffs against another ref than `upstream/master`; without `-o` the patch
   goes to stdout.
 
