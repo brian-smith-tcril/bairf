@@ -201,3 +201,70 @@ in #2190's plan and are not repeated.
    `eslint-disable` comments); the completed fixtures,
    `preventNavigation`, the `beforeAll` import of the tab's module;
    the cases added for coverage.
+
+8. **The progress tab commit (2026-11-10, `a5517082`).** Beyond what
+   entries 1 and 7 and the body say:
+   - `ProgressTab.test.jsx` was generated from `master`'s file by a
+     script, so its diff against `master` is the header, the render
+     seam, the fixtures and the added describes; no case was retyped.
+   - The right-to-left cases need `getLocale` to answer `ar`, so the
+     suite mocks `@openedx/frontend-base` with the real module and
+     `getLocale` wrapped in `jest.fn`, the per-file form the package
+     already uses.
+   - The factory's second subsection gets `learner_has_access: false`,
+     not `true`: two `api.test.js` cases rely on the value being falsy,
+     as it was when absent.
+   - `AssignmentTypeCell`'s `footnoteMarker: null` default is dropped
+     with its `defaultProps`, as decision 11 of #2189 did for `null`
+     defaults.
+   - The describe added for further certificate states is named
+     "Certificate status card", and the components test's header says
+     only that each case renders one component alone: a test name
+     states the assertion, not what `master` lacked.
+   - One partial is left in this commit's files and named in the PR:
+     `SubsectionTitleCell.jsx` line 36, the `= 'a'` default for the
+     link component, taken only when `getLinkProps` returns an `href`,
+     which needs the courseware role to resolve to an external route
+     (openedx/frontend-base#348). Entry 3 settled that nothing is
+     asserted for that case.
+   - Checks at this commit: lint passes; 35 suites, 400 passed, 7
+     skipped; 98.95% of lines; `build` and `build:ci` pass.
+
+9. **The entrance exam commit (2026-11-10, `eba3a06e`).**
+   - The cache case does not seed the cache. `renderRoutes` creates
+     its own query client, so the case renders the requester's own
+     progress page with a failed entrance exam, then calls
+     `router.navigate` to `progress/10`: the arrival entry 4
+     describes. Checked 2026-11-10 by removing `CertificateStatus`'s
+     condition: that case alone fails, the other four pass.
+   - The gated learner's `visited` event carries
+     `certificate_status_variant: undefined` with the factory's empty
+     `certificate_data`. The card's event code has no entrance exam
+     variant: in `entranceExamFail` mode it sends the progress
+     response's `certStatus` untouched, as on `master`. The case
+     asserts that literal value and one call. The plan's "reflects it"
+     is looser than what the code does.
+   - The progress suite's `beforeEach` answers the courseware metadata
+     request: under the adapter an unmocked request rejects, and the
+     tab now waits for this one on the learner's own page. A failed
+     courseware metadata request therefore shows the tab's error view,
+     which follows from gating on it (#2243).
+   - Manifest: one line each for `api.js`, `apiHooks.ts`,
+     `coursewareMeta.ts` and the two factory files. The plan's "split
+     manifest line" does not fit the manifest's meaning of a split
+     (several targets for one legacy path); the rest of `api.js` and
+     `apiHooks.ts` lands on the same targets with #2195.
+   - `apiHooks.test.tsx` and `api.test.ts` sit at the paths #2195's
+     port of `master`'s tests will use, and merge with them there.
+     The hook's wrapper is a named component returned in an object,
+     as the course-home hooks test builds it; lint requires a display
+     name.
+   - Left uncovered and named in the PR: `course-exit/utils.js` lines
+     83-116, `GetCourseExitNavigation` (#2196, entry 5), and the
+     `useMinimalCourseOutline` stub's function (#2195).
+     `CertificateStatus.jsx` is at 100% of lines and branches.
+   - Checks at this commit: lint passes; 37 suites, 412 passed, 7
+     skipped; 99.04% of lines against the 96.15 bar; `build` and
+     `build:ci` pass.
+   - Commit 1 is now `66ccbd91`, amended with `courseware/urls.ts`,
+     its test and the comment on `coursewareRole`.
