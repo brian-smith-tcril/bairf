@@ -596,10 +596,14 @@ in #2190's plan and are not repeated.
       above. The PR body names them beside `GetCourseExitNavigation`
       (83-116). Codecov's patch on #2246 will list both groups.
     - The PR body (`pr-body-2246.md`) has the Summary, What changed,
-      Known gaps and Testing sections, and no embedded decision log
-      yet. This log covers all three layers and names files and
-      branches that do not belong in a public body, so how it is
-      split and scrubbed across the three PRs is open with Brian.
+      Known gaps and Testing sections. Settled with Brian the same
+      day: each layer's PR embeds the decisions that apply to that
+      layer. This log covers all three layers and names files and
+      branches that do not belong in a public body, so the layer's
+      entries are rewritten as `decisions-2246.md` (ten entries, no
+      unpushed SHAs, no worktree files) and embedded whole in #2246's
+      body, which was read back equal to the file. This log stays the
+      working record.
     - #2190's body still describes one branch and no stack: the edit
       from the mirror was not permitted in this session and waits for
       Brian.
