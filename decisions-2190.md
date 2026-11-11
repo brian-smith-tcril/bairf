@@ -795,3 +795,42 @@ in #2190's plan and are not repeated.
     - In a normal run the slow cases take 0.5 s (right-to-left) and
       0.3 s (first page rule); the 5-second timeouts only appeared
       with three suites running at once.
+
+26. **The progress tab layer is two commits: the port, then tests for
+    `master`'s gaps; nine cases are dropped (settled with Brian
+    2026-11-11).** Follows entry 25.
+    - Brian's correction to entry 25's framing: "the only test of some
+      line or branch" and "what this PR introduces" are separate
+      axes. Of the 33 new cases: this PR's behaviour, 1 that is the
+      only test of some code and 4 that add no coverage; `master`'s
+      behaviour that `master` never tested, 19 that are the only test
+      of some code and 9 that add no coverage.
+    - Without the 19 the package is still at 98.31% of lines, but the
+      layer's patch, counted as Codecov counts it, is about 90% (21
+      lines missed and 24 partial of 468).
+    - Brian: tests of `master`'s behaviour belong in a separate layer
+      or at least a separate commit; a separate commit, since they
+      are about the tab this layer adds. The nine that add no
+      coverage are dropped: no Studio link for an administrator
+      without a URL or for a learner, the completion text for screen
+      readers, no dates link and no outline links without the tab, a
+      title without a link when its `url` is withheld, the two grade
+      bar anchor cases, the availability date in the browser time
+      zone.
+    - Commit 1, the port (`b41384b1`): as before, with `master`'s
+      cases adapted, the five cases about its own changes (page
+      rules, the dates and outline hrefs, the subsection href, the
+      dates link opening the dates tab, the credit help link from app
+      config) and, in `ProgressTabComponents.test.tsx`, the four
+      default-parameter cases. Checked alone: lint clean; 34 suites,
+      368 passed, 7 skipped; 98.31% of lines; `build:ci` passes.
+    - Commit 2, tests only (`6a8edf78`, `test:`): the 19 cases, the
+      right-to-left locale mock they need, `utils.test.ts`, and the
+      dividers and no-metadata cases of the components test. At the
+      layer's head: lint clean; 35 suites, 406 passed, 7 skipped;
+      100% of lines; `build` and `build:ci` pass.
+    - This layer is the second exception to "a layer is one commit"
+      (the entrance exam layer may also be more than one). Both are
+      squashed on merge.
+    - Unpushed. The entrance exam commit on `bsmith/progress-tab-wip`
+      is rebased onto the new head (`47740618`), not rechecked.
