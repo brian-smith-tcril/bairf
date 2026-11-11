@@ -342,3 +342,22 @@ in #2190's plan and are not repeated.
       `external_discussion`.
       So a course can list tabs no frontend app serves, and the list
       is open-ended.
+    - Findings 2026-11-11, same checkout, on whether the base of the
+      dates, progress and course tab URLs can differ by course (Brian
+      asked). It cannot. `get_learning_mfe_home_url` and
+      `make_learning_mfe_courseware_url`
+      (`openedx/features/course_experience/url_helpers.py`) read one
+      value, `configuration_helpers.get_value('LEARNING_MICROFRONTEND_URL',
+      settings.LEARNING_MICROFRONTEND_URL)`, and append
+      `/course/<course key>/...`. `get_value` reads the current site's
+      `SiteConfiguration` (`get_current_site_configuration`), so the
+      base can differ by the site the request is served on, never by
+      course or org; nothing in the path takes the course. What does
+      differ by course is which page a tab points at, through two
+      `CourseWaffleFlag`s: `progress` is the learning URL only when
+      `course_home_mfe_progress_tab_is_active(course.id)` (and never
+      for a deprecated course key), else the platform's Django
+      template `progress` view; `courseware` is
+      `<base>/course/<id>/home`, or the courseware URL
+      `<base>/course/<id>` when `DISABLE_COURSE_OUTLINE_PAGE_FLAG` is
+      on for the course. `dates` has no flag.
