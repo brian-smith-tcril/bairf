@@ -49,13 +49,17 @@ in #2190's plan and are not repeated.
      assumption has one home, a comment where the role is declared and
      a test against the route array. #2190's plan is amended (What
      moves, the subsection bullet, the tests, commit 1).
+     Amended 2026-11-11: the comment is gone (entry 10), and the
+     function is `getSequenceUrl(courseId, sequenceId)`, the sequence
+     form alone, with a throw in place of the `!` (entry 15).
 
 2. **The shared-modules commit (2026-11-10).** Made while porting:
    - `utils.test.ts` gets the `logClick` and `logVisit` cases and no
      `GetCourseExitNavigation` case (entry 1). Its lines are the
      package's only uncovered ones after this commit: the
      `course-exit` directory is at 54.76% of lines, the package at
-     97.53 against the 96.15 bar.
+     97.53 against the 96.15 bar. The four cases were kept on review,
+     with their org changed (entry 14).
    - The courseware stub is a hook type with two functions assigned to
      it, `(courseId, options?) => { data: undefined }`, not functions
      with unused parameters: the package's lint reports an unused
@@ -68,7 +72,8 @@ in #2190's plan and are not repeated.
      `microMastersLearnMore`, `microMastersMessage`, `upgradeButton`,
      `upgradeLink` and `viewGradesButton` had none on `master`. Each
      says where the course exit page shows the string; ids and default
-     messages are untouched.
+     messages are untouched. All eight were rewritten for translators
+     on review (entry 13).
    - `getCourseExitMode`'s two `indexOf` comparisons become `includes`,
      the autofix for `@typescript-eslint/prefer-includes`.
    - `links.test` is `links.test.tsx`, not the plan's `.jsx`: a new file
@@ -76,7 +81,9 @@ in #2190's plan and are not repeated.
    - The profile link drops one trailing slash from the role's URL
      before appending `/u/<username>`, as `ProfileLinkMenuItem` does
      (`shell/menus/ProfileLinkMenuItem.tsx` in openedx/frontend-base,
-     read in the installed `2.0.0-alpha.17`).
+     read in the installed `2.0.0-alpha.17`). Why Learning builds the
+     URL itself, and the comment naming openedx/frontend-base#349, are
+     entry 16.
    - The hooks return `resolveRouteByRole(role, { courseId })?.url`.
      The `?.` covers a site whose `apps` no longer carry Learning's
      routes, which cannot be the site running this code; no test feeds
@@ -126,6 +133,8 @@ in #2190's plan and are not repeated.
      forms against Learning's routes only. Nobody can reach the
      external case today: a site cannot point `coursewareRole` at an
      external route while Learning is installed.
+     Amended 2026-11-11: the function is `getSequenceUrl` and its test
+     asserts the one form it builds (entry 15).
 
 4. **On a target user's page the certificate card ignores the courseware
    metadata cache (settled with Brian 2026-11-10).** The plan stopped
@@ -278,8 +287,8 @@ in #2190's plan and are not repeated.
     route was weighed and dropped for the same reason: the code shows
     it. The facts stay pinned by tests: `src/app.test.ts` asserts the
     role resolves to the course's index route, and `urls.test.ts`
-    asserts the three forms match routes carrying the role. The
-    reasoning is entry 3. The comment comes out of commit 1, and the
+    asserts the three forms match routes carrying the role (the
+    sequence form only, since entry 15). The reasoning is entry 3. The comment comes out of commit 1, and the
     plan and #2190's body lose the clause naming it.
     Done 2026-11-11: the line is out of `src/constants.ts` and commit
     1's message no longer names it. The branch is now `fa0757c1`,
@@ -516,3 +525,32 @@ in #2190's plan and are not repeated.
     - Applied in commit 1. The branch is `75f7ba3b`, `f118985a`,
       `4874b699`; lint, the suite (37 suites, 411 passed, 7 skipped),
       `build` and `build:ci` pass at the tip.
+
+17. **Docs checked against the tip (2026-11-11, at Brian's request,
+    after his review of commit 1's code).** Read against the branch at
+    `75f7ba3b`, `f118985a`, `4874b699`: this log, `plan-2190.md`, the
+    body mirror, effort decisions 34 and 38, `TAG.md`, `UPSTREAM.md`,
+    the ticket and the three commit messages.
+    - Plan and body mirror: the Test changes section still said
+      `course-tabs/hooks.test.tsx` "ports as it is", against What
+      moves, which describes its changed first case and the absent-tab
+      case; the sentence now points there. Eight phrases named "the
+      LMS" and now name the thing: the course metadata response, the
+      `LEARNING_MICROFRONTEND_URL` setting, the `jump_to` view, the
+      progress serializer, the Django template progress page,
+      `master`'s dashboard and profile destinations. The platform repo
+      is cited as openedx/openedx-platform, its current name.
+    - This log: entries 1, 2, 3 and 10 gain a pointer to the later
+      entry that changed what they say (10, 13, 14, 15, 16).
+    - Effort decisions 34 and 38 gain an amendment each for entries 16
+      and 15.
+    - The three commit messages match the code and needed no change.
+      `TAG.md` lists every issue named here.
+    - Left as found: `UPSTREAM.md` has rows for slug-named body files
+      only; the files renamed to their issue number on filing
+      (`issue-body-2243.md`, `-2244.md`, `-frontend-base-348.md`, and
+      the older `-332.md`, `-333.md`, `-1905.md`) have none. Older
+      entries of the effort log and other issues' bodies that say "the
+      LMS" were not reworded.
+    - #2190's live body is behind the mirror by entries 15, 16 and
+      this one; the edit waits for Brian's word.

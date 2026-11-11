@@ -617,6 +617,14 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     does; when the site declares no route for the role the link renders
     nothing, as the shell does, with no LMS fallback. The two role strings
     live in Learning's `constants.ts`.
+    Amended 2026-11-11 (reviewing #2190's diff): Learning builds the
+    profile URL itself because the shell's `ProfileLinkMenuItem` is not
+    exported and the exported `LinkMenuItem` cannot carry the
+    `Hyperlink` props. The append exists because the profile page is a
+    route with a param and an external route ignores params
+    (openedx/frontend-base#349); the line carries that issue's URL and
+    is replaced by a role with a `username` param once it is resolved
+    (decisions-2190 entry 16).
 
 35. **Redirect-only routes port as route loaders.** A route whose only
     job is to send the learner elsewhere (the five children of the
@@ -737,6 +745,14 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     prefer a role is frontend-base's question and is left alone. The
     comment on `coursewareRole` named above is gone (decisions-2190
     entry 10).
+    Amended 2026-11-11 with Brian: the function is
+    `getSequenceUrl(courseId, sequenceId)`, the one form #2190 calls,
+    and it throws when no route provides the role. The optional ids
+    and the join that folded three forms into one function were hard
+    to read, and so was the `!` on `resolveRouteByRole`. The unit form
+    is added beside it in `courseware/urls.ts` with its first caller,
+    in #2196; the course form is the role's own URL (decisions-2190
+    entry 15).
 
 39. **A `master` bug the shell would turn into an inconsistency is fixed
     in the port, and the `master` issue points at the port.** Decided
