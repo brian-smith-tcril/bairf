@@ -35,7 +35,7 @@ An app cannot import `isClientRoute`, the check the course bar uses to tell whet
   };
   ```
 
-- The copy and the course bar agree only as long as neither changes. Learning's outline, dates and courseware pages have the same kind of link and will use the same copy.
+- The copy and the course bar agree only as long as neither changes.
 
 ## Question
 
