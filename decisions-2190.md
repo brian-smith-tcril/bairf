@@ -311,6 +311,10 @@ in #2190's plan and are not repeated.
       `courseware/urls.test.ts`. The case is named "returns the url of
       the tab's route for the course on the page": `master`'s "from
       the course metadata" no longer says where the URL comes from.
+      Folded into commit 1; the branch is now `bfb925df`, `ec231a2c`,
+      `fc690428`, differing from the previous tip in that file only.
+      Checks at the tip: lint passes; 37 suites, 412 passed, 7
+      skipped; 99.04% of lines; `build` and `build:ci` pass.
     - Findings 2026-11-11, openedx/openedx-platform at `d3a86602dc`,
       on what `tabs` in the `course_metadata` response can hold (Brian
       asked). `CourseHomeMetadataView` serializes
