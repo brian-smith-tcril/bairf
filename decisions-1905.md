@@ -718,6 +718,27 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     at all, since an external URL has no params to fill). `master`
     builds the same path inline in seven files; their ports call the
     function.
+    Amended 2026-11-11 with Brian, reviewing #2190's diff: the hooks do
+    not resolve roles. An in-page link to a tab does what the tab
+    itself does in the shell's course bar: it takes `tabs[].url` from
+    the course metadata, and when the URL's path is a route in this site
+    the link is a react-router `Link` to the path, otherwise an anchor
+    to the URL. The course bar's `CourseTabsNavigation` decides with
+    `isClientRoute(pathname)` (`shell/header/course-bar/utils.ts`: the
+    path matches, as a prefix, the route of a role some app provides
+    under `providesCourseBarRolesId`), which frontend-base does not
+    export. Learning carries a copy in `course-tabs/utils.ts`, built
+    from the exported `getProvidesAsStrings`, `providesCourseBarRolesId`
+    and `getUrlByRouteRole`, with a frontend-base issue asking for the
+    export. The hooks return the path or the URL and the readers keep
+    `getLinkProps`. This drops the tab-id-to-role table and the known
+    gap for these three links: no role is resolved, and where a tab
+    lives is the LMS's to say through its learning URL setting. The
+    subsection link's half of this decision stands: it is not a tab,
+    the response's `jump_to` URL is an LMS redirect and never a route in
+    this site, and `getCoursewareUrl` keeps the click in the client; the
+    known gap remains for `coursewareRole`. The comment on
+    `coursewareRole` named above is gone (decisions-2190 entry 10).
 
 39. **A `master` bug the shell would turn into an inconsistency is fixed
     in the port, and the `master` issue points at the port.** Decided
