@@ -151,3 +151,18 @@ in #2190's plan and are not repeated.
    - The plan, #2190's body mirror and #2244's body mirror are amended;
      the test seeds the requester's failing status and asserts the
      card as with the cache empty.
+
+5. **`GetCourseExitNavigation` gets no test in #2190 (settled with
+   Brian 2026-11-10).** `master` has no direct test of it:
+   `course-exit/utils.test.ts` covers `getCourseExitMode` only, and the
+   function runs through the suites of its two callers,
+   `SequenceNavigation.jsx` and `UnitNavigation.jsx`, which port with
+   #2196. That is decision 32's first case (lines `master` tests only
+   through a suite this PR does not port wait for that port). The
+   plan's case for it could not be written (entry 1), and a direct
+   test with the metadata query seeded, possible from the entrance
+   exam commit on, was weighed and not taken. The function is left as
+   on `master`, the PR names its lines with #2196, and the plan's test
+   bullet and Coverage section are amended. Codecov will likely list
+   the lines on the PR while its check passes; revisit if the report
+   looks bad.
