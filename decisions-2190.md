@@ -755,3 +755,43 @@ in #2190's plan and are not repeated.
       415 passed, 7 skipped; 100% of lines; `build` and `build:ci`
       pass. The entrance exam commit on `bsmith/progress-tab-wip` is
       rebased onto it, not rechecked.
+
+25. **What each new case of `ProgressTab.test.jsx` is the only test
+    of (measured 2026-11-11, at `24768643`; Brian asked whether
+    `master` really has no equivalents).**
+    - `master`'s progress tab has two test files, `ProgressTab.test.jsx`
+      (68 cases) and `hooks.test.jsx`. None of its cases asserts what
+      a new case asserts: it has no assertion on the Studio link, the
+      completion chart's text, any link's `href`, the grade bar's
+      label anchors or `CREDIT_HELP_LINK_URL`. Its own coverage (the
+      legacy tree's lcov of 2026-10-29) leaves 24 lines and about 45
+      branch lines of the tab's files unrun.
+    - Method: the nine suites that load the tab's code (the four in
+      `progress-tab/`, `routes.test.tsx`, `shared/`, `courseware/`)
+      were run 33 times with coverage, each time with one new case
+      left out by `-t` with a negative lookahead, and each lcov
+      compared with the full run's. Eleven runs made three at a time
+      had 5-second timeouts under the load (the right-to-left cases,
+      the first page-rule case, a `routes.test.tsx` case); rerun
+      alone they pass, and the alone runs are the ones compared.
+    - 20 cases are the only test of some line or branch: the Studio
+      link for an administrator; the chart's popovers, all-complete,
+      none-complete and thin locked segment; the dates link opening
+      the dates tab; practice scores; the eligibility and requirement
+      statuses; the four grade summary cases; the tooltip closing on
+      blur; four of the five certificate cases; both right-to-left
+      cases.
+    - 13 lose no line and no branch when left out. Four assert what
+      this PR introduces: the page rules (two tests), the dates and
+      outline hrefs, the subsection href, and the credit help link
+      read from the app config. Nine assert `master` behaviour that
+      `master` never asserted and other cases already run: no Studio
+      link for an administrator without a URL and for a learner; the
+      completion text for screen readers; no dates link and no
+      outline links without the tab; a title without a link when its
+      `url` is withheld; the two grade bar anchor cases; the
+      availability date in the browser time zone. Those nine are 87
+      of the block's 433 lines.
+    - In a normal run the slow cases take 0.5 s (right-to-left) and
+      0.3 s (first page rule); the 5-second timeouts only appeared
+      with three suites running at once.
