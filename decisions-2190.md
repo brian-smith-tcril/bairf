@@ -166,3 +166,38 @@ in #2190's plan and are not repeated.
    bullet and Coverage section are amended. Codecov will likely list
    the lines on the PR while its check passes; revisit if the report
    looks bad.
+
+6. **Standalone component tests: the defaults are tested, and
+   `CertificateStatus` keeps its `?? {}` (settled with Brian
+   2026-11-10).** `ProgressTabComponents.test.tsx` renders one
+   component alone.
+   - The four default parameters that replaced `defaultProps`
+     (`tooltipClassName` twice, `iconButtonClassName`,
+     `AssignmentTypeCell`'s `footnoteId` and `locked`) are left unset
+     by no caller, so only a standalone render takes them. They are
+     tested: an optional prop is the component's interface.
+   - `CertificateStatus`'s `?? {}` after
+     `useCourseHomeMeta(courseId, { enabled: false }).data` cannot run
+     on the page, since `TabPage` has loaded that query before the
+     card renders. Decision 32 of #2189 dropped the same default in
+     `Timeline` and `UpgradeToCompleteAlert` because it only moved a
+     throw. Here it changes the outcome: without the metadata
+     `isEnrolled` is `undefined`, `getCourseExitMode` returns
+     `disabled`, no card renders and the `visited` event carries
+     `certificate_status_disabled`; nothing throws after it, the next
+     read being the progress data. By decision 32's rule such a guard
+     keeps its line and gets a test that feeds it the input. Dropping
+     it was proposed first, on a wrong reading of decision 32.
+
+7. **Body corrections drafted for one PATCH (2026-11-10).** What the
+   port found that the plan did not say, now in the plan and the body
+   mirror: 40 files in `master`'s progress directory, 53 moving;
+   `links.test.tsx`; the three `index.scss` rules (entry 1); the
+   console fixes beyond the hover trigger (`defaultProps`, the
+   `GradeSummaryTable` effect, `NoticeRow`'s prop type, the `Popover`
+   id, the Paragon patterns); a Lint bullet (message descriptions,
+   `includes`, the `viewBox` on a `<g>`, which was a
+   `react/no-unknown-property` error and not console output, stale
+   `eslint-disable` comments); the completed fixtures,
+   `preventNavigation`, the `beforeAll` import of the tab's module;
+   the cases added for coverage.
