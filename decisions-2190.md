@@ -456,3 +456,28 @@ in #2190's plan and are not repeated.
     commit 1: the branch is `0e5e9c19`, `fbf6b905`, `80d4ac32`; lint,
     the suite (37 suites, 412 passed, 7 skipped; 99.04% of lines),
     `build` and `build:ci` pass at the tip.
+
+15. **`getSequenceUrl(courseId, sequenceId)` replaces `getCoursewareUrl`
+    (settled with Brian 2026-11-11; amends entry 1).** Brian found
+    `getCoursewareUrl(courseId, sequenceId?, unitId?)` hard to read:
+    the `[url, sequenceId, unitId].filter(Boolean).join('/')` join was
+    too clever and the `!` on `resolveRouteByRole` was the assertion
+    he had turned down in `course-tabs/hooks.ts`.
+    - The join existed only to fold three URL forms into one function
+      with optional ids. This PR calls one form (the subsection link,
+      a course id and a sequence id), so `courseware/urls.ts` ports
+      that form alone. The unit form (`UnitButton.tsx`,
+      `UnitLinkWrapper.tsx`, `JumpNavMenuItem.jsx`, the sequence
+      navigation's `hooks.js` on `master`) is added beside it, in the
+      same file, with its first caller in #2196. The file stays the
+      one home of the assumption that the role's URL is the base of
+      `/:sequenceId`.
+    - The `!` becomes a guard that throws `No route provides the role
+      <role>`. `resolveRouteByRole` returns `null` only when no route
+      provides the role, and the code runs under Learning's own route
+      array, which always carries it. Returning `undefined`, as the
+      tab hooks do, was weighed and not taken: the hooks' callers
+      already render nothing for an absent tab, while every caller
+      here (and each of #2196's) would need a no-URL branch for a case
+      that cannot occur. The guard's line is tested with the site
+      config's `apps` emptied.
