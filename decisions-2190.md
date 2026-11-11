@@ -376,10 +376,15 @@ in #2190's plan and are not repeated.
       shape of the existing `hasDiscussionTab`. The file ported with
       #2189 (merged as #2234), so this PR changes it; `utils.test.ts`
       follows.
-    - `course-tabs/hooks.ts`: `useTabs` is `master`'s again, a
-      `useRouteUrl(role)` helper resolves the role for the course on
-      the page, and each exported hook is two statements: the role's
-      URL, returned when the course has the tab.
+    - `course-tabs/hooks.ts`: `useTabs` is `master`'s again, and each
+      exported hook is a guard followed by the lookup:
+      `if (!hasDatesTab(useTabs())) { return undefined; }` then
+      `return getRouteUrl(courseDatesRole, courseId)`. `getRouteUrl` is
+      a plain function, so it runs after the guard. A first version
+      made the lookup a hook (`useRouteUrl`), which the rules of hooks
+      forced ahead of the check; Brian found that order hard to parse,
+      and turned down a variant with non-null assertions on the course
+      id and the resolved route.
     - Behaviour and `hooks.test.tsx` are unchanged.
     - Folded into commit 1, whose message names the change; the branch
       is now `e43ae7f7`, `9e22c399`, `f4931a4a`, differing from
