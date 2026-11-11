@@ -268,3 +268,16 @@ in #2190's plan and are not repeated.
      `build:ci` pass.
    - Commit 1 is now `66ccbd91`, amended with `courseware/urls.ts`,
      its test and the comment on `coursewareRole`.
+
+10. **`coursewareRole` carries no comment (settled with Brian
+    2026-11-11).** Commit 1 put `// Its URL is the base of /:sequenceId
+    and /:sequenceId/:unitId, which getCoursewareUrl appends.` above the
+    constant in `src/constants.ts`. It described `getCoursewareUrl` from
+    another file and restated what `src/courseware/urls.ts` shows. A
+    line in `urls.ts` saying `resolveRouteByRole` returns the index
+    route was weighed and dropped for the same reason: the code shows
+    it. The facts stay pinned by tests: `src/app.test.ts` asserts the
+    role resolves to the course's index route, and `urls.test.ts`
+    asserts the three forms match routes carrying the role. The
+    reasoning is entry 3. The comment comes out of commit 1, and the
+    plan and #2190's body lose the clause naming it.

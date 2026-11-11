@@ -66,7 +66,7 @@ Each file ports to the same relative path under `frontend-base/src/` and gets a 
 
 Three, in review order, squashed on merge:
 
-1. **Shared modules**: `shared/links.jsx` with `links.test.tsx` and the two role constants; `course-exit/utils.js`, `messages.ts`, `utils.test.ts`; `course-tabs/hooks.ts` and its test; the `courseware/data/apiHooks` stub; `courseware/urls.ts` with its test and the comment on `coursewareRole`; the three app config keys in `app.ts`'s `defaultConfig` and the test site's values for the two URLs; manifest lines. Nothing renders on a route yet.
+1. **Shared modules**: `shared/links.jsx` with `links.test.tsx` and the two role constants; `course-exit/utils.js`, `messages.ts`, `utils.test.ts`; `course-tabs/hooks.ts` and its test; the `courseware/data/apiHooks` stub; `courseware/urls.ts` with its test; the three app config keys in `app.ts`'s `defaultConfig` and the test site's values for the two URLs; manifest lines. Nothing renders on a route yet.
 2. **The progress tab**: `course-home/progress-tab/`, the seven placeholder slots and the dropped lines, the two routes replacing their stubs, the `@use` lines and the three `index.scss` rules, the console and lint fixes, the tests.
 3. **Entrance exam status on the progress tab**: the courseware metadata slice replacing the `useCoursewareMetadata` stub, `ProgressTab`'s fetch and gate with the `targetUserId` condition, the same condition on `CertificateStatus`'s read, their tests. Separate so the port (1 and 2) reads as faithful and the deviation reviews on its own.
 
