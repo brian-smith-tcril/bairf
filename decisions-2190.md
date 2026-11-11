@@ -398,3 +398,24 @@ in #2190's plan and are not repeated.
       `utils.test.ts` only. Checks at the tip: lint passes; 37 suites,
       412 passed, 7 skipped; 99.04% of lines; `build` and `build:ci`
       pass. #2190's body was PATCHed from the mirror first.
+
+13. **Message descriptions are written for translators (Brian,
+    2026-11-11).** `formatjs/enforce-description` requires a
+    description on every message; nine messages `master` leaves
+    without one got theirs in this PR (eight in
+    `course-exit/messages.ts`, `minimumGrade` in the progress tab's
+    `credit-information/messages.ts`). The first versions described
+    the code path that renders the string ("Heading shown to a learner
+    who reached the end of the course without a passing grade" for
+    "You’ve reached the end of the course!"), which says more than the
+    message does and is not what a translator needs. The rule: say
+    what kind of text it is and what it is for, at the level of the
+    descriptions `master` already has in the file ("Link to user’s
+    dashboard", "Button to view the course schedule"), and add context
+    only where it changes the translation, such as a fragment dropped
+    into another sentence.
+    - Approved and applied: `endOfCourseHeader`, `endOfCourseTitle`,
+      `microBachelorsLearnMore`, `microMastersLearnMore`,
+      `microMastersMessage`.
+    - Proposed, awaiting Brian's pass: `upgradeButton`, `upgradeLink`,
+      `viewGradesButton`, `minimumGrade`.
