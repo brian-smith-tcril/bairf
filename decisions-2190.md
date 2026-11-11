@@ -642,7 +642,16 @@ in #2190's plan and are not repeated.
       JSDoc on the function and a full signature in the cast were
       offered; Brian kept the cast for the test, the real fix being a
       port of `utils.js` to TypeScript, a bigger change than this PR.
-    - In the working tree of `bsmith/progress-shared-modules`, not
-      committed or pushed, until Brian has read them: lint clean; 31
-      suites, 297 passed, 1 skipped; 100% of lines; `build` and
-      `build:ci` pass.
+    - Amended into the layer's commit and pushed with `gh stack push`
+      on Brian's word (2026-11-11): #2246's head is `e1374ac0` (was
+      `75f7ba3b`), its commit message names the tests and the dropped
+      default, and its body and `decisions-2246.md` (entries 1, 6, 7
+      and 9) are updated and read back equal. Checks at the layer:
+      lint clean; 31 suites, 297 passed, 1 skipped; 100% of lines;
+      `build` and `build:ci` pass.
+    - `bsmith/progress-tab-wip` is rebased onto the amended commit:
+      `e1374ac0`, `44cdb593`, `8110b077`. Checks at its tip: lint
+      passes; 37 suites, 425 passed, 7 skipped; 100% of lines;
+      `build` and `build:ci` pass. The mock of the courseware hooks
+      in `utils.test.ts` holds once the entrance exam commit makes
+      `useCoursewareMetadata` real.
