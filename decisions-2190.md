@@ -417,7 +417,12 @@ in #2190's plan and are not repeated.
     - Approved and applied: `endOfCourseHeader`, `endOfCourseTitle`,
       `microBachelorsLearnMore`, `microMastersLearnMore`,
       `microMastersMessage`.
-    - Proposed, awaiting Brian's pass: `upgradeButton`, `upgradeLink`,
+    - `upgradeButton` ("Upgrade now") takes `master`'s own description
+      of the same string in `course-home/progress-tab/grades/messages.ts`,
+      "Text for button that redirects to the upgrade page"; the first
+      rewrite, "Button to upgrade in order to get a certificate", said
+      nothing clear.
+    - Proposed, awaiting Brian's pass: `upgradeLink`,
       `viewGradesButton`, `minimumGrade`.
     - With the five applied the branch is `0dd4b028`, `e2ecb97d`,
       `291e73b0`; lint, the suite (37 suites, 412 passed, 7 skipped),
