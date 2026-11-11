@@ -554,3 +554,29 @@ in #2190's plan and are not repeated.
     - #2190's live body was behind the mirror by entries 15, 16 and
       this one. Brian approved the edit; the body was updated from the
       mirror at 2026-11-11T18:46:41Z and read back equal to it.
+
+18. **#2190 goes up as a stack of three layers, bottom layer first
+    (settled with Brian 2026-11-11).** The plan had three commits on
+    one branch, squashed on merge, and no stack.
+    - Each commit becomes a layer with its own PR, off `frontend-base`:
+      `bsmith/progress-shared-modules`, `bsmith/progress-tab`,
+      `bsmith/progress-entrance-exam`. Squashing one PR would fold the
+      entrance exam fix into the port; as its own layer it lands as a
+      separate `fix:` commit, which is why it was a separate commit.
+      The shared modules hold the design questions of the review pass
+      (entries 10 to 16) in 16 files, ahead of the tab's 5,400 lines.
+    - The entrance exam layer may be more than one commit (Brian). The
+      house rule for a bug-fix layer, failing tests then the fix, is
+      decided when that layer is made.
+    - Only the bottom layer is created and submitted now, as a draft.
+      The other two are added when each is ready, so a stack push
+      cannot carry work that is not ready.
+    - Costs accepted: the bottom layer renders nothing and has no
+      manual pass; the lines waiting on #2196 and #2195 are a larger
+      share of its small patch on Codecov; each layer's checks run
+      alone.
+    - The local branch that held the three commits is kept as
+      `bsmith/progress-tab-wip`, the source the upper layers are made
+      from.
+    - The plan and body mirror are amended first (Layers, Coverage,
+      Stack, Manual testing, and which PR states what).
