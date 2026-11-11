@@ -429,9 +429,13 @@ in #2190's plan and are not repeated.
       sentence it ends, and the sentence's own message shows the
       `{upgradeLink}` placeholder. Applied without an explicit yes on
       the trimmed wording.
-    - Awaiting Brian: `minimumGrade`, proposed as "Name of the minimum
-      grade requirement for (course credit)"; "Label" in the earlier
-      versions named nothing.
+    - `minimumGrade` (commit 2): "The minimum grade requirement, in
+      the list of requirements for course credit". Brian accepted it
+      as better than the alternatives, not as good. "Label" and "Name"
+      in earlier versions did not say what the text is (the title of
+      one row in the requirements list), and the "(course credit)"
+      parentheses copied from neighbouring descriptions had no reason
+      anyone could give.
     - With the five applied the branch is `0dd4b028`, `e2ecb97d`,
       `291e73b0`; lint, the suite (37 suites, 412 passed, 7 skipped),
       `build` and `build:ci` pass at the tip.
