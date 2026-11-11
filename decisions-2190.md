@@ -481,3 +481,11 @@ in #2190's plan and are not repeated.
       here (and each of #2196's) would need a no-URL branch for a case
       that cannot occur. The guard's line is tested with the site
       config's `apps` emptied.
+    - Applied: `urls.ts` and `urls.test.ts` in commit 1 (two cases:
+      the route match, and the throw), the call in
+      `SubsectionTitleCell.jsx` in commit 2, both commit messages
+      reworded. The branch is `4cdccf9c`, `9babca15`, `f749a6a5`;
+      lint, the suite (37 suites, 411 passed, 7 skipped; 99.04% of
+      lines), `build` and `build:ci` pass at the tip. #2190's live
+      body still names `getCoursewareUrl` until Brian approves the
+      edit; the mirror is ahead of it.
