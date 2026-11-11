@@ -908,3 +908,13 @@ in #2190's plan and are not repeated.
       three divider cases and `CertificateStatus` without metadata.
     - Keeping the defaults and only fixing the tests was the
       alternative, not taken.
+    - Applied: the component edits in the port commit, the four cases
+      out of the coverage commit, both messages reworded. The layer is
+      `714af67d` (the port) and `8d8d8123` (the tests), unpushed. The
+      port alone: lint clean; 33 suites, 364 passed, 7 skipped; 98.31%
+      of lines; `build:ci` passes. At the head: lint clean; 35 suites,
+      402 passed, 7 skipped; 100% of lines, and the four components at
+      100% of branches; `build` and `build:ci` pass. The entrance exam
+      commit on `bsmith/progress-tab-wip` is rebased onto it, not
+      rechecked. #2190's body is behind the mirror on this and on
+      entry 29.
