@@ -7,17 +7,20 @@ target under `frontend-base/src/` or to `dropped`. Each script's `--help` prints
 ## Diffs
 
 A port commit adds files under `frontend-base/src/`, so `git show` presents each one as
-new. `port-diff` shows what the port changed: every file the commit added or changed under
-`frontend-base/src/`, as it stands at that commit, diffed against its legacy file on
-`master`.
+new. `port-diff` shows what the commit changed: every file it added or changed under
+`frontend-base/src/`, as it stands at that commit, diffed against the file its change is
+read from.
 
 ```sh
 git -C ../frontend-app-learning fetch upstream
 bin/port-diff <commit> -C ../frontend-app-learning -o dates.patch
 ```
 
-- The legacy file comes from the manifest line for the target, at that commit. A file with
-  no manifest line, such as a new test, shows as added.
+- A file the commit ports, meaning its manifest line is new in that commit, is diffed
+  against its legacy file on `master`. The patch names it `master/<path>`.
+- Any other file that already existed is diffed against the commit's parent, so the patch
+  holds only the commit's own change. The patch names it `parent/<path>`.
+- A file with neither, such as a new test, shows as added.
 - Files identical to their legacy file are left out of the patch and named on stderr.
 - A target merged from several legacy files stops the script, since there is no single
   file to diff against.
