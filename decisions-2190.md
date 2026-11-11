@@ -607,3 +607,42 @@ in #2190's plan and are not repeated.
     - #2190's body still describes one branch and no stack: the edit
       from the mirror was not permitted in this session and waits for
       Brian.
+
+20. **The bottom layer tests `getCourseExitMode` and
+    `GetCourseExitNavigation` itself (settled with Brian 2026-11-11;
+    reverses entry 5 for this layer).** Codecov on #2246: patch 77.38%
+    (65 of 84 lines), 19 lines missed, all in `course-exit/utils.js`
+    (7 of `getCourseExitMode`, 12 of `GetCourseExitNavigation`); the
+    project check also failed, 96.49% to 96.25%, since it fails on
+    any drop. Covering only the 7 would leave patch at 85.7% and
+    project at 96.36%, both still failing.
+    - Brian's read: a patch that low says the layer should carry its
+      own tests and not lean on a suite above it. The #2234 rule
+      (lines `master` tests through a later suite wait for that port)
+      was written when the later suite was another issue; with one
+      layer per PR it is the next PR of the same stack, and each PR
+      is judged alone.
+    - `utils.test.ts`: a table of nine direct cases for
+      `getCourseExitMode`, one changed input per case from a baseline
+      learner; five cases for `GetCourseExitNavigation` through
+      `renderHook`, with the two courseware hooks mocked
+      (`jest.mock('@src/courseware/data/apiHooks')`), since at this
+      layer they are stubs that return nothing and the function
+      throws without metadata. No case for a signed-out user.
+    - `GetCourseExitNavigation` loses the `?? {}` after
+      `useCoursewareMetadata(...).data`: without metadata the nested
+      destructure throws on the next line either way, the pattern
+      #2234 dropped from `Timeline`.
+    - The table calls the function through
+      `getCourseExitMode as (...inputs: unknown[]) => number`.
+      `utils.js` is untyped, and TypeScript reads its `= null`
+      defaults as null-only parameters, so `build:ci` rejected the
+      cases that pass `false` (jest does not type-check; the first
+      version shown to Brian had only been through lint and jest).
+      JSDoc on the function and a full signature in the cast were
+      offered; Brian kept the cast for the test, the real fix being a
+      port of `utils.js` to TypeScript, a bigger change than this PR.
+    - In the working tree of `bsmith/progress-shared-modules`, not
+      committed or pushed, until Brian has read them: lint clean; 31
+      suites, 297 passed, 1 skipped; 100% of lines; `build` and
+      `build:ci` pass.
