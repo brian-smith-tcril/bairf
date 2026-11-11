@@ -393,7 +393,7 @@ in #2190's plan and are not repeated.
       each, which read clearly and repeated themselves.
     - Behaviour and `hooks.test.tsx` are unchanged.
     - Folded into commit 1, whose message names the change; the branch
-      is now `2ec72e41`, `026a7c39`, `10a73f8c`, differing from
+      is now `7788a5ba`, `6df958a9`, `e21a28e8`, differing from
       `3431fdfd` in `course-tabs/hooks.ts`, `utils.ts` and
       `utils.test.ts` only. Checks at the tip: lint passes; 37 suites,
       412 passed, 7 skipped; 99.04% of lines; `build` and `build:ci`
