@@ -723,3 +723,9 @@ in #2190's plan and are not repeated.
       the other candidate: it would also drop the two lines added to
       the factory's second subsection, but it hides defaults in a
       factory other suites share, in a file Brian had just accepted.
+    - Amended into the local progress tab layer, now `1bc0a98b`
+      (was `2b8278ba`), unpushed. The file's diff against `master` went
+      from 36 hunks to 24. Checks at the layer: lint clean; 35 suites,
+      413 passed, 7 skipped; 100% of lines; `build` and `build:ci`
+      pass. The entrance exam commit on `bsmith/progress-tab-wip` is
+      rebased onto it, not rechecked.
