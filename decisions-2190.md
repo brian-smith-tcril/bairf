@@ -705,3 +705,21 @@ in #2190's plan and are not repeated.
       commit on `bsmith/progress-tab-wip` is rebased onto it
       (`f12cefd2`), not rechecked. #2190's live body waits for
       Brian's word on the one clause this changes.
+
+23. **`setTabData` completes the subsections a case writes out
+    (settled with Brian 2026-11-11).** The port had added
+    `problem_scores` to 13 inline subsections of `ProgressTab.test.jsx`
+    and `block_key` to five, since `SubsectionTitleCell` requires
+    both and a prop-type warning fails the suite. That was 12 of the
+    file's 36 hunks against `master`, one or two lines each, and what
+    made the diff read as huge to Brian.
+    - The helper now gives every subsection of the built tab data a
+      `block_key` and an empty `problem_scores` unless the case wrote
+      its own, and the inline fixtures are `master`'s again.
+    - The removed values matched each fixture's points
+      (`[{ earned: 8, possible: 10 }]`); the default is an empty list.
+      No case asserted on those drawer rows.
+    - Doing it in the factory, with a hook over every subsection, was
+      the other candidate: it would also drop the two lines added to
+      the factory's second subsection, but it hides defaults in a
+      factory other suites share, in a file Brian had just accepted.
