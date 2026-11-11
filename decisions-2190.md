@@ -834,3 +834,9 @@ in #2190's plan and are not repeated.
       squashed on merge.
     - Unpushed. The entrance exam commit on `bsmith/progress-tab-wip`
       is rebased onto the new head (`47740618`), not rechecked.
+
+27. **#2190's body updated (2026-11-11).** On Brian's word, from the
+    mirror at 2026-11-11T22:23:46Z, read back equal to it. It now carries entries 22
+    (the `Hyperlink`), 23 (`setTabData`), 24 (event cases stop the
+    navigation) and 26 (the layer's two commits and the tests'
+    two kinds).
