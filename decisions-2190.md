@@ -387,7 +387,7 @@ in #2190's plan and are not repeated.
       id and the resolved route.
     - Behaviour and `hooks.test.tsx` are unchanged.
     - Folded into commit 1, whose message names the change; the branch
-      is now `e43ae7f7`, `9e22c399`, `f4931a4a`, differing from
+      is now `2ec72e41`, `026a7c39`, `10a73f8c`, differing from
       `3431fdfd` in `course-tabs/hooks.ts`, `utils.ts` and
       `utils.test.ts` only. Checks at the tip: lint passes; 37 suites,
       412 passed, 7 skipped; 99.04% of lines; `build` and `build:ci`
