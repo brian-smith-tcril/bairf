@@ -302,8 +302,15 @@ in #2190's plan and are not repeated.
     bar. The committed hooks already do the first half, and the
     progress page links to no other tabs. Nothing was filed on
     frontend-base and openedx/frontend-base#348 stands as written.
-    - Still open: the hooks test's expected value is a typed-out path
-      built from a `segment` column, which Brian flagged.
+    - The hooks test no longer types the path out. Its first case
+      matched `/learning/course/${courseId}/${segment}`, with a
+      `segment` column that named nothing in the code under test; it
+      now matches the returned URL against the exported route array
+      and expects the matched route to carry the tab's role with
+      `{ courseId }` as its params, the pattern of
+      `courseware/urls.test.ts`. The case is named "returns the url of
+      the tab's route for the course on the page": `master`'s "from
+      the course metadata" no longer says where the URL comes from.
     - Findings 2026-11-11, openedx/openedx-platform at `d3a86602dc`,
       on what `tabs` in the `course_metadata` response can hold (Brian
       asked). `CourseHomeMetadataView` serializes
