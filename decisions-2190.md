@@ -496,8 +496,7 @@ in #2190's plan and are not repeated.
       reworded. The branch is `4cdccf9c`, `9babca15`, `f749a6a5`;
       lint, the suite (37 suites, 411 passed, 7 skipped; 99.04% of
       lines), `build` and `build:ci` pass at the tip. #2190's live
-      body still names `getCoursewareUrl` until Brian approves the
-      edit; the mirror is ahead of it.
+      body named `getCoursewareUrl` until the edit in entry 17.
 
 16. **`ProfileLink` builds the user's profile URL on its own line,
     under a comment naming openedx/frontend-base#349 (settled with
@@ -552,5 +551,6 @@ in #2190's plan and are not repeated.
       the older `-332.md`, `-333.md`, `-1905.md`) have none. Older
       entries of the effort log and other issues' bodies that say "the
       LMS" were not reworded.
-    - #2190's live body is behind the mirror by entries 15, 16 and
-      this one; the edit waits for Brian's word.
+    - #2190's live body was behind the mirror by entries 15, 16 and
+      this one. Brian approved the edit; the body was updated from the
+      mirror at 2026-11-11T18:46:41Z and read back equal to it.
