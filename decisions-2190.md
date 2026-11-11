@@ -694,3 +694,14 @@ in #2190's plan and are not repeated.
       the same anchor as `master` and leaves an absolute URL of
       another origin to the browser, read in 6.30.6); not taken, as
       a one-off in a tab of `Hyperlink`s.
+    - Amended into the local progress tab layer: `bsmith/progress-tab`
+      is `2b8278ba` (was `44cdb593`), unpushed, and its message names
+      the `Hyperlink`. `SubsectionTitleCell.jsx` is at 100% of lines
+      and branches; the layer's only partial line left is
+      `CertificateStatus.jsx` 108. Checks at the layer: lint clean;
+      35 suites, 413 passed, 7 skipped; 100% of lines; `build` and
+      `build:ci` pass (the import was then put back on one line, with
+      lint and the four progress suites rerun). The entrance exam
+      commit on `bsmith/progress-tab-wip` is rebased onto it
+      (`f12cefd2`), not rechecked. #2190's live body waits for
+      Brian's word on the one clause this changes.
