@@ -381,3 +381,9 @@ in #2190's plan and are not repeated.
       the page, and each exported hook is two statements: the role's
       URL, returned when the course has the tab.
     - Behaviour and `hooks.test.tsx` are unchanged.
+    - Folded into commit 1, whose message names the change; the branch
+      is now `e43ae7f7`, `9e22c399`, `f4931a4a`, differing from
+      `3431fdfd` in `course-tabs/hooks.ts`, `utils.ts` and
+      `utils.test.ts` only. Checks at the tip: lint passes; 37 suites,
+      412 passed, 7 skipped; 99.04% of lines; `build` and `build:ci`
+      pass. #2190's body was PATCHed from the mirror first.
