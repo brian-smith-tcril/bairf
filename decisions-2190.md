@@ -361,3 +361,23 @@ in #2190's plan and are not repeated.
       `<base>/course/<id>/home`, or the courseware URL
       `<base>/course/<id>` when `DISABLE_COURSE_OUTLINE_PAGE_FLAG` is
       on for the course. `dates` has no flag.
+
+12. **The course-tabs URL getters become presence checks (settled with
+    Brian 2026-11-11).** The committed `hooks.ts` replaced `master`'s
+    `useTabs` with `useTabUrl(getTabUrl, role)`, which called a URL
+    getter only to test its result (`!getTabUrl(tabs)`). Brian found
+    the shape confusing: for a hook such as `useProgressTabUrl` the URL
+    always comes from the role, the link is absent when the metadata
+    lists no such tab, and the metadata's URL is never read, so the
+    code should say that and not hide it behind a URL's truthiness.
+    - `course-tabs/utils.ts`: `getCourseOutlineUrl`, `getDatesTabUrl`
+      and `getProgressTabUrl`, whose only caller is `hooks.ts`, become
+      `hasCourseOutlineTab`, `hasDatesTab` and `hasProgressTab`, the
+      shape of the existing `hasDiscussionTab`. The file ported with
+      #2189 (merged as #2234), so this PR changes it; `utils.test.ts`
+      follows.
+    - `course-tabs/hooks.ts`: `useTabs` is `master`'s again, a
+      `useRouteUrl(role)` helper resolves the role for the course on
+      the page, and each exported hook is two statements: the role's
+      URL, returned when the course has the tab.
+    - Behaviour and `hooks.test.tsx` are unchanged.
