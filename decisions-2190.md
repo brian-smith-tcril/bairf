@@ -126,3 +126,28 @@ in #2190's plan and are not repeated.
      forms against Learning's routes only. Nobody can reach the
      external case today: a site cannot point `coursewareRole` at an
      external route while Learning is installed.
+
+4. **On a target user's page the certificate card ignores the courseware
+   metadata cache (settled with Brian 2026-11-10).** The plan stopped
+   `ProgressTab` fetching the query on `progress/:targetUserId` and left
+   `CertificateStatus.jsx` unchanged, which keeps the card's `null` only
+   while the cache is empty. It need not be: the query client is the
+   shell's, the key (`[appId, 'courseware', 'metadata', courseId]`)
+   names no user, and the requester's own progress page fills it with
+   this PR, a courseware page once #2195 lands. A staff member who
+   never sat the exam reports `false` for themselves (#2244), so
+   arriving at a learner's page without a page load would hide that
+   learner's card. Nothing in Learning links to
+   `progress/:targetUserId`; the arrival would be from another app on
+   the same site, not checked.
+   - The rule: the page behaves as its `enabled: false` read behaves
+     on a fresh load, which finds no data and passes `null`.
+     `CertificateStatus` reads `targetUserId` from the route and
+     passes `null` when it is set.
+   - The fetch and gate on the learner's own page are #2243's fix and
+     stay as planned; the two `targetUserId` conditions (`ProgressTab`,
+     `CertificateStatus`) are the workaround and each carries #2244's
+     URL, the issue whose backend change removes them.
+   - The plan, #2190's body mirror and #2244's body mirror are amended;
+     the test seeds the requester's failing status and asserts the
+     card as with the cache empty.

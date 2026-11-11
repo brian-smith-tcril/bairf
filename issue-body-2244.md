@@ -19,9 +19,9 @@ If the progress tab fetched the courseware metadata on this page as it does for 
 
 ## Frontend side
 
-- On `progress/:targetUserId` the progress tab does not run the courseware metadata query and does not gate on it; the card keeps passing `null`, the "no information" value `getCourseExitMode` already handles, so the page stays as it is today. The condition carries this issue's URL and says why: the endpoint cannot answer for the target.
+- On `progress/:targetUserId` the progress tab does not run the courseware metadata query, does not gate on it and does not read its cache, which the requester's own pages can fill with the requester's status; the card keeps passing `null`, the "no information" value `getCourseExitMode` already handles, so the page stays as it is on a fresh load today. The condition carries this issue's URL and says why: the endpoint cannot answer for the target.
 - The masquerade case needs nothing: with no target id, both endpoints apply the same masquerade and agree.
-- Tests: the target-user case asserts no courseware metadata request and the card as today.
+- Tests: the target-user case asserts no courseware metadata request and the card as today, with the query cache empty and with the requester's failing status in it.
 
 ## Backend side, a separate issue when picked up
 
@@ -29,7 +29,7 @@ The progress response adding `entrance_exam_passed` for the learner it already r
 
 ## Acceptance
 
-- [ ] On `progress/:targetUserId` the progress tab makes no courseware metadata request and the certificate card renders as today
+- [ ] On `progress/:targetUserId` the progress tab makes no courseware metadata request and the certificate card renders as today, whatever the query cache holds
 - [ ] The condition names this issue and the reason
 - [ ] The backend issue is filed and linked here before the frontend reads the status on this page
 
