@@ -771,3 +771,9 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     early to support it. #2243 and #2244 get a comment saying the fix is
     on `frontend-base`, linking the PR; no separate `master` PR, since the
     branch lands on `master` at the end of epic 1 (decision 2).
+    Amended 2026-11-12 (Brian): that last sentence framed it wrongly.
+    The branch landing on `master` does not fix the frontend-build and
+    frontend-platform version under `src/`; the fix is in the
+    frontend-base version only, and the other needs a backport if a fix
+    is wanted there. The two issues say so in their bodies, as a status
+    line, not in a comment.

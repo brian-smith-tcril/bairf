@@ -1,5 +1,7 @@
 The progress tab's certificate card takes the learner's entrance exam status into account, but it never has it: the card reads the courseware metadata from the query cache without fetching, and nothing on the progress page fetches it. A learner who has not passed the entrance exam sees the certificate card the course would show without an exam. This has been so since #1429 added the check. This issue is the learner viewing their own progress; staff viewing another learner's progress is #2244, since the endpoint cannot answer for that learner.
 
+**Status (2026-11-12):** #2249 fixes this in the frontend-base version of Learning, the package under `frontend-base/` on the `frontend-base` branch. The frontend-build and frontend-platform version under `src/` still has the bug. If a fix is wanted there, #2249's change needs to be backported to it.
+
 > [!NOTE]
 > This issue was written by Claude (Claude Code) and reviewed before posting.
 
@@ -19,7 +21,7 @@ The progress tab's certificate card takes the learner's entrance exam status int
 
 ## What a learner sees
 
-With the entrance exam not passed, the card renders as for a course without one: a non-passing learner sees the "not passing" card, an audit learner the upgrade card, and so on, where the intent since #1429 is no certificate card.
+With the entrance exam not passed, the card renders as for a course without one: a non-passing learner sees the "not passing" card, an audit learner the upgrade card, and so on. #1429 wired the status into the card, and with the status the card renders nothing. Neither #1429 nor #1415 says the progress tab was meant to change, so that intent is read from #1429's code.
 
 ## Fix
 

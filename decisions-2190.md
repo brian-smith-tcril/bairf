@@ -1329,3 +1329,18 @@ in #2190's plan and are not repeated.
       #2244 linking #2249, and whether #2243's sentence "the intent
       since #1429 is no certificate card" is corrected in its body.
     - CI on #2249 has not been read here; Brian watches CI.
+
+47. **#2243 and #2244 get a status line in their bodies, not a
+    comment (Brian, 2026-11-12).**
+    - My framing, "the fix reaches `master` when the branch lands; no
+      separate `master` PR", was wrong. #2249 fixes the frontend-base
+      version of Learning. The frontend-build and frontend-platform
+      version under `src/` keeps the bug whatever lands, and gets a
+      fix only by a backport, if one is wanted.
+    - Plan, #2190's mirror and decision 39 of `decisions-1905.md`
+      amended. Drafted in `issue-body-2243.md` and
+      `issue-body-2244.md`, which are ahead of the live bodies until
+      Brian says to apply them; #2190's live body also still carries
+      the old sentence.
+    - The #2243 draft also rewrites "the intent since #1429 is no
+      certificate card" (entry 44). Put to Brian as a separate hunk.

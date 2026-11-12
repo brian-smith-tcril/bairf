@@ -1,5 +1,7 @@
 When staff open a learner's progress page (`progress/:targetUserId`), the certificate card cannot learn that learner's entrance exam status: the only endpoint that reports it answers for the requester, honors a `username` override only for global staff, and wants a username the page learns only from the progress response. #2243 fixes the learner's own page; this one is the staff view, where the frontend has to leave the status unknown on purpose until the backend carries it in the progress response.
 
+**Status (2026-11-12):** #2249 does the frontend side below in the frontend-base version of Learning, the package under `frontend-base/` on the `frontend-base` branch. The frontend-build and frontend-platform version under `src/` needs it only if #2243's fix is backported there. The backend side is not started.
+
 > [!NOTE]
 > This issue was written by Claude (Claude Code) and reviewed before posting.
 
