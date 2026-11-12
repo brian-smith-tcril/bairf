@@ -1128,3 +1128,22 @@ in #2190's plan and are not repeated.
     (entry 22) was checked by editing a title's text in the page to
     be long: it wraps fine. The lock icon (entry 31) was checked by
     rendering, not in the app.
+
+39. **The progress tab layer is up as a draft: #2247 (2026-11-11).**
+    Submitted on Brian's word with `gh stack submit --auto --remote
+    upstream`: `bsmith/progress-tab` (`ca1189eb` the port, `42d7c7f0`
+    the tests) on top of #2246, which was already up to date. GitHub
+    shows the two PRs as stack #2248.
+    - The auto-generated title was the branch name; set to "refactor:
+      port the progress tab to frontend-base" in the same edit that
+      set the body from `pr-body-2247.md`, read back equal to it.
+    - The layer's public decision log is `decisions-2247.md` (19
+      entries), embedded whole in the body with the progress tab
+      layer's section of `manual-testing-2190.md`.
+    - Before the push: all four checks at the head and at the port
+      commit alone (entry 36), and the layer's patch counted from the
+      local lcov as Codecov counts it: 470 lines, none missed, one
+      partial (`CertificateStatus.jsx` line 108, the entrance exam
+      layer's).
+    - The entrance exam commit stays on `bsmith/progress-tab-wip`,
+      unpushed, for the top layer.

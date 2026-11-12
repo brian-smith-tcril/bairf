@@ -49,7 +49,7 @@ What was decided while building this layer; the scope and the import and config 
 <details>
 <summary>Full decision log</summary>
 
-# Decisions: the progress tab
+# Decisions: the progress tab (#2247)
 
 Decisions made while building this layer of #2190. The scope and the import and config
 mapping are in #2190's plan. The role links, the course-tabs hooks and `getSequenceUrl`
