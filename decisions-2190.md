@@ -1211,3 +1211,30 @@ in #2190's plan and are not repeated.
     - Open with Brian: the layer's commits. It is one `fix:` commit
       that also ports the courseware metadata slice; the house rule
       for a bug-fix layer is the failing tests, then the fix.
+
+42. **The entrance exam layer: one commit; what its two new test
+    files are the only test of (2026-11-11).**
+    - Brian: a single commit is fine for this layer, an exception to
+      the failing-tests-then-fix rule.
+    - Brian asked about `courseware/data/api.test.ts`, 84 lines and
+      wholly new. Its three cases: the request URL with the browser
+      time zone, the normalized shape, the clock offset from the
+      `Date` header.
+    - `master` has no unit test of `getCourseMetadata`. Its only
+      direct test is the "returns normalized course metadata" case of
+      `courseware/data/pact-tests/lmsPact.test.jsx`, whose `expect`
+      sits in a `setTimeout` the test does not wait for, on a promise
+      it does not await. `master`'s lcov still shows `api.js` and
+      `coursewareMeta.ts` fully run, through the courseware page
+      suites, which port with #2195 and #2196. The courseware Pact
+      test has no manifest line yet; #2234 dropped the course-home
+      one.
+    - Measured at the layer (`04ed607f`) by running the full suite
+      without each file: without `api.test.ts` no line or branch is
+      lost, since the progress page's entrance exam cases run the
+      request and the normalizer; without `apiHooks.test.tsx` one
+      branch is lost, `apiHooks.ts` line 22, the hook called with no
+      options, which no caller in this PR does (`master`'s
+      signature, kept for #2195's callers).
+    - Put to Brian: drop `api.test.ts` by the same reasoning as the
+      nine cases of entry 26, keep `apiHooks.test.tsx`. Open.
