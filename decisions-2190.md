@@ -1244,8 +1244,9 @@ in #2190's plan and are not repeated.
       `useSequenceIds` and `useIsCourseLoaded` cases, with no case of
       its own. Plan and mirror corrected, and the commit message's
       "master has no test of the metadata request, normalizer or
-      hook" with them. The live #2190 body carries the old sentence
-      until Brian says to update it.
+      hook" with them. Brian read the layer's code and said to
+      update the live #2190 body; it matches the mirror as of
+      2026-11-12T12:35:22Z.
     - Checks at `f51d72ec` (local): lint passes with no warning; 36
       suites, 412 passed, 7 skipped; 100% of lines; `build` and
       `build:ci` pass. Patch estimate from `lcov.info`: 17 lines,
