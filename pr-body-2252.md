@@ -17,6 +17,7 @@ Part of #1905. Resolves #2191. Stacked above #2251.
 - **The goal card clears `weekly_goal` through the router**, since frontend-base exports no `history`.
 - **Placeholder slots.** The section outline slot renders its default content; the tab notifications slot, which has none, renders nothing. Both wait for #2185. Their READMEs and images are dropped with the plugin-framework contract they document.
 - **Console and lint fixes in the components**, since the suite fails on console output: three components lose their `defaultProps`; `WelcomeMessage`'s ref prop type names `HTMLElement` where it named `HTMLInputElement` for a ref that is a button; the certificate alert and the course tools render an icon only when they have one; the `start_course` effect lists the values it reads; eleven messages gain a `description`.
+- **Branches no input can take are removed**, so that no added line is partly covered: nine `?? {}` fallbacks on query reads that only moved a throw; two `else if` in `ProctoringInfoPanel.jsx` that repeated the negation of the condition before them; the certificate alert's chain over its three awarded statuses, now a `switch`; and the guard around its button's action. No behavior changes (decision log entries 16 and 17).
 - **Styles.** `style.scss` loads the `DateSummary`, `FlagButton` and `ProctoringInfoPanel` partials and takes the one rule of `master`'s `index.scss` that styles this tab.
 - **Factories and packages.** The `outlineTabData`, `block` and `courseBlocks` factories port. `courseBlocks.factory.js` keeps two builders commented out until #2195, whose suites are their first callers. The package declares `truncate-html`, `lodash.camelcase` and the regular Font Awesome icons at `master`'s versions.
 - **The test render helpers put the authenticated user in the site context.** They mounted no `SiteContext` provider, so a component reading the context saw no user. The private course alert is the first ported code whose tested outcome depends on it.
@@ -33,10 +34,10 @@ Part of #1905. Resolves #2191. Stacked above #2251.
 
 At the layer's head and at the port commit alone, in `frontend-base/`: lint, the tests, `build` and `build:ci` pass. Lint ran with the package's `.jsx` files included (openedx/frontend-base#327).
 
-- **Head:** 41 suites, 543 tests passed and 11 skipped (the four this layer skips, named in decision log entry 13, and seven from earlier layers).
+- **Head:** 42 suites, 569 tests passed and 11 skipped (the four this layer skips, named in decision log entry 13, and seven from earlier layers).
 - **Port commit alone:** 41 suites, 525 passed, 11 skipped.
 
-**Coverage.** The package is at 100% of lines at the head, against its 96.15% bar, and at 98.4% at the port commit alone.
+**Coverage.** The package is at 100% of lines at the head, against its 96.15% bar, and at 98.4% at the port commit alone. Counted as codecov counts a patch, against #2251's head, the layer adds 526 lines with none missed and none partly covered.
 
 **Manual testing** on the package's dev site against tutor dev, with one enrolled learner in the demo course: the page and its styles in the shell, the console, a sequence title, the all-dates link, the welcome message frame, the narrow card header, and the progress tab's outline links. Not run in the app: the goal card's flags, and the handouts frame. The flags' image form was compared with `master`'s inline form in headless Chrome, outside the app: the screenshots are byte-identical. The record is below.
 
@@ -239,13 +240,78 @@ import and config mapping are in #2191's plan and are not repeated.
     defaults, which include a unit, and a sequence block built with
     its own URLs.
 
-16. **Checks (2026-11-12).** At the first commit: `npm run lint` clean,
+    More cases take the branches those lines left untaken, so that no
+    added line is partly covered: a date with a linked title and a
+    description, and a link that is not the upgrade deadline; a
+    completed sequence, a sequence without a URL, and dates with no
+    time zone set; an anonymous visitor and an enterprise learner; an
+    outline response without course goals, certificate data or an
+    enroll alert; a proctoring status the panel does not know; a
+    weekly goal changed, and the reminder switch while masquerading; a
+    frame message of another type; and the course blocks factory given
+    its sequences as one block, the side of its two helpers no caller
+    used.
+
+    `OutlineTabComponents.test.tsx` renders components alone in states
+    the route never gives them, as `ProgressTabComponents.test.tsx`
+    does for the progress tab: the certificate alert with a status it
+    does not know and with a time zone in its payload; its hook
+    without course metadata; the course end alert with a time zone;
+    the private course alert and the goal card without course
+    metadata; the handouts without an outline; and the frame without a
+    class name and under a page with and without a `dir` attribute.
+
+16. **A `?? {}` on a query read goes where it only moves a throw.**
+    `master` reads the outline and course metadata queries as
+    `.data ?? {}`. Where the same or the next statement destructures a
+    nested key or reads through the result, the code throws with the
+    fallback and throws without it, so the fallback has no outcome of
+    its own and no test can take its side. Nine go: both reads in
+    `OutlineTab.jsx`, the outline read in the certificate hook, the
+    course end and scheduled content hooks, `CourseDates`,
+    `StartOrResumeCourseCard`, `CourseTools` and `WelcomeMessage`.
+    Four stay, because they change what renders, each with a case that
+    renders the component alone: the certificate hook's metadata read
+    (no alert), `PrivateCourseAlert` (a welcome with no course title),
+    `CourseHandouts` (nothing) and `WeeklyLearningGoalCard` (it
+    renders).
+
+17. **Conditions that were always true where they stood are written
+    out.** Each is `master`'s, and each left a branch no input can
+    take. No behavior changes.
+    - `ProctoringInfoPanel.jsx`: `else if (!isNotYetReleased(releaseDate))`
+      and `else if (readableStatus !== …otherCourseApproved)` each
+      repeat the negation of the condition before them, and become
+      `else`.
+    - `CertificateStatusAlert.jsx`: `renderCertAwardedStatus` runs only
+      for the three awarded statuses, picked by the `switch` below it,
+      so the last `else if` of its chain was never false. The chain is
+      a `switch` over the same three statuses, which keeps each
+      status's name on its arm; it has no `default`, as the chain had
+      no final `else`.
+    - `CertificateStatusAlert.jsx`: the button's handler was
+      `if (buttonAction) { buttonAction(); }`. `buttonVisible` and
+      `buttonAction` are set only in this file, in the same four
+      objects, so every button it renders has an action; the handler
+      is `onClick={buttonAction}`. The progress tab's
+      `CertificateStatus.jsx` keeps its own guard, which it needs: its
+      button can render with a link and no action.
+
+18. **The certificate and course end alerts get no time zone, as on
+    `master`.** Their hooks read `userTimezone` from the outline data,
+    which has no such key; the course metadata carries it. The port
+    keeps the read. The two cases that reach the alerts' time zone
+    branch hand the component a payload.
+
+19. **Checks (2026-11-12).** At the first commit: `npm run lint` clean,
     with the package's `.jsx` files included
     (openedx/frontend-base#327); `npm test`, 41 suites, 525 passed, 11
-    skipped, lines 98.4. At the second: lint clean; 543 passed, 11
-    skipped; lines 100 for the package. `npm run build` and
-    `npm run build:ci` pass; `dist/` holds the three flag images, and
-    the CI build emits them and the `learning-outline` chunk.
+    skipped, lines 98.4. At the second: lint clean; 42 suites, 569
+    passed, 11 skipped; lines 100 for the package. Counted as codecov
+    counts a patch, against #2251's head: 526 added lines, none missed
+    and none partly covered. `npm run build` and `npm run build:ci`
+    pass at both; `dist/` holds the three flag images, and the CI
+    build emits them and the `learning-outline` chunk.
 
 </details>
 
