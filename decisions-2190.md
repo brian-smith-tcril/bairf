@@ -1236,5 +1236,5 @@ in #2190's plan and are not repeated.
       branch is lost, `apiHooks.ts` line 22, the hook called with no
       options, which no caller in this PR does (`master`'s
       signature, kept for #2195's callers).
-    - Put to Brian: drop `api.test.ts` by the same reasoning as the
-      nine cases of entry 26, keep `apiHooks.test.tsx`. Open.
+    - Brian: drop `api.test.ts`, by the same reasoning as the nine
+      cases of entry 26. `apiHooks.test.tsx` stays.
