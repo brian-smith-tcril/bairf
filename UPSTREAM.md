@@ -35,4 +35,4 @@
 | react-bootstrap-warnings | issue-body-react-bootstrap-warnings.md | openedx/paragon#4523 | settled |
 | external-route-params | issue-body-external-route-params.md | openedx/frontend-base#349 | settled |
 | helmet-strict-mode | issue-body-helmet-strict-mode.md | openedx/frontend-base#350 | settled |
-| outline-hidden-dates-tab | issue-body-outline-hidden-dates-tab.md | | unpublished |
+| outline-hidden-dates-tab | issue-body-2250.md | openedx/frontend-app-learning#2250 | settled |
