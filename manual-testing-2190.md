@@ -163,7 +163,7 @@ the second look fakes the two responses with a local patch.
 
 ### Two looks
 
-- [ ] **1. The request, for real** (no fakes) — open
+- [x] **1. The request, for real** (no fakes) — open
       `http://apps.local.openedx.io:2000/learning/course/course-v1:OpenedX+DemoX+DemoCourse/progress`
       with DevTools' Network panel filtered to `courseware`, and reload. There is one
       request to `/api/courseware/course/course-v1:OpenedX+DemoX+DemoCourse`, with a
@@ -174,7 +174,7 @@ the second look fakes the two responses with a local patch.
       when it fails; the suite answers it from a factory, so neither the real request
       nor the real response's field has been seen.
       *Please note:* the value of `entrance_exam_passed` you see.
-- [ ] **2. The card with the entrance exam not passed** (fakes applied) — reload the
+- [x] **2. The card with the entrance exam not passed** (fakes applied) — reload the
       same page: a "Certificate status" card shows, saying the ID verification is
       pending. Add `?exam=failed` to the URL and load it: the card is not there, and it
       does not flash in while the page loads. The rest of the page is unchanged.
@@ -182,7 +182,7 @@ the second look fakes the two responses with a local patch.
 
 ### Optional
 
-- [ ] **A staff view** (needs a staff session and a learner's user id; no fakes) —
+- [x] **A staff view** (needs a staff session and a learner's user id; no fakes) —
       `…/progress/<userId>` with Network filtered to `courseware`: no request to
       `/api/courseware/course/`. The suite asserts this; this only adds the real route.
 
@@ -215,3 +215,21 @@ disabled or without a course id.
 
 Everything in the progress tab layer's section. The courseware pages that also read this
 query port with #2195 and #2196.
+
+### Results
+
+**2026-11-12, Brian, on the dev site, on `bsmith/progress-entrance-exam` at `f51d72ec`,**
+with `local-fake-entrance-exam.patch` applied for the whole pass and taken out afterwards.
+
+- Brian ticked both looks and the optional staff view.
+- Look 1 ran with the fakes applied. The Network panel shows the response as it arrived,
+  before the patch edits it, so the request and the field are the real ones; the page
+  itself already carried the faked certificate data.
+- Look 2: during the pass Brian quoted the card as "Certificate status — In order to
+  qualify for a certificate, you must have a passing grade", the "not passing" card, not
+  the "ID verification is pending" card the step names. With the faked `unverified`
+  certificate either card can show, depending on the course home metadata's
+  `can_view_certificate`; the step's wording was a guess at which.
+- Not recorded: the value of `entrance_exam_passed` in the real response (look 1's
+  "please note"), and whether the "not passing" card is what showed at the plain URL in
+  look 2. Asked of Brian.
