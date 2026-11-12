@@ -26,7 +26,18 @@ Read from the code at the linked commits; not reproduced in a browser.
      } = useModel('outline', courseId);
   ```
 
-- **The certificate status alert has a second fault.** It spreads the format arguments onto its `FormattedMessage`, which has no `timeZone` prop, and the two `FormattedDate` elements inside the message get none ([`CertificateStatusAlert.jsx`](https://github.com/openedx/frontend-app-learning/blob/363bc1e43a1c62199c35f0bf5d83fcd1a8fdf90a/src/course-home/outline-tab/alerts/certificate-status-alert/CertificateStatusAlert.jsx#L61-L75)). With a time zone in its payload, the alert would still format both dates in the browser's time zone.
+- **The certificate status alert has a second fault.** It spreads the format arguments onto its `FormattedMessage`, which has no `timeZone` prop, and the two `FormattedDate` elements inside the message get none ([`CertificateStatusAlert.jsx`](https://github.com/openedx/frontend-app-learning/blob/363bc1e43a1c62199c35f0bf5d83fcd1a8fdf90a/src/course-home/outline-tab/alerts/certificate-status-alert/CertificateStatusAlert.jsx#L61-L75)). With a time zone in its payload, the alert would still format both dates in the browser's time zone. The spread has been there since #477 added the alert, so its dates have never used the preference.
+
+## Timeline
+
+| When | Change | Course end alert | Certificate status alert |
+|---|---|---|---|
+| 2020-08-03 | #146 (`314b82d0`) adds the course end alert; its hook reads `datesWidget.userTimezone` from the outline model | working | not there yet |
+| 2021-06-10 | #477 (`fab2da45`) adds the certificate status alert; its hook reads `datesWidget.userTimezone` too, and the component spreads the time zone onto its `FormattedMessage` | working | hook right, dates never get the time zone |
+| 2021-09-03 | #606 (`70e2aa02`) moves the tab's time zone reads to the course metadata; in these two hooks it takes `userTimezone` out of the `datesWidget` nesting and leaves the read on the outline model | **broken from here** | hook broken too |
+| 2026-09-22 | #2093 (`218c9dfb`), part of the Redux to React Query migration, swaps `useModel('outline', courseId)` for `useOutlineTabData(courseId, { enabled: false }).data` | broken, same read | broken, same read |
+
+The outline model had no top-level `userTimezone` after #606: the store snapshot at that commit carries it only under `courseHomeMeta`, and #606 removed `user_timezone` from the outline test factory.
 
 ## Where it shows
 
