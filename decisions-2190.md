@@ -1184,5 +1184,7 @@ in #2190's plan and are not repeated.
       18) and the manual record name the new head; the body was read
       back equal to its file. The entrance exam commit on
       `bsmith/progress-tab-wip` is rebased onto it (`3b8d94c5`).
-    - #2190's body is one sentence behind the mirror (the components
-      test's contents).
+    - #2190's body was one sentence behind the mirror (the components
+      test's contents); updated on Brian's word at 2026-11-12T02:56:17Z and
+      read back equal to it. That edit also carried the lean Manual
+      testing section of entry 36.
