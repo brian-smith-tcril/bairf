@@ -1160,3 +1160,29 @@ in #2190's plan and are not repeated.
       commit on `bsmith/progress-tab-wip` had four such lines and is
       fixed and rebased (`b0722475`). The manual record and #2247's
       body name the new id.
+
+40. **#2247's one partial line gets a case in the layer (settled
+    with Brian 2026-11-11).** Codecov's report on #2247: patch
+    99.81%, 0 missing and 1 partial, `CertificateStatus.jsx`; the
+    line is 108, whose false side needs a learner who has not passed
+    the entrance exam. Brian: even with the check passing, the
+    comment still reads as a failure ("Patch coverage is 99.81025%
+    with 1 line in your changes missing coverage. Please review.").
+    - `ProgressTabComponents.test.tsx` mocks the courseware hooks
+      module for the file, as #2246's `GetCourseExitNavigation` test
+      does, with a `beforeEach` that returns no data as the stub
+      does. The new case sets `entranceExamPassed: false` with an
+      `unverified` certificate status and expects no card and a
+      `visited` event carrying `unverified`, which tells it from the
+      no-metadata case's `certificate_status_disabled`.
+    - The layer's patch counted from the local lcov: 470 lines, none
+      missed, none partial. Lint clean; 35 suites, 403 passed, 7
+      skipped; `build:ci` passes; `build` not rerun for a test file.
+    - Amended into the tests commit and pushed with `gh stack push`:
+      #2247's head is `bf89cde5` (was `3b75d41f`), both authors
+      credited. #2247's body, `decisions-2247.md` (entries 17 and
+      18) and the manual record name the new head; the body was read
+      back equal to its file. The entrance exam commit on
+      `bsmith/progress-tab-wip` is rebased onto it (`3b8d94c5`).
+    - #2190's body is one sentence behind the mirror (the components
+      test's contents).
