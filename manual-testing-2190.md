@@ -37,7 +37,7 @@ as the enrolled learner and stay on it.
       passing-grade marker.
       *Why here:* the route now loads the real page; `style.scss` gains the chart and
       grade bar partials and the three rules copied from `master`'s `index.scss`.
-- [ ] **2. The console** — open DevTools, Console, reload. No errors or warnings
+- [x] **2. The console** — open DevTools, Console, reload. No errors or warnings
       from Learning's code. One warning is expected and is not Learning's:
       `findDOMNode is deprecated in StrictMode`, with `RefHolder` and react-bootstrap's
       `OverlayTrigger` in its stack. react-bootstrap raises it for an overlay trigger
@@ -45,15 +45,15 @@ as the enrolled learner and stay on it.
       openedx/paragon#3425 tracks it, and `master`, which also renders in `StrictMode`,
       has the same components.
       *Why here:* the port fixes the warnings `master` raises on this page.
-- [ ] **3. Two tooltips** — hover the info icon beside "Grade summary", and the one
+- [x] **3. Two tooltips** — hover the info icon beside "Grade summary", and the one
       in the grade summary table's footer row. Each shows its tooltip.
       *Why here:* both lose their `trigger="hover"` for the default.
-- [ ] **4. The dates link** — under "Related links", click "Dates". The dates tab
+- [x] **4. The dates link** — under "Related links", click "Dates". The dates tab
       opens without the page reloading (the header does not flash; with Network filtered
       to **Doc**, no new entry). Go back.
       *Why here:* the in-page links are route links now; on `master` they are full page
       loads.
-- [ ] **5. Subsection titles and the outline link** — in "Detailed grades", the
+- [x] **5. Subsection titles and the outline link** — in "Detailed grades", the
       subsection titles read as small muted links, and a long title that wraps still
       looks right. Click one: it lands on the placeholder "courseware: not yet ported"
       with that subsection's id. Go back. Click "Course outline" in the sentence above the
@@ -62,7 +62,7 @@ as the enrolled learner and stay on it.
 
 ### Only if it costs you nothing
 
-- [ ] **A staff view** (needs a staff session and a learner's user id) —
+- [x] **A staff view** (needs a staff session and a learner's user id) —
       `…/progress/<userId>` shows "Course progress for <that learner>". The suite covers
       the heading and the request; this only adds the real route.
 
@@ -102,7 +102,13 @@ entrance exam status is the next layer's section.
 
 ### Results
 
-**2026-11-11, Brian, on the dev site.** In progress.
+**2026-11-11, Brian, on the dev site, `bsmith/progress-tab` at `42d7c7f0`.**
+
+- Brian ticked steps 2, 3, 4 and 5 and the optional staff view. Step 1, the page and its
+  styles, is not ticked; whether it was not looked at or something looked off has not
+  been said yet.
+- Not recorded for step 5: whether the demo course has a subsection title long enough to
+  wrap.
 
 - Step 2: Brian saved the console of the progress page to a log; it holds 31 distinct
   entries, each once. None comes from the progress tab's own code, and none is a warning
