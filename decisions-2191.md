@@ -225,3 +225,23 @@ its PR.
    - Checks after it: lint clean; 42 suites, 568 passed, 11 skipped;
      lines 100; patch 526 lines, none missed, 2 partial (the factory's
      11 and 17). Those two still await Brian.
+   - **The factory's single-block side, Brian's ruling (2026-11-12):**
+     "test case for factory thing seems fine". One case in
+     `OutlineTab.test.jsx`'s "Section" group builds `courseBlocks` with
+     `sequences` given as one block, which sends it through `getIds`
+     (the section's children) and `getBlocks` (the block map), and
+     asserts the sequence shows as a link under its section. No source
+     change.
+   - Checks after it: lint clean; 42 suites, 569 passed, 11 skipped;
+     lines 100; **patch 526 lines, none missed, none partial**.
+   - **The time zone finding becomes an issue off the epic** (Brian:
+     "sounds like it should be an off-epic issue"). Drafted as
+     `issue-body-outline-alerts-timezone.md`, `unpublished` in
+     `UPSTREAM.md`. Confirmed on upstream `master` (`363bc1e4`): #606
+     (`70e2aa02`, 2021) took `userTimezone` out of the `datesWidget`
+     nesting in both hooks and left the read on the outline data, the
+     change #2148 describes for the sequence due dates and #2149 fixed
+     there. The certificate status alert also spreads the format
+     arguments onto its `FormattedMessage`, not its two
+     `FormattedDate` elements. #2148's unobserved statement that the
+     course end alert shows the preference's zone is wrong.
