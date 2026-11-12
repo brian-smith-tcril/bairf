@@ -101,6 +101,15 @@ before the layer is submitted.
    throws when no route provides the courseware role, runs only for
    a title that shows a link. No other file of the two outline
    layers has an assertion the port added.
+7b. **Where the lint fixer removed a directive, the line goes with
+   it.** The package's lint removes an `eslint-disable` comment for a
+   rule it does not report. It left an empty line in its place in
+   `ProctoringInfoPanel.jsx`, `WeeklyLearningGoalCard.jsx` and
+   `courseBlocks.factory.js`, and, for the JSX comment in
+   `StartOrResumeCourseCard.jsx`, an empty expression container,
+   `{ }`, which Brian caught. All four are deleted, so each reads as
+   `master`'s file minus the comment line. The directives `master`
+   carries for rules the package does report are kept.
 8. **`courseBlocks.factory.js` ports with two builders commented out
    (Brian).** The outline suite uses `buildMinimalCourseBlocks` only;
    `buildSimpleCourseBlocks` and `buildBinaryCourseBlocks` are used by
