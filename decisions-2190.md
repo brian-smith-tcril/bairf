@@ -960,8 +960,8 @@ in #2190's plan and are not repeated.
       `focus` in the trigger the tooltips open on hover only.
     - Settled with Brian: the prop is dropped in both files, so each
       differs from `master` by its import and one deleted line.
-      Folded into the port commit; the layer is `8cb4a5e2` (the port) and
-      `6df27180` (the tests), unpushed. At the head: lint clean; 35
+      Folded into the port commit; the layer is `6687544f` (the port) and
+      `a2788b99` (the tests), unpushed. At the head: lint clean; 35
       suites, 402 passed, 7 skipped; 100% of lines; `build` and
       `build:ci` pass. The port commit alone was not rerun for this
       one-line change. The entrance exam commit on
