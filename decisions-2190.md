@@ -1147,3 +1147,16 @@ in #2190's plan and are not repeated.
       layer's).
     - The entrance exam commit stays on `bsmith/progress-tab-wip`,
       unpushed, for the top layer.
+    - Amended 2026-11-11: GitHub did not credit the co-author on the
+      tests commit (Brian noticed). Its message ended with three
+      blank lines after the `Co-Authored-By` trailer, where the two
+      commits GitHub did credit end with the trailer. Cause: the
+      commit had been rebuilt several times with `git commit-tree -F
+      <(git log -1 --format=%B …)`; `git log` adds a newline and
+      `commit-tree` stores the message as given. Rewritten with `git
+      commit --amend -F`, which strips them: the tests commit is
+      `3b75d41f` (was `42d7c7f0`), same tree, pushed with `gh stack
+      push`, and GitHub now lists both authors. The entrance exam
+      commit on `bsmith/progress-tab-wip` had four such lines and is
+      fixed and rebased (`b0722475`). The manual record and #2247's
+      body name the new id.
