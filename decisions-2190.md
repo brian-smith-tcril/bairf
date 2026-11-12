@@ -1025,3 +1025,14 @@ in #2190's plan and are not repeated.
       Lint clean; 35 suites, 402 passed, 7 skipped; 100% of lines.
       Builds not rerun (a test setup change). The entrance exam
       commit on `bsmith/progress-tab-wip` is rebased onto it.
+
+35. **#2190's body updated; Brian has been through the progress tab
+    layer's code (2026-11-11).** On Brian's word ("all the code looks
+    good now"), from the mirror at 2026-11-12T01:47:40Z, read back equal to it. It now
+    carries entries 29 (the components test in the coverage commit),
+    30 (no defaults on the four components), 32 (the `trigger` prop
+    dropped), 33 (`GradeSummaryTable`) and 34 (`PopoverContent`
+    under paragon#3043). The layer is `ca1189eb` (the port) and
+    `42d7c7f0` (the tests), local and unpushed; still to do before it
+    is submitted: the full checks once more at its head and at the
+    port commit alone, the manual pass on Tutor dev, and its PR body.
