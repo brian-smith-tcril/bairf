@@ -832,3 +832,28 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     the entrance exam), and that `master` behavior is
     openedx/frontend-app-learning#2250, filed without a status line
     until the outline layer's PR exists.
+
+42. **A red `codecov/project` on a layer just rebased onto
+    `frontend-base` can be an upload race; re-running the layer's two
+    test workflows clears it.** Seen on
+    openedx/frontend-app-learning#2249 (2026-11-12) after #2247 merged
+    and upstream rebased the layer onto `frontend-base` (`5443cd53`).
+    The push runs on `5443cd53` and the pull request runs on the
+    layer's head (`bea109b5`) started three seconds apart (20:12:58Z
+    and 20:13:01Z). Codecov last made its comparison at 20:16:59Z; the
+    base's `frontend-base` workflow had uploaded the package's report
+    (done 20:15:40Z) and the base's `validate` coverage job, which
+    uploads the legacy report, had not started (20:17:08Z to
+    20:17:15Z). So the base report held the package alone and the head
+    held both uploads: base 107 files, 1,349 lines, 99.55%; head 478
+    files, 7,386 lines, 96.79%; reported as a 2.77 point drop, with
+    `codecov/patch` passing.
+    - The sign to look for is the file counts in the Codecov comment's
+      "Coverage Diff" table: a base of about a hundred files against a
+      head of several hundred.
+    - Brian re-ran `validate` and `frontend-base` on #2249 (attempt 2,
+      done 21:15:32Z and 21:13:37Z). Codecov compared again at
+      21:14:44Z: base 475 files, 7,368 lines, 96.78%; head 478 files,
+      7,386 lines, 96.79%; `codecov/project` passes.
+    - #2251 and #2252 did not show it: each one's base is the head of
+      the layer below, not the `frontend-base` commit.

@@ -120,3 +120,9 @@ layer below.
     everything after it run as they are. The patch gives the progress response an
     `unverified` certificate, not a `requesting` one, whose card has a button that
     posts a certificate request.
+
+12. **The red `codecov/project` after the rebase onto `frontend-base` was an upload race,
+    not a drop (2026-11-12).** Codecov compared the head against a base report that held
+    only the package's upload. Brian re-ran the two test workflows and the check passes,
+    96.78% to 96.79%. The timings and the sign to look for are entry 42 of
+    `decisions-1905.md`.
