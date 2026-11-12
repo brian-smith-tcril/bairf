@@ -996,3 +996,10 @@ in #2190's plan and are not repeated.
       four warnings; 35 suites, 402 passed, 7 skipped; 100% of lines;
       `build` and `build:ci` pass. The entrance exam commit on
       `bsmith/progress-tab-wip` is rebased onto it, not rechecked.
+    - Amended the same day (Brian): the four unused
+      `eslint-disable-line react/prop-types` comments go after all; a
+      lint run without warnings is preferred to those four lines
+      matching `master`. The layer is `97b8e84c` (the port) and `020fdb45`
+      (the tests), unpushed; lint is clean again, and the four
+      progress suites pass (a comment-only change, so the full suite
+      and builds were not rerun).
