@@ -52,14 +52,16 @@ as the enrolled learner.
       *Needs:* a course with at least one date, so the widget shows.
 - [ ] **5. The goal card's flags** — each of the three goal buttons shows its flag
       (outline, half grey, black), and selecting one gives it the selected border.
-      *Needs:* weekly learning goals on for the course (the `course_goals.goals_and_streaks`
-      waffle flag, or whatever the instance uses); skip and say so if it is off.
+      *Needs:* weekly learning goals on for the course: the outline view sets
+      `weekly_learning_goal_enabled` when `ENABLE_COURSE_GOALS` is enabled for the course
+      (`lms/djangoapps/course_home_api/outline/views.py`). Skip and say so if it is off.
       *Why here:* the flags are `<img>` elements now; the button styles come from
       `FlagButton.scss` through `style.scss`.
 - [ ] **6. The handouts and welcome message frames** — each frame shows its text with
       links coloured and, in the welcome message, underlined; the handouts text is
       smaller than the page's.
-      *Needs:* a course update and a handout, added in Studio under Content, Updates.
+      *Needs:* a course update and a handout for the course, added in Studio; the record
+      names the page and controls as they read when it is done.
       *Why here:* the three rules are inline in the frame document where `master` linked
       a stylesheet file.
 - [ ] **7. The narrow card header** — at a window under 576 pixels wide, the start or
