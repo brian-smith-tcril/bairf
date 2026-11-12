@@ -11,7 +11,7 @@
 | outline-tab | issue-body-outline-tab.md | openedx/frontend-app-learning#2191 | settled |
 | access-denied | issue-body-access-denied.md | openedx/frontend-app-learning#2192 | settled |
 | header-title-widget | issue-body-header-title-widget.md | openedx/frontend-app-learning#2193 | settled |
-| order-history | issue-body-order-history.md | openedx/frontend-base#324 | in-review |
+| order-history | issue-body-order-history.md | openedx/frontend-base#324 | settled |
 | instructor-toolbar | issue-body-instructor-toolbar.md | openedx/frontend-app-learning#2194 | settled |
 | courseware-container | issue-body-courseware-container.md | openedx/frontend-app-learning#2195 | settled |
 | courseware-sequence-unit | issue-body-courseware-sequence-unit.md | openedx/frontend-app-learning#2196 | settled |
