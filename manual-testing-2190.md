@@ -31,14 +31,19 @@ The same as for the dates tab; nothing new.
 Open `http://apps.local.openedx.io:2000/learning/course/course-v1:OpenedX+DemoX+DemoCourse/progress`
 as the enrolled learner and stay on it.
 
-- [ ] **1. The page and its styles** — the progress page renders inside the shell
+- [x] **1. The page and its styles** — the progress page renders inside the shell
       with the Progress tab selected. The cards have a soft shadow and no border. The
       completion chart is a ring with a percentage in the middle. The grade bar has its
       passing-grade marker.
       *Why here:* the route now loads the real page; `style.scss` gains the chart and
       grade bar partials and the three rules copied from `master`'s `index.scss`.
 - [ ] **2. The console** — open DevTools, Console, reload. No errors or warnings
-      from Learning's code.
+      from Learning's code. One warning is expected and is not Learning's:
+      `findDOMNode is deprecated in StrictMode`, with `RefHolder` and react-bootstrap's
+      `OverlayTrigger` in its stack. react-bootstrap raises it for an overlay trigger
+      whose child is a plain element, here the chart's and grade bar's `<rect>` anchors;
+      openedx/paragon#3425 tracks it, and `master`, which also renders in `StrictMode`,
+      has the same components.
       *Why here:* the port fixes the warnings `master` raises on this page.
 - [ ] **3. Two tooltips** — hover the info icon beside "Grade summary", and the one
       in the grade summary table's footer row. Each shows its tooltip.
@@ -97,7 +102,13 @@ entrance exam status is the next layer's section.
 
 ### Results
 
-Not run yet.
+**2026-11-11, Brian, on the dev site.** In progress.
+
+- Step 2: the console shows `Warning: findDOMNode is deprecated in StrictMode. findDOMNode
+  was passed an instance of RefHolder which is inside StrictMode.`, with the stack `rect`,
+  `RefHolder` and `OverlayTrigger` (react-bootstrap), `OverlayTrigger` (Paragon). That is
+  the expected third-party warning named in the step. Whether the console showed anything
+  else has not been reported yet.
 
 ## The entrance exam layer
 
