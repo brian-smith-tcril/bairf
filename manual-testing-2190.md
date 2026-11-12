@@ -138,4 +138,80 @@ message rewritten; no component changed since.
 
 ## The entrance exam layer
 
-Written when that layer is made.
+The layer makes the progress page wait for one more request, `GET /api/courseware/course/<id>`,
+and hides the certificate card when that response says the entrance exam is not passed.
+The suite fakes the request, so what needs eyes is the real request in the real app, and
+the card going away once in a real browser. A course with an entrance exam is not needed:
+the second look fakes the two responses with a local patch.
+
+### Setup
+
+- The dev site as for the progress tab layer, on `bsmith/progress-entrance-exam`
+  (`f51d72ec`, local).
+- The same enrolled learner and the demo course.
+- For look 2 only, the fakes: from the repository root,
+  `git apply ../bairf-learning-frontend-base/local-fake-entrance-exam.patch`, and
+  `git apply -R` with the same path when done. The patch is never committed. It changes
+  two request functions:
+  - `getProgressTabData`: the response's `certificate_data` becomes
+    `{ cert_status: 'unverified' }` and `verification_data.status` becomes `'pending'`, so
+    a certificate card with no button shows.
+  - `getCourseMetadata`: the response's `entrance_exam_data.entrance_exam_passed` becomes
+    `false`, only when the page URL has `?exam=failed`.
+
+  The same two edits as browser overrides on the two responses do the same job.
+
+### Two looks
+
+- [ ] **1. The request, for real** (no fakes) — open
+      `http://apps.local.openedx.io:2000/learning/course/course-v1:OpenedX+DemoX+DemoCourse/progress`
+      with DevTools' Network panel filtered to `courseware`, and reload. There is one
+      request to `/api/courseware/course/course-v1:OpenedX+DemoX+DemoCourse`, with a
+      `browser_timezone` parameter and status 200. Its response has
+      `entrance_exam_data.entrance_exam_passed`, and the value is `true` or `false`. The
+      page renders as it did on the progress tab layer.
+      *Why here:* the page now waits for this request and shows the tab's error view
+      when it fails; the suite answers it from a factory, so neither the real request
+      nor the real response's field has been seen.
+      *Please note:* the value of `entrance_exam_passed` you see.
+- [ ] **2. The card with the entrance exam not passed** (fakes applied) — reload the
+      same page: a "Certificate status" card shows, saying the ID verification is
+      pending. Add `?exam=failed` to the URL and load it: the card is not there, and it
+      does not flash in while the page loads. The rest of the page is unchanged.
+      *Why here:* this is the layer's one visible change, and it has only run in jsdom.
+
+### Optional
+
+- [ ] **A staff view** (needs a staff session and a learner's user id; no fakes) —
+      `…/progress/<userId>` with Network filtered to `courseware`: no request to
+      `/api/courseware/course/`. The suite asserts this; this only adds the real route.
+
+### Checked outside the app
+
+- **Lint, tests and both builds** at `f51d72ec`, 2026-11-11: all pass. 36 suites, 412
+  passed, 7 skipped, 100% of lines.
+- **The fakes** — with the patch applied, the suite's "Entrance exam status" cases were
+  run twice, 2026-11-12. With the test page's URL as it is, "shows the certificate card
+  to a learner who has passed the entrance exam" passes, and the visited event carries
+  `certificate_status_variant: 'unverified'`: the faked card renders, with no console
+  output. With the URL set to `http://localhost/?exam=failed`, the same case fails
+  with the card not found: the switch hides it. The patch was then taken back out; it
+  has not been run in a browser.
+
+### Left to the suite
+
+`ProgressTab.test.jsx`, "Entrance exam status":
+
+- No card, and one visited event, for a learner who has not passed the entrance exam.
+- The card for a learner who has passed it.
+- One courseware metadata request on the learner's own page; none on another learner's.
+- Another learner's card shows when the requester's own page left a not-passed status in
+  the query cache.
+
+`courseware/data/apiHooks.test.tsx`: the hook fetches once, and requests nothing when
+disabled or without a course id.
+
+### Not this layer
+
+Everything in the progress tab layer's section. The courseware pages that also read this
+query port with #2195 and #2196.

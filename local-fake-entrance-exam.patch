@@ -1,0 +1,28 @@
+diff --git a/frontend-base/src/course-home/data/api.ts b/frontend-base/src/course-home/data/api.ts
+index 06302270..ae6fa19b 100644
+--- a/frontend-base/src/course-home/data/api.ts
++++ b/frontend-base/src/course-home/data/api.ts
+@@ -203,6 +203,9 @@ export async function getProgressTabData(courseId: string, targetUserId?: string
+ 
+   try {
+     const { data } = await getAuthenticatedHttpClient().get(url);
++    // Manual pass fake, never committed: a certificate card with no button.
++    data.certificate_data = { cert_status: 'unverified' };
++    data.verification_data = { ...data.verification_data, status: 'pending' };
+     const camelCasedData = camelCaseObject(data);
+ 
+     // We replace gradingPolicy.gradeRange with the original data to preserve the intended casing for the grade.
+diff --git a/frontend-base/src/courseware/data/api.js b/frontend-base/src/courseware/data/api.js
+index 5345526e..746039c5 100644
+--- a/frontend-base/src/courseware/data/api.js
++++ b/frontend-base/src/courseware/data/api.js
+@@ -6,5 +6,9 @@ export async function getCourseMetadata(courseId) {
+   let url = `${getSiteConfig().lmsBaseUrl}/api/courseware/course/${courseId}`;
+   url = appendBrowserTimezoneToUrl(url);
+   const metadata = await getAuthenticatedHttpClient().get(url);
++  // Manual pass fake, never committed: the entrance exam reads as not passed when the page URL has ?exam=failed.
++  if (window.location.search.includes('exam=failed')) {
++    metadata.data.entrance_exam_data.entrance_exam_passed = false;
++  }
+   return normalizeCoursewareMeta(metadata);
+ }
