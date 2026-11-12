@@ -1003,3 +1003,25 @@ in #2190's plan and are not repeated.
       (the tests), unpushed; lint is clean again, and the four
       progress suites pass (a comment-only change, so the full suite
       and builds were not rerun).
+
+34. **`PopoverContent`'s `defaultProps` warning is silenced under
+    openedx/paragon#3043, not #4523 (2026-11-11).** Brian asked why
+    the setup file has two patterns under two issues. #3043 tracks
+    `defaultProps` on Paragon's own function components; #4523 tracks
+    the same warning from react-bootstrap 1.x components Paragon
+    wraps, which Paragon cannot fix in place.
+    - Checked where each silenced component's `defaultProps` is set,
+      in the installed packages: `Overlay` and `OverlayTrigger` in
+      react-bootstrap (`cjs/Overlay.js`, `cjs/OverlayTrigger.js`);
+      the seven `Collapsible` and `DataTable` names in Paragon's
+      `src/`; `PopoverContent` in Paragon's `src/Popover/index.jsx`
+      too, on its own wrapper function, while react-bootstrap's
+      `PopoverContent` sets none.
+    - The port had added `PopoverContent` to the #4523 pattern. It is
+      moved to the #3043 pattern, so the #4523 line is again as #2234
+      left it and this layer's change to `setupTest.js` is one added
+      pattern. The port commit's message cites #3043 only.
+    - The layer is `ca1189eb` (the port) and `42d7c7f0` (the tests), unpushed.
+      Lint clean; 35 suites, 402 passed, 7 skipped; 100% of lines.
+      Builds not rerun (a test setup change). The entrance exam
+      commit on `bsmith/progress-tab-wip` is rebased onto it.
