@@ -104,11 +104,29 @@ entrance exam status is the next layer's section.
 
 **2026-11-11, Brian, on the dev site.** In progress.
 
-- Step 2: the console shows `Warning: findDOMNode is deprecated in StrictMode. findDOMNode
-  was passed an instance of RefHolder which is inside StrictMode.`, with the stack `rect`,
-  `RefHolder` and `OverlayTrigger` (react-bootstrap), `OverlayTrigger` (Paragon). That is
-  the expected third-party warning named in the step. Whether the console showed anything
-  else has not been reported yet.
+- Step 2: Brian saved the console of the progress page to a log; it holds 31 distinct
+  entries, each once. None comes from the progress tab's own code, and none is a warning
+  the port fixed (no failed prop type, no "Cannot update a component while rendering", no
+  hover-only trigger warning, no `defaultProps` warning naming a Learning component).
+  By source:
+  - The browser and the dev tooling: five `Error with Permissions-Policy header:
+    Unrecognized feature` lines, webpack-dev-server's and HMR's start-up lines, the React
+    DevTools hint.
+  - frontend-base: `userId 4`, printed by its `NewRelicLoggingService`; React Router's
+    `v7_startTransition` future-flag warning (openedx/frontend-base#325); `defaultProps`
+    warnings for `Nav`, `Navbar`, `NavbarToggle`, `NavbarCollapse`, `NavItem` and
+    `NavLink`, from the shell header's `PrimaryNavLinks`.
+  - Paragon and react-bootstrap, under the page's components: `defaultProps` warnings for
+    `OverlayTrigger` and `Overlay` (openedx/paragon#4523) and for `PopoverContent`,
+    `DataTable`, `DataTableLayout`, `Table`, `TableFooter`, `CollapsibleTrigger`,
+    `CollapsibleVisible` and `CollapsibleBody` (openedx/paragon#3043), the same names the
+    test setup silences; three `findDOMNode` warnings from react-bootstrap's overlay and
+    its transition (openedx/paragon#3425), one of them the `RefHolder` one with `rect` in
+    its stack.
+  - react-helmet: `Using UNSAFE_componentWillMount in strict mode … SideEffect(NullComponent)`.
+    Learning renders `Helmet` in `Main.tsx` and `tab-page/LoadedTabPage.tsx`, both from
+    earlier layers, and `master`'s `LoadedTabPage` does too. Not this layer's, and tracked
+    nowhere that was found.
 
 ## The entrance exam layer
 
