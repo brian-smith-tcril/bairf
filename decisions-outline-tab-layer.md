@@ -168,6 +168,12 @@ before the layer is submitted.
   clean. With the coverage cases: 543 passed, 11 skipped; lines 100 for
   the package; lint clean; `build` and `build:ci` pass, the CI build
   emitting the three flag images and the `learning-outline` chunk.
-- Waiting on Brian: reading the diff; #2191's live body (the `dropped`
+- Brian read the port's diff (2026-11-12) and took it, after the
+  changes recorded above: the effect's dependencies, the welcome
+  message descriptions, the guard in `SequenceTitle.tsx`, the lint
+  fixer's leftovers. That diff includes the `SiteContext` provider
+  in the test helpers and the commented-out factory builders. He is
+  reading the coverage cases' diff next.
+- Waiting on Brian: the coverage cases' diff; #2191's live body (the `dropped`
   line for the stylesheet); the manual pass, drafted in
   `manual-testing-2191.md`.
