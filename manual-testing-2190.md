@@ -230,6 +230,7 @@ with `local-fake-entrance-exam.patch` applied for the whole pass and taken out a
   the "ID verification is pending" card the step names. With the faked `unverified`
   certificate either card can show, depending on the course home metadata's
   `can_view_certificate`; the step's wording was a guess at which.
-- Not recorded: the value of `entrance_exam_passed` in the real response (look 1's
-  "please note"), and whether the "not passing" card is what showed at the plain URL in
-  look 2. Asked of Brian.
+- Look 1: `entrance_exam_passed` was `true` in the real response (Brian, asked
+  afterwards). The demo course has no entrance exam.
+- Look 2: the "not passing" card is what showed at the plain URL (Brian, asked
+  afterwards), and it was gone with `?exam=failed`.
