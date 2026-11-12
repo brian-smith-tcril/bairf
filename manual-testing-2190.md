@@ -1,7 +1,7 @@
 # Manual testing — the progress tab (#2190)
 
 One section per layer of the stack. A layer's section asks only for what that layer changes
-and a test cannot see, and says what each look costs.
+and a test cannot see, and says what each step needs beyond the page itself.
 
 ## Shared modules (#2246)
 
@@ -26,29 +26,29 @@ The same as for the dates tab; nothing new.
 - One user: a learner enrolled in the demo course, `course-v1:OpenedX+DemoX+DemoCourse`.
   No grades, staff user, faked responses or config edits are needed.
 
-### One page, five looks (about five minutes)
+### One page, five looks
 
 Open `http://apps.local.openedx.io:2000/learning/course/course-v1:OpenedX+DemoX+DemoCourse/progress`
 as the enrolled learner and stay on it.
 
-- [ ] **1. The page and its styles** (1 min) — the progress page renders inside the shell
+- [ ] **1. The page and its styles** — the progress page renders inside the shell
       with the Progress tab selected. The cards have a soft shadow and no border. The
       completion chart is a ring with a percentage in the middle. The grade bar has its
       passing-grade marker.
       *Why here:* the route now loads the real page; `style.scss` gains the chart and
       grade bar partials and the three rules copied from `master`'s `index.scss`.
-- [ ] **2. The console** (15 s) — open DevTools, Console, reload. No errors or warnings
+- [ ] **2. The console** — open DevTools, Console, reload. No errors or warnings
       from Learning's code.
       *Why here:* the port fixes the warnings `master` raises on this page.
-- [ ] **3. Two tooltips** (15 s) — hover the info icon beside "Grade summary", and the one
+- [ ] **3. Two tooltips** — hover the info icon beside "Grade summary", and the one
       in the grade summary table's footer row. Each shows its tooltip.
       *Why here:* both lose their `trigger="hover"` for the default.
-- [ ] **4. The dates link** (30 s) — under "Related links", click "Dates". The dates tab
+- [ ] **4. The dates link** — under "Related links", click "Dates". The dates tab
       opens without the page reloading (the header does not flash; with Network filtered
       to **Doc**, no new entry). Go back.
       *Why here:* the in-page links are route links now; on `master` they are full page
       loads.
-- [ ] **5. Subsection titles and the outline link** (1 min) — in "Detailed grades", the
+- [ ] **5. Subsection titles and the outline link** — in "Detailed grades", the
       subsection titles read as small muted links, and a long title that wraps still
       looks right. Click one: it lands on the placeholder "courseware: not yet ported"
       with that subsection's id. Go back. Click "Course outline" in the sentence above the
@@ -57,7 +57,7 @@ as the enrolled learner and stay on it.
 
 ### Only if it costs you nothing
 
-- [ ] **A staff view** (1 min, needs a staff session and a learner's user id) —
+- [ ] **A staff view** (needs a staff session and a learner's user id) —
       `…/progress/<userId>` shows "Course progress for <that learner>". The suite covers
       the heading and the request; this only adds the real route.
 

@@ -1038,13 +1038,13 @@ in #2190's plan and are not repeated.
     port commit alone, the manual pass on Tutor dev, and its PR body.
 
 36. **The manual pass asks only for what a layer changes and a test
-    cannot see, with a cost on each step (Brian, 2026-11-11).** Brian:
+    cannot see (Brian, 2026-11-11).** Brian:
     earlier manual testing docs had him retest things the layer did
     not touch and took no account of the time and effort of each
     test.
     - `manual-testing-2190.md` has one section per layer. The
-      progress tab layer's is one page and five looks, about five
-      minutes, with one enrolled learner in the demo course and no
+      progress tab layer's is one page and five looks, with one
+      enrolled learner in the demo course and no
       faked responses, staff user or config edit: the page and its
       styles, the console, the two tooltips, the dates link, the
       subsection titles and the outline link. A staff view is
@@ -1068,3 +1068,7 @@ in #2190's plan and are not repeated.
     - Tutor dev and the dev site were not running when checked
       (`local.openedx.io:8000` and `apps.local.openedx.io:2000` did
       not answer), so nothing was looked at in the app itself.
+    - Amended the same day (Brian): no time estimates on the steps or
+      the pass; he does not trust them. A step says what it needs
+      beyond the page (a staff session, a user id), not how long it
+      takes.
