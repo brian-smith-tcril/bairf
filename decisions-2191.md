@@ -63,3 +63,35 @@ its PR.
      the three lower branches kept their tips. #2251's body was set
      again from `pr-body-2251.md` and matches it; `decisions-2251.md`
      carries the change as entry 9.
+
+4. **The outline tab layer is up as a draft: #2252 (2026-11-12).**
+   Built on `bsmith/outline-tab`, added to the stack above
+   `bsmith/outline-shared-modules`. The working notes of the build are
+   `notes-outline-tab-layer.md`; the PR's decision log is
+   `decisions-2252.md`.
+   - Settled with Brian on the way: the two unused builders of
+     `courseBlocks.factory.js` commented out until #2195; the handouts
+     stylesheet `dropped` in the manifest (the posted plan gave it a
+     line pointing at the component, which stops `port-diff`); the
+     `start_course` effect's dependencies added, no suppression; the
+     welcome message descriptions in Learning's words, not "course
+     update"; no `!` in `SequenceTitle.tsx`; the lines the lint fixer
+     left behind deleted, one of them a bare `{ }` he caught; the card
+     footer line left as `master` has it; `HTMLElement` for the welcome
+     message's ref, after reading #1580's history.
+   - Brian read both diffs in the viewer, the port and the coverage
+     cases, served from two commit objects built off the working tree,
+     and took them. The two commits, `c2315c2d` and `2a1a017b`, hold
+     exactly those trees.
+   - `gh stack submit --auto --remote upstream` pushed the branch and
+     opened #2252 on #2251's branch; GitHub's stack #2248 holds #2246,
+     #2247, #2249, #2251 and #2252. The four lower branches were not
+     moved. The body was set from `pr-body-2252.md` in one edit and
+     matches it; the commits' authors on GitHub are Brian and Claude.
+   - Not done, each waits for Brian's word: #2191's live body (the
+     `dropped` line; the mirror is one sentence ahead); #2250's status
+     line naming #2252; the manual pass, which Brian runs on the draft
+     (`manual-testing-2191.md`, embedded in the PR body with every box
+     unticked).
+   - CI on #2252 has not been read here; Brian watches CI.
+
