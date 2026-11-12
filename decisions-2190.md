@@ -966,3 +966,33 @@ in #2190's plan and are not repeated.
       `build:ci` pass. The port commit alone was not rerun for this
       one-line change. The entrance exam commit on
       `bsmith/progress-tab-wip` is rebased onto it, not rechecked.
+
+33. **`GradeSummaryTable` changes only where it set the parent's
+    state; `master`'s lint comments stay (settled with Brian
+    2026-11-11).** The port had turned the helper into a pure
+    function, rediscovered its answer from the rows
+    (`gradeSummaryData.some(({ type }) => type.locked)`) and removed
+    four `// eslint-disable-line react/prop-types` comments. Brian
+    could not see where the logic had gone, and read the result as a
+    partial cleanup: either clean the whole file or make the minimal
+    change.
+    - Minimal change taken. `master`'s helper keeps its shape; the
+      line that called `setAllOfSomeAssignmentTypeIsLocked(true)`
+      during render sets a local `let` instead, and an effect after
+      the rows are built passes it to the parent. The component
+      already fills its `footnotes` list the same way.
+    - Checked first: with `master`'s component, `master`'s own case
+      "renders limited feature preview with upgrade button when user
+      has access to some content that would typically be locked"
+      fails on React's "Cannot update a component (`GradeSummary`)
+      while rendering a different component (`GradeSummaryTable`)".
+      The render-time setter dates from #561 (2021-07-27).
+    - The four comments are back as on `master`. The package's lint
+      reports them as unused directives, four warnings, with exit 0.
+      Only `utils.ts`'s `import/prefer-default-export` comment has to
+      go: that rule is unknown to the package's lint, an error.
+    - Folded into the port commit; the layer is `3b75f249` (the port) and
+      `ee53188a` (the tests), unpushed. At the head: lint passes with those
+      four warnings; 35 suites, 402 passed, 7 skipped; 100% of lines;
+      `build` and `build:ci` pass. The entrance exam commit on
+      `bsmith/progress-tab-wip` is rebased onto it, not rechecked.
