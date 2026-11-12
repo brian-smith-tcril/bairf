@@ -57,5 +57,9 @@ its PR.
      `GetCourseExitNavigation`.
    - On the working tree with both changes: the directory is at 100% of
      branches; lint clean; 39 suites, 433 passed, 7 skipped; `build`
-     and `build:ci` pass. Not yet amended into the layer's commit or
-     pushed; that waits for Brian's word.
+     and `build:ci` pass. Brian: amend and push. The commit was amended to
+     `47f5333b` (its message gains the sentence about the dropped
+     default) and `gh stack push --remote upstream` updated the branch;
+     the three lower branches kept their tips. #2251's body was set
+     again from `pr-body-2251.md` and matches it; `decisions-2251.md`
+     carries the change as entry 9.
