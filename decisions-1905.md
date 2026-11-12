@@ -795,3 +795,40 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     the import form: an `.svg` imported as `ReactComponent` becomes the
     default URL import in an `<img>`, since frontend-base removed
     `@svgr/webpack`; the flags and `unsubscribe.svg` are the cases.
+
+41. **The handouts iframe's stylesheet goes inline, and that is not a
+    breaking change.** Decided 2026-11-12 with Brian, planning #2191.
+    `LmsHtmlFragment.jsx` links `<BASE_URL>/static/LmsHtmlFragment.css`,
+    which `master`'s `webpack.prod.config.js` copies out of
+    `public/static/`. Under frontend-base nothing serves a package's file
+    at the site's base URL, its webpack gives every `.css` import to the
+    stylesheet rule (the host page, not the iframe's document), has no
+    rule returning a file's text, and its jest config maps `.css` to
+    `identity-obj-proxy`; so the file cannot be kept, as a link or as
+    inlined text. The three rules are written into the component in a
+    `<style>` element where the `<link>` stood. Weighed and left: a
+    module of their own exporting the rules as a string (Brian: whoever
+    changed the file has to think again either way, so straight inline);
+    a frontend-base issue asking for a way to import a file's text (not
+    filed). Brian's hesitation was whether operators replace the file
+    and whether theming still works:
+    - Theming of the iframe's content is `LEGACY_THEME_NAME`
+      (openedx/frontend-app-learning#785: "When we will use
+      `LEGACY_THEME_NAME` we will be able to use theme legacy styles for
+      the iframe content"), which selects the `lms-main.css` linked
+      before the three rules; a `<style>` element in the `<link>`'s
+      place has the same position and specificity.
+    - No public replacement was found: GitHub code search for files
+      named `LmsHtmlFragment.css` gives 17 repositories, all copies of
+      frontend-app-learning, the 16 that are not upstream holding
+      upstream's blob `9f3869df`; mitodl/ol-infrastructure's nginx
+      template names the file only to set cache headers.
+    - Replacing the file in a fork or an image is not part of Learning's
+      API (Brian), so the port's PR does not call the change breaking.
+    Amendment to decision 38, same day: its rule reaches the outline
+    tab's two dates links, which read `useDatesTabUrl()` where `master`
+    reads the outline response's `datesTabLink`; that also removes them
+    when `tabs` has no dates tab (the tab hidden, or a learner gated by
+    the entrance exam), and that `master` behavior is
+    openedx/frontend-app-learning#2250, filed without a status line
+    until the outline layer's PR exists.
