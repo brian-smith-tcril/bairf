@@ -1246,3 +1246,7 @@ in #2190's plan and are not repeated.
       "master has no test of the metadata request, normalizer or
       hook" with them. The live #2190 body carries the old sentence
       until Brian says to update it.
+    - Checks at `f51d72ec` (local): lint passes with no warning; 36
+      suites, 412 passed, 7 skipped; 100% of lines; `build` and
+      `build:ci` pass. Patch estimate from `lcov.info`: 17 lines,
+      none missed or partial.
