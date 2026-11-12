@@ -59,7 +59,11 @@ before the layer is submitted.
    - jsdom's "Not implemented: navigation": the upgrade button's
      `location.replace` is stubbed with `mockLocation`; the two link
      clicks use `preventNavigation`.
-5. **Lint.** Eleven messages gain a `description` (six in
+5. **Lint.** (The three welcome message descriptions first said
+   "course update", the platform's word for where the field comes
+   from; Brian asked where it came from. Learning's code says
+   "welcome message" throughout, and the descriptions do now.)
+   Eleven messages gain a `description` (six in
    `messages.ts`, two in the certificate alert's, three inline in the
    scheduled content alert, one inline in the certificate alert);
    `eslint-disable` comments for rules the package's lint does not have

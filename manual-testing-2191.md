@@ -60,8 +60,10 @@ as the enrolled learner.
 - [ ] **6. The handouts and welcome message frames** — each frame shows its text with
       links coloured and, in the welcome message, underlined; the handouts text is
       smaller than the page's.
-      *Needs:* a course update and a handout for the course, added in Studio; the record
-      names the page and controls as they read when it is done.
+      *Needs:* a welcome message and a handout for the course. The outline response's
+      `welcome_message_html` is the course's current update (`get_current_update_for_user`
+      in the outline view), so both are added in Studio; the record names the page and
+      controls as they read when it is done.
       *Why here:* the three rules are inline in the frame document where `master` linked
       a stylesheet file.
 - [ ] **7. The narrow card header** — at a window under 576 pixels wide, the start or
