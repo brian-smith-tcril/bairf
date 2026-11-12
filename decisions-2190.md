@@ -1107,3 +1107,14 @@ in #2190's plan and are not repeated.
       openedx/frontend-base for "react-helmet" return nothing.
     - Not checked: whether `react-helmet-async` is free of the
       warning.
+    - Filed on Brian's word as openedx/frontend-base#350,
+      "`react-helmet` warns under `StrictMode`", a discovery issue:
+      the mechanism, the docs (React's StrictMode reference, ADR
+      0015's rejected alternative, the React 19 release post, the
+      `react-helmet-async` README), the places that render `Helmet`,
+      and questions. `react-helmet-async` on React 18 and React 19's
+      own `<title>` hoisting are named as untested. Checked for the
+      issue: `Helmet` mounted in jsdom with React 18.3.1 writes the
+      warning to `console.error` inside `<StrictMode>` and nothing
+      outside it (left out of the body at Brian's direction, with the
+      line about Learning's suite). Row `in-review` in `UPSTREAM.md`.

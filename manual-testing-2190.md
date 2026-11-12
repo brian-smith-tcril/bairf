@@ -125,8 +125,8 @@ entrance exam status is the next layer's section.
     its stack.
   - react-helmet: `Using UNSAFE_componentWillMount in strict mode … SideEffect(NullComponent)`.
     Learning renders `Helmet` in `Main.tsx` and `tab-page/LoadedTabPage.tsx`, both from
-    earlier layers, and `master`'s `LoadedTabPage` does too. Not this layer's, and tracked
-    nowhere that was found.
+    earlier layers, and `master`'s `LoadedTabPage` does too. Not this layer's; filed as
+    openedx/frontend-base#350.
 
 ## The entrance exam layer
 
