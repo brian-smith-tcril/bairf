@@ -197,3 +197,19 @@ its PR.
      (`if (buttonAction)`), and the factory's single-block arm (two
      lines).
 
+   - **Line 84, Brian's ruling (2026-11-12):** "let's do the inner
+     switch". `renderCertAwardedStatus`'s `if`/`else if` chain is a
+     `switch (certStatus)` with the three statuses as cases and no
+     `default`. Early returns would not have cleared the line: the
+     instrumenter counts both sides of every `if`, and one branch per
+     written `case` of a `switch` with none for "no case matched"
+     (`coverSwitchCase`, `istanbul-lib-instrument/src/visitor.js`).
+     Lint is clean without a `default`. The first arm's body moved in
+     two spaces, which adds two spaces inside its two-line
+     `defaultMessage` literal; the webpack bundle and the test
+     transformer collapse that break to one space, and only the
+     per-file compiled output keeps it.
+   - Checks after the switch: lint clean; 42 suites, 568 passed, 11
+     skipped; lines 100; patch 528 lines, none missed, 3 partial
+     (`CertificateStatusAlert.jsx` 178, which is `if (buttonAction)`,
+     and the factory's 11 and 17). Those three still await Brian.
