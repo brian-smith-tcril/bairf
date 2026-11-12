@@ -146,13 +146,11 @@ the second look fakes the two responses with a local patch.
 
 ### Setup
 
-- The dev site as for the progress tab layer, on `bsmith/progress-entrance-exam`
-  (`f51d72ec`, local).
+- The dev site as for the progress tab layer, on `bsmith/progress-entrance-exam`.
 - The same enrolled learner and the demo course.
-- For look 2 only, the fakes: from the repository root,
-  `git apply ../bairf-learning-frontend-base/local-fake-entrance-exam.patch`, and
-  `git apply -R` with the same path when done. The patch is never committed. It changes
-  two request functions:
+- For look 2 only, the fakes: the patch below, applied with `git apply` and taken out
+  with `git apply -R` when done. It is never committed. It changes two request
+  functions:
   - `getProgressTabData`: the response's `certificate_data` becomes
     `{ cert_status: 'unverified' }` and `verification_data.status` becomes `'pending'`, so
     a certificate card with no button shows.
@@ -160,6 +158,37 @@ the second look fakes the two responses with a local patch.
     `false`, only when the page URL has `?exam=failed`.
 
   The same two edits as browser overrides on the two responses do the same job.
+
+```diff
+diff --git a/frontend-base/src/course-home/data/api.ts b/frontend-base/src/course-home/data/api.ts
+index 06302270..ae6fa19b 100644
+--- a/frontend-base/src/course-home/data/api.ts
++++ b/frontend-base/src/course-home/data/api.ts
+@@ -203,6 +203,9 @@ export async function getProgressTabData(courseId: string, targetUserId?: string
+ 
+   try {
+     const { data } = await getAuthenticatedHttpClient().get(url);
++    // Manual pass fake, never committed: a certificate card with no button.
++    data.certificate_data = { cert_status: 'unverified' };
++    data.verification_data = { ...data.verification_data, status: 'pending' };
+     const camelCasedData = camelCaseObject(data);
+ 
+     // We replace gradingPolicy.gradeRange with the original data to preserve the intended casing for the grade.
+diff --git a/frontend-base/src/courseware/data/api.js b/frontend-base/src/courseware/data/api.js
+index 5345526e..746039c5 100644
+--- a/frontend-base/src/courseware/data/api.js
++++ b/frontend-base/src/courseware/data/api.js
+@@ -6,5 +6,9 @@ export async function getCourseMetadata(courseId) {
+   let url = `${getSiteConfig().lmsBaseUrl}/api/courseware/course/${courseId}`;
+   url = appendBrowserTimezoneToUrl(url);
+   const metadata = await getAuthenticatedHttpClient().get(url);
++  // Manual pass fake, never committed: the entrance exam reads as not passed when the page URL has ?exam=failed.
++  if (window.location.search.includes('exam=failed')) {
++    metadata.data.entrance_exam_data.entrance_exam_passed = false;
++  }
+   return normalizeCoursewareMeta(metadata);
+ }
+```
 
 ### Two looks
 
@@ -188,15 +217,14 @@ the second look fakes the two responses with a local patch.
 
 ### Checked outside the app
 
-- **Lint, tests and both builds** at `f51d72ec`, 2026-11-11: all pass. 36 suites, 412
-  passed, 7 skipped, 100% of lines.
+- **Lint, tests and both builds** at the layer's commit, 2026-11-11: all pass. 36
+  suites, 412 passed, 7 skipped, 100% of lines.
 - **The fakes** — with the patch applied, the suite's "Entrance exam status" cases were
   run twice, 2026-11-12. With the test page's URL as it is, "shows the certificate card
   to a learner who has passed the entrance exam" passes, and the visited event carries
   `certificate_status_variant: 'unverified'`: the faked card renders, with no console
   output. With the URL set to `http://localhost/?exam=failed`, the same case fails
-  with the card not found: the switch hides it. The patch was then taken back out; it
-  has not been run in a browser.
+  with the card not found: the switch hides it. The patch was then taken back out.
 
 ### Left to the suite
 
@@ -218,8 +246,8 @@ query port with #2195 and #2196.
 
 ### Results
 
-**2026-11-12, Brian, on the dev site, on `bsmith/progress-entrance-exam` at `f51d72ec`,**
-with `local-fake-entrance-exam.patch` applied for the whole pass and taken out afterwards.
+**2026-11-12, Brian, on the dev site, on `bsmith/progress-entrance-exam`,** with the
+fakes patch applied for the whole pass and taken out afterwards.
 
 - Brian ticked both looks and the optional staff view.
 - Look 1 ran with the fakes applied. The Network panel shows the response as it arrived,
