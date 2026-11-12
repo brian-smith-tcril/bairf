@@ -155,17 +155,20 @@ are decided in #2246, the layer below.
       dropped.
     - `utils.test.ts` is new, for `showUngradedAssignments` and
       `getLatestDueDateInFuture`. `ProgressTabComponents.test.tsx` is new and renders one
-      component alone: the complete segment's dividers, and `CertificateStatus` without
-      course metadata. That last state cannot occur on the page, since the frame loads
-      the metadata first, but its `?? {}` changes the outcome (no card, a
-      `certificate_status_disabled` event), so the line stays and gets the case.
+      component alone: the complete segment's dividers, and two `CertificateStatus`
+      cases. Without course metadata: that state cannot occur on the page, since the
+      frame loads the metadata first, but its `?? {}` changes the outcome (no card, a
+      `certificate_status_disabled` event), so the line stays and gets the case. For a
+      learner who has not passed the entrance exam: nothing on the tab loads that result
+      in this layer (#2243), so the case mocks the courseware hook; Codecov's first
+      report on this PR listed that branch of `CertificateStatus.jsx` line 108 as the
+      patch's one partial line.
     - Without this commit the package is still above its bar (98.31% of lines). Without
       the nineteen cases alone, the layer's patch, counted as Codecov counts it, was
       about 90%.
 
-18. **Coverage at this layer.** 100% of lines for the package. One line of the layer's
-    patch keeps a branch no test here takes: `CertificateStatus.jsx` line 108, taken
-    when a learner has not passed the entrance exam, which the next layer tests.
+18. **Coverage at this layer.** 100% of lines for the package, and no line of the layer's
+    patch is missed or partly covered.
 
 19. **The manual pass asks only for what the layer changes and a test cannot see.** The
     page and its styles in the shell, the console, the two tooltips, the dates link, and
