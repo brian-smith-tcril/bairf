@@ -932,3 +932,29 @@ in #2190's plan and are not repeated.
     lock icon is looked at in the manual pass. `.jsx` is linted
     locally only until openedx/frontend-base#327, so CI would pass
     with the line in today.
+
+32. **History of the two `trigger="hover"` lines (read 2026-11-11,
+    Brian asked whether hover-only had a reason).** The port writes
+    `trigger={['hover', 'focus']}` in `GradeSummaryHeader.jsx` and
+    `GradeSummaryTableFooter.jsx`, to stop react-bootstrap's warning
+    about a hover-only trigger; with `master`'s value back, nine
+    grade summary cases fail on it.
+    - `['hover', 'focus']` is the default of Paragon's
+      `OverlayTrigger` (`src/Overlay/index.tsx`) and of
+      react-bootstrap 1.6.8's underneath, so dropping the prop gives
+      the same behaviour as the port's line.
+    - Both lines came in with #1558 (`1ffc93dc`, 2025-01-06,
+      KristinAoki, "update grade summary to show floating point
+      grades"), the only commit in the repo's history that adds the
+      text; #1619 only re-indented the header's. Before #1558 the
+      header had `trigger="click"` on an `IconButton` with a
+      `Popover`, a `show` state toggled on click and closed on blur,
+      and `disabled` when grades are fully locked; #1558 replaced it
+      with a hover `Tooltip` on a bare `Icon`, and added the footer's
+      tooltip in the same shape.
+    - No reason for hover-only is recorded: #1558's description says
+      a tooltip was added and its test steps say "Hover over the
+      tooltip in the table footer"; it has one approval and no review
+      comments.
+    - A bare `Icon` cannot take keyboard focus, so with or without
+      `focus` in the trigger the tooltips open on hover only.
