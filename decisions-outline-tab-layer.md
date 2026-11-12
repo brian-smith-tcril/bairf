@@ -65,9 +65,14 @@ before the layer is submitted.
    `eslint-disable` comments for rules the package's lint does not have
    are removed (`import/no-extraneous-dependencies` in the three
    factories, `import/prefer-default-export` in two alert hooks);
-   `OutlineTab.jsx`'s `start_course` effect gains a
-   `react-hooks/exhaustive-deps` disable comment, keeping `master`'s
-   dependency list; `HiddenSequenceLink.tsx` drops its empty `Props`
+   `OutlineTab.jsx`'s `start_course` effect lists the two dependencies
+   it reads beside `location.search` (`location.pathname`, `navigate`),
+   which the package's lint reports as a warning and `master`'s lint,
+   with `react-hooks/exhaustive-deps` turned off, does not. I first
+   added a disable comment; Brian: adding the dependencies is better
+   than ignoring a lint rule, the more so as it does not change
+   behavior. When the effect runs again `start_course` is already out
+   of the address, and a case holds that the event is sent once; `HiddenSequenceLink.tsx` drops its empty `Props`
    interface; `WelcomeMessage`'s show-more button, an element in an
    array, gains a `key`.
 6. **The certificate alert's button takes `getLinkProps` for every
@@ -120,8 +125,8 @@ before the layer is submitted.
 - Working tree on `bsmith/outline-tab`, uncommitted. Two commit objects
   on no branch hold it as it will be committed: the port, and the
   coverage cases on top (186 lines added to `OutlineTab.test.jsx`).
-- The port alone: 41 suites, 524 passed, 11 skipped; lines 98.4; lint
-  clean. With the coverage cases: 542 passed, 11 skipped; lines 100 for
+- The port alone: 41 suites, 525 passed, 11 skipped; lines 98.4; lint
+  clean. With the coverage cases: 543 passed, 11 skipped; lines 100 for
   the package; lint clean; `build` and `build:ci` pass, the CI build
   emitting the three flag images and the `learning-outline` chunk.
 - Waiting on Brian: reading the diff; #2191's live body (the `dropped`
