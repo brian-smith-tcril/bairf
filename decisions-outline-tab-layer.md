@@ -83,14 +83,47 @@ before the layer is submitted.
    subsection titles; `master` has a bare anchor. Its look beside the
    widget's other anchors is a manual-pass item.
 
-## Open, for Brian
+8. **`courseBlocks.factory.js` ports with two builders commented out
+   (Brian).** The outline suite uses `buildMinimalCourseBlocks` only;
+   `buildSimpleCourseBlocks` and `buildBinaryCourseBlocks` are used by
+   courseware suites and are line-commented under #2195's URL until
+   then. Factories count toward coverage here, as on `master`, and the
+   package is at 100% of lines below this layer. Uncommented, the file
+   is `master`'s apart from two stale lint comments the fixer removed.
+   The factory's default options and `block.factory.js`'s two
+   pass-through URLs are run by two cases of the coverage commit.
+9. **`CourseTools` renders an icon only for a tool it knows.** For any
+   other analytics id `renderIcon` returns `null`, and react-fontawesome
+   reports an icon it cannot find. Course tools are a plugin point
+   (`CourseToolsPluginManager`), so an unknown id can occur. Found
+   writing the coverage case for that branch; the fix is in the port's
+   commit, its case in the coverage commit.
+10. **Cases for what the port changes, with the port:** the sequence
+    title's `href`; the dates widget link (its `href`, and a click
+    staying in the site) and the scheduled content button, each also
+    absent without a dates tab; the not-passing alert's link to the
+    progress tab; the frame document (base, stylesheet link, the three
+    rules, the theme name); each goal button's flag image;
+    `weekly_goal` gone from the router's location after the save; the
+    page-rule assertion. `SESSION_COOKIE_DOMAIN` is covered in #2251.
+    The three lines #2234 left for this suite are run by `master`'s own
+    cases once ported.
+11. **Coverage cases, in their own commit:** the section's toggles; an
+    outline whose blocks include a unit; a sequence block built with its
+    own URLs; the start or resume button's click event and its absence
+    without a URL; each tool's icon, an unknown tool, a tool click; the
+    certificate and grades buttons' click events; the past-due
+    onboarding button; the frame's resize message.
 
-- **Factories and coverage.** `courseBlocks.factory.js` ports whole,
-  but the outline suite uses only `buildMinimalCourseBlocks`;
-  `buildSimpleCourseBlocks` and `buildBinaryCourseBlocks` are used by
-  courseware suites (#2195 on). Factories count toward coverage here,
-  as on `master`, so about 31 of the file's lines are uncovered in this
-  layer, and two in `block.factory.js`. The package is at 100% of lines
-  below this layer, and codecov's patch target is the base's coverage.
-- The plan's "new cases for what the port changes" and the coverage
-  commit are not written yet.
+## State (2026-11-12)
+
+- Working tree on `bsmith/outline-tab`, uncommitted. Two commit objects
+  on no branch hold it as it will be committed: the port, and the
+  coverage cases on top (186 lines added to `OutlineTab.test.jsx`).
+- The port alone: 41 suites, 524 passed, 11 skipped; lines 98.4; lint
+  clean. With the coverage cases: 542 passed, 11 skipped; lines 100 for
+  the package; lint clean; `build` and `build:ci` pass, the CI build
+  emitting the three flag images and the `learning-outline` chunk.
+- Waiting on Brian: reading the diff; #2191's live body (the `dropped`
+  line for the stylesheet); the manual pass, drafted in
+  `manual-testing-2191.md`.
