@@ -112,3 +112,10 @@ its PR.
    - #2252's body was set again from `pr-body-2252.md` with the record
      and matches it.
 
+6. **#2191's and #2250's bodies updated (Brian, 2026-11-12).** #2191:
+   the handouts stylesheet's manifest line reads `dropped`, the one
+   sentence the mirror was ahead by. #2250: the status line, naming
+   #2252 as the fix in the frontend-base version, in #2243's words.
+   One edit each; each live body matches its mirror apart from a
+   trailing newline.
+
