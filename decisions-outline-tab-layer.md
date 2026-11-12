@@ -61,7 +61,11 @@ before the layer is submitted.
      one comment (codecov) do not mention the type. The case it added
      asserts the "Expand all" button has focus after dismissal. The
      line has not changed since, and no other prop type in Learning
-     names an element class. Its Jira tickets are private.
+     names an element class. Its Jira tickets are private. Prop types
+     are checked in React's development build only and never change
+     what the component does, so the looser type removes the warning
+     for today's caller and nothing else. Brian: `HTMLElement` is
+     fine.
    - `CertificateStatusAlert` rendered `FontAwesomeIcon` with no icon
      for the not-passing variant, which react-fontawesome reports
      ("Could not find icon undefined"). The icon renders only when the
