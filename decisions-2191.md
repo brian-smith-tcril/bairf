@@ -213,3 +213,15 @@ its PR.
      skipped; lines 100; patch 528 lines, none missed, 3 partial
      (`CertificateStatusAlert.jsx` 178, which is `if (buttonAction)`,
      and the factory's 11 and 17). Those three still await Brian.
+   - **The button's click handler, Brian's ruling (2026-11-12):**
+     "let's do onClick={buttonAction}". The guard `if (buttonAction)`
+     never took its false side: `buttonVisible` and `buttonAction` are
+     set only in this file, in the same four objects (downloadable,
+     requesting, not ID verified, not passing), and the payload carries
+     neither. The four actions take no parameters, so receiving the
+     click event changes nothing. The progress tab's
+     `CertificateStatus.jsx` keeps its own guard, which it needs: its
+     button can render with a link and no action.
+   - Checks after it: lint clean; 42 suites, 568 passed, 11 skipped;
+     lines 100; patch 526 lines, none missed, 2 partial (the factory's
+     11 and 17). Those two still await Brian.
