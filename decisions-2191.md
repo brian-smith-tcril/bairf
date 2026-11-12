@@ -245,3 +245,15 @@ its PR.
      arguments onto its `FormattedMessage`, not its two
      `FormattedDate` elements. #2148's unobserved statement that the
      course end alert shows the preference's zone is wrong.
+   - **Landed (2026-11-12), on Brian's "amend and push".** The source
+     changes are folded into the port commit and the cases into the
+     coverage commit, both messages extended: `a38676f6` and
+     `09d40b80`, pushed through the stack; #2252's head is `09d40b80`.
+     Rechecked at the port commit alone: lint clean, 41 suites, 525
+     passed, 11 skipped, lines 98.4, both builds pass. At the head
+     both builds pass. `decisions-2252.md` gains entries 16 to 18 and
+     its checks become entry 19; #2252's body is set from
+     `pr-body-2252.md` and matches it.
+   - Open: the time zone issue draft waits for Brian's word to file.
+     When it has a number, entry 18 of `decisions-2252.md` and the
+     PR body gain it.
