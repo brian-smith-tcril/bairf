@@ -104,9 +104,7 @@ entrance exam status is the next layer's section.
 
 **2026-11-11, Brian, on the dev site, `bsmith/progress-tab` at `42d7c7f0`.**
 
-- Brian ticked steps 2, 3, 4 and 5 and the optional staff view. Step 1, the page and its
-  styles, is not ticked; whether it was not looked at or something looked off has not
-  been said yet.
+- Brian ticked all five steps and the optional staff view.
 - Not recorded for step 5: whether the demo course has a subsection title long enough to
   wrap.
 
