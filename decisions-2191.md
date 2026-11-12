@@ -119,3 +119,41 @@ its PR.
    One edit each; each live body matches its mirror apart from a
    trailing newline.
 
+7. **#2252's patch has 45 partial lines; codecov's patch check fails
+   (Brian, from codecov, 2026-11-12).** Codecov: patch 92.88%, "37
+   lines missing coverage", project 96.60%. Counted locally the way
+   codecov counts a patch (`bin/patch-coverage`, new): 529 lines, none
+   missed, 45 partial. Codecov's per-file reports for `OutlineTab.jsx`,
+   `WeeklyLearningGoalCard.jsx` and `LmsHtmlFragment.jsx` name the same
+   lines; its four "missed" lines are lines whose only coverage is a
+   default value never used.
+   - My miss: #2247's record counts its patch this way before the
+     layer went up ("none missed or partly covered"). For this layer I
+     reported line coverage only, and the PR went up with the check
+     failing.
+   - The 45, by kind:
+     - 13 are `?? {}` after a cache read that the tab's gate never
+       lets be empty. About eight only move a throw (the next
+       statement destructures or reads through the result); five change
+       what renders.
+     - 4 are defaults never used: the three default parameters this
+       port wrote in place of `defaultProps` (`LmsHtmlFragment`'s
+       class name, the goal card's two props, each always passed), and
+       `master`'s `courseGoals = {}` in `OutlineTab.jsx`.
+     - 21 are states no case renders: a date with a linked title, a
+       description, or a link that is not the upgrade link; a frame in
+       a document without `dir`, and a message of another type; an
+       anonymous and an enterprise learner; time zones present or
+       absent in three alerts; a null `certData`; an anonymous private
+       course alert; an outline without `enrollAlert`; a completed
+       sequence and one without a link; an unknown proctoring status;
+       changing an existing goal, and the reminder switch while
+       masquerading.
+     - 5 are branches no input takes, in `master`'s code: two
+       `else if` in `ProctoringInfoPanel.jsx` whose condition is always
+       true where they stand, and in `CertificateStatusAlert.jsx` the
+       `else if` for the third of three statuses, the `default` arm's
+       `if`, and `if (buttonAction)`.
+     - 2 are the course blocks factory's single-block arm.
+   - Not yet decided or changed; put to Brian.
+
