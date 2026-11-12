@@ -147,3 +147,9 @@ Decisions made while implementing, 2026-10-26. The direction the issue's discuss
     `errorElement` (a path no route matches) they replace `Shell`
     entirely, so there is no header and no skip link there, which is
     pre-existing and its own question.
+
+12. **#328 is closed (Brian, 2026-11-12).** Closed as completed:
+    openedx/frontend-base#329, merged 2026-10-27, resolved it.
+    openedx/frontend-base#330, "Export `SkipLink` component", is a
+    separate follow-up and stays open; it is not part of this effort's
+    `TAG.md`.
