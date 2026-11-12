@@ -9,8 +9,8 @@ Nothing to do. No route renders these modules until the next layer.
 
 ## The outline tab layer
 
-Drafted 2026-11-12 before the pass; nothing below has been observed yet. Each box is
-ticked by Brian, with what was seen written under it.
+Drafted 2026-11-12 before the pass. The boxes are Brian's ticks; what was and was not
+observed is under Record, below the steps.
 
 What needs eyes: the page in the real shell with real data, its styles, the flags, the
 two frames, the in-page links navigating inside the site, and a real browser's console.
@@ -33,31 +33,32 @@ The same as for the progress tab; nothing new.
 Open `http://apps.local.openedx.io:2000/learning/course/course-v1:OpenedX+DemoX+DemoCourse/home`
 as the enrolled learner.
 
-- [ ] **1. The page and its styles** — the outline renders inside the shell with the
+- [x] **1. The page and its styles** — the outline renders inside the shell with the
       Course tab selected: the title, the start or resume card, the section list with
       its "Expand all" button, and the right column (goal card if the course has goals
       on, course tools, dates, handouts). The cards have a soft shadow and no border.
       *Why here:* the route now loads the real page; `style.scss` gains three partials
       and the card-header rule copied from `master`'s `index.scss`.
-- [ ] **2. The console** — DevTools, Console, reload. No errors or warnings from
+- [x] **2. The console** — DevTools, Console, reload. No errors or warnings from
       Learning's code.
-- [ ] **3. A sequence title** — expand a section and click a sequence title. The address
+- [x] **3. A sequence title** — expand a section and click a sequence title. The address
       becomes `/learning/course/<course>/<sequence id>` and the courseware stub shows,
       with no page load (the Network tab shows no document request).
       *Why here:* the title's link is `getSequenceUrl`'s where `master` wrote
       `/course/<course>/<sequence>`.
-- [ ] **4. The all-dates link** — in the dates widget, "View all course dates" opens the
+- [x] **4. The all-dates link** — in the dates widget, "View all course dates" opens the
       dates tab with no page load. Before clicking, compare its look with the links
       around it: it is a Paragon `Hyperlink` now where `master` has a bare anchor.
       *Needs:* a course with at least one date, so the widget shows.
-- [ ] **5. The goal card's flags** — each of the three goal buttons shows its flag
+- [ ] **5. The goal card's flags** (not run) — each of the three goal buttons shows its flag
       (outline, half grey, black), and selecting one gives it the selected border.
       *Needs:* weekly learning goals on for the course: the outline view sets
       `weekly_learning_goal_enabled` when `ENABLE_COURSE_GOALS` is enabled for the course
-      (`lms/djangoapps/course_home_api/outline/views.py`). Skip and say so if it is off.
+      (`lms/djangoapps/course_home_api/outline/views.py`), the waffle flag
+      `course_experience.enable_course_goals`, off by default. Skip and say so if it is off.
       *Why here:* the flags are `<img>` elements now; the button styles come from
       `FlagButton.scss` through `style.scss`.
-- [ ] **6. The handouts and welcome message frames** — each frame shows its text with
+- [x] **6. The handouts and welcome message frames** (the welcome message only) — each frame shows its text with
       links coloured and, in the welcome message, underlined; the handouts text is
       smaller than the page's.
       *Needs:* a welcome message and a handout for the course. The outline response's
@@ -66,11 +67,25 @@ as the enrolled learner.
       controls as they read when it is done.
       *Why here:* the three rules are inline in the frame document where `master` linked
       a stylesheet file.
-- [ ] **7. The narrow card header** — at a window under 576 pixels wide, the start or
+- [x] **7. The narrow card header** — at a window under 576 pixels wide, the start or
       resume card's button sits under its title, not beside it.
       *Why here:* the one `index.scss` rule copied into `style.scss`.
-- [ ] **8. The progress tab's outline links** — on the progress tab, the outline links
+- [x] **8. The progress tab's outline links** — on the progress tab, the outline links
       that #2247 left on the stub now open this page with no page load.
+
+### Record
+
+**2026-11-12, Brian, on the dev site, on `bsmith/outline-tab`.**
+
+- Brian ticked steps 1, 2, 3, 4, 7 and 8, with no notes on any of them.
+- Step 5 was not run. Brian: "not testing because setting up goals sounds like a
+  pain". So the goal card, its three flag images and its `FlagButton.scss` styles have
+  not been seen in a browser. The suite checks that each goal button holds an image
+  whose source is the SVG's URL, with the SVG import mocked; the CI site build emits
+  the three files.
+- Step 6 was run for the welcome message only. Brian: "just welcome message, didn't
+  do anything for handouts". So the handouts frame, and with it the `small` rule, has
+  not been seen in a browser.
 
 ### Left to the suite
 
