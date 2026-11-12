@@ -1,7 +1,5 @@
 The outline tab links to the dates tab when the learner's tab list has no dates tab. Two cases: a course whose Dates tab is hidden, where the "View Course Schedule" button opens a dates page with no dates on it; and a learner who has not yet passed the entrance exam, for whom only the "Entrance Exam" tab is listed, where that button and the dates widget's "View all course dates" link both open the dates page.
 
-**Status (2026-11-12):** the frontend-base port of the outline tab (#2191) fixes this in the frontend-base version of Learning, the package under `frontend-base/` on the `frontend-base` branch. The frontend-build and frontend-platform version under `src/` has the bug. If a fix is wanted there, it needs its own change.
-
 > [!NOTE]
 > This issue was written by Claude (Claude Code) and reviewed before posting.
 
