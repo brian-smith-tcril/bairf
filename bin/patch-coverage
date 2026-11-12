@@ -3,7 +3,7 @@
 # layer adds under frontend-base/src, which are hit, which are missed, and which are partial
 # (a line with a branch that no test takes). Run the package's tests with coverage first.
 #
-#   patch-coverage <repo> <base-ref> <head-ref> <lcov.info>
+#   patch-coverage <repo> <base-ref> <head-ref|-> <lcov.info>      (- for the working tree)
 #   patch-coverage ../frontend-app-learning bsmith/outline-shared-modules bsmith/outline-tab \
 #       ../frontend-app-learning/frontend-base/coverage/lcov.info
 #
@@ -14,7 +14,8 @@ import subprocess, sys, collections
 repo, base, head, lcov = sys.argv[1:5]
 # lines added between base and head, per file
 added = collections.defaultdict(set)
-diff = subprocess.run(['git', '-C', repo, 'diff', '-U0', base, head, '--', 'frontend-base/src'], capture_output=True, text=True, check=True).stdout
+refs = [base] if head == '-' else [base, head]   # '-' for head: the working tree
+diff = subprocess.run(['git', '-C', repo, 'diff', '-U0', *refs, '--', 'frontend-base/src'], capture_output=True, text=True, check=True).stdout
 path = None
 for line in diff.splitlines():
     if line.startswith('+++ b/'):

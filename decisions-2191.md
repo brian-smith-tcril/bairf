@@ -157,3 +157,43 @@ its PR.
      - 2 are the course blocks factory's single-block arm.
    - Not yet decided or changed; put to Brian.
 
+8. **The partial lines, worked through (2026-11-12); on the working
+   tree, not yet amended or pushed.** Brian took kinds 1 to 3 of entry
+   7 and, for kind 4, ruled that `if (x) {} else if (!x) {}` becomes
+   `if (x) {} else {}`. Counted again with `bin/patch-coverage` against
+   the working tree: 527 lines, none missed, 4 partial.
+   - Nine `?? {}` that only moved a throw are dropped: both in
+     `OutlineTab.jsx` (its content component is not exported, and the
+     tab renders it only with both queries loaded), and the outline
+     read in the certificate, course end and scheduled content hooks,
+     `CourseDates`, `StartOrResumeCourseCard`, `CourseTools` and
+     `WelcomeMessage`, each of which destructures or reads through the
+     result on the same or the next statement.
+   - Four `?? {}` change what renders and are kept, each with a case
+     that renders the component alone: the certificate hook's metadata
+     read (no alert), `PrivateCourseAlert` (a welcome with no title),
+     `CourseHandouts` (nothing), the goal card (it renders).
+   - The two redundant `else if` in `ProctoringInfoPanel.jsx` are
+     `else`.
+   - `OutlineTabComponents.test.tsx`, new, ten cases, as
+     `ProgressTabComponents.test.tsx` is for the progress tab: the four
+     above; the three default parameters and `document`'s missing
+     `dir`; and three states only a payload reaches (an unknown
+     certificate status that is not failing, and a time zone in the
+     certificate and course end alerts).
+   - Fifteen cases added to `OutlineTab.test.jsx` for the states no
+     case rendered.
+   - **Found on the way:** the certificate and course end alerts never
+     get the learner's time zone. Their hooks read `userTimezone` from
+     the outline data, and the outline normalizer returns no such
+     field; the course metadata and the response's `dates_widget` carry
+     it. `master` has the same read. The two components' time zone
+     branch is therefore reached only by a payload given directly, which
+     is how the new cases reach it. Put to Brian.
+   - Checks on the working tree: lint clean; 42 suites, 568 passed, 11
+     skipped; lines 100.
+   - Left, awaiting Brian: `CertificateStatusAlert.jsx` lines 84
+     (`else if` for the third of three statuses) and 173
+     (`if (buttonAction)`), and the factory's single-block arm (two
+     lines).
+
