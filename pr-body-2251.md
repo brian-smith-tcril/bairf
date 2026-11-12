@@ -39,7 +39,7 @@ What was decided while building this layer; the scope and the import and config 
 <details>
 <summary>Full decision log</summary>
 
-# Decisions: the modules the outline tab shares (draft; renamed to the PR number when the layer is submitted)
+# Decisions: the modules the outline tab shares (#2251)
 
 Decisions made while building this layer of #2191. The scope and the
 import and config mapping are in #2191's plan and are not repeated.
