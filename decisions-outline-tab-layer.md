@@ -51,7 +51,17 @@ before the layer is submitted.
 4. **Console output fixed in components.**
    - `WelcomeMessage`'s `nextElementRef` prop type named
      `HTMLInputElement`; the tab passes the expand button's ref. Now
-     `HTMLElement`.
+     `HTMLElement`. Brian asked whether the input type had a reason;
+     the history, read 2026-11-12, gives none. The prop came in with
+     openedx/frontend-app-learning#1580 (KristinAoki, merged
+     2025-01-31), an accessibility fix. The type is `HTMLInputElement`
+     in all ten of its commits, and in all ten the ref is on the
+     "Expand all" `Button`; it never pointed at an input. The body, the
+     one review thread (about `tabIndex` on the message body) and the
+     one comment (codecov) do not mention the type. The case it added
+     asserts the "Expand all" button has focus after dismissal. The
+     line has not changed since, and no other prop type in Learning
+     names an element class. Its Jira tickets are private.
    - `CertificateStatusAlert` rendered `FontAwesomeIcon` with no icon
      for the not-passing variant, which react-fontawesome reports
      ("Could not find icon undefined"). The icon renders only when the
