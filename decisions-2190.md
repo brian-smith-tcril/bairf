@@ -1072,3 +1072,38 @@ in #2190's plan and are not repeated.
       the pass; he does not trust them. A step says what it needs
       beyond the page (a staff session, a user id), not how long it
       takes.
+
+37. **The react-helmet warning in the browser console (read
+    2026-11-11; seen by Brian in the progress tab layer's manual
+    pass).** `Warning: Using UNSAFE_componentWillMount in strict mode
+    is not recommended … Please update the following components:
+    SideEffect(NullComponent)`.
+    - Mechanism: `react-helmet` 6.1.0 builds `Helmet` on
+      `react-side-effect` 2.1.2, whose class component defines
+      `UNSAFE_componentWillMount` (`lib/index.js` line 95). React
+      warns about that lifecycle for any component under
+      `StrictMode`, and frontend-base's shell renders the site in
+      `StrictMode` (`shell/site.js`). `react-helmet`'s last release is
+      6.1.0, 2020-06-08.
+    - Learning renders `Helmet` for the document title in `Main.tsx`
+      (#2221) and `tab-page/LoadedTabPage.tsx` (#2234); nothing in
+      #2190 adds a use. `master` uses it in six files under
+      `StrictMode` as well.
+    - It is frontend-base's prescribed pattern:
+      `docs/decisions/0015-page-titles-via-helmet.rst` (status
+      Proposed) has every route-level page set its title with
+      `Helmet` from `react-helmet`, each app declaring the
+      dependency, and the migration guide repeats it. The ADR names
+      `react-helmet-async` as a "worthwhile follow-up", for its
+      `act()` warnings, streaming SSR and maintenance; it does not
+      mention this warning.
+    - The other converted apps do the same: a code search finds
+      `react-helmet` in `src/Main.*` of frontend-app-account,
+      -profile, -learner-dashboard, -instructor-dashboard,
+      -admin-console and -gradebook, and in three pages of
+      frontend-app-catalog.
+    - No issue found for it: searches of the openedx org for
+      "react-helmet UNSAFE_componentWillMount" and of
+      openedx/frontend-base for "react-helmet" return nothing.
+    - Not checked: whether `react-helmet-async` is free of the
+      warning.
