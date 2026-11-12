@@ -105,8 +105,8 @@ entrance exam status is the next layer's section.
 **2026-11-11, Brian, on the dev site, `bsmith/progress-tab` at `42d7c7f0`.**
 
 - Brian ticked all five steps and the optional staff view.
-- Not recorded for step 5: whether the demo course has a subsection title long enough to
-  wrap.
+- Step 5, wrapping: Brian edited a subsection title's text in the page to be long, and it
+  wrapped fine. The demo course's own titles were not what was tested for this.
 
 - Step 2: Brian saved the console of the progress page to a log; it holds 31 distinct
   entries, each once. None comes from the progress tab's own code, and none is a warning

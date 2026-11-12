@@ -1118,3 +1118,13 @@ in #2190's plan and are not repeated.
       warning to `console.error` inside `<StrictMode>` and nothing
       outside it (left out of the body at Brian's direction, with the
       line about Learning's suite). Row `in-review` in `UPSTREAM.md`.
+
+38. **The progress tab layer's manual pass is done (2026-11-11,
+    Brian, on `42d7c7f0`).** All five steps and the optional staff
+    view are ticked in `manual-testing-2190.md`. The console held
+    nothing from the tab's own code (the log's 31 entries are sorted
+    by source in the record; the react-helmet one became
+    openedx/frontend-base#350). The `Hyperlink` title's wrapping
+    (entry 22) was checked by editing a title's text in the page to
+    be long: it wraps fine. The lock icon (entry 31) was checked by
+    rendering, not in the app.
