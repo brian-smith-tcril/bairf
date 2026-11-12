@@ -98,3 +98,17 @@ its PR.
      unticked).
    - CI on #2252 has not been read here; Brian watches CI.
 
+5. **The outline tab layer's manual pass (2026-11-12).** Brian ran it on
+   the dev site on `bsmith/outline-tab` and ticked steps 1 to 4, 7 and
+   8; step 5 (the goal card's flags) was not run, and step 6 was run
+   for the welcome message only. He is not running the rest, so both
+   stand as gaps in the record, as do three details I asked about and
+   he did not note (`manual-testing-2191.md`).
+   - I asked him to run the skipped steps and to answer three follow-up
+     questions before doing what I could do without him. The flags'
+     image form was then compared with `master`'s inline form in
+     headless Chrome, outside the app: byte-identical screenshots,
+     recorded under "Checked outside the app".
+   - #2252's body was set again from `pr-body-2252.md` with the record
+     and matches it.
+
