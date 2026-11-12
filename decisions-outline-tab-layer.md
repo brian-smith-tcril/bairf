@@ -23,13 +23,16 @@ before the layer is submitted.
 
 ## Found, each needing an entry
 
-1. **No manifest line for `public/static/LmsHtmlFragment.css`.** The
-   posted plan gives it one, pointing at `LmsHtmlFragment.jsx`. Two
-   things are against it: `port-diff` stops on a target with two legacy
-   files ("a merge of several legacy files"), and `rebase-audit` only
-   reads `master`'s changes under `src/`, so a line for a `public/` path
-   audits nothing. The plan and the issue body say otherwise until
-   Brian is told and the body is edited.
+1. **`public/static/LmsHtmlFragment.css` is `dropped` in the manifest
+   (Brian).** The posted plan gave it a line pointing at
+   `LmsHtmlFragment.jsx`. That makes the component a target with two
+   legacy files, on which `port-diff` stops ("a merge of several legacy
+   files"). `dropped` is what the manifest calls a file that is not
+   ported, names no target, and so leaves the component with one legacy
+   file. The commit and the PR say where the three rules went. The
+   plan and the issue body mirror carry the correction; #2191's live
+   body is edited on Brian's word. `rebase-audit` reads `master`'s
+   changes under `src/` only, so the line is not audited either way.
 2. **The test render helpers had no authenticated user in the site
    context.** `render` and `renderRoutes` in `tests/render.tsx` mounted
    no `SiteContext` provider, so `useContext(SiteContext)` gave the

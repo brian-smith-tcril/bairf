@@ -27,7 +27,7 @@ Each file ports to the same relative path under `frontend-base/src/` and gets a 
 - `alerts/logistration-alert/AccountActivationAlert.jsx` and `messages.ts`, which #2189 left for this port.
 - `courseware/data/api.js` gains `sendActivationEmail` (the manifest line exists; #2195 adds the rest). `courseware/data/index.js` ports exporting that one name, with `getResumeBlock` and `getSequenceForUnitDeprecated` commented out under #2195's URL, as the factory indexes carry their unported names.
 - `course-home/data/__factories__/outlineTabData.factory.js`, `shared/data/__factories__/block.factory.js` and `courseBlocks.factory.js`. The two factory `index.js` files uncomment their three imports; no commented import naming this issue remains.
-- `public/static/LmsHtmlFragment.css` gets a manifest line pointing at `LmsHtmlFragment.jsx`, which takes its three rules (What changes).
+- `public/static/LmsHtmlFragment.css` gets a `dropped` manifest line: the file is not ported, and its three rules are written into `LmsHtmlFragment.jsx` (What changes).
 
 ### Stubbed here, replaced by a later issue
 
