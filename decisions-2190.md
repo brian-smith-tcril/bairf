@@ -1277,3 +1277,29 @@ in #2190's plan and are not repeated.
       own enrollment (#2244), so it is not part of the look.
     - The fakes were run under the suite, not in a browser: see the
       doc's "Checked outside the app".
+
+44. **Hiding the card stays; the PR says where the intent is read
+    from (2026-11-12).**
+    - During the manual pass Brian asked whether a learner with the
+      exam not passed loses the "must have a passing grade" card.
+      They do: `entranceExamFail` has no branch in the card.
+    - #1429 and #1415 were reread: both are about the unit
+      navigation's Next button, neither mentions the progress tab,
+      and no test covered the card. #2243's "the intent since #1429
+      is no certificate card" was an inference from the code.
+    - What supports the inference: #1429 added the read, the
+      variable and the argument to the card and not to
+      `CourseExit.jsx`; the read was empty from the start because
+      `useModel('coursewareMeta')` had no model on that page (Brian:
+      a mistake of the Redux era).
+    - The other direction, the card never reading the status, was
+      put to Brian and not taken. The layer stays as built.
+    - Brian ticked both looks and the staff view;
+      `entrance_exam_passed` was `true` in the real response, and
+      the "not passing" card is what the faked `unverified`
+      certificate produced on his site.
+    - Drafts: `decisions-entrance-exam-layer.md` and
+      `pr-body-entrance-exam-layer.md`, renamed by PR number once the
+      layer is submitted. The manual testing section was made
+      embeddable: the fakes patch is inline and no local path is
+      named. #2243's live body still words the intent as fact.
