@@ -2,180 +2,198 @@
 
 Decisions made while building this layer of #2191. The scope and the
 import and config mapping are in #2191's plan and are not repeated.
-Working notes, 2026-11-12, in the order found; rewritten into entries
-before the layer is submitted.
 
-## Done on the working tree (`bsmith/outline-tab`, uncommitted)
+1. **The top layer of two, in two commits.** The shared modules are
+   #2251. This layer's first commit is the port, with `master`'s tests
+   and the cases for what the port changes; the second holds the cases
+   that add coverage, so the port's diff shows only what the port
+   changes.
 
-- The 43 files of `course-home/outline-tab/` copied (flags into
-  `widgets/assets/`), the two slot modules, the three factories; imports
-  folded into `@openedx/frontend-base`; the plan's source changes
-  applied; `home` route lazy; `LEGACY_THEME_NAME: null` in
-  `defaultConfig`; three `@use` lines and the card-header rule in
-  `style.scss`; `truncate-html`, `lodash.camelcase` and
-  `@fortawesome/free-regular-svg-icons` declared at `master`'s versions
-  (the lock resolves the same versions as the legacy lock); 53 manifest
-  lines, 5 of them `dropped`.
-- `OutlineTab.test.jsx` and `Section.test.tsx` ported: 80 pass, 4 are
-  `it.skip` (three under #2194, one under #2185). Full suite: 41 suites,
-  512 passed, 11 skipped; lines 97.06. Lint clean. `npm run build`
-  passes and `dist/` holds the three flag SVGs.
+2. **A sequence title links to `getSequenceUrl(courseId, id)`.**
+   `master` writes `/course/<course>/<sequence>`, a path at the root of
+   its own site; under the shell Learning's routes sit below
+   `/learning`. The element stays react-router's `Link`, and the
+   block's `lms_web_url` (`showLink`) still decides whether the title
+   is a link.
+   - `useParams()` types the course id as possibly undefined. The
+     title is a link when `showLink && courseId`, in one expression,
+     with no non-null assertion. `master` built the link element first
+     and chose after; `getSequenceUrl` throws when no route provides
+     the courseware role, so here it runs only for a title that shows
+     a link.
 
-## Found, each needing an entry
+3. **The two dates links read `useDatesTabUrl()`.** `master` reads
+   `datesTabLink` from the outline response, which the outline view
+   builds as `get_learning_mfe_home_url(course_key,
+   url_fragment='dates')`: Learning's dates tab, reached by a full page
+   load. The hook resolves the dates role for the course, and both
+   links render through `getLinkProps`, so the switch stays in the
+   site.
+   - The hook returns nothing when the course metadata's `tabs` has no
+     dates tab, and then neither link renders. That is the fix for
+     #2250: `master` shows the scheduled content alert's button for a
+     course whose Dates tab is hidden, and both links to a learner the
+     entrance exam still gates.
+   - The all-dates link is a Paragon `Hyperlink` carrying `master`'s
+     classes, as #2247 made the progress tab's subsection titles;
+     `master` has a bare anchor. The scheduled content alert's `Button`
+     takes the link props directly.
 
-1. **`public/static/LmsHtmlFragment.css` is `dropped` in the manifest
-   (Brian).** The posted plan gave it a line pointing at
-   `LmsHtmlFragment.jsx`. That makes the component a target with two
-   legacy files, on which `port-diff` stops ("a merge of several legacy
-   files"). `dropped` is what the manifest calls a file that is not
-   ported, names no target, and so leaves the component with one legacy
-   file. The commit and the PR say where the three rules went. The
-   plan and the issue body mirror carry the correction; #2191's live
-   body is edited on Brian's word. `rebase-audit` reads `master`'s
-   changes under `src/` only, so the line is not audited either way.
-2. **The test render helpers had no authenticated user in the site
-   context.** `render` and `renderRoutes` in `tests/render.tsx` mounted
-   no `SiteContext` provider, so `useContext(SiteContext)` gave the
-   context's default, `authenticatedUser: null`, while
-   `getAuthenticatedUser()` returned the mock user. `master`'s
-   `AppProvider` put the user in `AppContext`. The private course alert
-   is the first ported reader whose tested outcome depends on it
-   (`authenticatedUser !== null`): four outline cases failed until both
-   helpers wrapped their tree in a `SiteContext.Provider` holding
-   `getAuthenticatedUser()`, read at render time. No other suite
-   changed result.
-3. **Lazy alerts and the account activation modal in the route test.**
-   `fetchAndRender` waits for the level-one heading with
-   `hidden: true`: the modal hides the page behind it from the
-   accessibility tree.
-4. **Console output fixed in components.**
-   - `WelcomeMessage`'s `nextElementRef` prop type named
-     `HTMLInputElement`; the tab passes the expand button's ref. Now
-     `HTMLElement`. Brian asked whether the input type had a reason;
-     the history, read 2026-11-12, gives none. The prop came in with
-     openedx/frontend-app-learning#1580 (KristinAoki, merged
-     2025-01-31), an accessibility fix. The type is `HTMLInputElement`
-     in all ten of its commits, and in all ten the ref is on the
-     "Expand all" `Button`; it never pointed at an input. The body, the
-     one review thread (about `tabIndex` on the message body) and the
-     one comment (codecov) do not mention the type. The case it added
-     asserts the "Expand all" button has focus after dismissal. The
-     line has not changed since, and no other prop type in Learning
-     names an element class. Its Jira tickets are private. Prop types
-     are checked in React's development build only and never change
-     what the component does, so the looser type removes the warning
-     for today's caller and nothing else. Brian: `HTMLElement` is
-     fine.
-   - `CertificateStatusAlert` rendered `FontAwesomeIcon` with no icon
-     for the not-passing variant, which react-fontawesome reports
-     ("Could not find icon undefined"). The icon renders only when the
-     variant has one.
-   - jsdom's "Not implemented: navigation": the upgrade button's
-     `location.replace` is stubbed with `mockLocation`; the two link
-     clicks use `preventNavigation`.
-5. **Lint.** (The three welcome message descriptions first said
-   "course update", the platform's word for where the field comes
-   from; Brian asked where it came from. Learning's code says
-   "welcome message" throughout, and the descriptions do now.)
-   Eleven messages gain a `description` (six in
-   `messages.ts`, two in the certificate alert's, three inline in the
-   scheduled content alert, one inline in the certificate alert);
-   `eslint-disable` comments for rules the package's lint does not have
-   are removed (`import/no-extraneous-dependencies` in the three
-   factories, `import/prefer-default-export` in two alert hooks);
-   `OutlineTab.jsx`'s `start_course` effect lists the two dependencies
-   it reads beside `location.search` (`location.pathname`, `navigate`),
-   which the package's lint reports as a warning and `master`'s lint,
-   with `react-hooks/exhaustive-deps` turned off, does not. I first
-   added a disable comment; Brian: adding the dependencies is better
-   than ignoring a lint rule, the more so as it does not change
-   behavior. When the effect runs again `start_course` is already out
-   of the address, and a case holds that the event is sent once; `HiddenSequenceLink.tsx` drops its empty `Props`
-   interface; `WelcomeMessage`'s show-more button, an element in an
-   array, gains a `key`.
-6. **The certificate alert's button takes `getLinkProps` for every
-   variant that has a link**, in one line:
-   `{...(buttonLink && getLinkProps(buttonLink))}` where `master` has
-   `href={buttonLink}`. The certificate web view and the support URL
-   are absolute, so they stay plain `href`s; the progress URL is a path
-   in the site and becomes a router link; an empty or missing link
-   renders a button, as `master`'s falsy `href` did. The plan said
-   only the grades button changes; the outcome is the same.
-7. **The all-dates link is a Paragon `Hyperlink`** with `master`'s
-   classes and `getLinkProps`, as #2247 made the progress tab's
-   subsection titles; `master` has a bare anchor. Its look beside the
-   widget's other anchors is a manual-pass item.
+4. **The certificate alert's button renders through `getLinkProps` in
+   one line.** `{...(buttonLink && getLinkProps(buttonLink))}` stands
+   where `master` has `href={buttonLink}`. The certificate web view
+   and the ID verification support URL are absolute, so they stay
+   plain `href`s; the progress tab's URL is a path in the site and
+   becomes a router link; an empty or missing link renders a button,
+   as `master`'s falsy `href` did.
 
-7a. **`SequenceTitle.tsx` guards the course id, no assertion.** I first
-   wrote `getSequenceUrl(courseId!, id)`, since `useParams()` types
-   the id as possibly undefined; Brian flagged the `!`, as he had on
-   `resolveRouteByRole` in #2190. The title is a link when
-   `showLink && courseId`, in one expression where `master` built
-   the link element first and chose after, so `getSequenceUrl`, which
-   throws when no route provides the courseware role, runs only for
-   a title that shows a link. No other file of the two outline
-   layers has an assertion the port added.
-7b. **Where the lint fixer removed a directive, the line goes with
-   it.** The package's lint removes an `eslint-disable` comment for a
-   rule it does not report. It left an empty line in its place in
-   `ProctoringInfoPanel.jsx`, `WeeklyLearningGoalCard.jsx` and
-   `courseBlocks.factory.js`, and, for the JSX comment in
-   `StartOrResumeCourseCard.jsx`, an empty expression container,
-   `{ }`, which Brian caught. All four are deleted, so each reads as
-   `master`'s file minus the comment line. The directives `master`
-   carries for rules the package does report are kept. The line under
-   the comment, `<Card.Footer><></></Card.Footer>`, stays as `master`
-   has it (Brian): the empty fragment is not needed, but the line is
-   unchanged from `master`.
-8. **`courseBlocks.factory.js` ports with two builders commented out
-   (Brian).** The outline suite uses `buildMinimalCourseBlocks` only;
-   `buildSimpleCourseBlocks` and `buildBinaryCourseBlocks` are used by
-   courseware suites and are line-commented under #2195's URL until
-   then. Factories count toward coverage here, as on `master`, and the
-   package is at 100% of lines below this layer. Uncommented, the file
-   is `master`'s apart from two stale lint comments the fixer removed.
-   The factory's default options and `block.factory.js`'s two
-   pass-through URLs are run by two cases of the coverage commit.
-9. **`CourseTools` renders an icon only for a tool it knows.** For any
-   other analytics id `renderIcon` returns `null`, and react-fontawesome
-   reports an icon it cannot find. Course tools are a plugin point
-   (`CourseToolsPluginManager`), so an unknown id can occur. Found
-   writing the coverage case for that branch; the fix is in the port's
-   commit, its case in the coverage commit.
-10. **Cases for what the port changes, with the port:** the sequence
-    title's `href`; the dates widget link (its `href`, and a click
-    staying in the site) and the scheduled content button, each also
-    absent without a dates tab; the not-passing alert's link to the
-    progress tab; the frame document (base, stylesheet link, the three
-    rules, the theme name); each goal button's flag image;
-    `weekly_goal` gone from the router's location after the save; the
-    page-rule assertion. `SESSION_COOKIE_DOMAIN` is covered in #2251.
-    The three lines #2234 left for this suite are run by `master`'s own
-    cases once ported.
-11. **Coverage cases, in their own commit:** the section's toggles; an
-    outline whose blocks include a unit; a sequence block built with its
-    own URLs; the start or resume button's click event and its absence
-    without a URL; each tool's icon, an unknown tool, a tool click; the
-    certificate and grades buttons' click events; the past-due
-    onboarding button; the frame's resize message.
+5. **The frames' three rules are inline, and the stylesheet file is
+   `dropped`.** `master`'s frame document links
+   `<BASE_URL>/static/LmsHtmlFragment.css`, a file its
+   `webpack.prod.config.js` copies out of `public/static/`. The package
+   is a library a site bundles: nothing serves a file of its at the
+   site's base URL, frontend-base's webpack gives every `.css` import
+   to its stylesheet rule (the host page, not the frame's document),
+   and no rule returns a file's text. The rules are written into
+   `LmsHtmlFragment.jsx` in a `<style>` element where the `<link>`
+   stood.
+   - Theming is unchanged. The frame's content is themed through
+     `LEGACY_THEME_NAME` (#785), which selects the `lms-main.css`
+     linked before these rules; a `<style>` element in the `<link>`'s
+     place has the same position and specificity in the cascade.
+   - Replacing the file in a fork or an image was never part of
+     Learning's API, so this is not called a breaking change. A search
+     of public GitHub for files named `LmsHtmlFragment.css` finds only
+     copies of this repository, each holding the unchanged file.
+   - The manifest line is `public/static/LmsHtmlFragment.css` to
+     `dropped`. A line pointing at the component would give that
+     target two legacy files, on which the `port-diff` script stops.
 
-## State (2026-11-12)
+6. **The goal card's flags are images under `widgets/assets/`.**
+   `master` imports each SVG's `ReactComponent`, which frontend-build's
+   `@svgr/webpack` rule provides. frontend-base's migration guide
+   (`docs/how_tos/migrate-frontend-app.md`, "SVGR "ReactComponent"
+   imports have been removed") says: "Please replace that export with
+   the default URL export and set the URL as the source of an `<img>`
+   tag, rather than using `ReactComponent`." The same guide's `build`
+   target copies `*.scss` files and files under an `assets/` directory
+   into `dist/`, which is all the package publishes, so the three files
+   move there; the manifest carries the move. The package's own dev
+   site and CI build bundle from `src/` and would not show a file
+   missing from `dist/`.
 
-- Working tree on `bsmith/outline-tab`, uncommitted. Two commit objects
-  on no branch hold it as it will be committed: the port, and the
-  coverage cases on top (186 lines added to `OutlineTab.test.jsx`).
-- The port alone: 41 suites, 525 passed, 11 skipped; lines 98.4; lint
-  clean. With the coverage cases: 543 passed, 11 skipped; lines 100 for
-  the package; lint clean; `build` and `build:ci` pass, the CI build
-  emitting the three flag images and the `learning-outline` chunk.
-- Brian read the port's diff (2026-11-12) and took it, after the
-  changes recorded above: the effect's dependencies, the welcome
-  message descriptions, the guard in `SequenceTitle.tsx`, the lint
-  fixer's leftovers. That diff includes the `SiteContext` provider
-  in the test helpers and the commented-out factory builders. He is
-  reading the coverage cases' diff next.
-- Brian read the coverage cases' diff and took it as it stood
-  (2026-11-12). Both diff servers are stopped.
-- Waiting on Brian: the word to commit; #2191's live body (the `dropped`
-  line for the stylesheet); the manual pass, drafted in
-  `manual-testing-2191.md`.
+7. **The goal card clears `weekly_goal` through the router.** `master`
+   calls `history.replace({ search })` on frontend-platform's
+   `history`, an instance of its own beside the router's, so the
+   address bar changes and the router's location does not.
+   frontend-base exports no `history`. The effect calls
+   `navigate({ search }, { replace: true })`; the router's location
+   then changes, the effect runs once more and finds no `weekly_goal`.
+   The goal is saved once either way, and a case holds that.
+
+8. **The `start_course` effect lists the values it reads.** Its
+   dependency list on `master` is `[location.search]`, though it also
+   reads `location.pathname` and `navigate`. `master`'s lint has
+   `react-hooks/exhaustive-deps` turned off; the package's reports it
+   as a warning. The two are added to the list instead of a disable
+   comment. When the effect runs again `start_course` is already out
+   of the address, so nothing changes, and a case holds that the event
+   is sent once. The two other `exhaustive-deps` comments in this
+   directory (`Section.tsx`, `WeeklyLearningGoalCard.jsx`) are
+   `master`'s and stay: adding dependencies there would change when
+   those effects run.
+
+9. **Console output fixed in the components.**
+   - `DateSummary`, `LmsHtmlFragment` and `WeeklyLearningGoalCard`
+     lose their `defaultProps`. The last two take default parameters,
+     since their defaults are read (a class name written into the
+     frame document, a goal compared with `null`).
+   - `WelcomeMessage`'s `nextElementRef` prop type names `HTMLElement`
+     where it named `HTMLInputElement`. The tab passes the "Expand all"
+     button's ref, so every re-render failed the check. The type came
+     in with #1580 and is `HTMLInputElement` in all of its commits,
+     while the ref is on the button in all of them and the case it
+     added asserts the button has focus; nothing in that PR says why
+     an input. The component only calls `.focus()`. Prop types are
+     checked in React's development build only, so nothing else
+     changes.
+   - `CertificateStatusAlert` and `CourseTools` render their icon only
+     when they have one. The not-passing variant of the alert has no
+     icon, and a tool with an analytics id the widget does not know
+     has none either; react-fontawesome reports an icon it cannot
+     find. Course tools come from a plugin point
+     (`CourseToolsPluginManager`), so an unknown id can occur.
+
+10. **Lint.** Eleven messages gain a `description`, their ids and
+    default messages untouched: six in `messages.ts`, two in the
+    certificate alert's, three inline in the scheduled content alert
+    and one inline in the certificate alert. `eslint-disable` comments
+    for rules the package's lint does not have or does not report are
+    removed, each with its whole line. `HiddenSequenceLink.tsx` drops
+    an empty `Props` interface, and `WelcomeMessage`'s show-more
+    button, an element in an array, gains a `key`.
+
+11. **`courseBlocks.factory.js` ports with two builders commented
+    out.** The outline suite uses `buildMinimalCourseBlocks` only.
+    `buildSimpleCourseBlocks` and `buildBinaryCourseBlocks` are first
+    called by courseware suites, so they are line-commented under
+    #2195's URL. Factories count toward coverage here, as on `master`,
+    and the package is at 100% of lines below this layer. Uncommented,
+    the file is `master`'s apart from two lint comments.
+
+12. **The test render helpers put the authenticated user in the site
+    context.** `render` and `renderRoutes` mounted no `SiteContext`
+    provider, so `useContext(SiteContext)` gave the context's default,
+    no user, while `getAuthenticatedUser()` returned the mock user.
+    `master`'s `AppProvider` put the user in `AppContext`. The private
+    course alert is the first ported code whose tested outcome depends
+    on it, and four outline cases failed. Both helpers now wrap their
+    tree in a `SiteContext.Provider` holding `getAuthenticatedUser()`,
+    read at render time. No other suite changed result.
+
+13. **The outline test through the route array.**
+    - `fetchAndRender` keeps its `path` argument for the query-string
+      cases and waits for the level-one heading with `hidden: true`:
+      the account activation modal hides the page behind it from the
+      accessibility tree.
+    - Three cases render the instructor toolbar for real and are
+      `it.skip` under #2194's URL: the two access expiration banner
+      cases and the request count with the toolbar mounted. The case
+      that asserts the plugin slot's test id is `it.skip` under
+      #2185's URL.
+    - A case that clicks a link stops the navigation with
+      `preventNavigation`. The upgrade button calls `location.replace`
+      itself, which a prevented click does not stop, so its case stubs
+      the location with `mockLocation`, as the dates suite does for
+      the same button.
+    - The case that sets `LEGACY_THEME_NAME` resets it inside `act`
+      while the page is still mounted, as the progress suite resets
+      its flag.
+
+14. **Cases for what the port changes, in the first commit:** the
+    sequence title's `href`; the dates widget link (its `href`, and a
+    click staying in the site) and the scheduled content button, each
+    also absent without a dates tab; the not-passing alert's link to
+    the progress tab; the frame document (base, stylesheet link, the
+    three rules, the theme name); each goal button's flag image;
+    `weekly_goal` and `start_course` gone from the router's location,
+    with one save and one event; the page-rule assertion, moved from
+    `routes.test.tsx`. The three lines #2234 left for this suite are
+    run by `master`'s own cases once ported.
+
+15. **Cases that add coverage, in the second commit:** a section's
+    toggles; the start or resume button's click event and its absence
+    without a URL; each tool's icon, an unknown tool, a tool click;
+    the certificate and grades buttons' click events; the past-due
+    onboarding button; the frame's resize message. Two cases run
+    factory code: an outline built from the course blocks factory's
+    defaults, which include a unit, and a sequence block built with
+    its own URLs.
+
+16. **Checks (2026-11-12).** At the first commit: `npm run lint` clean,
+    with the package's `.jsx` files included
+    (openedx/frontend-base#327); `npm test`, 41 suites, 525 passed, 11
+    skipped, lines 98.4. At the second: lint clean; 543 passed, 11
+    skipped; lines 100 for the package. `npm run build` and
+    `npm run build:ci` pass; `dist/` holds the three flag images, and
+    the CI build emits them and the `learning-outline` chunk.
