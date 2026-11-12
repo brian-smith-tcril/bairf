@@ -249,9 +249,9 @@ import and config mapping are in #2191's plan and are not repeated.
 
 18. **The certificate and course end alerts get no time zone, as on
     `master`.** Their hooks read `userTimezone` from the outline data,
-    which has no such key; the course metadata carries it. The port
-    keeps the read. The two cases that reach the alerts' time zone
-    branch hand the component a payload.
+    which has no such key; the course metadata carries it (#2253).
+    The port keeps the read. The two cases that reach the alerts' time
+    zone branch hand the component a payload.
 
 19. **Checks (2026-11-12).** At the first commit: `npm run lint` clean,
     with the package's `.jsx` files included

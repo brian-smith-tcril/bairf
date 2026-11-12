@@ -257,3 +257,12 @@ its PR.
    - Open: the time zone issue draft waits for Brian's word to file.
      When it has a number, entry 18 of `decisions-2252.md` and the
      PR body gain it.
+   - **The time zone issue is filed (2026-11-12): #2253**, settled on
+     Brian's word ("issue draft looks fine, file it as settled"), with
+     the timeline he asked for: broken since #606 in 2021, five years
+     before the React Query conversion (#2093), which kept the read as
+     it was; the certificate alert's dates have never used the
+     preference, since #477 put the time zone on its
+     `FormattedMessage`. Not a sub-issue of the epic. Entry 18 of
+     `decisions-2252.md` and its copy in `pr-body-2252.md` name #2253;
+     #2252's live body does not yet, pending Brian's word.

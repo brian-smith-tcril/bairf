@@ -36,4 +36,4 @@
 | external-route-params | issue-body-external-route-params.md | openedx/frontend-base#349 | settled |
 | helmet-strict-mode | issue-body-helmet-strict-mode.md | openedx/frontend-base#350 | settled |
 | outline-hidden-dates-tab | issue-body-2250.md | openedx/frontend-app-learning#2250 | settled |
-| outline-alerts-timezone | issue-body-outline-alerts-timezone.md | | unpublished |
+| outline-alerts-timezone | issue-body-outline-alerts-timezone.md | openedx/frontend-app-learning#2253 | settled |
