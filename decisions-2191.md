@@ -266,3 +266,13 @@ its PR.
      `FormattedMessage`. Not a sub-issue of the epic. Entry 18 of
      `decisions-2252.md` and its copy in `pr-body-2252.md` name #2253,
      and #2252's live body is set from it.
+   - **Stack re-synced (2026-11-12)** after Brian merged #2246 and
+     #2247 and upstream rebased the three open layers onto
+     `frontend-base` (`5443cd53`). Upstream was the truth: the fetch
+     moved each remote branch from exactly the local tip, and
+     `git range-diff` showed all four commits unchanged. By the
+     recipe: `gh stack unstack --local`, the five local layer branches
+     deleted, `gh stack checkout 2248`; nothing pushed. Heads now:
+     #2249 `bea109b5`, #2251 `5cdad421`, #2252 `84f00e55` (port commit
+     `74b0eb31`). The local `frontend-base` is fast-forwarded to
+     upstream's. All three open PRs are out of draft.
