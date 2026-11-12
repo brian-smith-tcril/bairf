@@ -174,6 +174,8 @@ before the layer is submitted.
   fixer's leftovers. That diff includes the `SiteContext` provider
   in the test helpers and the commented-out factory builders. He is
   reading the coverage cases' diff next.
-- Waiting on Brian: the coverage cases' diff; #2191's live body (the `dropped`
+- Brian read the coverage cases' diff and took it as it stood
+  (2026-11-12). Both diff servers are stopped.
+- Waiting on Brian: the word to commit; #2191's live body (the `dropped`
   line for the stylesheet); the manual pass, drafted in
   `manual-testing-2191.md`.
