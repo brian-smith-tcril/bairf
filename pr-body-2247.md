@@ -296,9 +296,11 @@ as the enrolled learner and stay on it.
 - **The lock icon with `viewBox` removed** — the icon's `<g>`, with and without the
   attribute, was rendered in headless Chrome 157 at the chart's `viewBox`: the two
   screenshots are byte-identical, lock icon in place on the segment.
-- **Lint, tests and both builds** at the layer's head (`3b75d41f`) and at its port commit
-  alone (`ca1189eb`), 2026-11-11: all pass. Head: 35 suites, 402 passed, 7 skipped, 100%
-  of lines. Port commit: 33 suites, 364 passed, 7 skipped, 98.31% of lines.
+- **Lint, tests and both builds** at the layer's head and at its port commit alone
+  (`ca1189eb`), 2026-11-11: all pass. Head: 35 suites, 402 passed, 7 skipped, 100% of
+  lines. Port commit: 33 suites, 364 passed, 7 skipped, 98.31% of lines. One test case
+  was added to the head afterwards (`bf89cde5`: 403 passed), with lint, the suite and
+  `build:ci` rerun.
 
 ### Left to the suite
 
@@ -327,9 +329,9 @@ entrance exam status is the next layer's section.
 
 ### Results
 
-**2026-11-11, Brian, on the dev site, `bsmith/progress-tab` at `3b75d41f`.** The checks
-and this pass ran on that commit's code under its earlier id; only its message was
-rewritten since.
+**2026-11-11, Brian, on the dev site, on `bsmith/progress-tab`.** The pass ran on the
+layer's code as it stands at `bf89cde5`, before one test case was added and a commit
+message rewritten; no component changed since.
 
 - Brian ticked all five steps and the optional staff view.
 - Step 5, wrapping: Brian edited a subsection title's text in the page to be long, and it
