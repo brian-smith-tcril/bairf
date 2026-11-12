@@ -1238,3 +1238,11 @@ in #2190's plan and are not repeated.
       signature, kept for #2195's callers).
     - Brian: drop `api.test.ts`, by the same reasoning as the nine
       cases of entry 26. `apiHooks.test.tsx` stays.
+    - The plan said `master`'s `apiHooks.test.tsx` "covers sequence
+      metadata only". It does not: it has cases for eleven hooks and
+      queries, and `useCoursewareMetadata` is the fetcher in its
+      `useSequenceIds` and `useIsCourseLoaded` cases, with no case of
+      its own. Plan and mirror corrected, and the commit message's
+      "master has no test of the metadata request, normalizer or
+      hook" with them. The live #2190 body carries the old sentence
+      until Brian says to update it.
