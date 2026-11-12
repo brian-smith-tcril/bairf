@@ -1188,3 +1188,26 @@ in #2190's plan and are not repeated.
       test's contents); updated on Brian's word at 2026-11-12T02:56:17Z and
       read back equal to it. That edit also carried the lean Manual
       testing section of entry 36.
+
+41. **The entrance exam layer exists locally (2026-11-11).** `gh
+    stack add bsmith/progress-entrance-exam` on top of #2247,
+    fast-forwarded to the commit that had been parked on
+    `bsmith/progress-tab-wip`; that helper branch is deleted. Not
+    pushed, no PR.
+    - Checks at the layer: lint clean; 37 suites, 415 passed, 7
+      skipped; 100% of lines; `build` and `build:ci` pass. Its patch
+      counted from the local lcov as Codecov counts it: 16 lines,
+      none missed or partial (`coursewareMeta.ts` is mostly types).
+    - Two comments the lower layers added become false here and are
+      corrected in this layer's commit: `course-exit/utils.test.ts`
+      said both courseware queries are stubs, and only the outline
+      one still is; `ProgressTabComponents.test.tsx` said nothing on
+      the progress tab loads the courseware metadata, which this
+      layer changes. Both mocks stay, since neither file's cases
+      fetch. The layer's commit is `04ed607f`.
+    - `useCoursewareMetadata` calls `coursewareMetadataQuery(courseId!)`
+      with `enabled` false for a missing id, the idiom of the merged
+      `course-home/data/apiHooks.ts` (three hooks there).
+    - Open with Brian: the layer's commits. It is one `fix:` commit
+      that also ports the courseware metadata slice; the house rule
+      for a bug-fix layer is the failing tests, then the fix.
