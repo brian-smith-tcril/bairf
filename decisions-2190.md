@@ -1303,3 +1303,15 @@ in #2190's plan and are not repeated.
       layer is submitted. The manual testing section was made
       embeddable: the fakes patch is inline and no local path is
       named. #2243's live body still words the intent as fact.
+
+45. **The top layer is up as a draft: #2249 (2026-11-12).** `gh stack
+    submit --auto --remote upstream` pushed
+    `bsmith/progress-entrance-exam` at `f51d72ec` and opened #2249
+    on #2247's branch; GitHub's stack #2248 now holds #2246, #2247
+    and #2249. The title is the commit header; the body was set
+    from `pr-body-2249.md` in one `gh pr edit` and matches it. The
+    commit's authors on GitHub are Brian and Claude. The drafts
+    were renamed `decisions-2249.md` and `pr-body-2249.md`.
+    - Not done, each waits for Brian's word: the comments on #2243
+      and #2244 linking the fix; the correction of #2243's sentence
+      about #1429's intent.

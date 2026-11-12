@@ -1,4 +1,4 @@
-# Decisions: the entrance exam status on the progress tab
+# Decisions: the entrance exam status on the progress tab (#2249)
 
 Decisions made while building this layer of #2190. The scope is in #2190's plan, the bug
 is described in #2243 and the staff view in #2244. The tab itself is ported in #2247, the
