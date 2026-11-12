@@ -77,7 +77,10 @@ as the enrolled learner.
 
 **2026-11-12, Brian, on the dev site, on `bsmith/outline-tab`.**
 
-- Brian ticked steps 1, 2, 3, 4, 7 and 8, with no notes on any of them.
+- Brian ticked steps 1, 2, 3, 4, 7 and 8, with no notes on any of them. Three details
+  those steps ask about were not noted and stay unrecorded: how the all-dates link
+  looked beside the links around it (step 4), whether the console held warnings that
+  are not Learning's (step 2), and whether the welcome message held a link (step 6).
 - Step 5 was not run. Brian: "not testing because setting up goals sounds like a
   pain". So the goal card, its three flag images and its `FlagButton.scss` styles have
   not been seen in a browser. The suite checks that each goal button holds an image
@@ -86,6 +89,7 @@ as the enrolled learner.
 - Step 6 was run for the welcome message only. Brian: "just welcome message, didn't
   do anything for handouts". So the handouts frame, and with it the `small` rule, has
   not been seen in a browser.
+- Brian is not running the steps that were not run; they stand as gaps in this pass.
 
 ### Left to the suite
 
