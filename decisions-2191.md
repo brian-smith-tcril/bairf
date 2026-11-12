@@ -88,6 +88,9 @@ its PR.
      #2247, #2249, #2251 and #2252. The four lower branches were not
      moved. The body was set from `pr-body-2252.md` in one edit and
      matches it; the commits' authors on GitHub are Brian and Claude.
+   - With two commits on the branch, `--auto` titled the PR from the
+     branch name ("bsmith/outline tab"). The title was set to the
+     port commit's subject in a second edit, as #2247's is.
    - Not done, each waits for Brian's word: #2191's live body (the
      `dropped` line; the mirror is one sentence ahead); #2250's status
      line naming #2252; the manual pass, which Brian runs on the draft
