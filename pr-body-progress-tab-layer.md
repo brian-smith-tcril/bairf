@@ -282,13 +282,13 @@ as the enrolled learner and stay on it.
       table: it lands on "outline: not yet ported". Go back.
       *Why here:* the title is a Paragon `Hyperlink` to the sequence's route.
 
-### Only if it costs you nothing
+### Optional
 
 - [x] **A staff view** (needs a staff session and a learner's user id) —
       `…/progress/<userId>` shows "Course progress for <that learner>". The suite covers
       the heading and the request; this only adds the real route.
 
-### Checked without you
+### Checked outside the app
 
 - **The lock icon with `viewBox` removed** — the icon's `<g>`, with and without the
   attribute, was rendered in headless Chrome 157 at the chart's `viewBox`: the two
@@ -297,7 +297,7 @@ as the enrolled learner and stay on it.
   alone (`ca1189eb`), 2026-11-11: all pass. Head: 35 suites, 402 passed, 7 skipped, 100%
   of lines. Port commit: 33 suites, 364 passed, 7 skipped, 98.31% of lines.
 
-### Left to the suite, not asked of you
+### Left to the suite
 
 Each of these needs faked responses, a config edit or a special course to see by hand, and
 has a test that asserts it:
