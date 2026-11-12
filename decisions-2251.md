@@ -64,19 +64,35 @@ import and config mapping are in #2191's plan and are not repeated.
    so each case sets a start relative to now (7 days and an hour, 2
    hours and a minute) and gives the metadata `userTimezone: 'UTC'`, so
    the expected date string does not depend on the machine's time zone.
-   No test in the package pins the clock, and none does here. Two
-   branches stay untaken, as on `master`: the `?? {}` after the metadata
-   read in `CourseStartAlert.jsx` (line 26) and
-   `CourseStartMasqueradeBanner.jsx` (line 16), reached only if the
-   metadata the hook just read is gone when the alert renders.
+   No test in the package pins the clock, and none does here.
 
-9. **`js-cookie` is declared at `^3.0.8`**, `master`'s `3.0.8` with a
+9. **Of the two `?? {}` after the metadata read, one is dropped and
+   one is tested.** Both run only if the component renders with no
+   course metadata in the cache, and the first push of this layer left
+   both branches untaken, which codecov showed as two partially covered
+   lines. Each was rendered alone without metadata to see what its
+   default does.
+   - `CourseStartAlert.jsx` throws either way: with the default the
+     start date is undefined, the distance is `NaN`, and
+     `FormattedRelativeTime` raises React's "Too many re-renders";
+     without it the destructure throws. The default only moved the
+     throw, so it is dropped, as #2234 did in `Timeline` and
+     `UpgradeToCompleteAlert` and #2246 in `GetCourseExitNavigation`.
+   - `CourseStartMasqueradeBanner.jsx` renders the banner with today's
+     date as the start date, since `FormattedDate` formats the current
+     time for an undefined value. The default changes the outcome, so
+     it stays, and a case renders the banner without metadata and
+     asserts that text. The case records what `master`'s default does;
+     the date it shows is not the course's.
+
+10. **`js-cookie` is declared at `^3.0.8`**, `master`'s `3.0.8` with a
    caret, as the dates tab layer declared its dependencies. The lock
    gains the one package entry.
 
-10. **Checks at the layer's commit (2026-11-12).** `npm run lint`
+11. **Checks at the layer's commit (2026-11-12).** `npm run lint`
     clean, with the package's `.jsx` files included
-    (openedx/frontend-base#327). `npm test`: 39 suites, 432 passed, 7 skipped; lines 100,
-    statements 99.64, branches 97.41, functions 98.15 for the package.
-    Each file this layer adds is at 100 lines. `npm run build` and
+    (openedx/frontend-base#327). `npm test`: 39 suites, 433 passed, 7 skipped; lines 100,
+    statements 99.64, branches 97.65, functions 98.15 for the package.
+    Each file this layer adds is at 100 lines, and
+    `alerts/course-start-alert/` at 100 branches. `npm run build` and
     `npm run build:ci` pass; `dist/` holds the new modules.

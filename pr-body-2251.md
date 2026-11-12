@@ -11,7 +11,7 @@ Part of #1905. Part of #2191. Stacked above #2249; the outline tab follows as th
 
 - **The account activation alert reads its cookie domain from the app config.** `master` removes the `show-account-activation-popup` cookie on `process.env.SESSION_COOKIE_DOMAIN`. Here the domain is `getAppConfig(appId).SESSION_COOKIE_DOMAIN`, an app config key with no bundled default: an operator who sets nothing gets the cookie removed on the serving host, as `master` does with the variable unset. The continue button's site name is `getSiteConfig().siteName`.
 - **`sendActivationEmail` and the courseware data index.** The alert imports its request from `courseware/data`, so `courseware/data/api.js` gains `sendActivationEmail` and `courseware/data/index.js` ports exporting that one name. The other two names the index re-exports on `master`, `getResumeBlock` and `getSequenceForUnitDeprecated`, are commented out under #2195's URL until the courseware container ports them.
-- **The course start alert ports whole.** The outline tab reads `useCourseStartAlert` and `CourseStartAlert.jsx`. `useCourseStartMasqueradeBanner` and `CourseStartMasqueradeBanner.jsx` come with them and have no caller until the instructor toolbar ports (#2194).
+- **The course start alert ports whole.** The outline tab reads `useCourseStartAlert` and `CourseStartAlert.jsx`. `useCourseStartMasqueradeBanner` and `CourseStartMasqueradeBanner.jsx` come with them and have no caller until the instructor toolbar ports (#2194). `CourseStartAlert.jsx` drops the `?? {}` after its metadata read: without metadata it throws either way, so the default only moved the throw (decision log entry 9).
 - **`EffortEstimate` drops its `defaultProps`.** React warns about them on a function component. The one default was a `null` class name, which `classNames` skips the same way it skips an absent one.
 - **Lint.** The masquerade banner's multi-line `FormattedDate` value gains parentheses, and the effort estimate's `activities` message gains a `description`; its id and default message are untouched.
 - **`js-cookie` is declared** at `^3.0.8`, the version `master` installs. The lock gains that one package entry.
@@ -20,15 +20,15 @@ Part of #1905. Part of #2191. Stacked above #2249; the outline tab follows as th
 
 ## Testing
 
-In `frontend-base/`: lint, the tests, `build` and `build:ci` pass. 39 suites, 432 tests passed and 7 skipped (cases kept as `it.skip` under the issues that port what they render). Lint ran with the package's `.jsx` files included (openedx/frontend-base#327).
+In `frontend-base/`: lint, the tests, `build` and `build:ci` pass. 39 suites, 433 tests passed and 7 skipped (cases kept as `it.skip` under the issues that port what they render). Lint ran with the package's `.jsx` files included (openedx/frontend-base#327).
 
 **New tests.** `master` has no test file for any of these modules; it covers them through the outline and progress tab suites. Each gets one here, since no route in this layer renders them:
 
 - `EffortEstimate.test.tsx`: the time in whole minutes, abbreviated on screen and spelled out for screen readers; the activity count; both together; nothing for a block with neither; the class name it is given.
-- `course-start-alert/hooks.test.tsx`: the alert's full sentence for a course more than a day away and less than a day away, in the learner's time zone and without one, and nothing for a learner who is not enrolled or a course that has started; the masquerade banner on the progress tab, and nothing on another tab or without masquerading.
+- `course-start-alert/hooks.test.tsx`: the alert's full sentence for a course more than a day away and less than a day away, in the learner's time zone and without one, and nothing for a learner who is not enrolled or a course that has started; the masquerade banner on the progress tab, with today's date when the course metadata is gone from the cache, and nothing on another tab or without masquerading.
 - `AccountActivationAlert.test.tsx`: the alert opens when the cookie is set and removes it; stays closed without it; removes it on the domain the app config names; closes on the continue button and stays open on Escape; resends the activation email, with a spinner until the request settles and a check after. The cases set the cookie on the document and let `js-cookie` read and remove it, where `master`'s outline suite replaces the library's functions with mocks.
 
-**Coverage.** The package is at 100% of lines at this layer, against its 96.15% bar, and every file this layer adds is at 100% of lines. Two branches stay untaken, as on `master`: the `?? {}` after the metadata read in `CourseStartAlert.jsx` and `CourseStartMasqueradeBanner.jsx`.
+**Coverage.** The package is at 100% of lines at this layer, against its 96.15% bar, and every file this layer adds is at 100% of lines. Codecov's first report on this PR showed two partially covered lines, the `?? {}` after the metadata read in `CourseStartAlert.jsx` and `CourseStartMasqueradeBanner.jsx`; the first is dropped and the second has a case now (decision log entry 9).
 
 **Manual testing.** None: no route renders these modules yet. The outline tab layer carries the manual pass.
 
@@ -105,21 +105,37 @@ import and config mapping are in #2191's plan and are not repeated.
    so each case sets a start relative to now (7 days and an hour, 2
    hours and a minute) and gives the metadata `userTimezone: 'UTC'`, so
    the expected date string does not depend on the machine's time zone.
-   No test in the package pins the clock, and none does here. Two
-   branches stay untaken, as on `master`: the `?? {}` after the metadata
-   read in `CourseStartAlert.jsx` (line 26) and
-   `CourseStartMasqueradeBanner.jsx` (line 16), reached only if the
-   metadata the hook just read is gone when the alert renders.
+   No test in the package pins the clock, and none does here.
 
-9. **`js-cookie` is declared at `^3.0.8`**, `master`'s `3.0.8` with a
+9. **Of the two `?? {}` after the metadata read, one is dropped and
+   one is tested.** Both run only if the component renders with no
+   course metadata in the cache, and the first push of this layer left
+   both branches untaken, which codecov showed as two partially covered
+   lines. Each was rendered alone without metadata to see what its
+   default does.
+   - `CourseStartAlert.jsx` throws either way: with the default the
+     start date is undefined, the distance is `NaN`, and
+     `FormattedRelativeTime` raises React's "Too many re-renders";
+     without it the destructure throws. The default only moved the
+     throw, so it is dropped, as #2234 did in `Timeline` and
+     `UpgradeToCompleteAlert` and #2246 in `GetCourseExitNavigation`.
+   - `CourseStartMasqueradeBanner.jsx` renders the banner with today's
+     date as the start date, since `FormattedDate` formats the current
+     time for an undefined value. The default changes the outcome, so
+     it stays, and a case renders the banner without metadata and
+     asserts that text. The case records what `master`'s default does;
+     the date it shows is not the course's.
+
+10. **`js-cookie` is declared at `^3.0.8`**, `master`'s `3.0.8` with a
    caret, as the dates tab layer declared its dependencies. The lock
    gains the one package entry.
 
-10. **Checks at the layer's commit (2026-11-12).** `npm run lint`
+11. **Checks at the layer's commit (2026-11-12).** `npm run lint`
     clean, with the package's `.jsx` files included
-    (openedx/frontend-base#327). `npm test`: 39 suites, 432 passed, 7 skipped; lines 100,
-    statements 99.64, branches 97.41, functions 98.15 for the package.
-    Each file this layer adds is at 100 lines. `npm run build` and
+    (openedx/frontend-base#327). `npm test`: 39 suites, 433 passed, 7 skipped; lines 100,
+    statements 99.64, branches 97.65, functions 98.15 for the package.
+    Each file this layer adds is at 100 lines, and
+    `alerts/course-start-alert/` at 100 branches. `npm run build` and
     `npm run build:ci` pass; `dist/` holds the new modules.
 
 </details>
