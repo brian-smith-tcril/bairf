@@ -38,7 +38,7 @@ At the layer's head and at the port commit alone, in `frontend-base/`: lint, the
 
 **Coverage.** The package is at 100% of lines at the head, against its 96.15% bar, and at 98.4% at the port commit alone.
 
-**Manual testing** on the package's dev site against tutor dev, with one enrolled learner in the demo course: the page and its styles in the shell, the console, a sequence title, the all-dates link, the welcome message frame, the narrow card header, and the progress tab's outline links. Not run: the goal card's flags, and the handouts frame. The record is below.
+**Manual testing** on the package's dev site against tutor dev, with one enrolled learner in the demo course: the page and its styles in the shell, the console, a sequence title, the all-dates link, the welcome message frame, the narrow card header, and the progress tab's outline links. Not run in the app: the goal card's flags, and the handouts frame. The flags' image form was compared with `master`'s inline form in headless Chrome, outside the app: the screenshots are byte-identical. The record is below.
 
 ## Decisions
 
@@ -337,13 +337,30 @@ as the enrolled learner.
   are not Learning's (step 2), and whether the welcome message held a link (step 6).
 - Step 5 was not run. Brian: "not testing because setting up goals sounds like a
   pain". So the goal card, its three flag images and its `FlagButton.scss` styles have
-  not been seen in a browser. The suite checks that each goal button holds an image
+  not been seen in the app. The suite checks that each goal button holds an image
   whose source is the SVG's URL, with the SVG import mocked; the CI site build emits
-  the three files.
+  the three files; and the image form was compared with the inline form outside the
+  app (below).
 - Step 6 was run for the welcome message only. Brian: "just welcome message, didn't
   do anything for handouts". So the handouts frame, and with it the `small` rule, has
   not been seen in a browser.
 - Brian is not running the steps that were not run; they stand as gaps in this pass.
+
+### Checked outside the app
+
+- **The flags as images** — the three goal buttons were drawn twice in one page
+  layout, once with each SVG inline, as `master` renders it, and once as
+  `<img src>` of the same file, as this layer does, and rendered in headless Chrome
+  157 at 560 by 220 pixels: the two screenshots are byte-identical, with the
+  outline, half-grey and black flags in place and the middle button selected. The
+  page used stand-in styles for the button and its layout classes, the same in both
+  renderings, not Paragon's or the app's stylesheet. So this holds that an image
+  draws what the inline SVG drew; it does not show the card in the app, which
+  step 5 would have.
+- **Lint, tests and both builds** at the layer's head (`2a1a017b`) and at its port
+  commit alone (`c2315c2d`), 2026-11-12: all pass. Head: 41 suites, 543 passed, 11
+  skipped, 100% of lines. Port commit: 525 passed, 11 skipped, 98.4% of lines. The
+  CI site build emits the three flag files and the `learning-outline` chunk.
 
 ### Left to the suite
 
