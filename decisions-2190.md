@@ -1315,3 +1315,17 @@ in #2190's plan and are not repeated.
     - Not done, each waits for Brian's word: the comments on #2243
       and #2244 linking the fix; the correction of #2243's sentence
       about #1429's intent.
+
+46. **The stack is in review (2026-11-12).** Brian took #2246, #2247
+    and #2249 out of draft and requested review from `arbrandes` on
+    each. Read from GitHub afterwards: all three open, not draft, at
+    `e1374ac0`, `bf89cde5` and `f51d72ec`; each live body matches its
+    mirror (`pr-body-2246.md`, `pr-body-2247.md`, `pr-body-2249.md`),
+    and #2190's, #2243's and #2244's match theirs.
+    - The project checkout is on `bsmith/progress-entrance-exam` with
+      only the local lint change uncommitted; the fakes patch is not
+      applied.
+    - Still waiting for Brian's word: the comments on #2243 and
+      #2244 linking #2249, and whether #2243's sentence "the intent
+      since #1429 is no certificate card" is corrected in its body.
+    - CI on #2249 has not been read here; Brian watches CI.
