@@ -1036,3 +1036,35 @@ in #2190's plan and are not repeated.
     `42d7c7f0` (the tests), local and unpushed; still to do before it
     is submitted: the full checks once more at its head and at the
     port commit alone, the manual pass on Tutor dev, and its PR body.
+
+36. **The manual pass asks only for what a layer changes and a test
+    cannot see, with a cost on each step (Brian, 2026-11-11).** Brian:
+    earlier manual testing docs had him retest things the layer did
+    not touch and took no account of the time and effort of each
+    test.
+    - `manual-testing-2190.md` has one section per layer. The
+      progress tab layer's is one page and five looks, about five
+      minutes, with one enrolled learner in the demo course and no
+      faked responses, staff user or config edit: the page and its
+      styles, the console, the two tooltips, the dates link, the
+      subsection titles and the outline link. A staff view is
+      optional.
+    - Dropped from the plan's list for this layer, each with the test
+      that covers it named in the record: the certificate states by
+      faked `certificate_data`, credit information, the 404 redirect,
+      `SHOW_UNGRADED_ASSIGNMENT_PROGRESS` on and off, the dashboard
+      and profile links with roles declared in the dev site config.
+      The plan's Manual testing section and the body mirror are
+      rewritten to match; #2190's live body waits for Brian's word.
+    - Done without Brian: the lock icon's `<g>` with and without
+      `viewBox`, rendered in headless Chrome 157 at the chart's
+      `viewBox`, gives byte-identical screenshots with the icon in
+      place (entry 31's open point).
+    - Full checks 2026-11-11, at the layer's head `42d7c7f0`: lint
+      clean; 35 suites, 402 passed, 7 skipped; 100% of lines; `build`
+      and `build:ci` pass. At the port commit alone, `ca1189eb`: lint
+      clean; 33 suites, 364 passed, 7 skipped; 98.31% of lines;
+      `build` and `build:ci` pass.
+    - Tutor dev and the dev site were not running when checked
+      (`local.openedx.io:8000` and `apps.local.openedx.io:2000` did
+      not answer), so nothing was looked at in the app itself.
