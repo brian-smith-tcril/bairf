@@ -1251,3 +1251,29 @@ in #2190's plan and are not repeated.
       suites, 412 passed, 7 skipped; 100% of lines; `build` and
       `build:ci` pass. Patch estimate from `lcov.info`: 17 lines,
       none missed or partial.
+
+43. **The entrance exam layer's manual pass: two looks, faked
+    responses (2026-11-12).**
+    - Brian: setting up a real entrance exam is a pain, so the pass
+      relies on faked responses, by a patch or by browser overrides.
+    - Look 1 has no fake: the real `GET /api/courseware/course/<id>`
+      from the real app, and the real response's
+      `entrance_exam_data.entrance_exam_passed`. The suite answers
+      this request from a factory.
+    - Look 2 uses `local-fake-entrance-exam.patch`, kept beside the
+      local lint patch and never committed. It edits the two
+      responses where they arrive, so the normalizer and everything
+      after it run as they are: the progress response gets an
+      `unverified` certificate with a `pending` verification (a
+      card with no button; a `requesting` card would offer a button
+      that posts a certificate request), and the courseware response
+      gets `entrance_exam_passed: false` when the page URL has
+      `?exam=failed`.
+    - The demo course most likely shows no certificate card by
+      itself, which is why the progress response is faked too. Not
+      checked on Brian's site.
+    - The staff look is optional and only watches for no request.
+      The card on another learner's page depends on the requester's
+      own enrollment (#2244), so it is not part of the look.
+    - The fakes were run under the suite, not in a browser: see the
+      doc's "Checked outside the app".
