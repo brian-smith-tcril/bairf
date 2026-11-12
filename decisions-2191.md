@@ -264,5 +264,5 @@ its PR.
      it was; the certificate alert's dates have never used the
      preference, since #477 put the time zone on its
      `FormattedMessage`. Not a sub-issue of the epic. Entry 18 of
-     `decisions-2252.md` and its copy in `pr-body-2252.md` name #2253;
-     #2252's live body does not yet, pending Brian's word.
+     `decisions-2252.md` and its copy in `pr-body-2252.md` name #2253,
+     and #2252's live body is set from it.
