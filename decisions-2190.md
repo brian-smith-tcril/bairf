@@ -1344,3 +1344,8 @@ in #2190's plan and are not repeated.
       the old sentence.
     - The #2243 draft also rewrites "the intent since #1429 is no
       certificate card" (entry 44). Put to Brian as a separate hunk.
+    - Brian: apply all four. Done 2026-11-12 in three edits: #2243
+      (the status paragraph and the intent sentence), #2244 (the
+      status paragraph), #2190 (the plan's sentence). Each live body
+      matches its mirror afterwards. No comment was posted on either
+      issue.
