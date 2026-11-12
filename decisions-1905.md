@@ -777,3 +777,21 @@ Settled 2026-10-19, wayfinder ticket 04 (port order).
     frontend-base version only, and the other needs a backport if a fix
     is wanted there. The two issues say so in their bodies, as a status
     line, not in a comment.
+
+40. **An image file ports into an `assets/` directory.** Decided
+    2026-11-12 with Brian, planning #2191. The package publishes `dist/`
+    only, and its `build` target, in the form frontend-base's migration
+    how-to gives (`docs/how_tos/migrate-frontend-app.md`), copies
+    `*.scss` files and "all files under `assets/` directories regardless
+    of type" into it. An image elsewhere is missing from the published
+    package, and the package's own checks cannot show it: the dev site
+    and `build:ci` bundle from `src/`. Extending the `find` per extension
+    was the other form, and departs from the how-to's text. Nine of
+    `master`'s fourteen image files outside the slot docs already sit
+    under `assets/`; the five that do not move there with their ports,
+    the manifest carrying each move: the goal card's three flags
+    (#2191), `goal-unsubscribe/unsubscribe.svg` (#2206) and the tour's
+    `course_home_tour_modal_hero.png` (#2208). The same how-to settles
+    the import form: an `.svg` imported as `ReactComponent` becomes the
+    default URL import in an `<img>`, since frontend-base removed
+    `@svgr/webpack`; the flags and `unsubscribe.svg` are the cases.
