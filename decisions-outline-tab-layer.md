@@ -109,7 +109,10 @@ before the layer is submitted.
    `StartOrResumeCourseCard.jsx`, an empty expression container,
    `{ }`, which Brian caught. All four are deleted, so each reads as
    `master`'s file minus the comment line. The directives `master`
-   carries for rules the package does report are kept.
+   carries for rules the package does report are kept. The line under
+   the comment, `<Card.Footer><></></Card.Footer>`, stays as `master`
+   has it (Brian): the empty fragment is not needed, but the line is
+   unchanged from `master`.
 8. **`courseBlocks.factory.js` ports with two builders commented out
    (Brian).** The outline suite uses `buildMinimalCourseBlocks` only;
    `buildSimpleCourseBlocks` and `buildBinaryCourseBlocks` are used by
