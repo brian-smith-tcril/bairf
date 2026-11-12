@@ -74,9 +74,9 @@ import and config mapping are in #2191's plan and are not repeated.
    caret, as the dates tab layer declared its dependencies. The lock
    gains the one package entry.
 
-10. **Checks, on the layer's working tree before its commit
-    (2026-11-12).** `npm run lint` clean, with the local `.jsx` block in
-    place. `npm test`: 39 suites, 432 passed, 7 skipped; lines 100,
+10. **Checks at the layer's commit (2026-11-12).** `npm run lint`
+    clean, with the package's `.jsx` files included
+    (openedx/frontend-base#327). `npm test`: 39 suites, 432 passed, 7 skipped; lines 100,
     statements 99.64, branches 97.41, functions 98.15 for the package.
     Each file this layer adds is at 100 lines. `npm run build` and
     `npm run build:ci` pass; `dist/` holds the new modules.
