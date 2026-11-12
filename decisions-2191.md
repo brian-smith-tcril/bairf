@@ -38,3 +38,24 @@ its PR.
      only the local lint change uncommitted.
    - CI on #2251 has not been read here; Brian watches CI.
    - Next: the outline tab layer, `bsmith/outline-tab`, on Brian's go.
+
+3. **#2251's two partially covered lines (Brian, from codecov,
+   2026-11-12).** They are the `?? {}` after the metadata read in
+   `CourseStartAlert.jsx` and `CourseStartMasqueradeBanner.jsx`. Each
+   was rendered alone with no course metadata in the cache, in a
+   throwaway test, to see what the fallback does:
+   - The banner renders "This learner does not yet have access to this
+     course. The course starts on" followed by today's date:
+     `FormattedDate` formats the current time for an undefined value.
+     The fallback changes the outcome, so it keeps its line and gets a
+     case.
+   - The alert throws either way. With the fallback the start date is
+     undefined, the distance is `NaN`, and `FormattedRelativeTime`
+     raises React's "Too many re-renders"; without it the destructure
+     throws. The fallback only moves the throw, so it is dropped, as
+     #2234 did in `Timeline` and `UpgradeToCompleteAlert` and #2246 in
+     `GetCourseExitNavigation`.
+   - On the working tree with both changes: the directory is at 100% of
+     branches; lint clean; 39 suites, 433 passed, 7 skipped; `build`
+     and `build:ci` pass. Not yet amended into the layer's commit or
+     pushed; that waits for Brian's word.
