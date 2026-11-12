@@ -92,6 +92,15 @@ before the layer is submitted.
    subsection titles; `master` has a bare anchor. Its look beside the
    widget's other anchors is a manual-pass item.
 
+7a. **`SequenceTitle.tsx` guards the course id, no assertion.** I first
+   wrote `getSequenceUrl(courseId!, id)`, since `useParams()` types
+   the id as possibly undefined; Brian flagged the `!`, as he had on
+   `resolveRouteByRole` in #2190. The title is a link when
+   `showLink && courseId`, in one expression where `master` built
+   the link element first and chose after, so `getSequenceUrl`, which
+   throws when no route provides the courseware role, runs only for
+   a title that shows a link. No other file of the two outline
+   layers has an assertion the port added.
 8. **`courseBlocks.factory.js` ports with two builders commented out
    (Brian).** The outline suite uses `buildMinimalCourseBlocks` only;
    `buildSimpleCourseBlocks` and `buildBinaryCourseBlocks` are used by
