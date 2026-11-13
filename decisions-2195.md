@@ -39,3 +39,9 @@ its PR.
      wrapper; `DECODE_ROUTES` arrived with the react-router 6 upgrade
      to recreate that match. The ticket #1090 cites is 2U-internal.
      Detail in the plan under the `DecodePageRoute` bullet.
+   - With that history in hand Brian kept no list: "my gut feeling is
+     that the previous 'only decode the params' thing was likely
+     overzealous"; the Jira ticket is closed to him too and asking for
+     access "wouldn't be fast/easy". The removed `index.test.jsx` case
+     and this reasoning are named in the layer's PR.
+
