@@ -30,3 +30,12 @@ its PR.
      Baseline).
    - Still open: how layer 3's tests reach the three handlers the
      container passes to the course component (plan, Open questions).
+   - Brian asked for the history of `index.test.jsx`'s "should only
+     decode the url params and not the entire url" ("it feels like
+     there must have been a reason behind that"). Read #1090, its
+     commit, #1128 and #2047: the only recorded reason is the code
+     comment "it is just to be safe and less prone to errors"; the
+     params were what react-router 5's `computedMatch` handed the
+     wrapper; `DECODE_ROUTES` arrived with the react-router 6 upgrade
+     to recreate that match. The ticket #1090 cites is 2U-internal.
+     Detail in the plan under the `DecodePageRoute` bullet.
