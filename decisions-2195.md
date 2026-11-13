@@ -54,3 +54,28 @@ its PR.
      `OutlineTabComponents.test.tsx` (#2252) sit beside theirs;
      `master`'s suite ports whole with five cases `it.skip` under
      #2196, which unskips them. The plan has no open questions.
+
+2. **The amended body is drafted, ahead of the live one (2026-11-12).**
+   `issue-body-courseware-container.md` is rebuilt from the settled
+   plan and `plan-2195.md` now mirrors its plan block (decision numbers
+   kept in the plan, restated in words in the body); the planning
+   discussion stays in entry 1. #2195 on GitHub still carries the
+   2026-10-20 text until Brian says to post. Drafting choices Brian
+   has not yet seen, each put to him with the draft:
+   - "Depends on #2191" replaces "Depends on #2189": the layers sit
+     above `bsmith/outline-tab` and restore lines #2246, #2249, #2251
+     and #2252 left commented under this issue's URL.
+   - The unit form in `courseware/urls.ts` moves from layer 1 to layer
+     3, where `coursewarePath`, its first caller, is.
+   - `courseRecommendations` and `discussionTopics` are built by no
+     suite ported here (`master`: `CourseExit.test.jsx`; the
+     discussions widget's two tests), so their commented imports stay
+     and are re-pointed at #2202 and #2199.
+   - The redirect table gains the rows `master`'s eight rules have and
+     the 2026-10-20 table lacked: a unit id in the sequence slot, an
+     id that is none of the three, and preview as staff; its column is
+     where a path settles, since rules chain.
+   - Branch names proposed: `bsmith/courseware-data`,
+     `bsmith/courseware-route-wrappers`, `bsmith/courseware-container`.
+   - A third summary line above the plan names the two wrapper
+     differences and the returning page event.
