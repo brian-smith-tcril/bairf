@@ -28,8 +28,7 @@ its PR.
      router strips `/learning` as its basename and the shell's does
      not, which is all the prefix in the port stands for (plan,
      Baseline).
-   - Still open: how layer 3's tests reach the three handlers the
-     container passes to the course component (plan, Open questions).
+   - The handlers question, open at this point, is settled below.
    - Brian asked for the history of `index.test.jsx`'s "should only
      decode the url params and not the entire url" ("it feels like
      there must have been a reason behind that"). Read #1090, its
@@ -44,4 +43,14 @@ its PR.
      overzealous"; the Jira ticket is closed to him too and asking for
      access "wouldn't be fast/easy". The removed `index.test.jsx` case
      and this reasoning are named in the layer's PR.
-
+   - **The container's three handlers are tested at layer 3, in their
+     own test file, and the cases stay.** I first proposed a mock of
+     `./course` whose cases #2196 would delete; Brian: "why would we
+     need to write tests that will be removed instead of adding
+     coverage at a layer that matches the stuff we're adding like we
+     did with previous layers?" The deletion was never needed. The
+     cases mock `./course` in a new file beside `master`'s suite, as
+     `ProgressTabComponents.test.tsx` (#2247) and
+     `OutlineTabComponents.test.tsx` (#2252) sit beside theirs;
+     `master`'s suite ports whole with five cases `it.skip` under
+     #2196, which unskips them. The plan has no open questions.
