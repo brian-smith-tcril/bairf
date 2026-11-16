@@ -110,8 +110,8 @@ Where it came from (checked 2026-11-16 with `git log --all -S"Determines which d
 
 ### 8. A `CatalogPage.test.tsx` title still says `totalCourses` after the page local became `totalItems`
 
-Status: open: nit, Brian's call
-Rests on: src/catalog/CatalogPage.test.tsx line 1193 at 767011e12e
+Status: draft: in the review body's patch beside the README wording (Brian, 2026-11-16), not posted. Line 1193 is unchanged from `master` and outside every hunk (nearest: 1164-1178 and 1197-1203), so it cannot be an inline suggestion through the API
+Rests on: src/catalog/CatalogPage.test.tsx line 1193 at cb882add42 (same line as at 767011e12e); src/catalog/CatalogPage.tsx lines 99 and 123
 
 `it('should calculate pageCount as 0 when both total and totalCourses are 0')` named the page local on master; the PR renamed the local to `totalItems` and left the title, which now reads as the slot prop of the same name. The test renders the page with `results: []`, `total: 0` and asserts the empty-state message and no pager, so the title is a stale name only. Fix is one word; a `suggestion` block if posted.
 

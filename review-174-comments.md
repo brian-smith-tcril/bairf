@@ -155,20 +155,28 @@ Facts behind the table, checked at `1e1c048994`: `CatalogSearchFieldSlot`, `Cata
 
 ## Review summary, 2026-11-16 review
 
-Status: draft. Anchors and the patch are against head `cb882add42`. Brian submits this review himself and pastes the summary; his own part (the approval, and the PR body ask, non-blocking, stale points in ledger entry 12) is his to write and goes above the portion below. The disclosure line covers comments 1 to 5 as well, since the summary is the one place it goes; keeping or rewording it is his call.
+Status: draft. Anchors and the patch are against head `cb882add42`. Brian submits this review himself and pastes the summary; his own part (the approval, and the PR body ask, non-blocking, stale points in ledger entry 12) is his to write and goes above the portion below. The disclosure line covers comments 1 to 6 as well, since the summary is the one place it goes; keeping or rewording it is his call.
 
-The README wording for the four READMEs whose prose lines are outside the diff goes here, not inline (Brian, 2026-11-16). The patch was generated from the files at `cb882add42` by replacing "Course catalog" with "Catalog" on the 18 prose lines (search field 16, 22, 63, 65, 95; control bar 15, 21, 62, 64, 94; table footer 10, 16, 57, 59; course card 21, 27, 72, 102) and passes `git apply --check --unidiff-zero` in the code worktree at that head.
+What goes here, not inline, because the lines are outside every hunk of the diff (Brian, 2026-11-16): the "Course catalog" wording in the four renamed READMEs (ledger entry 12) and the stale test title (ledger entry 8). The patch was generated from the files at `cb882add42`: `totalCourses` to `totalItems` in the title at `src/catalog/CatalogPage.test.tsx` line 1193, and "Course catalog" to "Catalog" on the 18 README prose lines (search field 16, 22, 63, 65, 95; control bar 15, 21, 62, 64, 94; table footer 10, 16, 57, 59; course card 21, 27, 72, 102). It passes `git apply --check --unidiff-zero` in the code worktree at that head.
 
 Claude portion:
 
 > *This portion was written by Claude Code and reviewed before posting.*
 >
-> The inline suggestions on `src/slots/CatalogIntroSlot/README.md` change "Course catalog" to "Catalog" in its prose. The other four renamed READMEs have the same wording on lines that aren't part of the diff, so the same change for those is here instead.
+> Two small things on lines that aren't part of the diff, so they are here as a patch and not as inline suggestions:
+>
+> - A test title in `src/catalog/CatalogPage.test.tsx` still says `totalCourses`, the page local this PR renamed to `totalItems`.
+> - The other four renamed slot READMEs have the same "Course catalog" wording as `src/slots/CatalogIntroSlot/README.md`; this is the same change as the inline suggestions there.
 >
 > <details>
-> <summary>Patch for the four READMEs (18 lines, applies with <code>git apply --unidiff-zero</code>)</summary>
+> <summary>Patch (19 lines, applies with <code>git apply --unidiff-zero</code>)</summary>
 >
 > ```diff
+> --- a/src/catalog/CatalogPage.test.tsx
+> +++ b/src/catalog/CatalogPage.test.tsx
+> @@ -1193 +1193 @@
+> -  it('should calculate pageCount as 0 when both total and totalCourses are 0', () => {
+> +  it('should calculate pageCount as 0 when both total and totalItems are 0', () => {
 > --- a/src/slots/CatalogSearchFieldSlot/README.md
 > +++ b/src/slots/CatalogSearchFieldSlot/README.md
 > @@ -16 +16 @@
