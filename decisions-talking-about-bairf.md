@@ -32,9 +32,15 @@ Settled while preparing a deeper dive on bairf for colleagues, after a shareout 
 
 15. **`something-like-bairf.md` covers the two parts the presentation focuses on, as two named sections with no numbers (2026-11-16).** The first is "Global instructions": the "How Brian works" document, with what goes in it as subsections and memory as where its lines come from, as in the reference and 9. The second is the files Claude writes so that a later session can use them, which bairf produces in automated ways; the decisions doc and the glossary are the best examples. This replaces the six numbered headings written under 14. The shape of each part from 14 stands: what Brian does, what it gets him, the equivalent without a terminal.
 
-16. **The second section is named '"For Claude by Claude" files'; "local setup" is the other presenter's part.** Local setup is the walkthrough, for people who don't use GitHub, of how they might store files like a glossary or a decisions doc. Rejected as this doc's section name for that reason: "local setup". The label reuses the phrase from the one-line definition in 12. Where the files are kept is handed off to local setup and is not covered in this doc.
+16. **The second section is named '"For Claude by Claude" files'; "local setup" is the other presenter's part.** Local setup is the walkthrough, for people who don't use GitHub, of how they might store files like a glossary or a decisions doc. Rejected as this doc's section name for that reason: "local setup". The label reuses the phrase from the one-line definition in 12. Where the files are kept is handed off to local setup and is not covered in this doc, which does not mention local setup either.
 
 17. **The subheadings under "Global instructions" are the categories of what goes in the document, worded to be understood alone on a slide.** A slide shows the headings and none of the body, so the allowance in 6 for a label whose term the body defines does not apply to them. In order: When to stop and wait; How to look into a problem; How decisions get made; Things never to do; What finished work looks like. The first three are the Pace, Investigating and Deciding sections of "How Brian works", the fourth its Shell section, and the fifth stands for its tool-specific sections (GitHub, Code, Git, Node repos, Open edX repos). Rejected: wrapper subheadings "What goes in it" and "Where the lines come from" (the what and the where don't need headings; the categories are the headings); "House rules for one kind of work" for the fifth. Memory has no heading of its own. The second section's subheadings are plural to match: Decision docs; Glossaries. "Decision docs", not "Decisions docs": it is what Brian says aloud, though bairf's own files write "decisions doc".
+
+18. **The example under "Things never to do" is "A first name is never inferred from a handle."** It is lighthearted and works for the room. It replaces the delete-command rule and its home-directory story, and it does not fit under "What finished work looks like", where it first sat. So the category is the "never" lines wherever they are in "How Brian works", not only its Shell section as 17 had it.
+
+19. **"What finished work looks like" is dropped; "Global instructions" has four subheadings.** When to stop and wait; How to look into a problem; How decisions get made; Things never to do. The fifth was a bucket for the tool-specific sections of "How Brian works" (GitHub, Code, Git, Node repos, Open edX repos), renamed to sound general, as "House rules for one kind of work" had been before it. Nothing in the document is organised that way, and the line picked for it ("Minimal diffs") is about how to work, not what the result looks like. The four that remain are each about how Claude behaves in any kind of work.
+
+20. **What a glossary gets Brian is agreement on terms.** Claude tends to make terms up when they aren't defined. Rejected as the benefit: Claude using his words consistently across sessions and dropping retired ones, which describes an effect and misses the point.
 
 ## Open
 
@@ -42,4 +48,12 @@ Settled while preparing a deeper dive on bairf for colleagues, after a shareout 
 - Where the memory contrast goes: on the page, or spoken.
 - `bin/effort start` default directory (see 2).
 - Whether hooks, skills and the machine setup get a mention in `something-like-bairf.md`; they are out of it for now and remain in the reference.
-- Where a browser user puts the global instructions document so Claude reads it every time: whether that is this part's to say or local setup's.
+- Where a browser user puts the global instructions document so Claude reads it every time: whether that is this part's to say or local setup's. `something-like-bairf.md` says nothing about it until this is answered and the product fact is checked.
+
+Open items for `something-like-bairf.md`, kept here and not in the doc, since cold read 1 took an "Open" section for notes left in the handout:
+
+- Every "Yours might be" and "Your version" example is invented, written in the 2026-11-16 pass. Swap any that don't fit the room.
+- Which of Brian's lines stands for each of the first three categories, and the plain-words rendering of each, have not been checked by Brian.
+- Voice: Brian in first person, or about Brian.
+- Whether the memory paragraph stays as text under "Global instructions" or leaves the doc.
+- The cold reader took three reads to decode "for Claude by Claude". It is now a heading that will stand alone on a slide; the doc decodes it in its second paragraph, a slide would not.

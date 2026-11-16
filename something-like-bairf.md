@@ -1,71 +1,58 @@
 # Doing something like bairf
 
-For colleagues who use Claude for non-coding work. `what-bairf-is.md` is the reference, checked against the repo; this is the version for the room. Draft; shape first, words second.
+bairf is stuff Brian uses to make Claude work the way he likes (and a home for "for Claude by Claude" text).
 
-## Opening
+"For Claude by Claude" text is writing Claude produces for a later Claude to read: notes to its future self. The name comes from there. "Claude likes to write a lot of text. I've started affectionately calling that 'Claude vomit'. Claude needs that text, and I need a home for it. Hence bairf: it's barf + AI."
 
-Stuff Brian uses to make Claude work the way he likes (and a home for "for Claude by Claude" text).
-
-From the talk: "Claude likes to write a lot of text. I've started affectionately calling that 'Claude vomit'. Claude needs that text, and I need a home for it. Hence bairf: it's barf + AI."
-
-## Shape
-
-The two parts of bairf the presentation covers, each as: what Brian does, what it gets him, and what the equivalent looks like without a terminal or a code repo. Where someone who doesn't use GitHub keeps the files is the local setup part of the presentation, not this one.
+bairf is Brian's own, built around writing software. It isn't something to install. Two of its ideas carry over to any kind of work, and this is about those two: the instructions Claude reads before every session, and the files Claude writes for later sessions. Each is given as what Brian does, what it gets him, and what your version could be.
 
 ## Global instructions
 
-- Brian: "How Brian works", read by Claude at the start of every session on every project. Pace, how to decide, what not to do, learned the hard way.
-- Gets him: no re-explaining; the same Claude on day one of a project as on day ninety.
-- For the room: a standing document of your own. "Never say 'leverage'. Posts under 150 words. Lead with a person." Where it goes so Claude reads it every time: to confirm for the browser product.
+- What Brian does: he keeps one document, "How Brian works", and Claude reads it at the start of every session, whatever the project. It says how he wants Claude to work. A line goes in once something has been learned.
+- What it gets him: he doesn't explain himself again each session, and Claude behaves the same on the first day of a project as on the ninetieth.
+- Your version: a standing document of your own, "How [your name] works".
 
-Where its lines come from. Memory stays on. Every so often Brian reviews what Claude has remembered, with Claude, and promotes what deserves to be permanent into the document; the rest is dropped. Cheap collection, deliberate promotion, at his pace. For the room: ask Claude what it remembers about you; keep, rewrite into your document, or drop. The alternative some people take, memory off and everything written up front, and why Brian doesn't.
+Where its lines come from. Claude has a built-in memory: as it works, it records things about the projects and how the work is done. Brian leaves it on. Every so often he goes through what Claude has remembered, with Claude, and decides what deserves to be permanent. That goes into the document and the rest is dropped. Collecting costs him nothing, and deciding happens at his pace. Some people do the opposite: memory off, everything written down up front. Your version: ask Claude what it remembers about you, and for each thing keep it, rewrite it into your document, or drop it.
 
-The subheadings are the categories of what goes in it, each with one line from "How Brian works".
+The four headings below are the kinds of line in the document. Each has one or two of Brian's, in plain words, and one you might write.
 
 ### When to stop and wait
 
-- "Diagnose on "look into X": the mechanism, then the solution space, then stop. The fix waits for a word."
+- Brian's: when he says "look into this", Claude explains what is going on and what the options are, then stops. The fix waits until he says so.
+- Yours might be: "Show me an outline before you write the draft."
 
 ### How to look into a problem
 
-- "Think, then bisect; sequential trial-and-error is the signal to stop and plan."
+- Brian's: think first. Trying one thing after another is the signal to stop and make a plan. And a report says what was actually seen, and asks about anything that wasn't watched.
+- Yours might be: "When you look something up, tell me where it came from and what you couldn't find."
 
 ### How decisions get made
 
-- "A second rejection of an approach ends the guessing: talk through what the rejections have in common and compare candidates before the next attempt."
+- Brian's: two separate questions come to him as two separate choices, never bundled into "package A or package B". And if he turns an approach down twice, Claude stops guessing and talks through what the two had in common.
+- Yours might be: "When I have to choose, give me two or three options and say which one you'd pick."
 
 ### Things never to do
 
-- A rule against one kind of delete command, there because "an earlier model wiped Brian's home directory this way."
-
-### What finished work looks like
-
-- "A first name is never inferred from a handle."
+- Brian's: never guess a person's first name from their username.
+- Yours might be: "Never make up a quote, a number or a source. If you don't have one, say so."
 
 ## "For Claude by Claude" files
 
-- Brian: every piece of work gets a folder for the plans, decisions and context Claude writes so a later Claude can get situated. Separate from the work itself. Searchable after the work is done.
-- Gets him: a Claude that picks up where the last one left off, and a record of why things were decided.
-- For the room: have Claude write files you can use again in later sessions. Where to keep them: the local setup part.
-- The link to the first part: Claude writes and reads these files because a line in the global instructions says to.
+A new session starts with a Claude that hasn't seen the last one. These are the files that brief it.
+
+- What Brian does: each piece of work gets a folder of notes about the work, kept apart from the work itself: the plan, what was decided, what a later Claude would need to pick it up. Claude writes them as the work happens and reads them when a new session starts. It does both because the global instructions tell it to. The notes can still be searched after the work is finished.
+- What it gets him: a Claude that picks up where the last one stopped, and a record of why things were decided.
+- Your version: have Claude write files you can hand back to it in a later session. The two kinds below are the ones to start with.
 
 ### Decision docs
 
-- Brian: one per piece of work. Entries in the order they were decided, each saying what was settled and, where something was turned down, what and why. The global instructions tell Claude to write a decision there once it is settled, and to update it before acting when one changes. The example in hand is this presentation's own.
-- Gets him: a later session doesn't reopen what was settled or propose again what was turned down.
-- For the room: at the end of a session, "write down what we decided, what we ruled out, and why"; at the start of the next, hand the file back.
+- What Brian does: one per piece of work. A list of what was decided, in the order it was decided, and where something was turned down, what and why. His instructions tell Claude to add an entry once something is settled, and to update it before acting when a decision changes.
+- An example: the folder of notes for writing this document has one. It records that the first line above says "the way he likes", that "by his rules" was suggested in its place, and why that was turned down.
+- What it gets him: a later session doesn't reopen what was settled, or suggest again what was turned down.
+- Your version: at the end of a session, "write down what we decided, what we ruled out, and why". At the start of the next, hand the file back.
 
 ### Glossaries
 
-- Brian: the words of a subject, a line each: the term, what it means here, and often the word to avoid. One for the whole subject area, one per code repo, one per piece of work. The global instructions point Claude at it.
-- Gets him: Claude uses his words the same way in every session, and stops using the ones he has retired.
-- For the room: your organisation's words. The names of your programmes, what you call the people you work with, the words you've stopped using.
-
-## Open
-
-- The example rules under "Global instructions" ("leverage", 150 words, lead with a person) are the cold reader's invented persona talking, not a real colleague. The "For the room" lines under "Decision docs" and "Glossaries" are invented too. Swap for examples that fit the room.
-- The headings are settled; the text under every one of them is a placeholder still to be worked through, including the line picked for each category.
-- Whether the memory paragraph stays as text under "Global instructions" or leaves this doc.
-- Voice: Brian in first person, or about Brian.
-- Where the global instructions document goes for a browser user needs checking before it's said to a room, and may be the local setup part's to say.
-- Whether hooks, procedures with stops and the machine setup get a mention; they are out of this doc for now and remain in `what-bairf-is.md`.
+- What Brian does: the words of a subject, a line each: the word, what it means here, and often the word not to use. One of his entries gives the current name for a thing and lists two older names to avoid. He has one glossary for the field he works in, and more for a single project or piece of work when it has words of its own.
+- What it gets him: he and Claude agree on what the words mean. Where a word isn't defined, Claude tends to make one up.
+- Your version: a file of the words you and Claude have agreed on. When Claude calls something by a name you never used, or uses one of your words to mean something else, settle it and have Claude add the entry. Your organization's own terms are a place to start.
