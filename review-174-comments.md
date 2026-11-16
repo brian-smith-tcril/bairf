@@ -181,3 +181,124 @@ Status: draft
 >   courseDataResultsLength?: number;
 > ```
 
+## Comment 2: "Course catalog" wording in the intro README, lines 11-16
+
+File: `src/slots/CatalogIntroSlot/README.md`
+Lines: 11-16 (the `searchString` prop description and the Description sentence; 2 lines changed by the suggestion)
+Ledger: entry 12
+Status: draft
+
+**Diff context**
+
+```
+   8 | +
+   9 | +### Slot Props
+  10 | +
+> 11 | +* `searchString: string` — the current search query string entered in the course catalog search field.
+> 12 | +* `resultsCount?: number` — the number of results on the current search page (undefined until the search response arrives).
+> 13 | +
+> 14 | +## Description
+> 15 | +
+> 16 | +This slot is used to replace/modify/hide the entire Course catalog page intro section.
+  17 | +
+  18 | +## Examples
+  19 | +
+```
+
+Suggestion only, no text (Brian, 2026-11-16).
+
+> ```suggestion
+> * `searchString: string` — the current search query string entered in the catalog search field.
+> * `resultsCount?: number` — the number of results on the current search page (undefined until the search response arrives).
+>
+> ## Description
+>
+> This slot is used to replace/modify/hide the entire Catalog page intro section.
+> ```
+
+## Comment 3: "Course catalog" wording in the intro README, lines 22-26
+
+File: `src/slots/CatalogIntroSlot/README.md`
+Lines: 22-26 (the two image alt texts under "Default content" and "Wrapped with a red border"; 2 lines changed by the suggestion)
+Ledger: entry 12
+Status: draft
+
+**Diff context**
+
+```
+  19 | +
+  20 | +### Default content
+  21 | +
+> 22 | +![Course catalog page intro slot with default content](./images/screenshot_default.png)
+> 23 | +
+> 24 | +### Wrapped with a red border (custom layout)
+> 25 | +
+> 26 | +![Course catalog intro wrapped in a dashed red border](./images/screenshot_custom_wrap.png)
+  27 | +
+  28 | +To keep the default content but wrap it in extra markup, replace the slot's **layout**.
+  29 | +
+```
+
+Suggestion only, no text (Brian, 2026-11-16).
+
+> ```suggestion
+> ![Catalog page intro slot with default content](./images/screenshot_default.png)
+>
+> ### Wrapped with a red border (custom layout)
+>
+> ![Catalog intro wrapped in a dashed red border](./images/screenshot_custom_wrap.png)
+> ```
+
+## Comment 4: "Course catalog" wording in the intro README, lines 63-65
+
+File: `src/slots/CatalogIntroSlot/README.md`
+Lines: 63-65 (the image alt text and the sentence under "Replaced with a simple custom component"; 2 lines changed by the suggestion)
+Ledger: entry 12
+Status: draft
+
+**Diff context**
+
+```
+  60 | +
+  61 | +### Replaced with a simple custom component
+  62 | +
+> 63 | +![🕵️ in Course catalog page intro slot](./images/screenshot_custom_simple.png)
+> 64 | +
+> 65 | +Add the following to your site config to replace the Course catalog intro entirely (in this case with a centered "🕵️" `h1` tag).
+  66 | +
+  67 | +```diff
+  68 | +-import { EnvironmentTypes, SiteConfig, ... } from '@openedx/frontend-base';
+```
+
+Suggestion only, no text (Brian, 2026-11-16).
+
+> ```suggestion
+> ![🕵️ in Catalog page intro slot](./images/screenshot_custom_simple.png)
+>
+> Add the following to your site config to replace the Catalog intro entirely (in this case with a centered "🕵️" `h1` tag).
+> ```
+
+## Comment 5: "Course catalog" wording in the intro README, line 95
+
+File: `src/slots/CatalogIntroSlot/README.md`
+Lines: 95 (the sentence introducing the alert example; 1 line changed by the suggestion)
+Ledger: entry 12
+Status: draft
+
+**Diff context**
+
+```
+  92 | +
+  93 | +![Alert component reading searchString and resultsCount](./images/screenshot_custom_with_props.png)
+  94 | +
+> 95 | +Add the following to your site config to replace the Course catalog intro with an alert component that reads the slot's `searchString` and `resultsCount` props.
+  96 | +
+  97 | +```diff
+  98 | +-import { EnvironmentTypes, SiteConfig, ... } from '@openedx/frontend-base';
+```
+
+Suggestion only, no text (Brian, 2026-11-16).
+
+> ```suggestion
+> Add the following to your site config to replace the Catalog intro with an alert component that reads the slot's `searchString` and `resultsCount` props.
+> ```
