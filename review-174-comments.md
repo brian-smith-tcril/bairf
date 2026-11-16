@@ -264,7 +264,7 @@ Status: draft
   19 | +const CatalogIntroSlot = ({
 ```
 
-> It'd be nice to have a note on the prop itself too, so hovering it in an existing widget points at its new name.
+> It'd be nice to have a note on the prop itself too.
 >
 > ```suggestion
 >   /** @deprecated Use `resultsCount` on `CatalogIntroSlotProps`. */
