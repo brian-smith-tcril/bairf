@@ -418,9 +418,7 @@ Status: draft
   60 |      const hasActiveSearch = Boolean(searchString);
 ```
 
-The `suggestion` block is empty on purpose: applying it deletes lines 52-57. The sentence is a draft in Brian's voice, his to reword or cut.
+The `suggestion` block is empty on purpose: applying it deletes lines 52-57. Suggestion only, no text (Brian, 2026-11-16).
 
-> This comment was removed in #137, looks like it came back in with the rename.
->
 > ```suggestion
 > ```
