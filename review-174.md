@@ -31,6 +31,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 | 2026-11-06 | 586f5f6d7f | 767011e12e | every `Course` in src against the body (entry 11); slot-prop types across the stack (#175 to #178, fork branches); frontend-base#335, #343, #344 | comment review, body only: exports (entry 9) and slot identifiers (entry 3); nits 7 and 8 not raised |
 | 2026-11-07 | 586f5f6d7f | 1e1c048994 | 767011e12e..1e1c048994 line by line against the review's table and entries 3 and 9; old names left in src; PR body and commit body; CI checks (local suite not run: sandbox denied) | none yet: findings in entry 12 wait for Brian |
 | 2026-11-16 | 586f5f6d7f | cb882add42 | 1e1c048994..cb882add42 line by line (16 files, 47+/613-) against Brian's 2026-11-07 comment and the how-to at 079dc92; the ADR commit against the #175 thread it answers; PR body, title and commit bodies; merge and release config; CI checks (local suite not run) | approve https://github.com/openedx/frontend-app-catalog/pull/174#pullrequestreview-5925995204: six inline suggestions (entries 7 and 12) and a body with a 19-line patch (entries 8 and 12) and the PR body ask; all non-blocking; entries 13 and 14 settled with no comment |
+| 2026-11-16 | 586f5f6d7f | 44769fb0fd | | |
 
 ## Ledger
 
