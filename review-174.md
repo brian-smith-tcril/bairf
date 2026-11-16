@@ -101,8 +101,8 @@ Carried to 175: the edx-search commit's `document_type` → `_type` mapping is t
 
 ### 7. `CatalogPage.tsx` gains a six-line doc comment on `displayData` that the body does not mention
 
-Status: open: candidate nit, Brian's call
-Rests on: src/catalog/CatalogPage.tsx lines 52-57 at 767011e12e; added in 26ba130
+Status: draft: a suggestion to drop it (Brian, 2026-11-16), comment 6 in `review-174-comments.md`, not posted
+Rests on: src/catalog/CatalogPage.tsx lines 52-57 at cb882add42 (same lines as at 767011e12e); added in 26ba130
 
 The only non-rename code change in the whole diff: a `/** Determines which data to display ... */` block above the `displayData` `useMemo`. It is accurate (previous data is shown when there is an active search with no results and cached data exists) and says nothing the three lines below it do not. The body calls the PR "mostly `git mv` plus identifier renames" and lists no comment additions. From this change. Fix is deleting six lines or one sentence in the body. Candidate: "just curious" one-liner, or let it go.
 

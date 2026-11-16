@@ -384,3 +384,35 @@ Suggestion only, no text (Brian, 2026-11-16).
 > ```suggestion
 > Add the following to your site config to replace the Catalog intro with an alert component that reads the slot's `searchString` and `resultsCount` props.
 > ```
+
+## Comment 6: drop the restored doc comment on `displayData`
+
+File: `src/catalog/CatalogPage.tsx`
+Lines: 52-57 (the six-line doc comment above the `displayData` `useMemo`)
+Ledger: entry 7
+Status: draft
+
+**Diff context**
+
+```
+  49 |      handleSearch,
+  50 |    });
+  51 |  
+> 52 | +  /**
+> 53 | +   * Determines which data to display in the catalog based on search state and results.
+> 54 | +   * Shows previous catalog data when:
+> 55 | +   * - User has an active search but no results were found
+> 56 | +   * This provides better UX by showing cached data instead of empty state.
+> 57 | +   */
+  58 |    const displayData = useMemo(() => {
+    | -    const hasSearchResults = (courseData?.results?.length ?? 0) > 0;
+  59 | +    const hasSearchResults = (catalogData?.results?.length ?? 0) > 0;
+  60 |      const hasActiveSearch = Boolean(searchString);
+```
+
+The `suggestion` block is empty on purpose: applying it deletes lines 52-57. The sentence is a draft in Brian's voice, his to reword or cut.
+
+> This comment was removed in #137, looks like it came back in with the rename.
+>
+> ```suggestion
+> ```
