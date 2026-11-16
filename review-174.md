@@ -106,6 +106,8 @@ Rests on: src/catalog/CatalogPage.tsx lines 52-57 at 767011e12e; added in 26ba13
 
 The only non-rename code change in the whole diff: a `/** Determines which data to display ... */` block above the `displayData` `useMemo`. It is accurate (previous data is shown when there is an active search with no results and cached data exists) and says nothing the three lines below it do not. The body calls the PR "mostly `git mv` plus identifier renames" and lists no comment additions. From this change. Fix is deleting six lines or one sentence in the body. Candidate: "just curious" one-liner, or let it go.
 
+Where it came from (checked 2026-11-16 with `git log --all -S"Determines which data to display" -- src`): the comment is not new text. It was added with the code by 5a4f439 ("feat: [FC-86] Course search for catalog page (#42)", 2025-11-20) reading "Shows previous course data when:", removed by 5e4948f ("feat: initial `frontend-base` conversion (#137)", Brian, 2026-07-21, on `master`), and put back with "course" changed to "catalog" by cdc82a8 ("refactor: rename course data", rpenido, 2026-10-05, on the #169 branches, not in this PR) and so by 26ba130 here. At cb882add42 it is `src/catalog/CatalogPage.tsx` lines 52-57, all `+` lines. So the PR restores a comment the conversion deleted, most likely carried over from pre-conversion code the #169 work started from; nothing on the PR says it was deliberate. The earlier framing here, that the body does not mention it, is the weaker point: a doc comment needs no line in a PR body. The question is whether Brian wants the comment back.
+
 ### 8. A `CatalogPage.test.tsx` title still says `totalCourses` after the page local became `totalItems`
 
 Status: open: nit, Brian's call
