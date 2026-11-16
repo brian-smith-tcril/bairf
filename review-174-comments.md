@@ -155,7 +155,7 @@ Facts behind the table, checked at `1e1c048994`: `CatalogSearchFieldSlot`, `Cata
 
 ## Review summary, 2026-11-16 review
 
-Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#pullrequestreview-5925995204 (created PENDING 2026-11-16 on `cb882add42` in one call, with this body and comments 1 to 6; Brian submits it). Anchors and the patch are against head `cb882add42`. Brian submits this review himself and pastes the summary; his own part (the approval, and the PR body ask, non-blocking, stale points in ledger entry 12) is his to write and goes above the portion below. The disclosure line covers comments 1 to 6 as well, since the summary is the one place it goes; keeping or rewording it is his call.
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#pullrequestreview-5925995204 (created PENDING 2026-11-16 on `cb882add42` in one call, with this body and comments 1 to 6; submitted as an approval at 19:20 UTC through the API on Brian's word, body passed again at submit). Anchors and the patch are against head `cb882add42`. Brian submits this review himself and pastes the summary; his own part (the approval, and the PR body ask, non-blocking, stale points in ledger entry 12) is his to write and goes above the portion below. The disclosure line covers comments 1 to 6 as well, since the summary is the one place it goes; keeping or rewording it is his call.
 
 What goes here, not inline, because the lines are outside every hunk of the diff (Brian, 2026-11-16): the "Course catalog" wording in the four renamed READMEs (ledger entry 12) and the stale test title (ledger entry 8). The patch was generated from the files at `cb882add42`: `totalCourses` to `totalItems` in the title at `src/catalog/CatalogPage.test.tsx` line 1193, and "Course catalog" to "Catalog" on the 18 README prose lines (search field 16, 22, 63, 65, 95; control bar 15, 21, 62, 64, 94; table footer 10, 16, 57, 59; course card 21, 27, 72, 102). It passes `git apply --check --unidiff-zero` in the code worktree at that head.
 
@@ -260,7 +260,7 @@ Drafted 2026-11-16 against head `cb882add42`; the sections above were drafted ag
 File: `src/slots/CatalogIntroSlot/index.tsx`
 Lines: 16 (the `courseDataResultsLength` member of the deprecated `CourseCatalogIntroSlotProps`)
 Ledger: entry 12
-Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338801
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338801
 
 **Diff context**
 
@@ -286,7 +286,7 @@ Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#discuss
 File: `src/slots/CatalogIntroSlot/README.md`
 Lines: 11-16 (the `searchString` prop description and the Description sentence; 2 lines changed by the suggestion)
 Ledger: entry 12
-Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338820
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338820
 
 **Diff context**
 
@@ -321,7 +321,7 @@ Suggestion only, no text (Brian, 2026-11-16).
 File: `src/slots/CatalogIntroSlot/README.md`
 Lines: 22-26 (the two image alt texts under "Default content" and "Wrapped with a red border"; 2 lines changed by the suggestion)
 Ledger: entry 12
-Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338831
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338831
 
 **Diff context**
 
@@ -354,7 +354,7 @@ Suggestion only, no text (Brian, 2026-11-16).
 File: `src/slots/CatalogIntroSlot/README.md`
 Lines: 63-65 (the image alt text and the sentence under "Replaced with a simple custom component"; 2 lines changed by the suggestion)
 Ledger: entry 12
-Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338848
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338848
 
 **Diff context**
 
@@ -383,7 +383,7 @@ Suggestion only, no text (Brian, 2026-11-16).
 File: `src/slots/CatalogIntroSlot/README.md`
 Lines: 95 (the sentence introducing the alert example; 1 line changed by the suggestion)
 Ledger: entry 12
-Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338853
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338853
 
 **Diff context**
 
@@ -408,7 +408,7 @@ Suggestion only, no text (Brian, 2026-11-16).
 File: `src/catalog/CatalogPage.tsx`
 Lines: 52-57 (the six-line doc comment above the `displayData` `useMemo`)
 Ledger: entry 7
-Status: pending https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338859
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/174#discussion_r4590338859
 
 **Diff context**
 
