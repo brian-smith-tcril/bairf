@@ -153,6 +153,88 @@ Draft of the whole comment, Brian's voice, his two sentences kept verbatim (capi
 
 Facts behind the table, checked at `1e1c048994`: `CatalogSearchFieldSlot`, `CatalogDataTableControlBarSlot`, `CatalogDataTableTableFooterSlot` and `CatalogDataTableCourseCardSlot` each render the new id around the old, with the old `*SlotProps` declared as a type alias of the new (the footer has no props), and each folder holds `README.md`, `README.deprecated.md`, `images/` and `index.tsx`. The intro renames `courseDataResultsLength` to `resultsCount`. The alias mechanism is openedx/frontend-base#178. The anchors are GitHub's for the `## Example:` headings on `079dc92`.
 
+## Review summary, 2026-11-16 review
+
+Status: draft. Anchors and the patch are against head `cb882add42`. Brian submits this review himself and pastes the summary; his own part (the approval, and the PR body ask, non-blocking, stale points in ledger entry 12) is his to write and goes above the portion below. The disclosure line covers comments 1 to 5 as well, since the summary is the one place it goes; keeping or rewording it is his call.
+
+The README wording for the four READMEs whose prose lines are outside the diff goes here, not inline (Brian, 2026-11-16). The patch was generated from the files at `cb882add42` by replacing "Course catalog" with "Catalog" on the 18 prose lines (search field 16, 22, 63, 65, 95; control bar 15, 21, 62, 64, 94; table footer 10, 16, 57, 59; course card 21, 27, 72, 102) and passes `git apply --check --unidiff-zero` in the code worktree at that head.
+
+Claude portion:
+
+> *This portion was written by Claude Code and reviewed before posting.*
+>
+> The inline suggestions on `src/slots/CatalogIntroSlot/README.md` change "Course catalog" to "Catalog" in its prose. The other four renamed READMEs have the same wording on lines that aren't part of the diff, so the same change for those is here instead.
+>
+> <details>
+> <summary>Patch for the four READMEs (18 lines, applies with <code>git apply --unidiff-zero</code>)</summary>
+>
+> ```diff
+> --- a/src/slots/CatalogSearchFieldSlot/README.md
+> +++ b/src/slots/CatalogSearchFieldSlot/README.md
+> @@ -16 +16 @@
+> -This slot is used to replace/modify/hide the entire Course catalog page search field.
+> +This slot is used to replace/modify/hide the entire Catalog page search field.
+> @@ -22 +22 @@
+> -![Course catalog page search field slot with default content](./images/screenshot_default.png)
+> +![Catalog page search field slot with default content](./images/screenshot_default.png)
+> @@ -63 +63 @@
+> -![🔍 in Course catalog page search field slot](./images/screenshot_custom_simple.png)
+> +![🔍 in Catalog page search field slot](./images/screenshot_custom_simple.png)
+> @@ -65 +65 @@
+> -Add the following to your site config to replace the Course catalog search field entirely (in this case with a centered "🔍" `h1` tag).
+> +Add the following to your site config to replace the Catalog search field entirely (in this case with a centered "🔍" `h1` tag).
+> @@ -95 +95 @@
+> -Add the following to your site config to replace the Course catalog search field with a floating-label input plus a row of "popular searches" chips that invoke `setSearchInput` / `handleSearch` when clicked.
+> +Add the following to your site config to replace the Catalog search field with a floating-label input plus a row of "popular searches" chips that invoke `setSearchInput` / `handleSearch` when clicked.
+> --- a/src/slots/CourseCatalogDataTableSlots/CatalogDataTableControlBarSlot/README.md
+> +++ b/src/slots/CourseCatalogDataTableSlots/CatalogDataTableControlBarSlot/README.md
+> @@ -15 +15 @@
+> -This slot is used to replace/modify/hide the entire Course catalog page data table control bar.
+> +This slot is used to replace/modify/hide the entire Catalog page data table control bar.
+> @@ -21 +21 @@
+> -![Course catalog page data table control bar slot with default content](./images/screenshot_default.png)
+> +![Catalog page data table control bar slot with default content](./images/screenshot_default.png)
+> @@ -62 +62 @@
+> -![🎛️ in Course catalog page data table control bar slot](./images/screenshot_custom_simple.png)
+> +![🎛️ in Catalog page data table control bar slot](./images/screenshot_custom_simple.png)
+> @@ -64 +64 @@
+> -Add the following to your site config to replace the Course catalog control bar entirely (in this case with a centered "🎛️" `h1` tag).
+> +Add the following to your site config to replace the Catalog control bar entirely (in this case with a centered "🎛️" `h1` tag).
+> @@ -94 +94 @@
+> -Add the following to your site config to replace the Course catalog control bar with an alert component that reads the slot's `currentPageResultsCount` and `totalResultsCount` props.
+> +Add the following to your site config to replace the Catalog control bar with an alert component that reads the slot's `currentPageResultsCount` and `totalResultsCount` props.
+> --- a/src/slots/CourseCatalogDataTableSlots/CatalogDataTableTableFooterSlot/README.md
+> +++ b/src/slots/CourseCatalogDataTableSlots/CatalogDataTableTableFooterSlot/README.md
+> @@ -10 +10 @@
+> -This slot is used to replace/modify/hide the entire Course catalog page data table footer.
+> +This slot is used to replace/modify/hide the entire Catalog page data table footer.
+> @@ -16 +16 @@
+> -![Course catalog page data table footer slot with default content](./images/screenshot_default.png)
+> +![Catalog page data table footer slot with default content](./images/screenshot_default.png)
+> @@ -57 +57 @@
+> -![🦶 in Course catalog page data table footer slot](./images/screenshot_custom_simple.png)
+> +![🦶 in Catalog page data table footer slot](./images/screenshot_custom_simple.png)
+> @@ -59 +59 @@
+> -Add the following to your site config to replace the Course catalog data table footer entirely (in this case with a centered "🦶" `h1` tag).
+> +Add the following to your site config to replace the Catalog data table footer entirely (in this case with a centered "🦶" `h1` tag).
+> --- a/src/slots/CourseCatalogDataTableSlots/CourseCatalogDataTableCardViewSlot/CatalogDataTableCourseCardSlot/README.md
+> +++ b/src/slots/CourseCatalogDataTableSlots/CourseCatalogDataTableCardViewSlot/CatalogDataTableCourseCardSlot/README.md
+> @@ -21 +21 @@
+> -This slot is used to replace/modify/hide the entire Course catalog page data table course card.
+> +This slot is used to replace/modify/hide the entire Catalog page data table course card.
+> @@ -27 +27 @@
+> -![Course catalog page data table course card slot with default content](./images/screenshot_default.png)
+> +![Catalog page data table course card slot with default content](./images/screenshot_default.png)
+> @@ -72 +72 @@
+> -![🃏 in Course catalog page data table course card slot](./images/screenshot_custom_simple.png)
+> +![🃏 in Catalog page data table course card slot](./images/screenshot_custom_simple.png)
+> @@ -102 +102 @@
+> -![Custom card in Course catalog page data table course card slot](./images/screenshot_custom_with_props.png)
+> +![Custom card in Catalog page data table course card slot](./images/screenshot_custom_with_props.png)
+> ```
+>
+> </details>
+
 ## Comment 1: member-level `@deprecated` on `courseDataResultsLength`
 
 Drafted 2026-11-16 against head `cb882add42`; the sections above were drafted against earlier heads and are posted.
