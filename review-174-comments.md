@@ -153,3 +153,31 @@ Draft of the whole comment, Brian's voice, his two sentences kept verbatim (capi
 
 Facts behind the table, checked at `1e1c048994`: `CatalogSearchFieldSlot`, `CatalogDataTableControlBarSlot`, `CatalogDataTableTableFooterSlot` and `CatalogDataTableCourseCardSlot` each render the new id around the old, with the old `*SlotProps` declared as a type alias of the new (the footer has no props), and each folder holds `README.md`, `README.deprecated.md`, `images/` and `index.tsx`. The intro renames `courseDataResultsLength` to `resultsCount`. The alias mechanism is openedx/frontend-base#178. The anchors are GitHub's for the `## Example:` headings on `079dc92`.
 
+## Comment 1: member-level `@deprecated` on `courseDataResultsLength`
+
+Drafted 2026-11-16 against head `cb882add42`; the sections above were drafted against earlier heads and are posted.
+
+File: `src/slots/CatalogIntroSlot/index.tsx`
+Lines: 16 (the `courseDataResultsLength` member of the deprecated `CourseCatalogIntroSlotProps`)
+Ledger: entry 12
+Status: draft
+
+**Diff context**
+
+```
+  13 | +/** @deprecated Use `CatalogIntroSlotProps` and `org.openedx.frontend.slot.catalog.catalogIntro.v1`. */
+  14 | +export interface CourseCatalogIntroSlotProps {
+  15 | +  searchString: string;
+> 16 | +  courseDataResultsLength?: number;
+  17 | +}
+  18 | +
+  19 | +const CatalogIntroSlot = ({
+```
+
+> It'd be nice to have a note on the prop itself too, so hovering it in an existing widget points at its new name.
+>
+> ```suggestion
+>   /** @deprecated Use `resultsCount` on `CatalogIntroSlotProps`. */
+>   courseDataResultsLength?: number;
+> ```
+
