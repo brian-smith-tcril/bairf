@@ -163,6 +163,8 @@ BRIAN SECTION
 
 This LGTM! I left a few non-blocking suggestions, mostly just some hard to find "course catalog" references.
 
+It'd also be good to update the PR body, some of the lines in there are no longer true after the review changes.
+
 Sorry for the delay!
 
 END BRIAN SECTION
