@@ -159,6 +159,14 @@ Status: draft. Anchors and the patch are against head `cb882add42`. Brian submit
 
 What goes here, not inline, because the lines are outside every hunk of the diff (Brian, 2026-11-16): the "Course catalog" wording in the four renamed READMEs (ledger entry 12) and the stale test title (ledger entry 8). The patch was generated from the files at `cb882add42`: `totalCourses` to `totalItems` in the title at `src/catalog/CatalogPage.test.tsx` line 1193, and "Course catalog" to "Catalog" on the 18 README prose lines (search field 16, 22, 63, 65, 95; control bar 15, 21, 62, 64, 94; table footer 10, 16, 57, 59; course card 21, 27, 72, 102). It passes `git apply --check --unidiff-zero` in the code worktree at that head.
 
+BRIAN SECTION
+
+This LGTM! I left a few non-blocking suggestions, mostly just some hard to find "course catalog" references.
+
+Sorry for the delay!
+
+END BRIAN SECTION
+
 Claude portion:
 
 > *This portion was written by Claude Code and reviewed before posting.*
