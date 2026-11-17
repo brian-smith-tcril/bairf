@@ -101,4 +101,9 @@ its PR.
      `section_id` from `path[2]`, the sequential), so the root with a
      resume position is one hop, as `master`'s case mocks it. The
      draft body never carried the wrong chain.
+   - The third summary line is two paragraphs, "Behavior changes from
+     `master`" and "Also fixed here" (Brian, 2026-11-17: "that wording
+     works"). My first version put the returning page event under
+     "What differs from `master`", where it is the opposite, and he
+     could not tell what the paragraph meant.
 
