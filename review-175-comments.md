@@ -238,5 +238,5 @@ Body:
 A top-level comment on the PR, not a review and not inline (Brian, 2026-11-17): no review body, no anchor. Drafted against head `8848af5150`, base `56bc146b91`.
 
 Ledger: entry 7
-Status: draft
-Body: `comment-175-slot-contract.md`, the whole file verbatim. Brian is editing it.
+Status: posted https://github.com/openedx/frontend-app-catalog/pull/175#issuecomment-6955909879 (2026-11-17, on Brian's word after he read the full body)
+Body: `comment-175-slot-contract.md`, the whole file verbatim, as posted. Worked over with Brian line by line before posting; what he cut and why is in ledger entry 7 (the #174 table paragraph, the `totalItems` sentence, the frontend-base#344 and bookkeeping line, the edx-search paragraph, the README example).
