@@ -107,3 +107,9 @@ its PR.
      "What differs from `master`", where it is the opposite, and he
      could not tell what the paragraph meant.
 
+3. **The amended body is posted (2026-11-17).** One PATCH of #2195's
+   body from `issue-body-courseware-container.md` on Brian's "go"; the
+   live body was read back and equals the file. `UPSTREAM.md`'s row
+   stays `settled`. Implementation of the three layers waits for
+   Brian's word.
+
