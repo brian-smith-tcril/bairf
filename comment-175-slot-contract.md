@@ -17,6 +17,4 @@ I think those two slots need new ids, so the new slots can carry the new type wh
   </Slot>
   ```
 
-This is the "renaming a slot when its props change" example in openedx/frontend-base#344, plus the same README, export and #184 bookkeeping the five slots in #174 got.
-
 On keeping the old type word for word, `index` and `title` included: none of the three engines in `edx-search` puts a `title` on a result ([elastic](https://github.com/openedx/edx-search/blob/cf562c2517/src/search/elastic.py#L91-L98), [meilisearch](https://github.com/openedx/edx-search/blob/cf562c2517/src/search/meilisearch.py#L635-L638), [typesense](https://github.com/openedx/edx-search/blob/cf562c2517/src/search/typesense.py#L622-L625)), so it's tempting to fix `title: string` while we're in here. But a site can swap in a search backend that does send it, and a typed widget written against `title: string` would stop compiling. Leaving the old type alone, and passing the rows through as received, is the one option that doesn't break a widget either way.
