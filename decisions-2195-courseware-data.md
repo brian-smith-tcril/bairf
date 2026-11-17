@@ -104,8 +104,9 @@ mapping are in #2195's plan and are not repeated. Renamed to
     earlier layers have them too (seven in
     `course-home/data/apiHooks.ts`, one here since #2249); what stayed
     off the queries in the dates tab port was the error logging, a
-    listener in `Main.tsx`. A helper wrapping `queryOptions`, as
-    gradebook's `useGradebookQuery` spreads `gradebookQueryOptions`,
+    listener in `Main.tsx`. A helper wrapping `queryOptions`, as the
+    hook in gradebook's `src/data/query.ts` spreads
+    `gradebookQueryOptions`,
     would touch all fifteen definitions in both files. Brian: "i guess
     the spreads are ok, i don't love it but i think trying to avoid it
     would end up feeling over-engineered".
