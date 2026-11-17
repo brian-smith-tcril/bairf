@@ -52,12 +52,17 @@ number.
    the course routes sends none and is not decoded.
 
 6. **The tests render the route array with each page swapped for a
-   probe.** `withPages(routes, page)` in `tests/render.tsx` returns the
+   probe.** `replacePages(routes, page)` in `tests/render.tsx` returns the
    array with every leaf route's `element`, `lazy` and `loader`
    replaced, so a test renders `Main`, `PathFixesProvider` and
    `DecodePageRoute` where the app has them and no page's requests.
    `master`'s landing test builds the same thing from `DECODE_ROUTES`:
    the wrapper on each pattern around a probe, and a catch-all probe.
+   The helper was first `withPages`, a ternary inside a `map`; Brian
+   found it hard to read on review. It is named for what it does and
+   branches with an `if`: a route with children is a layout and
+   stays, with the pages under it replaced; a route without is a
+   page.
    - `decodeRoutes.test.tsx`: the rows are `master`'s. The harness adds
      `/learning` to each URL and landing. One landing changes: the row
      "mangled url with an encoded space" lands on
@@ -102,4 +107,4 @@ number.
    `.jsx` block in place; 46 suites, 792 passed, 11 skipped; 100% of
    lines; `build` and `build:ci` pass. The patch counted as codecov
    counts it: 20 lines, none missed, none partial. Local commit
-   `27ad5668` on `bsmith/courseware-route-wrappers`, not pushed.
+   `e0cef2b8` on `bsmith/courseware-route-wrappers`, not pushed.
