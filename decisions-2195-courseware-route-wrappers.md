@@ -91,5 +91,5 @@ number.
    rebased onto the final data layer: lint clean with the local `.jsx`
    block in place; 46 suites, 792 passed, 11 skipped; 100% of lines;
    `build` and `build:ci` pass. The patch counted as codecov counts
-   it: 20 lines, none missed, none partial. Local commit `ee9ea6c9` on
+   it: 20 lines, none missed, none partial. Local commit `e1db34d4` on
    `bsmith/courseware-route-wrappers`, not pushed.

@@ -115,8 +115,8 @@ its PR.
 
 4. **The three layers are built locally (2026-11-17), on Brian's "go
    ahead and implement all 3 layers".** `bsmith/courseware-data`
-   (`5cbd7d78`), `bsmith/courseware-route-wrappers` (`ee9ea6c9`) and
-   `bsmith/courseware-container` (`009ec9c2`) sit on the stack above
+   (`35bdb046`), `bsmith/courseware-route-wrappers` (`e1db34d4`) and
+   `bsmith/courseware-container` (`76d15760`) sit on the stack above
    `bsmith/outline-tab` (`84f00e55`); nothing is pushed and no PR
    exists. Each layer's decisions are in
    `decisions-2195-courseware-data.md`,
@@ -157,4 +157,15 @@ its PR.
    the landing table's result; the two retry counts; the new position
    case; the parked sequence navigation assertions and the virtual
    mock.
+
+6. **Brian is reviewing each layer's diff before the push
+   (2026-11-17), the data layer first**, in the diff viewer on the
+   output of `bin/port-diff`. Changes from the review are amended into
+   the layer and the layers above rebased locally; the layer logs
+   carry each one. So far: the `sequenceMetadata` factory's bare
+   `courseId` option (data layer, entry 10). The body draft is ahead
+   of the live body by that sentence; the PATCH waits for the end of
+   the review. After each amend the amended layer and the top layer
+   are checked in full; the middle layer is run again once the review
+   ends, before anything is pushed.
 

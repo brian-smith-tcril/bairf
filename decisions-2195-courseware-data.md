@@ -77,19 +77,29 @@ mapping are in #2195's plan and are not repeated. Renamed to
    harness (`mockCourseRequests` in `setupTest.js`) calls it, and the
    harness arrives with the first suite that uses it.
 
-10. **The `sequenceMetadata` factory's default for a missing course id
-    only throws (Brian, 2026-11-17: "dropping the dead if seems
-    fine").** `master` has `.option('courseId', (courseId) => { if
-    (courseId) { return courseId; } throw … })`. rosie calls an
-    option's default with its dependencies as arguments
-    (`_buildWithDependencies`), and only when the caller gave no
-    value; this option has no dependencies, so `courseId` is always
-    undefined there and the `if` never passes. It was the layer's one
-    missed and one partial line, and no input reaches it. The default
-    is now `() => { throw … }`; every caller gets what it got.
+10. **The `sequenceMetadata` factory's course id is an option with no
+    default (settled with Brian 2026-11-17, in two steps).** `master`
+    has `.option('courseId', (courseId) => { if (courseId) { return
+    courseId; } throw … })`. rosie calls an option's default only when
+    the caller gave no value, with the option's dependencies as
+    arguments (`_optionValue`, `_buildWithDependencies`; the README's
+    `instance.option` section: "This list of `dependencies` will match
+    the parameters that are passed to the `generator_function`"). This
+    option declares none, so `courseId` is always undefined there and
+    the `if` never passes: one missed and one partial line that no
+    input reaches.
+    - First the `if` went and the default was `() => { throw … }`
+      ("dropping the dead if seems fine"). Reviewing the diff, Brian
+      found a default that only throws confusing.
+    - rosie has the requirement built in: an option defined with no
+      default must be given a value, or the build throws ``option
+      `courseId` has no default value and none was provided``. The
+      factory is now `.option('courseId')` ("bare is fine and reads
+      the cleanest"). `master`'s message goes; the case in
+      `apiHooks.test.tsx` asserts rosie's.
 
 11. **Checks at this layer (2026-11-17).** Lint clean with the local
     `.jsx` block in place; 43 suites, 643 passed, 11 skipped; 100% of
     lines; `build` and `build:ci` pass. The patch counted as codecov
-    counts it: 239 lines, none missed, none partial. Local commit
-    `5cbd7d78` on `bsmith/courseware-data`, not pushed.
+    counts it: 238 lines, none missed, none partial. Local commit
+    `35bdb046` on `bsmith/courseware-data`, not pushed.
