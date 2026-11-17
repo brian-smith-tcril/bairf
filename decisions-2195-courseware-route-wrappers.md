@@ -67,8 +67,13 @@ number.
      here.
    - `index.test.jsx`: `master`'s wrapper cases mock `../constants`,
      `matchPath` and `Navigate`, none of which describe the wrapper any
-     more. They assert the router's location and its history action
-     (`REPLACE` after a decode, `POP` when nothing moved). `master`'s
+     more. Where `master` asserts on its mocked `Navigate`, the cases
+     assert on a spy of the router's own `navigate`, which the real
+     `Navigate` calls: not called when nothing needs decoding, called
+     with the decoded pathname and `replace: true` when something
+     does. My first version read the router's `historyAction` (`POP`
+     for no navigation); Brian, reviewing: "the 'mock nav not called'
+     check was very clear, this feels unclear". `master`'s
      three cases keep their shape: each builds its `props` with
      `matchPath` and calls `renderPage(props)`, which renders at
      `/learning` and the props' pathname, so the cases change in the
@@ -97,4 +102,4 @@ number.
    `.jsx` block in place; 46 suites, 792 passed, 11 skipped; 100% of
    lines; `build` and `build:ci` pass. The patch counted as codecov
    counts it: 20 lines, none missed, none partial. Local commit
-   `639af3be` on `bsmith/courseware-route-wrappers`, not pushed.
+   `27ad5668` on `bsmith/courseware-route-wrappers`, not pushed.
