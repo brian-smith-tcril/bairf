@@ -116,7 +116,7 @@ its PR.
 4. **The three layers are built locally (2026-11-17), on Brian's "go
    ahead and implement all 3 layers".** `bsmith/courseware-data`
    (`5cbd7d78`), `bsmith/courseware-route-wrappers` (`ee9ea6c9`) and
-   `bsmith/courseware-container` (`85483a72`) sit on the stack above
+   `bsmith/courseware-container` (`009ec9c2`) sit on the stack above
    `bsmith/outline-tab` (`84f00e55`); nothing is pushed and no PR
    exists. Each layer's decisions are in
    `decisions-2195-courseware-data.md`,
@@ -137,8 +137,12 @@ its PR.
      dropped on Brian's word (data layer, entry 10), amended into the
      data layer, and the two layers above rebased onto it and checked
      again; every layer's patch now has no missed and no partial line.
-   - Open for Brian: the `exhaustive-deps` warning on the container's
-     position effect (container layer, entry 2).
+   - The container's position effect limits itself with a ref and
+     lists every value it reads, on Brian's word (container layer,
+     entry 2); lint now reports nothing on any layer.
+   - To put in the issue body before the push, if Brian wants it
+     there: the two more URL forms and their guard, the retry default's
+     type, and the position effect's guard.
    - Not done: the push and the draft PRs, the PR bodies, the manual
      passes of layers 2 and 3.
 

@@ -7,17 +7,47 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
 1. **The top layer of three, one commit.** The courseware data module
    and the two route wrappers are the layers below.
 
-2. **`CoursewareContainer.tsx` is `master`'s file, byte for byte.** Its
-   imports are relative paths that exist in the package, and it reads
+2. **`CoursewareContainer.tsx` is `master`'s file apart from its
+   position effect, which limits itself with a ref (settled with Brian
+   2026-11-17: "ok, let's do the ref guard").** The imports are
+   relative paths that exist in the package, and the file reads
    nothing from the platform.
-   - Open, for Brian: the position effect's dependency list is
-     `[routeUnitId]`, and the package's lint reports
-     `react-hooks/exhaustive-deps` on it as a warning (lint exits 0).
-     `master`'s comment on the line says why: "only when the route's
-     unit changes; the sequence loading later must not save". Listing
-     the six values it reads would save the position when the sequence
-     loads, which is the behavior the comment rules out, so the line
-     is left as `master` has it.
+   - `master`'s effect lists `[routeUnitId]` as its dependencies, with
+     the comment "only when the route's unit changes; the sequence
+     loading later must not save" (#2146). `master`'s lint has
+     `react-hooks/exhaustive-deps` off; the package's reports the line
+     as a warning. Listing the six values it reads would save the
+     position when the sequence loads, the thing the comment rules
+     out.
+   - Here the effect lists every value it reads and returns early when
+     the route's unit is the one it last handled, kept in
+     `handledUnitId`, a ref that starts empty so that mounting at a
+     unit counts as a change. `master`'s comment sits on the guard.
+   - What was weighed. React's documentation says never to suppress
+     the rule ("We recommend treating the dependency lint error as a
+     compilation error", Removing Effect Dependencies) and gives an
+     Effect Event (`useEffectEvent`) for an effect that reacts to one
+     value and reads others; the package's React, 18.3.1, has no
+     `useEffectEvent`. A ref guard is not in those pages. It is in
+     this codebase: `master`'s `sidebar/hooks/useUnitShiftBehavior.ts`
+     compares `previousUnitIdRef.current` with the unit id in an
+     effect, the ref starting `null` "so first render triggers unit
+     shift logic". Leaving `master`'s line was my first
+     recommendation, for a file identical to `master`'s; Brian's rule
+     is to follow `exhaustive-deps` even where a config disables it,
+     and the outline tab's `start_course` effect was fixed in its port
+     the same way.
+   - Held by two cases. "Saves the position on each unit change": no
+     save after the load, one for each move. "Saves the position on
+     coming back to a unit of a sequence that is still loaded" (new):
+     a mount with the sequence already in the cache saves, as
+     `master`'s does. Run against three other bodies before the amend:
+     `master`'s effect passes both; a ref that starts at the route's
+     unit fails the new case; the full dependency list with no guard
+     fails both.
+   - One difference, in development only: under React's strict mode an
+     effect runs twice on mount, and `master`'s would save twice at a
+     unit whose sequence is cached where this one saves once.
 
 3. **`coursewarePath` returns role URLs, in three branches.** No
    sequence id: the courseware role's URL for the course, on a preview
@@ -148,11 +178,10 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
 13. **Factories.** `buildBinaryCourseBlocks` comes with the suite. No
     commented line naming #2195 remains in the package.
 
-14. **Checks at this layer (2026-11-17).** Run on the commit as
-    rebased onto the final layers below: lint has no errors with the
-    local `.jsx` block in place, and the one warning of entry 2; 48
-    suites, 835 passed, 16 skipped (the five of entry 9 and the eleven
-    from earlier layers); 100% of lines; `build` and `build:ci` pass.
-    The patch counted as codecov counts it: 150 lines, none missed,
-    none partial. Local commit `85483a72` on
-    `bsmith/courseware-container`, not pushed.
+14. **Checks at this layer (2026-11-17).** Lint clean, with no
+    warning, with the local `.jsx` block in place; 48 suites, 836
+    passed, 16 skipped (the five of entry 9 and the eleven from
+    earlier layers); 100% of lines; `build` and `build:ci` pass. The
+    patch counted as codecov counts it: 154 lines, none missed, none
+    partial. Local commit `009ec9c2` on `bsmith/courseware-container`,
+    not pushed.
