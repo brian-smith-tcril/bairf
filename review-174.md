@@ -22,6 +22,8 @@ rpenido answered 2026-11-10 (https://github.com/openedx/frontend-app-catalog/pul
 
 Merged 2026-11-16 21:19 UTC by Brian as squash commit 56bc146b91, subject `feat: rename course catalog data to catalog data [FC-0137] (#174)`; Release CI published `v1.0.0-alpha.5` two minutes later (entry 14). This PR's deprecations are on openedx/frontend-app-catalog#184 as a comment (https://github.com/openedx/frontend-app-catalog/issues/184#issuecomment-6950493435, 2026-11-17). Left: closing this effort. Settled with Brian 2026-11-16: he asks rpenido to update the stale PR body without holding the merge on it (entry 12), the merge is a squash under a `feat:` subject Brian writes at merge time (entry 14), nothing is said to kdmccormick about the ADR change, and the color contrast question stays on learner-dashboard#879 (entry 13).
 
+Closed 2026-11-17: merged.
+
 ## Passes
 
 One row per pass. `bin/review sync` appends the row with the new head; scope (whole diff, named files or commits) and outcome (none, comments, approve, request changes) are filled in by hand. Since the last pass: `git diff <previous head>..<head>` in the code worktree, or `git range-diff` across a rebase.
