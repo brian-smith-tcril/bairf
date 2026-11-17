@@ -7,7 +7,7 @@ I think those two slots need new ids, so the new slots can carry the new type wh
 
 - `CatalogSearchResponse` stays as it is here, and is what the new slots carry.
 - `CourseListSearchResponse` stops being an alias and keeps [the declaration from before this PR](https://github.com/openedx/frontend-app-catalog/blob/56bc146b9177c1f2e77c1d6ace585dc698a83d9e/src/data/catalog-search/types.ts#L1-L34) as it was, still `@deprecated`. The old slots' `displayData` is typed with it.
-- `catalog.catalogDataTable.v1` (with `totalItems`) and `catalog.catalogDataTableCardView.v1` wrap the old slots the way [`CatalogIntroSlot`](https://github.com/openedx/frontend-app-catalog/blob/56bc146b9177c1f2e77c1d6ace585dc698a83d9e/src/slots/CatalogIntroSlot/index.tsx#L28-L47) does, with the old slots getting `displayData` minus the pathway rows:
+- The new slots are `catalog.catalogDataTable.v1` and `catalog.catalogDataTableCardView.v1`. Each one renders the old slot inside it, like [`CatalogIntroSlot`](https://github.com/openedx/frontend-app-catalog/blob/56bc146b9177c1f2e77c1d6ace585dc698a83d9e/src/slots/CatalogIntroSlot/index.tsx#L28-L47) does, and passes it `displayData` with the pathway rows filtered out:
 
   ```tsx
   <Slot id="org.openedx.frontend.slot.catalog.catalogDataTableCardView.v1" displayData={displayData}>
@@ -16,6 +16,8 @@ I think those two slots need new ids, so the new slots can carry the new type wh
     </Slot>
   </Slot>
   ```
+
+The new data table slot is also the place for `totalCourses` to become `totalItems`.
 
 This is the "renaming a slot when its props change" example in openedx/frontend-base#344, plus the same README, export and #184 bookkeeping the five slots in #174 got.
 
