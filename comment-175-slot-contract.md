@@ -6,7 +6,7 @@ The change to `CatalogSearchResponse` in `src/data/catalog-search/types.ts` chan
 I think those two slots need new ids, so the new slots can carry the new type while the old ones keep the shape they have today:
 
 - `CatalogSearchResponse` stays as it is here, and is what the new slots carry.
-- `CourseListSearchResponse` stops being an alias and keeps [the declaration from before this PR](https://github.com/openedx/frontend-app-catalog/blob/56bc146b9177c1f2e77c1d6ace585dc698a83d9e/src/data/catalog-search/types.ts#L1-L34) as it was, still `@deprecated`. The old slots' `displayData` is typed with it. That includes `index` and `title`, even though the new type drops them: a site could be running a search backend that sends them, and a widget typed against the old shape should keep compiling.
+- `CourseListSearchResponse` stops being an alias and keeps [the declaration from before this PR](https://github.com/openedx/frontend-app-catalog/blob/56bc146b9177c1f2e77c1d6ace585dc698a83d9e/src/data/catalog-search/types.ts#L1-L34) as it was, still `@deprecated`. The old slots' `displayData` is typed with it. That includes `index` and `title` as they were (the new type makes `index` optional and drops `title`): a site could be running a search backend that sends them, and a widget typed against the old shape should keep compiling.
 - The new slots are `catalog.catalogDataTable.v1` and `catalog.catalogDataTableCardView.v1`. Each one renders the old slot inside it, like [`CatalogIntroSlot`](https://github.com/openedx/frontend-app-catalog/blob/56bc146b9177c1f2e77c1d6ace585dc698a83d9e/src/slots/CatalogIntroSlot/index.tsx#L28-L47) does, and passes it `displayData` with the pathway rows filtered out:
 
   ```tsx
