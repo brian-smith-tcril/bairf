@@ -135,7 +135,18 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
    - The nine "when receiving a course_access error_code" cases:
      `shared/access.test.ts` and `TabPage.test.jsx` test the redirect
      where it is made (#2234).
-   - `assertLoadedHeader`: the header is the shell's.
+   - `assertLoadedHeader`: the header is the shell's, and nothing in
+     the package renders `.learning-header` (`HeaderSlot` is `dropped`
+     since #2234; the org and title line is #2193's widget, which this
+     suite never renders). Brian, reviewing: removal is fine, "but it
+     was serving the purpose of proving both course metadata and
+     course blocks loaded". `assertMetadataAndOutlineLoaded` stands
+     where it was called, seven times: it waits for the course-home
+     metadata, courseware metadata and outline queries to read
+     `success`, the idiom `waitForMetadataWithOutlinePending` already
+     uses in this suite. "Blocks" in `master`'s comment is the
+     learning-sequences outline, which the suite builds from its
+     course blocks.
    - `assertNoSequenceNavigation` and its six calls are commented out
      under #2196's URL: it queries the real course component's
      navigation, and against the stub its first lookup finds no element
@@ -184,5 +195,5 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     passed, 16 skipped (the five of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `68fe77fe` on `bsmith/courseware-container`,
+    partial. Local commit `e77c07e2` on `bsmith/courseware-container`,
     not pushed.
