@@ -24,6 +24,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 |------|------|------|-------|---------|
 | 2026-10-30 | 586f5f6d7f | e87d4fd2d7 | the one commit, line by line (`git diff pr-174..pr-175`), plus the legacy engines' `_type` and frontend-base's `camelCaseObject`; suite not run (permission refused for code from the PR checkout) | none yet |
 | 2026-11-06 | 586f5f6d7f | 089a0cda88 | Brian's pass from the bottom of the branch diff: `CoursesList.tsx`, `pathway-card/types.ts`, the union, the mock and test guards, the normalizer; the `type` field and the category fields traced through #176 to #178 and the ADR | comment review https://github.com/openedx/frontend-app-catalog/pull/175#pullrequestreview-5805667419: six inline comments (entries 2, 8, 9, 10) |
+| 2026-11-17 | 56bc146b91 | 8848af5150 | | |
 
 ## Ledger
 
