@@ -168,4 +168,9 @@ its PR.
    the review. After each amend the amended layer and the top layer
    are checked in full; the middle layer is run again once the review
    ends, before anything is pushed.
+   - The data layer's code is reviewed (Brian, 2026-11-17: "i think
+     the code for this layer looks good"). He would have submitted its
+     draft there and then, but a submit takes the whole stack, so the
+     three go up together after the other two are reviewed. The route
+     wrappers are next.
 
