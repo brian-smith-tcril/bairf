@@ -3,7 +3,7 @@
 
 The change to `CatalogSearchResponse` in `src/data/catalog-search/types.ts` changes the shape of `displayData` on two existing slots. `CourseCatalogDataTableSlotProps` and `CourseCatalogDataTableCardViewSlotProps` both declare `displayData?: CatalogSearchResponse`, so even though neither slot file is in this diff, a widget on `courseCatalogDataTable.v1` or `courseCatalogDataTableCardView.v1` goes from getting course rows to getting course-or-pathway rows. The card view README's [own example](https://github.com/openedx/frontend-app-catalog/blob/56bc146b9177c1f2e77c1d6ace585dc698a83d9e/src/slots/CourseCatalogDataTableSlots/CourseCatalogDataTableCardViewSlot/README.md#L103-L116) stops type-checking, since it passes each row to `CatalogDataTableCourseCardSlot` as `original?: Course`.
 
-What I'd like to see is one type per slot id. That way we get a type that matches what the backend sends, and we also keep the old slots' contract:
+I think those two slots need new ids, so the new slots can carry the new type while the old ones keep the shape they have today:
 
 - `CatalogSearchResponse` stays as it is here, and is what the new slots carry.
 - `CourseListSearchResponse` stops being an alias and keeps [the declaration from before this PR](https://github.com/openedx/frontend-app-catalog/blob/56bc146b9177c1f2e77c1d6ace585dc698a83d9e/src/data/catalog-search/types.ts#L1-L34) as it was, still `@deprecated`. The old slots' `displayData` is typed with it.
