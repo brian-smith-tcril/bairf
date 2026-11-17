@@ -84,3 +84,21 @@ its PR.
      factory comments re-pointed ("sounds reasonable"); the branch
      names ("seem fine"). He asked for more on the redirect table and
      on the third summary line; both still open.
+   - **Redirect tests assert the landing, and each hop of a multi-hop
+     form** (Brian, 2026-11-17: "redirect tests for 'where to we
+     eventually land' makes sense. if we're doing multi-hop redirects
+     then also testing each hop individually is good"). `master`'s
+     suite already asserts landings, since it runs the real router to
+     the end of a chain; it asserts no intermediate address. The table
+     gains a "Through" column, and a multi-hop form gets a case that
+     reads every address the router visits from the router
+     `renderRoutes` returns (how the router reports them is confirmed
+     when the case is written).
+   - Corrected the same day: I told Brian the course root is a
+     three-hop chain, reading the resume response's `sectionId` as a
+     section. It is the sequence (`Resume` in
+     `openedx/core/djangoapps/courseware_api/views.py` fills
+     `section_id` from `path[2]`, the sequential), so the root with a
+     resume position is one hop, as `master`'s case mocks it. The
+     draft body never carried the wrong chain.
+
