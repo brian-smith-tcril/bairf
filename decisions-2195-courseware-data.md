@@ -77,17 +77,19 @@ mapping are in #2195's plan and are not repeated. Renamed to
    harness (`mockCourseRequests` in `setupTest.js`) calls it, and the
    harness arrives with the first suite that uses it.
 
-10. **Open, for Brian: one unreachable branch in the `sequenceMetadata`
-    factory.** `.option('courseId', (courseId) => { if (courseId) {
-    return courseId; } throw … })`: rosie calls an option's default
-    with its dependencies as arguments (`_buildWithDependencies`), this
-    one has none, so `courseId` is always undefined there and line 8
-    never runs (1 missed, 1 partial). Dropping the `if` changes
-    nothing a test can see; leaving it keeps `master`'s file and names
-    the line in the PR.
+10. **The `sequenceMetadata` factory's default for a missing course id
+    only throws (Brian, 2026-11-17: "dropping the dead if seems
+    fine").** `master` has `.option('courseId', (courseId) => { if
+    (courseId) { return courseId; } throw … })`. rosie calls an
+    option's default with its dependencies as arguments
+    (`_buildWithDependencies`), and only when the caller gave no
+    value; this option has no dependencies, so `courseId` is always
+    undefined there and the `if` never passes. It was the layer's one
+    missed and one partial line, and no input reaches it. The default
+    is now `() => { throw … }`; every caller gets what it got.
 
 11. **Checks at this layer (2026-11-17).** Lint clean with the local
-    `.jsx` block in place; 43 suites, 643 passed, 11 skipped; 99.95% of
+    `.jsx` block in place; 43 suites, 643 passed, 11 skipped; 100% of
     lines; `build` and `build:ci` pass. The patch counted as codecov
-    counts it: 241 lines, 1 missed and 1 partial, both entry 10's.
-    Local commit `35c7c958` on `bsmith/courseware-data`, not pushed.
+    counts it: 239 lines, none missed, none partial. Local commit
+    `5cbd7d78` on `bsmith/courseware-data`, not pushed.

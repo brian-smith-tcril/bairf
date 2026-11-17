@@ -148,11 +148,11 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
 13. **Factories.** `buildBinaryCourseBlocks` comes with the suite. No
     commented line naming #2195 remains in the package.
 
-14. **Checks at this layer (2026-11-17).** Lint has no errors with the
+14. **Checks at this layer (2026-11-17).** Run on the commit as
+    rebased onto the final layers below: lint has no errors with the
     local `.jsx` block in place, and the one warning of entry 2; 48
     suites, 835 passed, 16 skipped (the five of entry 9 and the eleven
-    from earlier layers); 99.95% of lines; `build` and `build:ci`
-    pass. The patch counted as codecov counts it: 150 lines, none
-    missed, none partial. Local commit `9a8c77f8` on
+    from earlier layers); 100% of lines; `build` and `build:ci` pass.
+    The patch counted as codecov counts it: 150 lines, none missed,
+    none partial. Local commit `85483a72` on
     `bsmith/courseware-container`, not pushed.
-

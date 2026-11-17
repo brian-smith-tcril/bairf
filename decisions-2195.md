@@ -115,8 +115,8 @@ its PR.
 
 4. **The three layers are built locally (2026-11-17), on Brian's "go
    ahead and implement all 3 layers".** `bsmith/courseware-data`
-   (`35c7c958`), `bsmith/courseware-route-wrappers` (`3745502f`) and
-   `bsmith/courseware-container` (`9a8c77f8`) sit on the stack above
+   (`5cbd7d78`), `bsmith/courseware-route-wrappers` (`ee9ea6c9`) and
+   `bsmith/courseware-container` (`85483a72`) sit on the stack above
    `bsmith/outline-tab` (`84f00e55`); nothing is pushed and no PR
    exists. Each layer's decisions are in
    `decisions-2195-courseware-data.md`,
@@ -133,9 +133,12 @@ its PR.
      and `getCourseOutlineUrl` behind one guard (the plan names only
      the unit form), and `queryClient.ts` types the retry default
      (not in the plan; found by the build).
-   - Open for Brian: the unreachable branch in the `sequenceMetadata`
-     factory (data layer, entry 10) and the `exhaustive-deps` warning
-     on the container's position effect (container layer, entry 2).
+   - The unreachable branch in the `sequenceMetadata` factory is
+     dropped on Brian's word (data layer, entry 10), amended into the
+     data layer, and the two layers above rebased onto it and checked
+     again; every layer's patch now has no missed and no partial line.
+   - Open for Brian: the `exhaustive-deps` warning on the container's
+     position effect (container layer, entry 2).
    - Not done: the push and the draft PRs, the PR bodies, the manual
      passes of layers 2 and 3.
 
