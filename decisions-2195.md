@@ -79,3 +79,8 @@ its PR.
      `bsmith/courseware-route-wrappers`, `bsmith/courseware-container`.
    - A third summary line above the plan names the two wrapper
      differences and the returning page event.
+   - Brian, 2026-11-17: "Depends on #2191" stands ("sounds good"); the
+     unit form in layer 3 ("that seems reasonable i think"); the two
+     factory comments re-pointed ("sounds reasonable"); the branch
+     names ("seem fine"). He asked for more on the redirect table and
+     on the third summary line; both still open.
