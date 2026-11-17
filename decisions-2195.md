@@ -173,4 +173,9 @@ its PR.
      draft there and then, but a submit takes the whole stack, so the
      three go up together after the other two are reviewed. The route
      wrappers are next.
+   - The wrappers layer's code is reviewed (Brian, 2026-11-17: "code
+     for this layer looks good"), after three changes from the review:
+     `index.test.jsx` keeps `master`'s prop-bag shape, asserts on a spy
+     of the router's `navigate`, and the test helper is
+     `replacePages`. The container layer is next.
 
