@@ -33,8 +33,9 @@ number.
      `/learning`, 134 cases.
    - An escaped character in a fixed segment is decoded and redirected.
      Four cases: `l%65arning`, `c%6Furse`, `pr%65view`, `h%6Fme`.
-     `master` leaves the first three as typed; the fourth it already
-     decodes, through its `:sequenceId` pattern.
+     By reading `master`'s wrapper, not by running it: it leaves the
+     first three as typed, and already decodes the fourth through its
+     `:sequenceId` pattern.
    - A trailing slash is left as it is, and the page renders.
    - The redirect drops the query string, as `master`'s does:
      `<Navigate to={newUrl}>` is given a pathname.
@@ -86,8 +87,9 @@ number.
    keys made in Studio are ASCII. jsdom's memory router does not
    re-encode, so no test here sees it. Noted for the manual pass.
 
-8. **Checks at this layer (2026-11-17).** Lint clean with the local
-   `.jsx` block in place; 46 suites, 787 passed, 11 skipped; 99.32% of
+8. **Checks at this layer (2026-11-17).** Run again on the commit as
+   rebased onto the amended data layer: lint clean with the local
+   `.jsx` block in place; 46 suites, 792 passed, 11 skipped; 99.95% of
    lines; `build` and `build:ci` pass. The patch counted as codecov
    counts it: 20 lines, none missed, none partial. Local commit
    `3745502f` on `bsmith/courseware-route-wrappers`, not pushed.
