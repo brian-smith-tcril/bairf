@@ -146,3 +146,15 @@ its PR.
    - Not done: the push and the draft PRs, the PR bodies, the manual
      passes of layers 2 and 3.
 
+5. **The body carries what the implementation settled (2026-11-17).**
+   On Brian's "ok i guess we can update the issue body", one PATCH of
+   #2195 from `issue-body-courseware-container.md`; the live body was
+   read back and equals the file. Added, each as a clause or a bullet
+   in the plan block: the three new forms in `courseware/urls.ts` and
+   their guard; the position effect's ref guard; the retry default's
+   type; the factory builder commented out under #2196 and the
+   factory's dead branch; the probe pages the wrapper tests render;
+   the landing table's result; the two retry counts; the new position
+   case; the parked sequence navigation assertions and the virtual
+   mock.
+
