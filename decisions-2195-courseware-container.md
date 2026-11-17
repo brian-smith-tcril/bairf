@@ -146,7 +146,14 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      `success`, the idiom `waitForMetadataWithOutlinePending` already
      uses in this suite. "Blocks" in `master`'s comment is the
      learning-sequences outline, which the suite builds from its
-     course blocks.
+     course blocks. Brian: "that doesn't quite feel the same". It is a
+     stand-in: with the course component stubbed, nothing on the page
+     depends on the outline. `master`'s `Course.jsx` sets the page
+     title to the sequence's, section's and course's titles from the
+     outline once the outline query succeeds, so after #2196 the check
+     can read `document.title`. The helper carries a one-line comment
+     with #2196's URL so that port replaces it ("yeah, add the
+     marker"). The org and number return only in #2193's widget.
    - `assertNoSequenceNavigation` and its six calls are commented out
      under #2196's URL: it queries the real course component's
      navigation, and against the stub its first lookup finds no element
@@ -195,5 +202,19 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     passed, 16 skipped (the five of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `e77c07e2` on `bsmith/courseware-container`,
+    partial. Local commit `29d60d21` on `bsmith/courseware-container`,
     not pushed.
+
+15. **Seen once, not this layer's: an intermittent failure in the
+    outline tab's suite (2026-11-17).** One full run of this layer,
+    after a change that only added a comment to the container suite,
+    failed `OutlineTab.test.jsx` "Certificate Available Alert ›
+    appears" (`queryByText('Your grade and certificate status will be
+    available soon.')` found nothing). The case is `master`'s,
+    unchanged, in #2252's layer. Run alone three times, in its whole
+    suite once, and in the next full run it passed; some sixteen other
+    full runs the same day passed. Not diagnosed: the case asserts
+    with `queryByText` straight after `fetchAndRender`, which waits
+    for the heading and for the spinner to go, so an alert added a
+    tick later would be missed under load. Put to Brian.
+
