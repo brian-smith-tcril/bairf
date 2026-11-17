@@ -68,7 +68,13 @@ number.
    - `index.test.jsx`: `master`'s wrapper cases mock `../constants`,
      `matchPath` and `Navigate`, none of which describe the wrapper any
      more. They assert the router's location and its history action
-     (`REPLACE` after a decode, `POP` when nothing moved). The case
+     (`REPLACE` after a decode, `POP` when nothing moved). `master`'s
+     three cases keep their shape: each builds its `props` with
+     `matchPath` and calls `renderPage(props)`, which renders at
+     `/learning` and the props' pathname, so the cases change in the
+     lines that assert and nowhere else (from Brian's review,
+     2026-11-17: without the prop bag "the diff seem[s] bigger"). The
+     new cases render at a full path through `renderAt`. The case
      "should only decode the url params and not the entire url" goes
      with the behavior it asserts. The `decodeUrl` cases are
      `master`'s.
@@ -87,9 +93,8 @@ number.
    keys made in Studio are ASCII. jsdom's memory router does not
    re-encode, so no test here sees it. Noted for the manual pass.
 
-8. **Checks at this layer (2026-11-17).** Run on the commit as
-   rebased onto the final data layer: lint clean with the local `.jsx`
-   block in place; 46 suites, 792 passed, 11 skipped; 100% of lines;
-   `build` and `build:ci` pass. The patch counted as codecov counts
-   it: 20 lines, none missed, none partial. Local commit `e1db34d4` on
-   `bsmith/courseware-route-wrappers`, not pushed.
+8. **Checks at this layer (2026-11-17).** Lint clean with the local
+   `.jsx` block in place; 46 suites, 792 passed, 11 skipped; 100% of
+   lines; `build` and `build:ci` pass. The patch counted as codecov
+   counts it: 20 lines, none missed, none partial. Local commit
+   `639af3be` on `bsmith/courseware-route-wrappers`, not pushed.
