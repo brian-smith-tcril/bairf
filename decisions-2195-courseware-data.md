@@ -98,7 +98,19 @@ mapping are in #2195's plan and are not repeated. Renamed to
       the cleanest"). `master`'s message goes; the case in
       `apiHooks.test.tsx` asserts rosie's.
 
-11. **Checks at this layer (2026-11-17).** Lint clean with the local
+11. **The spread stays on each query (Brian, reviewing the diff,
+    2026-11-17).** He asked about the eight `...queryDefaults` in
+    `apiHooks.ts` and recalled an earlier layer avoiding them. The
+    earlier layers have them too (seven in
+    `course-home/data/apiHooks.ts`, one here since #2249); what stayed
+    off the queries in the dates tab port was the error logging, a
+    listener in `Main.tsx`. A helper wrapping `queryOptions`, as
+    gradebook's `useGradebookQuery` spreads `gradebookQueryOptions`,
+    would touch all fifteen definitions in both files. Brian: "i guess
+    the spreads are ok, i don't love it but i think trying to avoid it
+    would end up feeling over-engineered".
+
+12. **Checks at this layer (2026-11-17).** Lint clean with the local
     `.jsx` block in place; 43 suites, 643 passed, 11 skipped; 100% of
     lines; `build` and `build:ci` pass. The patch counted as codecov
     counts it: 238 lines, none missed, none partial. Local commit
