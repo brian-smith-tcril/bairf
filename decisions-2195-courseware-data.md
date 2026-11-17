@@ -60,8 +60,34 @@ mapping are in #2195's plan and are not repeated. Renamed to
    query was a stub until this issue. It now says nothing there fetches
    the metadata or the outline, which is why the cases supply both.
 
-8. **Checks at this layer (2026-11-17).** Lint clean with the local
-   `.jsx` block in place; 43 suites, 638 passed, 11 skipped; 99.31% of
-   lines; `build` and `build:ci` pass. The patch counted as codecov
-   counts it: 156 lines, none missed, none partial. Local commit
-   `7cacf86e` on `bsmith/courseware-data`, not pushed.
+8. **Lines `master` reaches only through later suites get cases
+   here.** The first count of the patch left out the layer's new files
+   (the script diffs tracked files, and they were not yet added);
+   counted again from the commit, the layer had 14 missed and 5 partial
+   lines. Added to `apiHooks.test.tsx`: a sequence with a saved
+   position (`activeUnitIndex`); a sidebar outline whose section and
+   sequence have no `children`; a unit completed in a sequence that
+   holds another, so the sequence stays incomplete; a loaded course
+   whose outline has no sections (`buildEmptyOutline`, which nothing on
+   `master` calls); the factory's own guard for a missing course id.
+
+9. **`buildSimpleCourseAndSequenceMetadata` is commented out under
+   #2196's URL**, with its import, as `courseBlocks.factory.js` carried
+   its two builders until this issue. Only `master`'s course-request
+   harness (`mockCourseRequests` in `setupTest.js`) calls it, and the
+   harness arrives with the first suite that uses it.
+
+10. **Open, for Brian: one unreachable branch in the `sequenceMetadata`
+    factory.** `.option('courseId', (courseId) => { if (courseId) {
+    return courseId; } throw … })`: rosie calls an option's default
+    with its dependencies as arguments (`_buildWithDependencies`), this
+    one has none, so `courseId` is always undefined there and line 8
+    never runs (1 missed, 1 partial). Dropping the `if` changes
+    nothing a test can see; leaving it keeps `master`'s file and names
+    the line in the PR.
+
+11. **Checks at this layer (2026-11-17).** Lint clean with the local
+    `.jsx` block in place; 43 suites, 643 passed, 11 skipped; 99.95% of
+    lines; `build` and `build:ci` pass. The patch counted as codecov
+    counts it: 241 lines, 1 missed and 1 partial, both entry 10's.
+    Local commit `35c7c958` on `bsmith/courseware-data`, not pushed.
