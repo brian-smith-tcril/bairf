@@ -121,8 +121,7 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      `.fake-unit` line is `master`'s again, the two that assert it
      absent at the course root included, and the walked case differs
      from `master`'s in three lines: the config read, the header check
-     and the parked navigation check. The file's changed lines against
-     `master`'s went from 676 in the first port to 512. #2196 moves the
+     and the parked navigation check. #2196 moves the
      mock back to `./course/sequence/Unit`. The mock declares prop
      types for the two ids it reads, so it needs no
      `eslint-disable`; `master`'s unit mock keeps the one it has.
@@ -133,9 +132,9 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      (Brian, in review: the change of that call in every case made
      the file "look like it has a huge amount of changes"). `master`
      pushes onto frontend-platform's `history`, which its
-     `BrowserRouter` reads. Here `history` is a two-line object in the
-     suite that keeps the pushed path, and the render starts the
-     memory router there, under `/learning`.
+     `BrowserRouter` reads. Here `history` is a small object in the
+     suite whose `push` goes to the browser's history, which the
+     browser router reads when it is created.
    - `loadContainer` waits for the spinner again: it waits for the
      spinner to appear, then for none to be on the page. `master`'s
      one line, `waitForElementToBeRemoved(screen.getByRole('status'))`,
@@ -152,9 +151,6 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      they are: the fake unit is on the page only once a redirect has
      reached a unit, as on `master`. The suite passed five runs in a
      row before the amend.
-   - "Should stay on the sequence without a redirect to it" asserts
-     the router was at one pathname only; `master` spied on
-     `history.replaceState`.
    - "Should ask for the resume block again on a later visit" puts its
      link in a layout route around the route array.
    - "Saves the position on each unit change" is parked whole, as
@@ -186,14 +182,45 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      and with `master`'s access-denied block removed just after it the
      diff paired the wrong lines and showed that block as replaced
      (Brian, in review); it differs from `master`'s in one line.
+   - The nine "when receiving a course_access error_code" cases are
+     back (Brian, in review: "let's put it back, i understand not
+     needing it but i want the diffs (*especially for test files*) to
+     be minimal/clear"). #2189 had this issue drop them, since
+     `shared/access.test.ts` covers each code's destination and
+     `TabPage.test.jsx` the redirect; all nine destinations are in
+     `access.test.ts`. The block runs here as `master` has it.
+   - The suite renders under a browser router. `tests/render.tsx`
+     gains `renderBrowserRoutes(routes)`, a `createBrowserRouter` over
+     jsdom's address, beside the memory-router `renderRoutes` the
+     package's other suites use. `master`'s suite renders under
+     `BrowserRouter` and asserts on `global.location.href` and
+     `history.replaceState`; a memory router has neither. With it:
+     the suite's `history.push` is `window.history.pushState` under
+     `/learning`; the 33 addresses the cases expect differ from
+     `master`'s by `/learning` alone; "should stay on the sequence
+     without a redirect to it" is `master`'s, spy and all; and the
+     `audit_expired` case expects `uhoh%20oh%20no` as `master` does,
+     which a memory router would hold unencoded. `afterEach` disposes
+     of the router.
+   - The suite answers the outline tab's request
+     (`/api/course_home/outline/…`) in its `beforeEach`. Two of the
+     restored cases redirect a denied learner to the course home,
+     which renders the real outline tab; with its request unanswered
+     the tab threw (entry 16), and the package's suite fails on a
+     console error, which it did in two runs of five.
+   - What still differs from `master` inside its cases, the config
+     reads and `/learning` aside: the render calls; the header helper
+     and its seven calls; the parked navigation helper and its six
+     calls; six `it.skip` lines; the link case's layout route; three
+     statements the package's lint splits over lines. No expected
+     value differs. The file's changed lines against `master`'s went
+     676, 622, 512, 491, of which 167 are the two blocks added at the
+     end and about 85 are the two restored-and-prefixed kinds above.
    - The rule this file is held to, after three rounds of review: the
      cases stay `master`'s, the harness around them adapts, and a case
      that cannot run is parked whole, not rewritten.
 
 9. **Left out or parked.**
-   - The nine "when receiving a course_access error_code" cases:
-     `shared/access.test.ts` and `TabPage.test.jsx` test the redirect
-     where it is made (#2234).
    - `assertLoadedHeader`: the header is the shell's, and nothing in
      the package renders `.learning-header` (`HeaderSlot` is `dropped`
      since #2234; the org and title line is #2193's widget, which this
@@ -258,11 +285,11 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
 
 14. **Checks at this layer (2026-11-17).** Run on the commit as
     rebased onto the reviewed layers below: lint clean, with no
-    warning, with the local `.jsx` block in place; 49 suites, 837
+    warning, with the local `.jsx` block in place; 49 suites, 846
     passed, 17 skipped (the six of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `8fb8ed65` on `bsmith/courseware-container`,
+    partial. Local commit `ff89d411` on `bsmith/courseware-container`,
     not pushed.
 
 15. **Seen once, not this layer's: an intermittent failure in the
@@ -280,4 +307,17 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     time on 2026-11-18 (14:40 UTC), again in a full run and again
     passing on the next one: twice in about twenty full runs over the
     two days, never when the suite ran alone.
+
+16. **Seen while restoring the access cases, same on `master` by
+    reading, not this layer's: the outline tab throws for a denied
+    learner whose outline request fails.** `TabPage`'s `deriveView`
+    returns `isDenied` before it looks for a failed tab-data query,
+    and the outline tab shows its page to a denied learner, so
+    `OutlineTab` renders with no outline data and its nested
+    destructure of `courseBlocks` throws. `master`'s line has `?? {}`
+    after `.data`, which only moves the throw to `courseBlocks`
+    (#2252 dropped it for that reason). `master`'s container suite
+    lands on that page in two cases with the outline request
+    unanswered and does not notice, having no console check. Put to
+    Brian as a possible discovery issue.
 
