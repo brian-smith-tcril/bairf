@@ -154,6 +154,8 @@ say where the first version differed.
     `791ef1b3`, #2260 `7e8b9337`, #2261 `9024b6b3`, #2262 `ff53391b`. The remote heads
     were read back and match. The rebase before it was
     `gh stack rebase --upstack --no-trunk`; `git range-diff` showed the six commits
-    above #2249 unchanged. The bodies of #2249, #2243, #2244 and #2190 are drafted
-    here and not yet applied; #2249's title is still the first version's. Entries 12
-    and 13 stay out of the PR body, as entry 12 did.
+    above #2249 unchanged. The bodies of #2249, #2243, #2244 and #2190 were then
+    applied from their drafts here and read back equal. #2249's title is the new
+    commit subject, and #2243's is "Progress tab: the certificate card ignores the
+    entrance exam". Entries 12 and 13 stay out of the PR body, as entry 12 did. The
+    reply on the review thread is Brian's.
