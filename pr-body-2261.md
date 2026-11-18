@@ -142,10 +142,15 @@ history of the params-only decode and the alternatives weighed are in
    runs first. A non-ASCII letter does: run once in jsdom under a
    browser router, in a case that was not kept, a course key spelled
    `course-v1:Org+Caf%C3%A9+Run` rendered nothing with this layer's
-   wrapper and with `master`'s. Course keys made in Studio are ASCII.
-   Not seen in a real browser, not introduced here, and no issue is
-   filed for it. The package's suites run under a memory router, which
-   does not re-encode, so no kept case sees it.
+   wrapper and with `master`'s. Course keys made in Studio are ASCII
+   by default: Studio rejects other characters unless
+   `ALLOW_UNICODE_COURSE_ID` is set
+   ([`course.py`](https://github.com/openedx/openedx-platform/blob/46c8c9b4c86e9f7ec02d31293b2d0bb3f3638114/cms/djangoapps/contentstore/views/course.py#L1131-L1137)),
+   and the setting is `False` in
+   [`cms/envs/common.py`](https://github.com/openedx/openedx-platform/blob/46c8c9b4c86e9f7ec02d31293b2d0bb3f3638114/cms/envs/common.py#L118-L119).
+   Not seen in a real browser here, and not introduced here. The
+   package's suites run under a memory router, which does not
+   re-encode, so no kept case sees it.
 
 8. **Checks (2026-11-18).** `npm run lint` clean, with the package's
    `.jsx` files included (openedx/frontend-base#327); `npm test`, 46
@@ -231,8 +236,7 @@ and a real browser's console. The suite runs the wrappers in jsdom.
   throwaway case, started at `…/course-v1:Org+Caf%C3%A9+Run/home`, nothing rendered: the
   browser holds the address encoded, the wrapper decodes it to `é`, the two never match, and
   the wrapper keeps redirecting. `master`'s wrapper under `BrowserRouter` in jsdom did the
-  same, so this layer does not introduce it. Not seen in a real browser. No issue is filed
-  for it.
+  same, so this layer does not introduce it. Not seen in a real browser.
 - **Lint, tests and both builds** at the layer's head, on its own commit: all pass.
 
 ### Left to the suite

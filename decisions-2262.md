@@ -303,9 +303,9 @@ repeated.
     `OutlineTab` renders with no outline data and its nested
     destructure of `courseBlocks` throws. `master`'s line has `?? {}`
     after `.data`, which only moves the throw to `courseBlocks`; the
-    port's line has none. `master`'s container suite lands on that
-    page in two cases with the outline request unanswered and does
-    not notice, having no console check. No issue is filed for it.
+    port's line has none. `master`'s container suite renders only
+    the courseware routes, so the outline tab never renders at that
+    address there. Filed as #2263.
 
 17. **Checks (2026-11-18).** `npm run lint` clean, with no warning,
     with the package's `.jsx` files included

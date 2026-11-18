@@ -361,3 +361,21 @@ its PR.
     - Offered and not taken up: reproducing the throw with a throwaway
       case in `master`'s outline suite. "How it was seen" stays inside
       the details block, naming the port's suite.
+
+15. **The two PR log sentences are corrected (2026-11-18), on Brian's
+    "go ahead and fix the two PR log corrections".** Each edited in
+    its decisions file and its PR body, one `gh pr edit` per PR, both
+    read back equal to their files.
+    - #2261 entry 7: course keys made in Studio are ASCII by default;
+      Studio rejects other characters unless `ALLOW_UNICODE_COURSE_ID`
+      is set, linked to `course.py` and `cms/envs/common.py`.
+    - #2262 entry 16: `master`'s container suite renders only the
+      courseware routes, so the outline tab never renders at that
+      address there; "Filed as #2263" in place of "No issue is filed
+      for it".
+    - Changed with them, for the same reason: "no issue is filed for
+      it" came out of #2261 entry 7 and of `manual-testing-2195.md`
+      (embedded in both bodies), since #1802 reports a white page for
+      a Cyrillic course key. #1802 is not named in either body: a
+      mention would put a cross-reference on someone else's issue,
+      which is Brian's call.

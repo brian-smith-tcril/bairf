@@ -357,9 +357,9 @@ repeated.
     `OutlineTab` renders with no outline data and its nested
     destructure of `courseBlocks` throws. `master`'s line has `?? {}`
     after `.data`, which only moves the throw to `courseBlocks`; the
-    port's line has none. `master`'s container suite lands on that
-    page in two cases with the outline request unanswered and does
-    not notice, having no console check. No issue is filed for it.
+    port's line has none. `master`'s container suite renders only
+    the courseware routes, so the outline tab never renders at that
+    address there. Filed as #2263.
 
 17. **Checks (2026-11-18).** `npm run lint` clean, with no warning,
     with the package's `.jsx` files included
@@ -446,8 +446,7 @@ and a real browser's console. The suite runs the wrappers in jsdom.
   throwaway case, started at `…/course-v1:Org+Caf%C3%A9+Run/home`, nothing rendered: the
   browser holds the address encoded, the wrapper decodes it to `é`, the two never match, and
   the wrapper keeps redirecting. `master`'s wrapper under `BrowserRouter` in jsdom did the
-  same, so this layer does not introduce it. Not seen in a real browser. No issue is filed
-  for it.
+  same, so this layer does not introduce it. Not seen in a real browser.
 - **Lint, tests and both builds** at the layer's head, on its own commit: all pass.
 
 ### Left to the suite
