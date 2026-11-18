@@ -354,7 +354,13 @@ import and config mapping are in #2191's plan and are not repeated.
       three suites under `src/course-home/outline-tab` pass, 138 passed
       and 4 skipped; `OutlineTab.jsx` at 100% of lines and branches.
     - The source line and the case are both in the layer's first commit,
-      the port. How the fix is committed (into that commit, or as a
-      commit of its own on the layer) is not decided.
+      the port, and the fix is folded into that commit, whose message
+      gains a sentence for it. The second commit is unchanged.
+    - Pushed (2026-11-18) with `gh stack push --remote upstream`, heads
+      read back: #2252 `44147f47` (port commit `e3d3db61`), #2260
+      `82a7a25d`, #2261 `ad35181a`, #2262 `209e7cba`; #2249 and #2251
+      unchanged at `e22c204e` and `5b93f6eb`. Every commit above the port
+      commit read equal to its pushed one in patch and message. #2252
+      still reads approved.
     - The issue for `master` is drafted in the effort's files and not
-      filed.
+      filed. #2252's body does not mention the fix yet.
