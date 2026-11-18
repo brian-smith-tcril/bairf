@@ -98,31 +98,31 @@ The page is a stub until #2196: it reads "course: not yet ported" and lists `cou
 `sequenceId=…` and `unitId=…`. "The stub matches" below means those three equal the ids in
 the address.
 
-- [ ] **1. The course root** — open
+- [x] **1. The course root** — open
       `http://apps.local.openedx.io:2000/learning/course/course-v1:OpenedX+DemoX+DemoCourse`.
       The address settles on `…/course/<course>/<sequence>/<unit>` and the stub matches.
       *Why here:* the container and its redirects replace the stub page on the courseware
       routes; this is the resume lookup and the outline for real.
-- [ ] **2. A sequence alone** — delete the last segment of that address, the unit, and press
+- [x] **2. A sequence alone** — delete the last segment of that address, the unit, and press
       Enter. The address goes back to a unit of that sequence and the stub matches.
-- [ ] **3. A unit alone** — from the address in step 1, delete the sequence segment so the
+- [x] **3. A unit alone** — from the address in step 1, delete the sequence segment so the
       unit follows the course key, and press Enter. The address settles on
       `…/<sequence>/<unit>` again and the stub matches.
       *Why here:* the sequence endpoint's real answer to a unit id, and the lookup of the
       unit's parent, both of which the suite stands in for.
-- [ ] **4. An id that is nothing** — open
+- [x] **4. An id that is nothing** — open
       `…/learning/course/course-v1:OpenedX+DemoX+DemoCourse/block-v1:OpenedX+DemoX+DemoCourse+type@sequential+block@nothing`.
       The address goes to the course root and on to where step 1 settled.
       *Why here:* the sequence endpoint's real answer to an id it does not know.
-- [ ] **5. A preview address as the learner** — in the address from step 1, insert `/preview`
+- [x] **5. A preview address as the learner** — in the address from step 1, insert `/preview`
       after `/learning` and press Enter. The address loses `/preview` and the stub matches.
       *Why here:* `useIsPreview` now compares against `/learning/preview`.
-- [ ] **6. The course bar on a unit** — on the page from step 1, note which tab the course bar
-      shows as selected, if any, and click Progress and then back: each opens with no page
-      load.
+- [ ] **6. The course bar's tabs from a unit** — on the page from step 1, click Progress and
+      then go back: each opens with no page load.
       *Why here:* the shell picks the selected tab from the address, and this is the first
-      Learning page whose address is under none of the tabs' own. Nothing is expected
-      here; what shows is recorded.
+      Learning page whose address is under none of the tabs' own.
+- **To note, not to tick: which tab the course bar shows as selected on a unit page, if
+  any.** Nothing is expected here; what shows is recorded below.
 - [ ] **7. The earlier tabs' links** — on the Course tab, expand a section and click a
       sequence title; on the Progress tab, click a subsection's title. Each lands on a unit
       with the stub matching, with no page load.
