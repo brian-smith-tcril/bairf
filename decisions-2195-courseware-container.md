@@ -92,7 +92,7 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
    `lazyProgressTab` serves the progress tab's two routes. Ids and
    roles are unchanged; the preview index keeps its 404 loader.
    `routes.test.tsx` loses the five courseware stub cases and their
-   five page-rule rows; the container suite asserts the page rules on a
+   five page-rule rows; the stub's own test asserts the page rules on a
    unit.
 
 7. **`queryDefaults` types its retry policy for the library's default
@@ -108,16 +108,45 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
    error: Error) => boolean` and spreads that; it is the same
    function, and `queryDefaults.retry` is still `shouldRetryQuery`.
 
-8. **The container suite renders the route array.**
-   `CoursewareContainer.test.jsx` goes through `renderRoutes` at
-   `/learning/…`. Where `master` reads `global.location.href`, the
-   cases read `router.state.location.pathname`; where it reads its
-   mocked unit's text, they read the stub's `<main>`.
-   - `loadContainer` waits for the stub's `<main>`, which the tab page
-     renders once the course has loaded, where `master` waited for the
-     spinner to go.
-   - Assertions `master` makes straight after the load, on an address
-     a redirect has yet to reach, are inside `waitFor`.
+8. **The container suite renders the route array, and keeps
+   `master`'s fake unit, mocked one level up (settled with Brian in
+   review, 2026-11-18).** `CoursewareContainer.test.jsx` goes through
+   `renderRoutes` at `/learning/…`, and reads
+   `router.state.location.pathname` where `master` reads
+   `global.location.href`.
+   - My first port asserted on the stub's `<main>` where `master`
+     asserts on `.fake-unit`, dropped each unused `container` binding,
+     and moved waits to fit a stub that is always on the page. Walking
+     one case with Brian ("should use the resume block response…"),
+     most of its changes came from the stub, not the port: the suite
+     "isn't really being *ported* here so much as reworked into an
+     intermediate state and that doesn't feel good".
+   - `master` mocks `./course/sequence/Unit` as `div.fake-unit` under
+     the real course and sequence components. Here the suite mocks
+     `./course` with the same element inside a `<main>`, shown when
+     the route has a unit, as the sequence shows a unit. Every
+     `.fake-unit` line is `master`'s again, the two that assert it
+     absent at the course root included, and the walked case differs
+     from `master`'s in four lines: the config read, the load call,
+     the header check and the parked navigation check. #2196 moves the
+     mock back to `./course/sequence/Unit`.
+   - `master`'s own mock of `./course/sequence/Unit` stays as a
+     virtual mock under #2196's URL, since the skipped cases read
+     `mockRenderUnitNav`.
+   - `loadContainer` waits for the mocked course's `<main>`, which the
+     tab page renders once the course has loaded. `master` waits for
+     the spinner to be removed. That wait cannot be kept: the routes
+     load lazily, so the spinner has to be awaited first, and by the
+     time the test resumes it is already gone;
+     `waitForElementToBeRemoved` then holds a detached node whose
+     topmost ancestor still contains it, and times out.
+   - The stub is rendered by `course/index.test.tsx`, through the
+     routes with the requests mocked: the three ids it prints, and no
+     page-rule diagnostics. Both go with the stub in #2196.
+   - The assertions `master` makes straight after the load stay as
+     they are: the fake unit is on the page only once a redirect has
+     reached a unit, as on `master`. The suite passed five runs in a
+     row before the amend.
    - "Should stay on the sequence without a redirect to it" asserts
      the router was at one pathname only; `master` spied on
      `history.replaceState`.
@@ -198,11 +227,11 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
 
 14. **Checks at this layer (2026-11-17).** Run on the commit as
     rebased onto the reviewed layers below: lint clean, with no
-    warning, with the local `.jsx` block in place; 48 suites, 836
+    warning, with the local `.jsx` block in place; 49 suites, 837
     passed, 16 skipped (the five of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `29d60d21` on `bsmith/courseware-container`,
+    partial. Local commit `5c17eabe` on `bsmith/courseware-container`,
     not pushed.
 
 15. **Seen once, not this layer's: an intermittent failure in the
