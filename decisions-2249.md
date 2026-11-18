@@ -8,12 +8,6 @@ The layer's first version, pushed 2026-11-12, made the certificate card apply th
 status. Review reversed that (entry 1). The entries describe the layer as it is now and
 say where the first version differed.
 
-**Status (2026-11-18):** the reversal is amended into the layer's commit, `e22c204e`
-(was `bea109b5`), with a new subject, "fix: stop the progress tab's certificate card
-reading the entrance exam status". The five layers above are rebased onto it locally
-with `gh stack rebase --upstack --no-trunk`; `git range-diff` shows their six commits
-unchanged. Not pushed. The bodies of #2249, #2243 and #2244 are not updated.
-
 1. **The certificate card does not apply the entrance exam status.** `CertificateStatus`
    calls `getCourseExitMode` without `entranceExamPassed`. The parameter defaults to
    `null` and the function's one test of it is `=== false`, so the card renders as it
@@ -128,27 +122,26 @@ unchanged. Not pushed. The bodies of #2249, #2243 and #2244 are not updated.
      case runs both, and in this layer it is the only thing that does.
    - One comment in the lower layers' tests became false with the real query and stays
      corrected: `course-exit/utils.test.ts` said both courseware queries are stubs.
-   - On the working tree (2026-11-18): `npm run lint` passes with the package's `.jsx`
-     files included (openedx/frontend-base#327). The seven suites under
-     `src/course-home/progress-tab` and `src/courseware`: 138 passed, 6 skipped.
-     `CertificateStatus.jsx` line 101 is the partly covered line of entry 6. The full
-     run is entry 10. `build` and `build:ci` have not been run on this version.
+   - At the layer's commit (2026-11-18): `npm run lint` passes with the package's
+     `.jsx` files included (openedx/frontend-base#327), and `build` and `build:ci`
+     pass. The full run is entry 10.
 
-9. **One commit.** The reversal is amended into the layer's commit on Brian's word
-   (2026-11-18), and the commit message is rewritten, since the first one described
-   the fetch. The local heads after the rebase: #2249 `e22c204e`, #2251 `b2a2c6a2`,
-   #2252 `791ef1b3`, #2260 `7e8b9337`, #2261 `9024b6b3`, #2262 `ff53391b`.
+9. **One commit.** The reversal is amended into the layer's commit, whose message is
+   rewritten since the first one described the fetch. The five layers above are
+   rebased onto it with their commits unchanged.
 
-10. **Coverage at this layer (2026-11-18, working tree).** The full run: 36 suites,
+10. **Coverage at this layer (2026-11-18).** The full run: 36 suites,
     410 tests passed and 7 skipped. 100% of lines for the package. Counted from the
     local coverage report the way Codecov counts a patch, against the layer below, the
     layer adds 17 lines with none missed or partly covered. The partly covered line of
     entry 6, `CertificateStatus.jsx` line 101, is `master`'s and outside the patch. The
     `useMinimalCourseOutline` stub's function is not called (#2195).
 
-11. **The manual pass.** The first version's pass looked at the real request and at
-    the card going away with the response faked. Neither is in the layer now; whether
-    this version gets a pass is open.
+11. **No manual pass for this version.** The layer changes nothing a learner can see,
+    and the suite asserts the two things it does: no courseware metadata request, and
+    the card unmoved by what the query cache holds. The first version's pass
+    (2026-11-12) looked at the real request and at the card going away with the
+    response faked; both were of code this version removes.
 
 12. **The red `codecov/project` after the rebase onto `frontend-base` was an upload race,
     not a drop (2026-11-12).** Codecov compared the head against a base report that held
