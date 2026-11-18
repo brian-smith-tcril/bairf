@@ -192,4 +192,26 @@ its PR.
      `fetchAndRender`, and the alert arrives a tick later under load.
      It failed a second time on 2026-11-18, in a full run, and passed
      on the next: about one full run in ten so far.
+   - The container layer's code is reviewed (Brian, 2026-11-18: "i
+     think i'm ok with this layer now too"), after the changes its
+     log's entries 7 to 9 carry. All three layers are reviewed;
+     nothing is pushed.
+
+7. **The manual pass is drafted (2026-11-18)**, as
+   `manual-testing-2195.md`, one section per layer, each step with
+   what the layer changed and what it needs. Two things came up while
+   preparing it, both checked without Brian and neither this issue's:
+   - A course key with a non-ASCII letter renders nothing under a
+     browser router, with this layer's wrapper and with `master`'s
+     (throwaway cases in jsdom, run and deleted): the browser holds
+     the address encoded, the wrapper decodes it, and the two never
+     match.
+   - The body's acceptance line "The courseware tab is active in the
+     shell course bar on courseware routes" is from the 2026-10-20
+     text and has not been checked. The shell selects the tab whose
+     URL is the longest prefix of the address (`findActiveTab` in
+     frontend-base's `shell/header/course-bar/data/service`), and a
+     unit's address is under no tab's URL, so by reading no tab is
+     selected. The pass records what shows (container section, step
+     6); the line is corrected after.
 
