@@ -129,7 +129,9 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      absent at the course root included, and the walked case differs
      from `master`'s in four lines: the config read, the load call,
      the header check and the parked navigation check. #2196 moves the
-     mock back to `./course/sequence/Unit`.
+     mock back to `./course/sequence/Unit`. The mock declares prop
+     types for the two ids it reads, so it needs no
+     `eslint-disable`; `master`'s unit mock keeps the one it has.
    - `master`'s own mock of `./course/sequence/Unit` stays as a
      virtual mock under #2196's URL, since the skipped cases read
      `mockRenderUnitNav`.
@@ -231,7 +233,7 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     passed, 16 skipped (the five of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `5c17eabe` on `bsmith/courseware-container`,
+    partial. Local commit `f6df0e36` on `bsmith/courseware-container`,
     not pushed.
 
 15. **Seen once, not this layer's: an intermittent failure in the
