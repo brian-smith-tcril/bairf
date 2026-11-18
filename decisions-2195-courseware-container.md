@@ -37,14 +37,7 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      is to follow `exhaustive-deps` even where a config disables it,
      and the outline tab's `start_course` effect was fixed in its port
      the same way.
-   - Held by two cases. "Saves the position on each unit change": no
-     save after the load, one for each move. "Saves the position on
-     coming back to a unit of a sequence that is still loaded" (new):
-     a mount with the sequence already in the cache saves, as
-     `master`'s does. Run against three other bodies before the amend:
-     `master`'s effect passes both; a ref that starts at the route's
-     unit fails the new case; the full dependency list with no guard
-     fails both.
+   - Held by the two cases under "the position save" (entry 8).
    - One difference, in development only: under React's strict mode an
      effect runs twice on mount, and `master`'s would save twice at a
      unit whose sequence is cached where this one saves once.
@@ -164,8 +157,20 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      `history.replaceState`.
    - "Should ask for the resume block again on a later visit" puts its
      link in a layout route around the route array.
-   - "Saves the position on each unit change" moves with
-     `router.navigate`; `master` clicked the real navigation's Next.
+   - "Saves the position on each unit change" is parked whole, as
+     `it.skip` under #2196's URL, its body `master`'s line for line.
+     My first port kept the name and drove it with `router.navigate`
+     where `master` clicks the real navigation's Next; Brian, in
+     review: "before it was using userEvent to have the test click
+     through things, now that isn't happening". The effect is this
+     layer's, so two new cases under "the position save" cover it,
+     clicking links placed in a layout route around the route array
+     (the idiom of `master`'s "later visit to the course root" case):
+     nothing saved on opening a unit, then one save for each move;
+     and a save on coming back to a unit whose sequence is still
+     cached. Against `master`'s effect both pass; against a ref that
+     starts at the route's unit the second fails; with no guard both
+     fail.
    - The suite runs with retries off, as `master`'s does. `master`'s
      test client sets `retry: false` for every query. Here each query
      carries the policy in its own options, which a client cannot
@@ -205,9 +210,10 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      under #2196's URL: it queries the real course component's
      navigation, and against the stub its first lookup finds no element
      to assert on.
-   - Five cases are `it.skip` under #2196's URL: the first-section
+   - Six cases are `it.skip` under #2196's URL: the first-section
      celebration record, the sequence navigation slot, the completion
-     check on Next, the disabled Next control, and the page title.
+     check on Next, the position save on Next, the disabled Next
+     control, and the page title.
    - `master`'s mock of `./course/sequence/Unit` stays, as a virtual
      mock (`{ virtual: true }`, under #2196's URL): the module is not
      in the package yet, and the skipped cases still read
@@ -246,10 +252,10 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
 14. **Checks at this layer (2026-11-17).** Run on the commit as
     rebased onto the reviewed layers below: lint clean, with no
     warning, with the local `.jsx` block in place; 49 suites, 837
-    passed, 16 skipped (the five of entry 9 and the eleven from
+    passed, 17 skipped (the six of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `df0a8062` on `bsmith/courseware-container`,
+    partial. Local commit `d1afc94a` on `bsmith/courseware-container`,
     not pushed.
 
 15. **Seen once, not this layer's: an intermittent failure in the
