@@ -56,4 +56,7 @@ prs:
   openedx/frontend-app-learning#2249
   openedx/frontend-app-learning#2251
   openedx/frontend-app-learning#2252
+  openedx/frontend-app-learning#2260
+  openedx/frontend-app-learning#2261
+  openedx/frontend-app-learning#2262
   openedx/frontend-base#329

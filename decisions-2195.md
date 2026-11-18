@@ -119,9 +119,9 @@ its PR.
    `bsmith/courseware-container` (`53eaf560`) sit on the stack above
    `bsmith/outline-tab` (`84f00e55`); nothing is pushed and no PR
    exists. Each layer's decisions are in
-   `decisions-2195-courseware-data.md`,
-   `decisions-2195-courseware-route-wrappers.md` and
-   `decisions-2195-courseware-container.md`, to be renamed by PR
+   `notes-2195-courseware-data.md`,
+   `notes-2195-courseware-route-wrappers.md` and
+   `notes-2195-courseware-container.md`, to be renamed by PR
    number.
    - What the implementation settled that the plan left as read, not
      run: the landing table passes unchanged through the route array
@@ -277,4 +277,16 @@ its PR.
     lint clean, both builds passing, 100% of lines and no missed or
     partial patch line on all three. The push and the draft PRs wait
     for Brian's word.
+
+11. **The three layers are up as drafts (2026-11-18).** On Brian's
+    "go ahead and submit", `gh stack submit --auto --remote upstream`
+    pushed the three branches and opened #2260 (the courseware data
+    module, `35bdb046`, on `bsmith/outline-tab`), #2261 (the route
+    wrappers, `e0cef2b8`) and #2262 (the container and redirects,
+    `53eaf560`), all drafts, on stack #2248 with #2249, #2251 and
+    #2252, which were left as they were. The layer logs written while
+    building and reviewing become `notes-2195-*.md`, the effort's own
+    record of how each change came about; `decisions-2260.md`,
+    `decisions-2261.md` and `decisions-2262.md` are the logs the PRs
+    carry.
 
