@@ -258,3 +258,12 @@ its PR.
      what was seen and points at #359; the live #2195 body gets it
      with the pending PATCH.
 
+9. **The body carries what the review and the manual pass settled
+   (2026-11-18).** On Brian's "yeah, patch the body", one PATCH of
+   #2195 from `issue-body-courseware-container.md`; the live body was
+   read back and equals the file. Before it went up, a scan for
+   statements the review had made stale found one more, the plan's
+   manual-testing paragraph, which still asked for the page event by
+   hand and said the courseware tab is active; it now says what the
+   pass asked and saw.
+
