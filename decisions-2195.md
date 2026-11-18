@@ -343,3 +343,21 @@ its PR.
       with the outline request unanswered and does not notice" is
       false; `master`'s suite renders only the courseware routes, so
       the outline tab never renders at that address.
+
+14. **The discovery issue is filed (2026-11-18): #2263**, "Outline tab
+    throws for a denied learner when the outline request fails", from
+    `issue-body-outline-denied-failed-outline.md`, on Brian's "just
+    file it". Not a sub-issue of #1905 and no "Part of" line.
+    `UPSTREAM.md`'s row is `in-review`.
+    - Three things Brian took out of the draft, each for the same
+      reason: the issue is `master`'s, from #1259 (January 2024), and
+      must not read as a frontend-base issue. Out: a "both versions of
+      Learning have it" paragraph; a mention above the fold of the
+      port's failing test; "before the React Query conversion". Above
+      the fold it says only that it was not seen on a running site,
+      was found by reading the code, and dates from #1259.
+    - The disclosure note covers the whole issue ("This issue was
+      written by Claude…"), not "the details below".
+    - Offered and not taken up: reproducing the throw with a throwaway
+      case in `master`'s outline suite. "How it was seen" stays inside
+      the details block, naming the port's suite.
