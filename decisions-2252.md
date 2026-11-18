@@ -364,3 +364,13 @@ import and config mapping are in #2191's plan and are not repeated.
       still reads approved.
     - The issue for `master` is drafted in the effort's files and not
       filed. #2252's body does not mention the fix yet.
+
+23. **Checks after entry 22 (2026-11-18).** At the head, `44147f47`:
+    `npm run lint` clean, with the package's `.jsx` files included
+    (openedx/frontend-base#327); `npm test`, 42 suites, 566 passed, 11
+    skipped, lines 100 for the package; `OutlineTab.jsx` at 100 lines
+    and branches; `npm run build` and `npm run build:ci` pass. The count
+    is three under entry 21's 569: two cases went from the progress
+    suites in #2249 and one from the course start alert's in #2251, and
+    entry 22 adds an assertion, not a case. The port commit alone and
+    the layers above were not rerun.
