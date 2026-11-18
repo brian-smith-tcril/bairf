@@ -29,31 +29,36 @@ What needs eyes: a real browser's address bar going through the two redirects an
 rendering after them, the shell's course bar with the two new layout routes in the tree,
 and a real browser's console. The suite runs the wrappers in jsdom.
 
-- [ ] **1. An encoded course key** — paste
+- [x] **1. An encoded course key** — paste
       `http://apps.local.openedx.io:2000/learning/course/course-v1%3AOpenedX%2BDemoX%2BDemoCourse/home`
       into the address bar. The address becomes
       `…/learning/course/course-v1:OpenedX+DemoX+DemoCourse/home` and the outline tab
       renders.
       *Why here:* `DecodePageRoute` is back, as the layout route of the course routes. It
       now decodes every segment of the path.
-- [ ] **2. A space in the course key** — paste
+- [x] **2. A space in the course key** — paste
       `http://apps.local.openedx.io:2000/learning/course/course-v1:OpenedX DemoX DemoCourse/dates`.
       The address becomes `…/course/course-v1:OpenedX+DemoX+DemoCourse/dates` and the dates
       tab renders.
       *Why here:* `PathFixesProvider` is back, as a layout route around all of Learning's
       routes.
-- [ ] **3. The course bar** — from that page, click the Course, Progress and Dates tabs in
+- [x] **3. The course bar** — from that page, click the Course, Progress and Dates tabs in
       turn. Each opens with no page load (the Network tab shows no document request), and
       the course bar stays in place.
       *Why here:* the route tree gained a pathless route and the two course routes render
       a wrapper where they rendered a bare outlet; the shell reads the course from the
       matched routes, which no test of Learning's renders.
-- [ ] **4. The console** — DevTools, Console, reload on any of the three tabs. No errors or
+- [x] **4. The console** — DevTools, Console, reload on any of the three tabs. No errors or
       warnings from Learning's code.
 
 ### Record
 
-Not yet run.
+**2026-11-18, Brian, on the dev site, on `bsmith/courseware-route-wrappers` (`e0cef2b8`).**
+
+- Brian ticked steps 1, 2, 3 and 4, with no notes on any of them.
+- Two details those steps ask about were not noted and stay unrecorded: whether the
+  Network tab was watched for a document request on each tab click (step 3), and
+  whether the console held warnings that are not Learning's (step 4).
 
 ### Checked without you
 
