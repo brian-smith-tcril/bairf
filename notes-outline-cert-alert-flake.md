@@ -100,3 +100,48 @@ port's helper returns while they are still scheduled, and a
 synchronous assertion wins or loses a race with them depending on
 load. The first showing of a lazy alert is the long window; the 1 of
 24 on the second case is the short one left by the effect alone.
+
+## 4. The empty `act` question (2026-11-18)
+
+Brian, on fixing the helper with `await act(async () => {})`: "is
+that a known pattern for this type of thing?"
+
+- **Not in the official docs.** React's `act` page shows no empty
+  callback: every example wraps a render or an interaction ("`async
+  actFn`: An async function wrapping renders or interactions for
+  components being tested",
+  https://react.dev/reference/react/act#parameters). Testing Library's
+  guidance for content that appears later is to wait for it: "`findBy`
+  queries work when you expect an element to appear but the change to
+  the DOM might not happen immediately"
+  (https://testing-library.com/docs/dom-testing-library/api-async/#findby-queries),
+  and its FAQ on act warnings: "Wait for the result of the operation
+  in your test by using one of the async utilities like waitFor or a
+  `find*` query … Generally speaking, approach 1 is preferred".
+- **In this codebase, yes, for a different job.** `master` has ten
+  `await act(async () => {});` lines, in
+  `courseware/data/apiHooks.test.tsx` (five),
+  `courseware/course/bookmark/data/apiHooks.test.tsx` (one) and
+  `widgets/discussions/DiscussionsProvider.test.tsx` (four), added by
+  the React Query conversion (#2113 to #2140). Each lets pending work
+  settle before asserting that something did not happen ("fetches
+  nothing on its own"), where there is nothing to wait for. None waits
+  for content to appear. The package has none on this branch.
+- **What the docs do show is `master`'s own helper shape**: `await
+  act(async () => { root.render(…) })`
+  (https://react.dev/reference/react/act#await-act-async-actfn).
+  `master`'s `fetchAndRender` is `await act(async () => render(…))`;
+  the port's dropped the `act`.
+
+Correction to section 3: both trees run React 18.3.1 and
+`@testing-library/react` 16.3.3, and in `master` too the tab's content
+can arrive after the `act` has returned (the query observers are
+notified from a timer). So "`master`'s `act` flushes the alert" is a
+guess the reading does not establish. What makes `master`'s case
+immune is not known; the loop can test it.
+
+Candidates for the loop, one at a time, as uncommitted edits to the
+port's `fetchAndRender`:
+
+- A: `master`'s shape, `await act(async () => renderRoutes(…))`.
+- B: an empty `await act(async () => {})` after the two waits.
