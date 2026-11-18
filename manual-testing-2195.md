@@ -117,22 +117,38 @@ the address.
 - [x] **5. A preview address as the learner** — in the address from step 1, insert `/preview`
       after `/learning` and press Enter. The address loses `/preview` and the stub matches.
       *Why here:* `useIsPreview` now compares against `/learning/preview`.
-- [ ] **6. The course bar's tabs from a unit** — on the page from step 1, click Progress and
+- [x] **6. The course bar's tabs from a unit** — on the page from step 1, click Progress and
       then go back: each opens with no page load.
       *Why here:* the shell picks the selected tab from the address, and this is the first
       Learning page whose address is under none of the tabs' own.
 - **To note, not to tick: which tab the course bar shows as selected on a unit page, if
   any.** Nothing is expected here; what shows is recorded below.
-- [ ] **7. The earlier tabs' links** — on the Course tab, expand a section and click a
+  - Brian: "no tab highlighted/selected"
+- [x] **7. The earlier tabs' links** — on the Course tab, expand a section and click a
       sequence title; on the Progress tab, click a subsection's title. Each lands on a unit
       with the stub matching, with no page load.
       *Why here:* those links landed on the stub page of #2188 until now.
-- [ ] **8. The console** — DevTools, Console, reload on a unit. No errors or warnings from
+- [x] **8. The console** — DevTools, Console, reload on a unit. No errors or warnings from
       Learning's code.
 
 ### Record
 
-Not yet run.
+**2026-11-18, Brian, on the dev site, on `bsmith/courseware-container` (`53eaf560`).**
+
+- Brian ticked steps 1 to 8, with no notes on any of them.
+- On a unit page the course bar shows no tab as selected: "no tab highlighted/selected".
+  On `master` the Course tab is selected there: the container renders the tab page with
+  `activeTabSlug="courseware"`, the Course tab's id from the `course_metadata` response is
+  `courseware`, and `isActiveTab` selects the tab whose id equals the slug. The shell's
+  course bar does not take a slug from the page: it selects the tab whose URL is the
+  longest prefix of the address (`findActiveTab`), the Course tab's URL ends in `/home`,
+  and a unit's address is `…/course/<course>/<sequence>/<unit>`, under none of the tabs'.
+  So this is the shell's rule and not something this layer's code sets; it is a difference
+  from `master` that a learner sees.
+- Details the steps ask about that were not noted and stay unrecorded: whether the Network
+  tab was watched for a document request (steps 6 and 7), which sequence and subsection
+  were clicked (step 7), and whether the console held warnings that are not Learning's
+  (step 8).
 
 ### Checked without you
 

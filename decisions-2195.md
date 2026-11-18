@@ -215,3 +215,16 @@ its PR.
      selected. The pass records what shows (container section, step
      6); the line is corrected after.
 
+8. **The manual pass is run (2026-11-18)**: Brian ticked the four
+   steps of the wrappers section on `e0cef2b8` and the eight of the
+   container section on `53eaf560`; `manual-testing-2195.md` has the
+   record.
+   - One difference from `master` came out of it: on a unit page the
+     shell's course bar selects no tab, where `master` selects the
+     Course tab. It is the shell's rule (`findActiveTab`: the tab
+     whose URL is the longest prefix of the address), not this
+     layer's code. The body's acceptance line "The courseware tab is
+     active in the shell course bar on courseware routes" cannot be
+     met by this issue; what to do with the line and whether to file
+     the gap on frontend-base are Brian's.
+
