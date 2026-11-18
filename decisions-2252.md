@@ -339,8 +339,8 @@ import and config mapping are in #2191's plan and are not repeated.
     - arbrandes's review comment
       (https://github.com/openedx/frontend-app-learning/pull/2252#discussion_r4588525762)
       raised it and said a follow-up would do. Brian chose to fix it in
-      this layer, and to file the bug for `master` too, with a line saying
-      the frontend-base package has the fix here.
+      this layer and to file the bug for `master` as well: #2265, whose
+      status line says the frontend-base package has the fix here.
     - It is a change from `master` a learner can meet: after arriving
       from the enrollment email, Back leaves the page.
     - The case that held the cleanup asserted only that `start_course` is
@@ -350,21 +350,9 @@ import and config mapping are in #2191's plan and are not repeated.
       left as it was, the case fails, `router.state.historyAction` being
       `PUSH`. With the fix it passes. What Back then does in a browser
       has not been watched.
-    - Working tree, uncommitted (2026-11-18): `npm run lint` passes; the
-      three suites under `src/course-home/outline-tab` pass, 138 passed
-      and 4 skipped; `OutlineTab.jsx` at 100% of lines and branches.
     - The source line and the case are both in the layer's first commit,
       the port, and the fix is folded into that commit, whose message
       gains a sentence for it. The second commit is unchanged.
-    - Pushed (2026-11-18) with `gh stack push --remote upstream`, heads
-      read back: #2252 `44147f47` (port commit `e3d3db61`), #2260
-      `82a7a25d`, #2261 `ad35181a`, #2262 `209e7cba`; #2249 and #2251
-      unchanged at `e22c204e` and `5b93f6eb`. Every commit above the port
-      commit read equal to its pushed one in patch and message. #2252
-      still reads approved.
-    - The bug is filed for `master` as #2265, with a status line saying
-      the frontend-base package has the fix in #2252. #2252's body does
-      not mention the fix yet.
 
 23. **Checks after entry 22 (2026-11-18).** At the head, `44147f47`:
     `npm run lint` clean, with the package's `.jsx` files included
@@ -375,3 +363,12 @@ import and config mapping are in #2191's plan and are not repeated.
     suites in #2249 and one from the course start alert's in #2251, and
     entry 22 adds an assertion, not a case. The port commit alone and
     the layers above were not rerun.
+
+24. **Entry 22's fix is pushed (2026-11-18).** `gh stack push --remote
+    upstream`, heads read back: #2252 `44147f47` (port commit
+    `e3d3db61`), #2260 `82a7a25d`, #2261 `ad35181a`, #2262 `209e7cba`;
+    #2249 and #2251 unchanged at `e22c204e` and `5b93f6eb`. Every commit
+    above the port commit read equal to its pushed one in patch and
+    message, and #2252 still reads approved. Brian replied on the review
+    thread. #2252's body does not mention the fix yet. This entry stays
+    out of the PR body.
