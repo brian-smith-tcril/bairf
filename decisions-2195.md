@@ -379,3 +379,17 @@ its PR.
       a Cyrillic course key. #1802 is not named in either body: a
       mention would put a cross-reference on someone else's issue,
       which is Brian's call.
+
+16. **The outline suite's intermittent failure is fixed in #2252
+    (2026-11-18).** The follow-up of entries 6 and 12. Reproduced on
+    `bsmith/outline-tab` under load, traced to two of `master`'s
+    cases asserting synchronously on a lazily loaded alert, fixed by
+    having them wait with `findByText`, amended into #2252's port
+    commit, the three #2195 layers replayed onto it and the stack
+    pushed (#2252 `0e9a8e22`, #2260 `2a1754c3`, #2261 `aa5cc29b`,
+    #2262 `371a0e6a`). #2252's body carries the change (decision log
+    entries 20 and 21). The whole account is in
+    `notes-outline-cert-alert-flake.md`.
+    - Not looked at: whether other suites with the same helper shape
+      (the progress tab's, for one) assert synchronously on a lazy
+      alert's first showing.

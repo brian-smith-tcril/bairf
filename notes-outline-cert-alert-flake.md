@@ -224,4 +224,6 @@ updated", then "ok, so we should push the stack".
   move.
 - `decisions-2252.md` has entries 20 (the change) and 21 (the checks);
   `pr-body-2252.md` carries them and one sentence under Testing. The
-  body on GitHub is not yet updated.
+  body on GitHub was updated from it on Brian's word ("ok, update
+  the PR body for 2252"), one `gh pr edit`, read back equal to the
+  file.
