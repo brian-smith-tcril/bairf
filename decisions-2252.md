@@ -354,15 +354,18 @@ import and config mapping are in #2191's plan and are not repeated.
       the port, and the fix is folded into that commit, whose message
       gains a sentence for it. The second commit is unchanged.
 
-23. **Checks after entry 22 (2026-11-18).** At the head, `44147f47`:
+23. **Checks after entry 22 (2026-11-18).** At the port commit alone:
     `npm run lint` clean, with the package's `.jsx` files included
-    (openedx/frontend-base#327); `npm test`, 42 suites, 566 passed, 11
-    skipped, lines 100 for the package; `OutlineTab.jsx` at 100 lines
-    and branches; `npm run build` and `npm run build:ci` pass. The count
-    is three under entry 21's 569: two cases went from the progress
-    suites in #2249 and one from the course start alert's in #2251, and
-    entry 22 adds an assertion, not a case. The port commit alone and
-    the layers above were not rerun.
+    (openedx/frontend-base#327); `npm test`, 41 suites, 522 passed, 11
+    skipped, lines 98.39; `npm run build` and `npm run build:ci` pass.
+    At the head: lint clean; 42 suites, 566 passed, 11 skipped; lines
+    100 for the package, `OutlineTab.jsx` at 100 lines and branches;
+    both builds pass. Counted as codecov counts a patch, against #2251's
+    head, the layer adds 526 lines with none missed and none partly
+    covered. Each count is three under entry 21's: two cases went from
+    the progress suites in #2249 and one from the course start alert's
+    in #2251, and entry 22 adds an assertion, not a case. The layers
+    above were not rerun.
 
 24. **Entry 22's fix is pushed (2026-11-18).** `gh stack push --remote
     upstream`, heads read back: #2252 `44147f47` (port commit

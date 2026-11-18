@@ -15,6 +15,7 @@ Part of #1905. Resolves #2191. Stacked above #2251.
 - **The frames carry their three rules inline.** `master`'s frame document links `<BASE_URL>/static/LmsHtmlFragment.css`, copied out of `public/static/` by its webpack config. Nothing serves a package's file at the site's base URL, so the three rules are written into the document in a `<style>` element where the `<link>` stood. `LEGACY_THEME_NAME` still selects the `lms-main.css` linked before them. The stylesheet file is `dropped` in the manifest.
 - **The goal card's flags are images.** frontend-base has no SVGR loader, and its migration guide asks for the default URL import in an `<img>`. The three SVGs move into `widgets/assets/`, which the package's build copies into `dist/`.
 - **The goal card clears `weekly_goal` through the router**, since frontend-base exports no `history`.
+- **Clearing `start_course` replaces the history entry.** `master` passes `replace: true` in `navigate`'s first argument, where React Router ignores it, so the cleanup adds an entry (#2265). Here it is the second argument, as in the goal card's cleanup, and the case for it asserts that the router's last navigation was a replace.
 - **Placeholder slots.** The section outline slot renders its default content; the tab notifications slot, which has none, renders nothing. Both wait for #2185. Their READMEs and images are dropped with the plugin-framework contract they document.
 - **Console and lint fixes in the components**, since the suite fails on console output: three components lose their `defaultProps`; `WelcomeMessage`'s ref prop type names `HTMLElement` where it named `HTMLInputElement` for a ref that is a button; the certificate alert and the course tools render an icon only when they have one; the `start_course` effect lists the values it reads; eleven messages gain a `description`.
 - **Branches no input can take are removed**, so that no added line is partly covered: nine `?? {}` fallbacks on query reads that only moved a throw; two `else if` in `ProctoringInfoPanel.jsx` that repeated the negation of the condition before them; the certificate alert's chain over its three awarded statuses, now a `switch`; and the guard around its button's action. No behavior changes (decision log entries 16 and 17).
@@ -29,13 +30,14 @@ Part of #1905. Resolves #2191. Stacked above #2251.
 - **The all-dates link is a Paragon `Hyperlink`** with `master`'s classes; `master` has a bare anchor.
 - **The handouts stylesheet is no longer a file.** A deployment that replaced `LmsHtmlFragment.css` in its build has to restyle the frames through the theme's `lms-main.css`.
 - **The course tools list ends in an empty item** until the product tours port (#2208): the launch-tour button is a stub.
+- **After arriving from the enrollment email, Back leaves the course home.** On `master` clearing `start_course` adds a history entry, so Back returns to the `?start_course=1` address and the email-click event is sent again (#2265).
 
 ## Testing
 
 At the layer's head and at the port commit alone, in `frontend-base/`: lint, the tests, `build` and `build:ci` pass. Lint ran with the package's `.jsx` files included (openedx/frontend-base#327).
 
-- **Head:** 42 suites, 569 tests passed and 11 skipped (the four this layer skips, named in decision log entry 13, and seven from earlier layers).
-- **Port commit alone:** 41 suites, 525 passed, 11 skipped.
+- **Head:** 42 suites, 566 tests passed and 11 skipped (the four this layer skips, named in decision log entry 13, and seven from earlier layers).
+- **Port commit alone:** 41 suites, 522 passed, 11 skipped.
 
 Two of `master`'s alert cases, "Certificate Available Alert › appears" and "Scheduled Content Alert › appears correctly", wait for the alert's text with `findByText` where `master` asserts with `queryByText`. Both failed intermittently under load: the tab is reached through its lazy route here, and the alert can reach the page after the render helper's waits are satisfied (decision log entry 20).
 
@@ -374,6 +376,50 @@ import and config mapping are in #2191's plan and are not repeated.
     entry 19: the change adds and removes no case. The three layers
     above were replayed onto the amended layer with their own patches
     unchanged, and each passes its tests and both builds.
+
+22. **The `start_course` effect replaces the history entry (review,
+    2026-11-18).** `master` writes
+    `navigate({ pathname, search, replace: true })`. React Router's
+    `navigate` takes `replace` in its second argument and ignores it in
+    the first, so the cleanup adds a history entry. Back then returns to
+    the `?start_course=1` address, where the effect sends
+    `enrollment.email.clicked.startcourse` again and navigates forward
+    again. Here the call is
+    `navigate({ pathname, search }, { replace: true })`, the form entry 7
+    gave the goal card.
+    - The line is `master`'s, from #1128 (2023-10-05), which converted
+      `history.replace({ search })` to the `navigate` call. The port had
+      changed only the effect's dependency list (entry 8).
+    - arbrandes's review comment
+      (https://github.com/openedx/frontend-app-learning/pull/2252#discussion_r4588525762)
+      raised it and said a follow-up would do. Brian chose to fix it in
+      this layer and to file the bug for `master` as well: #2265, whose
+      status line says the frontend-base package has the fix here.
+    - It is a change from `master` a learner can meet: after arriving
+      from the enrollment email, Back leaves the page.
+    - The case that held the cleanup asserted only that `start_course` is
+      gone from the router's location, which a push satisfies as well. It
+      now also asserts that the router's last navigation was a replace.
+    - Seen, not only read: with the assertion added and `master`'s call
+      left as it was, the case fails, `router.state.historyAction` being
+      `PUSH`. With the fix it passes. What Back then does in a browser
+      has not been watched.
+    - The source line and the case are both in the layer's first commit,
+      the port, and the fix is folded into that commit, whose message
+      gains a sentence for it. The second commit is unchanged.
+
+23. **Checks after entry 22 (2026-11-18).** At the port commit alone:
+    `npm run lint` clean, with the package's `.jsx` files included
+    (openedx/frontend-base#327); `npm test`, 41 suites, 522 passed, 11
+    skipped, lines 98.39; `npm run build` and `npm run build:ci` pass.
+    At the head: lint clean; 42 suites, 566 passed, 11 skipped; lines
+    100 for the package, `OutlineTab.jsx` at 100 lines and branches;
+    both builds pass. Counted as codecov counts a patch, against #2251's
+    head, the layer adds 526 lines with none missed and none partly
+    covered. Each count is three under entry 21's: two cases went from
+    the progress suites in #2249 and one from the course start alert's
+    in #2251, and entry 22 adds an assertion, not a case. The layers
+    above were not rerun.
 
 </details>
 
