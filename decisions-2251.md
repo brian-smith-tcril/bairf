@@ -120,6 +120,10 @@ import and config mapping are in #2191's plan and are not repeated.
     Each file this layer adds is at 100 lines, and
     `alerts/course-start-alert/` at 100 branches. `npm run build` and
     `npm run build:ci` pass; `dist/` holds the new modules.
+    - After the review changes of entries 3 and 9 (2026-11-18): lint
+      clean; `npm test`, 39 suites, 430 passed, 7 skipped, 100% of lines;
+      `CourseStartAlert.jsx` and `CourseStartMasqueradeBanner.jsx` at 100%
+      of branches; `npm run build` and `npm run build:ci` pass.
 
 12. **The `SESSION_COOKIE_DOMAIN` line is amended in and pushed
     (2026-11-18).** Entry 3's change is one line in `app.ts`, amended
