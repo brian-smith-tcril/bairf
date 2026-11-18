@@ -373,5 +373,6 @@ import and config mapping are in #2191's plan and are not repeated.
     #2249 and #2251 unchanged at `e22c204e` and `5b93f6eb`. Every commit
     above the port commit read equal to its pushed one in patch and
     message, and #2252 still reads approved. Brian replied on the review
-    thread. #2252's body does not mention the fix yet. This entry stays
-    out of the PR body.
+    thread. #2252's body was then updated from its draft here and read
+    back equal; it carries entries 1 to 23. This entry stays out of the
+    PR body.
