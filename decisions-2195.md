@@ -227,4 +227,18 @@ its PR.
      active in the shell course bar on courseware routes" cannot be
      met by this issue; what to do with the line and whether to file
      the gap on frontend-base are Brian's.
+   - Brian: the tab "doesn't feel like it should block these PRs, but
+     we should definitely make a frontend-base issue for it and add it
+     to the epic". Drafted as `issue-body-course-bar-selected-tab.md`
+     (unpublished).
+   - Left out of that issue on Brian's word ("drop the section"), and
+     kept here for #2194: the shell's masquerade bar calls the same
+     `findActiveTab` after a masquerade change
+     (`shell/header/course-bar/masquerade/hooks.ts`) and navigates to
+     the first tab when it returns nothing. On a courseware page it
+     returns nothing for every user, so by reading a masquerade change
+     made on a unit's page sends the user to the course home, where
+     `master`'s widget reloads the page in place. Read, not observed;
+     to be checked on the dev site with a staff user when #2194 is
+     taken up, and filed on its own if it happens.
 

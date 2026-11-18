@@ -25,11 +25,6 @@ Found while porting Learning's courseware container to frontend-base (openedx/fr
 - 2026-11-18, on the branch that ports Learning's courseware container (openedx/frontend-app-learning#2195), against Tutor dev: on a unit's page the course bar showed no tab as selected. On the course home, the same course bar shows the Course tab as selected.
 - It is the first Learning page on frontend-base whose address is under none of the tabs' URLs; until that port the courseware routes rendered a placeholder.
 
-## The masquerade bar uses the same function
-
-- After a masquerade change, [`hooks.ts`](https://github.com/openedx/frontend-base/blob/0a81802ad1a5428fb5e2a2ba83abace5c6727df4/shell/header/course-bar/masquerade/hooks.ts#L158-L176) refetches the tabs and, when `findActiveTab(meta.tabs, location.pathname)` returns nothing, navigates to the first tab: "redirect to the first one if the current path no longer appears".
-- On a courseware page it returns nothing for every user. By reading, a masquerade change made on a unit's page sends the user to the first tab. Not observed.
-
 ## One case where a tab is selected
 
 - With the `DISABLE_COURSE_OUTLINE_PAGE_FLAG` waffle flag on for a course, `default_course_url` returns `make_learning_mfe_courseware_url(course_key)`, the course's courseware address. Every courseware page is under that.
@@ -38,6 +33,5 @@ Found while porting Learning's courseware container to frontend-base (openedx/fr
 
 - Which tab, if any, should the course bar mark on a course page whose address is under no tab's URL?
 - What tells the course bar which tab a page belongs to: the tabs' URLs, something the page's app declares, or the tab data?
-- Should the masquerade bar's check for whether the user can still see the current page follow the same answer?
 
 </details>
