@@ -105,7 +105,33 @@ not updated.
      and is disabled without a course id, as the hooks in `course-home/data/apiHooks.ts`
      do.
 
-8. **Tests.** To be written up once the cases run (2026-11-18).
+8. **Tests.**
+   - `ProgressTab.test.jsx`, "Entrance exam status": two assertions, each run on a
+     learner's own page and on `progress/10`. The tab makes no request to
+     `/api/courseware/course/`. With a failed entrance exam seeded in the query cache
+     before the card mounts, the certificate card renders. The suite's `beforeEach` no
+     longer answers the courseware request.
+   - The cache cases hold entry 3. Run against the layer below's `CertificateStatus.jsx`,
+     which has `master`'s read, both fail and the two request cases pass (2026-11-18).
+   - `ProgressTabComponents.test.tsx` loses the case that gave the card a mocked
+     `entranceExamPassed: false`, and with it the mock of
+     `@src/courseware/data/apiHooks`, its import, its `beforeEach` and its comment:
+     nothing the file renders reads that module now.
+   - `courseware/data/apiHooks.test.tsx` is new: the query carries the query defaults,
+     the hook fetches once, and it requests nothing when disabled or without a course
+     id. `master` has a file at this path with cases for eleven other hooks and queries
+     and none of its own for `useCoursewareMetadata`, which only does the fetching in
+     its `useSequenceIds` and `useIsCourseLoaded` cases; #2195 ports those into this
+     file.
+   - `getCourseMetadata` and the normalizer get no cases of their own. The hook's fetch
+     case runs both, and in this layer it is the only thing that does.
+   - One comment in the lower layers' tests became false with the real query and stays
+     corrected: `course-exit/utils.test.ts` said both courseware queries are stubs.
+   - On the working tree (2026-11-18): `npm run lint` passes with the package's `.jsx`
+     files included (openedx/frontend-base#327). The seven suites under
+     `src/course-home/progress-tab` and `src/courseware`: 138 passed, 6 skipped.
+     `CertificateStatus.jsx` line 101 is the partly covered line of entry 6. The full
+     run and the builds are not recorded yet.
 
 9. **One commit.** The change is amended into the layer's commit when Brian says so.
 
