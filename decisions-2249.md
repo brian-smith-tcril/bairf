@@ -131,12 +131,16 @@ not updated.
      files included (openedx/frontend-base#327). The seven suites under
      `src/course-home/progress-tab` and `src/courseware`: 138 passed, 6 skipped.
      `CertificateStatus.jsx` line 101 is the partly covered line of entry 6. The full
-     run and the builds are not recorded yet.
+     run is entry 10. `build` and `build:ci` have not been run on this version.
 
 9. **One commit.** The change is amended into the layer's commit when Brian says so.
 
-10. **Coverage at this layer.** To be measured for this version. The first version:
-    100% of lines for the package, 17 patch lines with none missed or partly covered.
+10. **Coverage at this layer (2026-11-18, working tree).** The full run: 36 suites,
+    410 tests passed and 7 skipped. 100% of lines for the package. Counted from the
+    local coverage report the way Codecov counts a patch, against the layer below, the
+    layer adds 17 lines with none missed or partly covered. The partly covered line of
+    entry 6, `CertificateStatus.jsx` line 101, is `master`'s and outside the patch. The
+    `useMinimalCourseOutline` stub's function is not called (#2195).
 
 11. **The manual pass.** The first version's pass looked at the real request and at
     the card going away with the response faked. Neither is in the layer now; whether
