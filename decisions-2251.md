@@ -17,13 +17,28 @@ import and config mapping are in #2191's plan and are not repeated.
    `getSequenceForUnitDeprecated`, are commented out under #2195's URL,
    as the factory indexes carry their unported imports.
 
-3. **The cookie domain is read from the app config.** `master` reads
-   `process.env.SESSION_COOKIE_DOMAIN` when it removes the
-   `show-account-activation-popup` cookie; here it is
-   `getAppConfig(appId).SESSION_COOKIE_DOMAIN`, with no bundled default,
-   so an operator who sets nothing gets a cookie removed on the serving
-   host, as `master` does with the variable unset. The site name in the
-   continue button is `getSiteConfig().siteName`.
+3. **The cookie domain is read from the app config, and `app.ts` lists
+   the key at `null`.** `master` reads `process.env.SESSION_COOKIE_DOMAIN`
+   when it removes the `show-account-activation-popup` cookie; here it is
+   `getAppConfig(appId).SESSION_COOKIE_DOMAIN`. An operator who sets
+   nothing gets a cookie removed on the serving host, as `master` does
+   with the variable unset. The site name in the continue button is
+   `getSiteConfig().siteName`.
+   - The layer's first version gave the key no bundled default, as
+     authn's `src/app.ts` gives its own none. arbrandes's review comment
+     (https://github.com/openedx/frontend-app-learning/pull/2251#discussion_r4588226383)
+     pointed out that it was the only key the package reads that
+     `defaultConfig` does not list, and that the list is the nearest
+     thing an operator has to documentation of what can be set. Brian
+     agreed (2026-11-18).
+   - `null` changes no behavior. `js-cookie` leaves a null attribute out
+     as it does an absent one (entry 7). `getAppConfig` merges
+     `defaultConfig` below the site's `commonAppConfig` and the app's
+     `config`, so a site sets the key as before.
+   - Listing every key the package reads, at `null`, is the
+     `defaultConfig` rule #2189 set for this app. authn lists only its
+     real defaults and documents this key in its README; this package
+     has no such table.
 
 4. **`EffortEstimate` loses its `defaultProps`.** React warns about them
    on a function component and the suite fails on console output. The

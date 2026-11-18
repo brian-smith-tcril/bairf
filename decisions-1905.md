@@ -395,6 +395,11 @@ Settled 2026-10-19, while charting the wayfinder map.
     since a key in the app's own `config` cannot be overridden by the site's
     `commonAppConfig` (catalog #156); `SUPPORT_URL` stays under that name
     because the shell's help button reads it from the app's config.
+    - Changed for Learning, 2026-11-18: `app.ts` lists
+      `SESSION_COOKIE_DOMAIN` in `defaultConfig` at `null`, after review on
+      openedx/frontend-app-learning#2251. The operator still sets it; the
+      `null` changes no behavior and blocks no site value. The reasons are
+      entry 3 of `decisions-2251.md`.
 
 Settled 2026-10-19, wayfinder ticket 04 (port order).
 
