@@ -322,3 +322,27 @@ import and config mapping are in #2191's plan and are not repeated.
     entry 19: the change adds and removes no case. The three layers
     above were replayed onto the amended layer with their own patches
     unchanged, and each passes its tests and both builds.
+
+22. **The `start_course` effect replaces the history entry (review,
+    2026-11-18).** `master` writes
+    `navigate({ pathname, search, replace: true })`. React Router's
+    `navigate` takes `replace` in its second argument and ignores it in
+    the first, so the cleanup adds a history entry. Back then returns to
+    the `?start_course=1` address, where the effect sends
+    `enrollment.email.clicked.startcourse` again and navigates forward
+    again. Here the call is
+    `navigate({ pathname, search }, { replace: true })`, the form entry 7
+    gave the goal card.
+    - The line is `master`'s, from #1128 (2023-10-05), which converted
+      `history.replace({ search })` to the `navigate` call. The port had
+      changed only the effect's dependency list (entry 8).
+    - arbrandes's review comment
+      (https://github.com/openedx/frontend-app-learning/pull/2252#discussion_r4588525762)
+      raised it and said a follow-up would do. Brian chose to fix it in
+      this layer, and to file the bug for `master` too, with a line saying
+      the frontend-base package has the fix here.
+    - It is a change from `master` a learner can meet: after arriving
+      from the enrollment email, Back leaves the page.
+    - The case that held the cleanup asserted only that `start_course` is
+      gone from the router's location, which a push satisfies as well. It
+      now also asserts that the router's last navigation was a replace.
