@@ -314,3 +314,10 @@ repeated.
     of lines for the package. `npm run build` and `npm run build:ci`
     pass. Counted as codecov counts a patch, against #2261's head: 154
     added lines, none missed and none partly covered.
+
+18. **The full suite at the stack's top after the review changes below
+    it (2026-11-18).** At `209e7cba`, the head pushed after the review
+    fixes in #2249, #2251 and #2252: `npm test`, 49 suites, 843 passed,
+    17 skipped, lines 100 for the package. This layer's own patch is
+    unchanged by those rebases. Lint and the builds were not rerun here.
+    This entry stays out of the PR body.
