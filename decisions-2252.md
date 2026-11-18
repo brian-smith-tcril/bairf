@@ -362,8 +362,9 @@ import and config mapping are in #2191's plan and are not repeated.
       unchanged at `e22c204e` and `5b93f6eb`. Every commit above the port
       commit read equal to its pushed one in patch and message. #2252
       still reads approved.
-    - The issue for `master` is drafted in the effort's files and not
-      filed. #2252's body does not mention the fix yet.
+    - The bug is filed for `master` as #2265, with a status line saying
+      the frontend-base package has the fix in #2252. #2252's body does
+      not mention the fix yet.
 
 23. **Checks after entry 22 (2026-11-18).** At the head, `44147f47`:
     `npm run lint` clean, with the package's `.jsx` files included

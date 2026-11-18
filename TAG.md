@@ -35,6 +35,7 @@ issues:
   openedx/frontend-app-learning#2250
   openedx/frontend-app-learning#2253
   openedx/frontend-app-learning#2263
+  openedx/frontend-app-learning#2265
   openedx/frontend-base#324
   openedx/frontend-base#325
   openedx/frontend-base#327
