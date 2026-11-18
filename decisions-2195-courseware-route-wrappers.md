@@ -103,7 +103,8 @@ number.
    keys made in Studio are ASCII. jsdom's memory router does not
    re-encode, so no test here sees it. Noted for the manual pass.
 
-8. **Checks at this layer (2026-11-17).** Lint clean with the local
+8. **Checks at this layer.** Run on its own commit on 2026-11-18,
+   after the review and before the push: lint clean with the local
    `.jsx` block in place; 46 suites, 792 passed, 11 skipped; 100% of
    lines; `build` and `build:ci` pass. The patch counted as codecov
    counts it: 20 lines, none missed, none partial. Local commit

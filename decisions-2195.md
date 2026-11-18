@@ -267,3 +267,14 @@ its PR.
    hand and said the courseware tab is active; it now says what the
    pass asked and saw.
 
+10. **Ready to push (2026-11-18).** The two blocks added at the end
+    of `CoursewareContainer.test.jsx` stay there (Brian: "yeah, leave
+    them"): they share the suite's setup and read as plain additions.
+    Each layer is checked on the commit that would go up:
+    `35bdb046` (43 suites, 643 passed, 11 skipped; patch 238 lines),
+    `e0cef2b8` (46 suites, 792 passed, 11 skipped; patch 20 lines),
+    `53eaf560` (49 suites, 846 passed, 17 skipped; patch 154 lines);
+    lint clean, both builds passing, 100% of lines and no missed or
+    partial patch line on all three. The push and the draft PRs wait
+    for Brian's word.
+
