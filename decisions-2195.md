@@ -178,4 +178,16 @@ its PR.
      `index.test.jsx` keeps `master`'s prop-bag shape, asserts on a spy
      of the router's `navigate`, and the test helper is
      `replacePages`. The container layer is next.
+   - **To follow up after this review (Brian, 2026-11-18: "let's make
+     a note to follow up on that after this review"): the intermittent
+     failure in `OutlineTab.test.jsx`, "Certificate Available Alert ›
+     appears".** Seen once on 2026-11-17 in a full run of the
+     container layer (container layer's log, entry 15), and passing on
+     every rerun. The case is `master`'s (the assertion's text dates
+     from #901, 2022) and came into the package with #2252's port
+     commit, `74b0eb31`; the harness around it, `fetchAndRender`, is
+     #2252's. #2252 is open, out of draft and green at `84f00e55`, so
+     its CI has not shown it. Not diagnosed. The guess to test first:
+     the case asserts with `queryByText` straight after
+     `fetchAndRender`, and the alert arrives a tick later under load.
 

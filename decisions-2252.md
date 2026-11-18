@@ -262,3 +262,11 @@ import and config mapping are in #2191's plan and are not repeated.
     and none partly covered. `npm run build` and `npm run build:ci`
     pass at both; `dist/` holds the three flag images, and the CI
     build emits them and the `learning-outline` chunk.
+
+20. **An intermittent failure seen after this layer went up
+    (2026-11-17), to follow up.** "Certificate Available Alert ›
+    appears" failed once in a full run made while #2195's layers were
+    being built on top, and passed on every rerun. The record and the
+    first guess are in `decisions-2195.md` entry 6; this PR's CI has
+    not shown it.
+
