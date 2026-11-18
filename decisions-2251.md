@@ -145,3 +145,23 @@ import and config mapping are in #2191's plan and are not repeated.
       carries entries 1 to 11 of this log. Brian replied on the review
       thread. The second review thread on this PR (the masquerade
       banner's `?? {}`) is not decided.
+
+13. **Checks for entry 9's drop of the banner's default (2026-11-18,
+    working tree, uncommitted).** Brian asked for the whole suite before
+    the amend.
+    - At this layer: `npm run lint` passes; `npm test`, 39 suites, 430
+      passed, 7 skipped, 100% of lines. `CourseStartMasqueradeBanner.jsx`
+      and `CourseStartAlert.jsx` are at 100% of lines and branches. The
+      patch against #2249, counted the way Codecov counts it: 87 lines,
+      none missed or partly covered.
+    - At the top of the stack (#2262's branch) with the same two files
+      changed: 49 suites, 843 passed, 17 skipped, 100% of lines.
+    - Why the banner cannot render without metadata, read from the code:
+      `useAlert` adds the alert in an effect only while the hook's
+      `isVisible` holds, which needs `isMasquerading` from that course's
+      metadata; the banner reads the metadata of the course id in its own
+      payload; a failed background refetch keeps the last data; nothing in
+      the package removes or resets queries; and the banner observes the
+      query, so it is not collected while the banner is mounted. No test
+      can drive the banner into that state through the hook.
+    - The builds were not rerun.
