@@ -165,3 +165,13 @@ import and config mapping are in #2191's plan and are not repeated.
       query, so it is not collected while the banner is mounted. No test
       can drive the banner into that state through the hook.
     - The builds were not rerun.
+
+14. **Entry 9's drop is amended in and pushed (2026-11-18).** The
+    commit message changes in the sentences about the two `?? {}`.
+    `gh stack rebase --upstack --no-trunk` met no conflict; the five
+    commits above read equal to their pushed ones in patch and message.
+    `gh stack push --remote upstream`, heads read back: #2251 `5b93f6eb`,
+    #2252 `c705cf74`, #2260 `ff8f892d`, #2261 `e5052182`, #2262
+    `a6e08695`; #2249 unchanged at `e22c204e`. #2251 and #2252 still read
+    approved. The bodies that describe the banner's case are not updated
+    yet.
