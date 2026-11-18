@@ -249,4 +249,12 @@ its PR.
      in courseware. Read in `openedx/features/course_experience`,
      not observed. The issue says the tab's link is the course home
      "by default".
+   - Filed on Brian's word (2026-11-18, "ok go ahead and file it"):
+     openedx/frontend-base#359, "The course bar selects no tab in
+     courseware", created from the draft and read back equal, then
+     added as a sub-issue of openedx/frontend-app-learning#1905, as
+     #332, #348 and #349 are. `UPSTREAM.md` has it `in-review`. The
+     body draft's acceptance line about the courseware tab now says
+     what was seen and points at #359; the live #2195 body gets it
+     with the pending PATCH.
 
