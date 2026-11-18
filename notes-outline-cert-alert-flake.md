@@ -227,3 +227,31 @@ updated", then "ok, so we should push the stack".
   body on GitHub was updated from it on Brian's word ("ok, update
   the PR body for 2252"), one `gh pr edit`, read back equal to the
   file.
+
+## 8. Left as observations (2026-11-18)
+
+Brian, on three things I had listed as "still open" after the fix:
+notes in the effort branch are fine; none is an issue or a task ("i
+have no idea how we'd even start trying to turn any of your 3 'still
+open' things into issues or anything"). Nothing is owed on any of
+them. Kept here in case one shows up later.
+
+- **Three more cases assert synchronously on the certificate alert**,
+  in the package's `OutlineTab.test.jsx`: "Certificate Available Alert
+  › renders verification alert" (line 858), "Certificate (web)
+  Complete Alert › appears" (line 1051) and "Requesting Certificate
+  Alert › appears" (line 1076). The alert's component is already
+  loaded when they run. The first failed once in 24 loaded runs of
+  its block before the fix; none failed in 64 loaded runs after it,
+  and none has failed in a normal run. They are `master`'s lines,
+  unchanged. If one ever fails for real, the same one-line change
+  (`await screen.findByText`) is the fix.
+- **Other suites were not checked for the pattern**: a synchronous
+  assertion, on the line after a render helper that waits for the
+  heading and the spinner, on a lazily loaded alert no earlier case
+  in the file has shown. The progress tab's suite has the same helper
+  shape. No failure has been seen in any of them.
+- **#1802** (open, not ours) reports a white page for a course key
+  with Cyrillic letters. The `DecodePageRoute` redirect loop of
+  `decisions-2261.md` entry 7 fits it and is not confirmed as its
+  cause. No comment was posted.
