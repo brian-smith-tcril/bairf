@@ -88,18 +88,36 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
    five page-rule rows; the stub's own test asserts the page rules on a
    unit.
 
-7. **`queryDefaults` types its retry policy for the library's default
-   error type.** `shouldRetryQuery` takes `error: unknown`, and a
-   query that spreads `queryDefaults` infers `unknown` as its error
-   type from it. `TabPage`'s `courseStatus` props are
-   `UseQueryResult`, whose error type is the default `Error`. The three
-   tab pages are `.jsx`, so nothing checked the mismatch until the
-   container, a `.tsx` file, passed its queries to `TabPage`
+7. **`shouldRetryQuery` takes an `Error` (settled with Brian in
+   review, 2026-11-18).** `master` declares it `(failureCount: number,
+   error: unknown)`. A query that spreads `queryDefaults` infers its
+   error type from that parameter, so every query in the package was
+   typed as failing with `unknown`. `TabPage`'s `courseStatus` props
+   are `UseQueryResult`, whose error type is the default `Error`. The
+   three tab pages are `.jsx`, so nothing checked the mismatch until
+   the container, a `.tsx` file, passed its queries to `TabPage`
    (`TS2322` in `build`). On `master` the policy is a client default
-   and no query infers from it. `queryClient.ts` assigns
-   `shouldRetryQuery` to a constant typed `(failureCount: number,
-   error: Error) => boolean` and spreads that; it is the same
-   function, and `queryDefaults.retry` is still `shouldRetryQuery`.
+   and no query infers from it.
+   - My first fix left the function alone and spread it through a
+     constant typed with `Error`. Brian: "the comment is confusing.
+     the line is confusing"; and, on a second version that put the
+     type on `queryDefaults`: "i don't get why we need to make up the
+     retry function type in queryDefaults, why are we not editing
+     `shouldRetryQuery` itself?" I had ruled that out because
+     `queryClient.test.ts` calls it with a plain object.
+   - Now the parameter is `Error`, and the test's `httpError` helper
+     returns `Object.assign(new Error(…), { response: { status } })`,
+     an `Error` carrying the response as an axios failure does. No
+     assertion changes; `queryDefaults` is as the layer below has it.
+   - Prior art checked 2026-11-18: gradebook's `retryUnlessClientError`
+     also takes `unknown` and sits in a spread options object
+     (`src/data/query.ts`); its `useGradebookQuery` wrapper names the
+     generics, with the error defaulting to `DefaultError`, so
+     nothing is inferred from the policy. account and profile set a
+     per-query retry in JavaScript. Tried and dropped:
+     `Pick<UseQueryOptions, 'retry' | 'refetchOnWindowFocus'>` on
+     `queryDefaults`, which fixes the error type and breaks inference
+     of the data type everywhere.
 
 8. **The container suite renders the route array, and keeps
    `master`'s fake unit, mocked one level up (settled with Brian in
@@ -290,7 +308,7 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     passed, 17 skipped (the six of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `ff89d411` on `bsmith/courseware-container`,
+    partial. Local commit `53eaf560` on `bsmith/courseware-container`,
     not pushed.
 
 15. **Seen once, not this layer's: an intermittent failure in the

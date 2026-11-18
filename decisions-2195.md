@@ -116,7 +116,7 @@ its PR.
 4. **The three layers are built locally (2026-11-17), on Brian's "go
    ahead and implement all 3 layers".** `bsmith/courseware-data`
    (`35bdb046`), `bsmith/courseware-route-wrappers` (`e0cef2b8`) and
-   `bsmith/courseware-container` (`ff89d411`) sit on the stack above
+   `bsmith/courseware-container` (`53eaf560`) sit on the stack above
    `bsmith/outline-tab` (`84f00e55`); nothing is pushed and no PR
    exists. Each layer's decisions are in
    `decisions-2195-courseware-data.md`,
