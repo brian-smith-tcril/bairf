@@ -262,3 +262,53 @@ import and config mapping are in #2191's plan and are not repeated.
     and none partly covered. `npm run build` and `npm run build:ci`
     pass at both; `dist/` holds the three flag images, and the CI
     build emits them and the `learning-outline` chunk.
+
+20. **Two of `master`'s alert cases wait for the alert's text
+    (2026-11-18, after the layer was up).** "Certificate Available
+    Alert › appears" and "Scheduled Content Alert › appears correctly"
+    assert with `expect(await screen.findByText(…))` where `master` has
+    `expect(screen.queryByText(…))` on the line after
+    `fetchAndRender()`. The change is in the port commit, with the
+    cases it adapts.
+    - How it was found. The first case failed in two of about twenty
+      full runs of the package's tests on the layers above this one,
+      and never when its suite ran alone. Under load it reproduces on
+      this layer: with eight copies of the outline suite running at
+      once on eight cores, 18 of 40 runs failed the certificate case
+      and 5 the scheduled content case, each with `queryByText`
+      returning `null`. Alone under the same load each failed nearly
+      every run (14 of 16, 15 of 16); with no other copy running,
+      neither failed.
+    - `master`'s own certificate case under the same load: 0 of 24.
+      The case bodies are the same; the helpers differ. `master`'s
+      renders the tab inside `await act(async () => render(…))`. The
+      port's reaches it through the lazy route and waits for the
+      heading and for the spinner to go. The alert reaches the page
+      after both are true: `useAlert` adds it in an effect,
+      `AlertList` renders it inside `<Suspense fallback={null}>`, and
+      its component is `React.lazy`, which suspends the first time it
+      renders in a test file. Both cases are the first in the file to
+      show their alert. What exactly keeps `master`'s helper clear of
+      the race was not established.
+    - Weighed. `master`'s `act` put back around the port's render
+      lowered the rate and did not remove it (7 of 24). An empty
+      `await act(async () => {})` after the helper's waits was not
+      run: React's `act` page shows no empty callback ("`async actFn`:
+      An async function wrapping renders or interactions for
+      components being tested",
+      [Parameters](https://react.dev/reference/react/act#parameters)),
+      and it waits a tick, not for the alert. Testing Library's answer
+      for content that appears later is the one taken: "`findBy`
+      queries work when you expect an element to appear but the change
+      to the DOM might not happen immediately"
+      ([Async Methods](https://testing-library.com/docs/dom-testing-library/api-async/#findby-queries)).
+      The course start alert's cases already assert that way.
+    - With the change, under the same load: 0 of 24 for each case
+      alone, 0 of 24 for the certificate block's five cases, 0 of 40
+      for the suite.
+    - Left as they are: the three later cases that show the
+      certificate alert ("renders verification alert", "Certificate
+      (web) Complete Alert", "Requesting Certificate Alert") keep
+      `queryByText`. The component is loaded by the time they run. One
+      of them failed once in 24 runs of its block before the change,
+      and none in 64 runs after it.
