@@ -1,6 +1,6 @@
 The outline tab throws for a learner without access when the outline request fails. A learner with access gets the tab page's error message in the same case.
 
-This has not been seen on a running site or reported by anyone. It comes from reading the code, after a test in the frontend-base port failed on the throw; it has not been reproduced in a browser, and not run on `master`.
+This has not been seen on a running site. It was found by reading the code, and has been there since #1259 (January 2024).
 
 > [!NOTE]
 > This issue was written by Claude (Claude Code) and reviewed before posting.
