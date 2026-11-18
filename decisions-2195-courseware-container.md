@@ -214,8 +214,9 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      calls; six `it.skip` lines; the link case's layout route; three
      statements the package's lint splits over lines. No expected
      value differs. The file's changed lines against `master`'s went
-     676, 622, 512, 491, of which 167 are the two blocks added at the
-     end and about 85 are the two restored-and-prefixed kinds above.
+     676, 622, 512, 491; of the 491, 167 are the two blocks added at
+     the end, and the config reads and `/learning` account for about
+     115 more.
    - The rule this file is held to, after three rounds of review: the
      cases stay `master`'s, the harness around them adapts, and a case
      that cannot run is parked whole, not rewritten.
@@ -315,8 +316,8 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     and the outline tab shows its page to a denied learner, so
     `OutlineTab` renders with no outline data and its nested
     destructure of `courseBlocks` throws. `master`'s line has `?? {}`
-    after `.data`, which only moves the throw to `courseBlocks`
-    (#2252 dropped it for that reason). `master`'s container suite
+    after `.data`, which only moves the throw to `courseBlocks`; the
+    port's line has none. `master`'s container suite
     lands on that page in two cases with the outline request
     unanswered and does not notice, having no console check. Put to
     Brian as a possible discovery issue.
