@@ -22,7 +22,7 @@ Found while porting Learning's courseware container to frontend-base (openedx/fr
 
 ## How it was seen
 
-- 2026-11-18, on the branch that ports Learning's courseware container (openedx/frontend-app-learning#2195), against Tutor dev: on a unit's page the course bar showed no tab as selected. The Course, Progress and Dates tabs each show as selected on their own pages.
+- 2026-11-18, on the branch that ports Learning's courseware container (openedx/frontend-app-learning#2195), against Tutor dev: on a unit's page the course bar showed no tab as selected. On the course home, the same course bar shows the Course tab as selected.
 - It is the first Learning page on frontend-base whose address is under none of the tabs' URLs; until that port the courseware routes rendered a placeholder.
 
 ## The masquerade bar uses the same function
