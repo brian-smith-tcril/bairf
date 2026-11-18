@@ -160,3 +160,34 @@ uncommitted edit, reverted after the run.
 So putting `master`'s `act` back around the render lowers the rate
 and does not remove it. `master`'s immunity is not explained by the
 `act` alone, and a helper that only flushes is still racing.
+
+## 6. Waiting for the alert in the two cases holds (2026-11-18, 18:50 to 19:10 UTC)
+
+Brian chose it over more work on the helper: "go ahead and do option
+1 but don't commit/amend it in yet, i want to see the diff after we
+verify it works".
+
+The change, uncommitted on `bsmith/outline-tab`: in "Certificate
+Available Alert › appears" (line 825) and "Scheduled Content Alert ›
+appears correctly" (line 1005), `expect(screen.queryByText(…))`
+becomes `expect(await screen.findByText(…))`. Two lines; no other
+case touched.
+
+Baseline taken first for the second case alone, which section 2 did
+not have: `sched-alone-before`, `-t 'Scheduled Content Alert appears
+correctly'`, coverage off, eight copies: 15 of 16 failed.
+
+With the change, eight copies at a time:
+
+| Loop | Before | With the change |
+|---|---|---|
+| certificate case alone, coverage off | 14 of 16 failed | 0 of 24 |
+| scheduled content case alone, coverage off | 15 of 16 failed | 0 of 24 |
+| the certificate block's five cases, coverage off | first 24 of 24, second 1 of 24 | 0 of 24 for all five |
+| the whole outline suite, coverage on | 20 of 40 runs with a failure | **0 of 40**; each run 127 passed, 4 skipped |
+
+Not settled by this: the three later certificate cases (lines 858,
+1051, 1076) keep `queryByText` on the line after the helper. One of
+them failed once in 24 before the change and none in 64 runs after
+it (24 of the block, 40 of the suite), which is too few to call the
+exposure gone. Not run: lint, the full package suite, the builds.
