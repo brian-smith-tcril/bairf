@@ -316,3 +316,30 @@ its PR.
       pre-existing findings get discovery issues (the outline tab
       throwing for a denied learner whose outline request fails; a
       non-ASCII course key rendering nothing).
+
+13. **The denied-learner throw gets a discovery issue, outside the
+    epic (2026-11-18).** Brian asked what the two unfiled findings
+    were, whether both are on `master`, and whether either has an
+    issue.
+    - The non-ASCII course URL has one: #1802 (open since 2025-10-06,
+      no comments), a real-browser "white page" with a Cyrillic course
+      key. The issue names no cause; the `DecodePageRoute` loop fits
+      and is not confirmed as what the reporter hit. No new issue.
+      Such keys need `ALLOW_UNICODE_COURSE_ID`, `False` by default
+      (`cms/envs/common.py`); opaque-keys itself allows any Unicode
+      word character.
+    - The denied-learner throw is from Redux days, not the React Query
+      conversion: #1259 (`ab871670`, merged 2024-01-22) made
+      `fetchTab` report `denied` whatever the tab-data request did;
+      #1997 kept that order in `deriveView`. Brian: "we can make a
+      discovery issue for it on frontend-app-learning but keep it out
+      of the epic". Drafted as
+      `issue-body-outline-denied-failed-outline.md`, `unpublished` in
+      `UPSTREAM.md`, with no "Part of #1905" and no sub-issue link.
+    - Two sentences in the posted PR logs are wrong and wait for
+      Brian's word to correct. #2261 entry 7: "Course keys made in
+      Studio are ASCII" holds only by default. #2262 entry 16:
+      "`master`'s container suite lands on that page in two cases
+      with the outline request unanswered and does not notice" is
+      false; `master`'s suite renders only the courseware routes, so
+      the outline tab never renders at that address.
