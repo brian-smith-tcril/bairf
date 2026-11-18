@@ -166,11 +166,17 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      link in a layout route around the route array.
    - "Saves the position on each unit change" moves with
      `router.navigate`; `master` clicked the real navigation's Next.
-   - Two counts on a failing lookup are 4 where `master` has 1: the
-     resume request and the parent-sequence request answer 500, and
-     each query carries the retry policy in its own options. `master`'s
-     test client turned retries off for every query; the package's
-     cannot, since a query's own option wins.
+   - The suite runs with retries off, as `master`'s does. `master`'s
+     test client sets `retry: false` for every query. Here each query
+     carries the policy in its own options, which a client cannot
+     override, so the suite mocks `@src/queryClient` with
+     `queryDefaults.retry` false. My first port changed two expected
+     counts on a failing lookup from 1 to 4; Brian, in review: that
+     "is changing the behavior being tested". Both read
+     `toHaveLength(1)` again.
+   - The rule this file is held to, after three rounds of review: the
+     cases stay `master`'s, the harness around them adapts, and a case
+     that cannot run is parked whole, not rewritten.
 
 9. **Left out or parked.**
    - The nine "when receiving a course_access error_code" cases:
@@ -243,7 +249,7 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     passed, 16 skipped (the five of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `727474b4` on `bsmith/courseware-container`,
+    partial. Local commit `df0a8062` on `bsmith/courseware-container`,
     not pushed.
 
 15. **Seen once, not this layer's: an intermittent failure in the
