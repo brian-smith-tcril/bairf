@@ -290,3 +290,29 @@ its PR.
     `decisions-2261.md` and `decisions-2262.md` are the logs the PRs
     carry.
 
+
+12. **The three PR bodies are set (2026-11-18).** `pr-body-2260.md`,
+    `pr-body-2261.md` and `pr-body-2262.md`, each applied with one
+    `gh pr edit --body-file` and read back equal to its file, the
+    stack footer gone. Each embeds its `decisions-<pr>.md` whole;
+    #2261 and #2262 embed `manual-testing-2195.md` whole, and #2260
+    has no manual pass.
+    - Corrected while writing the public logs, against the code: the
+      non-null assertions in `apiHooks.ts` are eleven, on `master` and
+      in the port (the layer notes said ten); the "Start null so first
+      render triggers unit shift logic" comment is on the ref's
+      creation in `sidebar/SidebarContext.tsx`, not in
+      `useUnitShiftBehavior.ts`; gradebook's `src/data/query.ts` is on
+      its `master` branch, linked at `b98b972a`.
+    - Left out of the public logs: the account and profile retry
+      prior art, not re-read in this session.
+    - `manual-testing-2195.md`'s "Put to Brian as a possible discovery
+      issue" reads "No issue is filed for it".
+    - GitHub lists no closing issue for #2262: its base is not the
+      default branch, as with #2252 and #2191.
+    - Still owed: the follow-up on the intermittent
+      `OutlineTab.test.jsx` "Certificate Available Alert › appears"
+      failure (entry 6), and Brian's word on whether the two
+      pre-existing findings get discovery issues (the outline tab
+      throwing for a denied learner whose outline request fails; a
+      non-ASCII course key rendering nothing).
