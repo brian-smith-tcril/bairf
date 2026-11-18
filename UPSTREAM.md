@@ -38,4 +38,4 @@
 | outline-hidden-dates-tab | issue-body-2250.md | openedx/frontend-app-learning#2250 | settled |
 | outline-alerts-timezone | issue-body-outline-alerts-timezone.md | openedx/frontend-app-learning#2253 | settled |
 | course-bar-selected-tab | issue-body-course-bar-selected-tab.md | openedx/frontend-base#359 | settled |
-| outline-denied-failed-outline | issue-body-outline-denied-failed-outline.md | openedx/frontend-app-learning#2263 | in-review |
+| outline-denied-failed-outline | issue-body-outline-denied-failed-outline.md | openedx/frontend-app-learning#2263 | settled |
