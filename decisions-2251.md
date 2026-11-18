@@ -177,5 +177,6 @@ import and config mapping are in #2191's plan and are not repeated.
     `gh stack push --remote upstream`, heads read back: #2251 `5b93f6eb`,
     #2252 `c705cf74`, #2260 `ff8f892d`, #2261 `e5052182`, #2262
     `a6e08695`; #2249 unchanged at `e22c204e`. #2251 and #2252 still read
-    approved. The bodies that describe the banner's case are not updated
-    yet.
+    approved. #2251's body was then updated from its draft here and read
+    back equal; #2191's does not mention the dropped case. Brian replied
+    on both review threads.
