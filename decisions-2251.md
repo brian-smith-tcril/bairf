@@ -24,8 +24,10 @@ import and config mapping are in #2191's plan and are not repeated.
    nothing gets a cookie removed on the serving host, as `master` does
    with the variable unset. The site name in the continue button is
    `getSiteConfig().siteName`.
-   - The layer's first version gave the key no bundled default, as
-     authn's `src/app.ts` gives its own none. arbrandes's review comment
+   - The layer's first version gave the key no bundled default,
+     following authn, whose
+     [`src/app.ts`](https://github.com/openedx/frontend-app-authn/blob/5687d65baf679f977d7439f694a56dda7f0a6a5d/src/app.ts)
+     does not list it. arbrandes's review comment
      (https://github.com/openedx/frontend-app-learning/pull/2251#discussion_r4588226383)
      pointed out that it was the only key the package reads that
      `defaultConfig` does not list, and that the list is the nearest
@@ -131,6 +133,8 @@ import and config mapping are in #2191's plan and are not repeated.
       `755ccb64`, #2252 `7d13fb98`, #2260 `111b34e3`, #2261 `b945ad46`,
       #2262 `b98365da`; #2249 unchanged at `e22c204e`. #2251 and #2252
       still read approved, and GitHub lists both authors on their commits.
-    - The bodies of #2251 and #2191 still say "no bundled default"; their
-      drafts are not written yet. The second review thread on this PR
-      (the masquerade banner's `?? {}`) is not decided.
+    - The bodies of #2251 and #2191 said "no bundled default". Both were
+      corrected from their drafts here and read back equal; #2251's
+      carries entries 1 to 11 of this log. Brian replied on the review
+      thread. The second review thread on this PR (the masquerade
+      banner's `?? {}`) is not decided.

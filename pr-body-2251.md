@@ -9,7 +9,7 @@ Part of #1905. Part of #2191. Stacked above #2249; the outline tab follows as th
 
 ## What changed
 
-- **The account activation alert reads its cookie domain from the app config.** `master` removes the `show-account-activation-popup` cookie on `process.env.SESSION_COOKIE_DOMAIN`. Here the domain is `getAppConfig(appId).SESSION_COOKIE_DOMAIN`, an app config key with no bundled default: an operator who sets nothing gets the cookie removed on the serving host, as `master` does with the variable unset. The continue button's site name is `getSiteConfig().siteName`.
+- **The account activation alert reads its cookie domain from the app config.** `master` removes the `show-account-activation-popup` cookie on `process.env.SESSION_COOKIE_DOMAIN`. Here the domain is `getAppConfig(appId).SESSION_COOKIE_DOMAIN`, an app config key that `app.ts` lists at `null`: an operator who sets nothing gets the cookie removed on the serving host, as `master` does with the variable unset. The continue button's site name is `getSiteConfig().siteName`.
 - **`sendActivationEmail` and the courseware data index.** The alert imports its request from `courseware/data`, so `courseware/data/api.js` gains `sendActivationEmail` and `courseware/data/index.js` ports exporting that one name. The other two names the index re-exports on `master`, `getResumeBlock` and `getSequenceForUnitDeprecated`, are commented out under #2195's URL until the courseware container ports them.
 - **The course start alert ports whole.** The outline tab reads `useCourseStartAlert` and `CourseStartAlert.jsx`. `useCourseStartMasqueradeBanner` and `CourseStartMasqueradeBanner.jsx` come with them and have no caller until the instructor toolbar ports (#2194). `CourseStartAlert.jsx` drops the `?? {}` after its metadata read: without metadata it throws either way, so the default only moved the throw (decision log entry 9).
 - **`EffortEstimate` drops its `defaultProps`.** React warns about them on a function component. The one default was a `null` class name, which `classNames` skips the same way it skips an absent one.
@@ -58,13 +58,30 @@ import and config mapping are in #2191's plan and are not repeated.
    `getSequenceForUnitDeprecated`, are commented out under #2195's URL,
    as the factory indexes carry their unported imports.
 
-3. **The cookie domain is read from the app config.** `master` reads
-   `process.env.SESSION_COOKIE_DOMAIN` when it removes the
-   `show-account-activation-popup` cookie; here it is
-   `getAppConfig(appId).SESSION_COOKIE_DOMAIN`, with no bundled default,
-   so an operator who sets nothing gets a cookie removed on the serving
-   host, as `master` does with the variable unset. The site name in the
-   continue button is `getSiteConfig().siteName`.
+3. **The cookie domain is read from the app config, and `app.ts` lists
+   the key at `null`.** `master` reads `process.env.SESSION_COOKIE_DOMAIN`
+   when it removes the `show-account-activation-popup` cookie; here it is
+   `getAppConfig(appId).SESSION_COOKIE_DOMAIN`. An operator who sets
+   nothing gets a cookie removed on the serving host, as `master` does
+   with the variable unset. The site name in the continue button is
+   `getSiteConfig().siteName`.
+   - The layer's first version gave the key no bundled default,
+     following authn, whose
+     [`src/app.ts`](https://github.com/openedx/frontend-app-authn/blob/5687d65baf679f977d7439f694a56dda7f0a6a5d/src/app.ts)
+     does not list it. arbrandes's review comment
+     (https://github.com/openedx/frontend-app-learning/pull/2251#discussion_r4588226383)
+     pointed out that it was the only key the package reads that
+     `defaultConfig` does not list, and that the list is the nearest
+     thing an operator has to documentation of what can be set. Brian
+     agreed (2026-11-18).
+   - `null` changes no behavior. `js-cookie` leaves a null attribute out
+     as it does an absent one (entry 7). `getAppConfig` merges
+     `defaultConfig` below the site's `commonAppConfig` and the app's
+     `config`, so a site sets the key as before.
+   - Listing every key the package reads, at `null`, is the
+     `defaultConfig` rule #2189 set for this app. authn lists only its
+     real defaults and documents this key in its README; this package
+     has no such table.
 
 4. **`EffortEstimate` loses its `defaultProps`.** React warns about them
    on a function component and the suite fails on console output. The
