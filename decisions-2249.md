@@ -148,3 +148,12 @@ say where the first version differed.
     only the package's upload. Brian re-ran the two test workflows and the check passes,
     96.78% to 96.79%. The timings and the sign to look for are entry 42 of
     `decisions-1905.md`.
+
+13. **The reversal is pushed (2026-11-18).** `gh stack push --remote upstream` updated
+    the six open layers: #2249 `e22c204e` (was `bea109b5`), #2251 `b2a2c6a2`, #2252
+    `791ef1b3`, #2260 `7e8b9337`, #2261 `9024b6b3`, #2262 `ff53391b`. The remote heads
+    were read back and match. The rebase before it was
+    `gh stack rebase --upstack --no-trunk`; `git range-diff` showed the six commits
+    above #2249 unchanged. The bodies of #2249, #2243, #2244 and #2190 are drafted
+    here and not yet applied; #2249's title is still the first version's. Entries 12
+    and 13 stay out of the PR body, as entry 12 did.
