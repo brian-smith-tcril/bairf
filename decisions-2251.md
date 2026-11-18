@@ -111,3 +111,26 @@ import and config mapping are in #2191's plan and are not repeated.
     Each file this layer adds is at 100 lines, and
     `alerts/course-start-alert/` at 100 branches. `npm run build` and
     `npm run build:ci` pass; `dist/` holds the new modules.
+
+12. **The `SESSION_COOKIE_DOMAIN` line is amended in and pushed
+    (2026-11-18).** Entry 3's change is one line in `app.ts`, amended
+    into the layer's commit, whose message changes in one clause ("which
+    app.ts lists at null" for "which has no bundled default"). Lint and
+    the four suites under `src/alerts` pass at the layer; the full run
+    and the builds were not rerun for it.
+    - `gh stack rebase --upstack --no-trunk` stopped on #2252's port
+      commit, which adds `LEGACY_THEME_NAME: null` at the same place in
+      `app.ts`; both lines are kept, in alphabetical order.
+    - `gh stack rebase --continue` after that conflict dropped the line of
+      the port commit's message that begins with `#2195`. `git range-diff`
+      showed it. The message was restored from the pushed commit with
+      `git commit --amend --cleanup=whitespace -F` at an `edit` stop, and
+      the layers above were rebased again. Every message from #2252 up
+      then read equal to its pushed one.
+    - `gh stack push --remote upstream`, heads read back: #2251
+      `755ccb64`, #2252 `7d13fb98`, #2260 `111b34e3`, #2261 `b945ad46`,
+      #2262 `b98365da`; #2249 unchanged at `e22c204e`. #2251 and #2252
+      still read approved, and GitHub lists both authors on their commits.
+    - The bodies of #2251 and #2191 still say "no bundled default"; their
+      drafts are not written yet. The second review thread on this PR
+      (the masquerade banner's `?? {}`) is not decided.
