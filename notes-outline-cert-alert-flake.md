@@ -145,3 +145,18 @@ port's `fetchAndRender`:
 
 - A: `master`'s shape, `await act(async () => renderRoutes(…))`.
 - B: an empty `await act(async () => {})` after the two waits.
+
+## 5. Candidate A does not hold (2026-11-18, 18:29 to 18:33 UTC)
+
+Brian: "yeah, let's try A". The port's `fetchAndRender` with its
+first line as `await act(async () => renderRoutes(routes, …))`, an
+uncommitted edit, reverted after the run.
+
+- `A-cert-alone`: `-t 'Certificate Available Alert appears'`, coverage
+  off, eight copies, three rounds. **7 of 24 failed**, the same
+  assertion and `null` (by round: 0, 3, 4 of 8).
+- The same loop without the edit was 14 of 16 (section 2).
+
+So putting `master`'s `act` back around the render lowers the rate
+and does not remove it. `master`'s immunity is not explained by the
+`act` alone, and a helper that only flushes is still racing.
