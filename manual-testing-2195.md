@@ -70,8 +70,8 @@ and a real browser's console. The suite runs the wrappers in jsdom.
   throwaway case, started at `…/course-v1:Org+Caf%C3%A9+Run/home`, nothing rendered: the
   browser holds the address encoded, the wrapper decodes it to `é`, the two never match, and
   the wrapper keeps redirecting. `master`'s wrapper under `BrowserRouter` in jsdom did the
-  same, so this layer does not introduce it. Not seen in a real browser. Put to Brian as a
-  possible discovery issue.
+  same, so this layer does not introduce it. Not seen in a real browser. No issue is filed
+  for it.
 - **Lint, tests and both builds** at the layer's head, on its own commit: all pass.
 
 ### Left to the suite
