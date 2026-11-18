@@ -312,3 +312,13 @@ import and config mapping are in #2191's plan and are not repeated.
       `queryByText`. The component is loaded by the time they run. One
       of them failed once in 24 runs of its block before the change,
       and none in 64 runs after it.
+
+21. **Checks after entry 20 (2026-11-18).** At the port commit alone:
+    `npm run lint` clean, with the package's `.jsx` files included
+    (openedx/frontend-base#327); `npm test`, 41 suites, 525 passed, 11
+    skipped, lines 98.39; `npm run build` and `npm run build:ci` pass.
+    At the head: lint clean; 42 suites, 569 passed, 11 skipped; lines
+    100 for the package; both builds pass. The counts are those of
+    entry 19: the change adds and removes no case. The three layers
+    above were replayed onto the amended layer with their own patches
+    unchanged, and each passes its tests and both builds.
