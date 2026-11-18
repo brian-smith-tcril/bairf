@@ -179,6 +179,13 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      counts on a failing lookup from 1 to 4; Brian, in review: that
      "is changing the behavior being tested". Both read
      `toHaveLength(1)` again.
+   - The two blocks this layer adds ("the position save", "the
+     addresses a redirect passes through") are the last two in the
+     file, after `master`'s "request count", so `master`'s blocks keep
+     their order. They sat before "when the course has no sections",
+     and with `master`'s access-denied block removed just after it the
+     diff paired the wrong lines and showed that block as replaced
+     (Brian, in review); it differs from `master`'s in one line.
    - The rule this file is held to, after three rounds of review: the
      cases stay `master`'s, the harness around them adapts, and a case
      that cannot run is parked whole, not rewritten.
@@ -255,7 +262,7 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     passed, 17 skipped (the six of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `d1afc94a` on `bsmith/courseware-container`,
+    partial. Local commit `8fb8ed65` on `bsmith/courseware-container`,
     not pushed.
 
 15. **Seen once, not this layer's: an intermittent failure in the
