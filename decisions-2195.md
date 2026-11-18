@@ -116,7 +116,7 @@ its PR.
 4. **The three layers are built locally (2026-11-17), on Brian's "go
    ahead and implement all 3 layers".** `bsmith/courseware-data`
    (`35bdb046`), `bsmith/courseware-route-wrappers` (`e0cef2b8`) and
-   `bsmith/courseware-container` (`f6df0e36`) sit on the stack above
+   `bsmith/courseware-container` (`665e934e`) sit on the stack above
    `bsmith/outline-tab` (`84f00e55`); nothing is pushed and no PR
    exists. Each layer's decisions are in
    `decisions-2195-courseware-data.md`,
@@ -190,4 +190,6 @@ its PR.
      its CI has not shown it. Not diagnosed. The guess to test first:
      the case asserts with `queryByText` straight after
      `fetchAndRender`, and the alert arrives a tick later under load.
+     It failed a second time on 2026-11-18, in a full run, and passed
+     on the next: about one full run in ten so far.
 

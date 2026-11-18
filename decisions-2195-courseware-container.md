@@ -123,25 +123,35 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
      intermediate state and that doesn't feel good".
    - `master` mocks `./course/sequence/Unit` as `div.fake-unit` under
      the real course and sequence components. Here the suite mocks
-     `./course` with the same element inside a `<main>`, shown when
+     `./course` with the same element, shown when
      the route has a unit, as the sequence shows a unit. Every
      `.fake-unit` line is `master`'s again, the two that assert it
      absent at the course root included, and the walked case differs
-     from `master`'s in four lines: the config read, the load call,
-     the header check and the parked navigation check. #2196 moves the
+     from `master`'s in three lines: the config read, the header check
+     and the parked navigation check. The file's changed lines against
+     `master`'s went from 676 in the first port to 512. #2196 moves the
      mock back to `./course/sequence/Unit`. The mock declares prop
      types for the two ids it reads, so it needs no
      `eslint-disable`; `master`'s unit mock keeps the one it has.
    - `master`'s own mock of `./course/sequence/Unit` stays as a
      virtual mock under #2196's URL, since the skipped cases read
      `mockRenderUnitNav`.
-   - `loadContainer` waits for the mocked course's `<main>`, which the
-     tab page renders once the course has loaded. `master` waits for
-     the spinner to be removed. That wait cannot be kept: the routes
-     load lazily, so the spinner has to be awaited first, and by the
-     time the test resumes it is already gone;
-     `waitForElementToBeRemoved` then holds a detached node whose
-     topmost ancestor still contains it, and times out.
+   - The cases still push a path and then call `loadContainer()`
+     (Brian, in review: the change of that call in every case made
+     the file "look like it has a huge amount of changes"). `master`
+     pushes onto frontend-platform's `history`, which its
+     `BrowserRouter` reads. Here `history` is a two-line object in the
+     suite that keeps the pushed path, and the render starts the
+     memory router there, under `/learning`.
+   - `loadContainer` waits for the spinner again: it waits for the
+     spinner to appear, then for none to be on the page. `master`'s
+     one line, `waitForElementToBeRemoved(screen.getByRole('status'))`,
+     cannot be kept: the routes load lazily, so the spinner is not
+     there when the render returns, and when it is awaited first it is
+     already gone by the time the test resumes; the helper then holds
+     a detached node whose topmost ancestor still contains it, and
+     times out. With the spinner wait back, the mocked course is the
+     fake unit alone, with no `<main>` to wait on.
    - The stub is rendered by `course/index.test.tsx`, through the
      routes with the requests mocked: the three ids it prints, and no
      page-rule diagnostics. Both go with the stub in #2196.
@@ -233,7 +243,7 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     passed, 16 skipped (the five of entry 9 and the eleven from
     earlier layers); 100% of lines; `build` and `build:ci` pass. The
     patch counted as codecov counts it: 154 lines, none missed, none
-    partial. Local commit `f6df0e36` on `bsmith/courseware-container`,
+    partial. Local commit `665e934e` on `bsmith/courseware-container`,
     not pushed.
 
 15. **Seen once, not this layer's: an intermittent failure in the
@@ -247,5 +257,8 @@ and the test plan are in #2195's plan and are not repeated. Renamed to
     full runs the same day passed. Not diagnosed: the case asserts
     with `queryByText` straight after `fetchAndRender`, which waits
     for the heading and for the spinner to go, so an alert added a
-    tick later would be missed under load. Put to Brian.
+    tick later would be missed under load. Put to Brian. Seen a second
+    time on 2026-11-18 (14:40 UTC), again in a full run and again
+    passing on the next one: twice in about twenty full runs over the
+    two days, never when the suite ran alone.
 
