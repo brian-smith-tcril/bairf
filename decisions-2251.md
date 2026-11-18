@@ -83,12 +83,11 @@ import and config mapping are in #2191's plan and are not repeated.
    the expected date string does not depend on the machine's time zone.
    No test in the package pins the clock, and none does here.
 
-9. **Of the two `?? {}` after the metadata read, one is dropped and
-   one is tested.** Both run only if the component renders with no
-   course metadata in the cache, and the first push of this layer left
-   both branches untaken, which codecov showed as two partially covered
-   lines. Each was rendered alone without metadata to see what its
-   default does.
+9. **Both `?? {}` after the metadata read are dropped.** Both run only
+   if the component renders with no course metadata in the cache, and
+   the first push of this layer left both branches untaken, which
+   codecov showed as two partially covered lines. Each was rendered
+   alone without metadata to see what its default does.
    - `CourseStartAlert.jsx` throws either way: with the default the
      start date is undefined, the distance is `NaN`, and
      `FormattedRelativeTime` raises React's "Too many re-renders";
@@ -97,10 +96,18 @@ import and config mapping are in #2191's plan and are not repeated.
      `UpgradeToCompleteAlert` and #2246 in `GetCourseExitNavigation`.
    - `CourseStartMasqueradeBanner.jsx` renders the banner with today's
      date as the start date, since `FormattedDate` formats the current
-     time for an undefined value. The default changes the outcome, so
-     it stays, and a case renders the banner without metadata and
-     asserts that text. The case records what `master`'s default does;
-     the date it shows is not the course's.
+     time for an undefined value. The layer first kept that default and
+     added a case asserting the text. arbrandes's review comment
+     (https://github.com/openedx/frontend-app-learning/pull/2251#discussion_r4588226396)
+     asked for both to go: the case asserts that staff are told the
+     course starts today, which is wrong, and the banner cannot render
+     without metadata, since `useCourseStartMasqueradeBanner`, its only
+     caller, shows it only when that metadata says the requester is
+     masquerading. Brian agreed (2026-11-18).
+   - The default was not written for the banner. #2109 added it when it
+     converted `useModel('courseHomeMeta', courseId)`, which returned
+     `{}` for a model that was not loaded, to the query read. Without it
+     a banner rendered without metadata throws, as the alert does.
 
 10. **`js-cookie` is declared at `^3.0.8`**, `master`'s `3.0.8` with a
    caret, as the dates tab layer declared its dependencies. The lock
