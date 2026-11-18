@@ -241,4 +241,12 @@ its PR.
      `master`'s widget reloads the page in place. Read, not observed;
      to be checked on the dev site with a staff user when #2194 is
      taken up, and filed on its own if it happens.
+   - Also left out of the issue on Brian's word: with the per-course
+     waffle flag `course_experience.disable_course_outline_page` on,
+     the platform's `default_course_url` gives the Course tab the
+     courseware address `…/course/<course>`, every course page is
+     under it, and the course bar's rule would select the Course tab
+     in courseware. Read in `openedx/features/course_experience`,
+     not observed. The issue says the tab's link is the course home
+     "by default".
 

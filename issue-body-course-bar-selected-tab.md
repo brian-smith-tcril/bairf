@@ -12,7 +12,7 @@ Found while porting Learning's courseware container to frontend-base (openedx/fr
 
 - [`CourseTabsNavigation`](https://github.com/openedx/frontend-base/blob/0a81802ad1a5428fb5e2a2ba83abace5c6727df4/shell/header/course-bar/navigation/CourseTabsNavigation.tsx#L44-L47) marks as active the tab that `findActiveTab(resolvedTabs, location.pathname)` returns.
 - [`findActiveTab`](https://github.com/openedx/frontend-base/blob/0a81802ad1a5428fb5e2a2ba83abace5c6727df4/shell/header/course-bar/data/service.ts#L46-L62) "Returns the tab whose URL pathname is the longest prefix match against `pathname`, or null if none match."
-- The tabs and their URLs come from the `course_metadata` response. The Course tab ([`CoursewareTab`](https://github.com/openedx/openedx-platform/blob/46c8c9b4c86e9f7ec02d31293b2d0bb3f3638114/lms/djangoapps/courseware/tabs.py#L31-L48), type `courseware`) links to [`default_course_url`](https://github.com/openedx/openedx-platform/blob/46c8c9b4c86e9f7ec02d31293b2d0bb3f3638114/openedx/features/course_experience/__init__.py#L111-L124), which is `get_learning_mfe_home_url(course_key, url_fragment='home')`: Learning's course home, `…/learning/course/<course>/home`.
+- The tabs and their URLs come from the `course_metadata` response. The Course tab ([`CoursewareTab`](https://github.com/openedx/openedx-platform/blob/46c8c9b4c86e9f7ec02d31293b2d0bb3f3638114/lms/djangoapps/courseware/tabs.py#L31-L48), type `courseware`) links to [`default_course_url`](https://github.com/openedx/openedx-platform/blob/46c8c9b4c86e9f7ec02d31293b2d0bb3f3638114/openedx/features/course_experience/__init__.py#L111-L124), which by default is `get_learning_mfe_home_url(course_key, url_fragment='home')`: Learning's course home, `…/learning/course/<course>/home`.
 - Learning's courseware pages are at `…/learning/course/<course>`, `…/<sequence>` and `…/<sequence>/<unit>`, with the same under `…/learning/preview/course/<course>`, and its course exit page is at `…/learning/course/<course>/course-end` ([`routes.tsx`](https://github.com/openedx/frontend-app-learning/blob/5443cd539e33f22a45317537119df11538d52ee8/frontend-base/src/routes.tsx) on Learning's `frontend-base` branch). None of those addresses is under a tab's URL, so `findActiveTab` returns null and no tab is marked.
 
 ## What Learning does on `master`
@@ -24,10 +24,6 @@ Found while porting Learning's courseware container to frontend-base (openedx/fr
 
 - 2026-11-18, on the branch that ports Learning's courseware container (openedx/frontend-app-learning#2195), against Tutor dev: on a unit's page the course bar showed no tab as selected. On the course home, the same course bar shows the Course tab as selected.
 - It is the first Learning page on frontend-base whose address is under none of the tabs' URLs; until that port the courseware routes rendered a placeholder.
-
-## One case where a tab is selected
-
-- With the `DISABLE_COURSE_OUTLINE_PAGE_FLAG` waffle flag on for a course, `default_course_url` returns `make_learning_mfe_courseware_url(course_key)`, the course's courseware address. Every courseware page is under that.
 
 ## Questions
 
