@@ -346,3 +346,15 @@ import and config mapping are in #2191's plan and are not repeated.
     - The case that held the cleanup asserted only that `start_course` is
       gone from the router's location, which a push satisfies as well. It
       now also asserts that the router's last navigation was a replace.
+    - Seen, not only read: with the assertion added and `master`'s call
+      left as it was, the case fails, `router.state.historyAction` being
+      `PUSH`. With the fix it passes. What Back then does in a browser
+      has not been watched.
+    - Working tree, uncommitted (2026-11-18): `npm run lint` passes; the
+      three suites under `src/course-home/outline-tab` pass, 138 passed
+      and 4 skipped; `OutlineTab.jsx` at 100% of lines and branches.
+    - The source line and the case are both in the layer's first commit,
+      the port. How the fix is committed (into that commit, or as a
+      commit of its own on the layer) is not decided.
+    - The issue for `master` is drafted in the effort's files and not
+      filed.
