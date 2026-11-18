@@ -37,3 +37,4 @@
 | helmet-strict-mode | issue-body-helmet-strict-mode.md | openedx/frontend-base#350 | settled |
 | outline-hidden-dates-tab | issue-body-2250.md | openedx/frontend-app-learning#2250 | settled |
 | outline-alerts-timezone | issue-body-outline-alerts-timezone.md | openedx/frontend-app-learning#2253 | settled |
+| course-bar-selected-tab | issue-body-course-bar-selected-tab.md | openedx/frontend-base (not yet created) | unpublished |
