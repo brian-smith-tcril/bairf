@@ -191,3 +191,37 @@ Not settled by this: the three later certificate cases (lines 858,
 them failed once in 24 before the change and none in 64 runs after
 it (24 of the block, 40 of the suite), which is too few to call the
 exposure gone. Not run: lint, the full package suite, the builds.
+
+## 7. Amended into #2252 and pushed (2026-11-18)
+
+Brian: "ok, it looks good, let's amend that in and get the stack
+updated", then "ok, so we should push the stack".
+
+- The two lines went into the layer's port commit, where the cases
+  they change are (the layer's second commit only adds tests), as a
+  fixup squashed by `git rebase -i --autosquash`. The port commit's
+  message gained one paragraph. `bsmith/outline-tab`: `84f00e55` to
+  `0e9a8e22` (port commit `74b0eb31` to `296118dd`).
+- A slip on the way: the first reword went through git's editor path,
+  whose cleanup deleted the message line beginning "#2195, whose
+  suites…". `git range-diff` showed it; the message was set again with
+  `git commit --amend --cleanup=whitespace -F` and now differs from
+  the old one by the added paragraph alone.
+- `gh stack rebase --upstack --no-trunk --remote upstream` replayed
+  the three layers above: #2260 `35bdb046` to `2a1754c3`, #2261
+  `e0cef2b8` to `aa5cc29b`, #2262 `53eaf560` to `371a0e6a`. Each
+  layer's own patch (`git patch-id`) and message are unchanged, and
+  each tree differs from the one it replaces by the two lines.
+- Checks before the push: lint on the amended layer and at the port
+  commit alone; tests, `build` and `build:ci` at all four layers and
+  at the port commit alone, all passing with the counts they had
+  (42/569/11, 43/643/11, 46/792/11, 49/846/17; port commit 41/525/11,
+  lines 98.39). The four-layer run took eight minutes; for a change to
+  one test file the amended layer and the top would have been enough.
+- `gh stack push --remote upstream` pushed the six open branches; the
+  remote heads and the six PRs' heads equal the local ones, and
+  GitHub credits both authors on `296118dd`. #2249 and #2251 did not
+  move.
+- `decisions-2252.md` has entries 20 (the change) and 21 (the checks);
+  `pr-body-2252.md` carries them and one sentence under Testing. The
+  body on GitHub is not yet updated.
