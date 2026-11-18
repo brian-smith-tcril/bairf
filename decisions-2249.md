@@ -8,10 +8,11 @@ The layer's first version, pushed 2026-11-12, made the certificate card apply th
 status. Review reversed that (entry 1). The entries describe the layer as it is now and
 say where the first version differed.
 
-**Status (2026-11-18):** the reversal is in the working tree of
-`bsmith/progress-entrance-exam`, uncommitted, for Brian's read of the diff. Not amended,
-not pushed; the layers above are not rebased; the bodies of #2249, #2243 and #2244 are
-not updated.
+**Status (2026-11-18):** the reversal is amended into the layer's commit, `e22c204e`
+(was `bea109b5`), with a new subject, "fix: stop the progress tab's certificate card
+reading the entrance exam status". The five layers above are rebased onto it locally
+with `gh stack rebase --upstack --no-trunk`; `git range-diff` shows their six commits
+unchanged. Not pushed. The bodies of #2249, #2243 and #2244 are not updated.
 
 1. **The certificate card does not apply the entrance exam status.** `CertificateStatus`
    calls `getCourseExitMode` without `entranceExamPassed`. The parameter defaults to
@@ -133,7 +134,10 @@ not updated.
      `CertificateStatus.jsx` line 101 is the partly covered line of entry 6. The full
      run is entry 10. `build` and `build:ci` have not been run on this version.
 
-9. **One commit.** The change is amended into the layer's commit when Brian says so.
+9. **One commit.** The reversal is amended into the layer's commit on Brian's word
+   (2026-11-18), and the commit message is rewritten, since the first one described
+   the fetch. The local heads after the rebase: #2249 `e22c204e`, #2251 `b2a2c6a2`,
+   #2252 `791ef1b3`, #2260 `7e8b9337`, #2261 `9024b6b3`, #2262 `ff53391b`.
 
 10. **Coverage at this layer (2026-11-18, working tree).** The full run: 36 suites,
     410 tests passed and 7 skipped. 100% of lines for the package. Counted from the
