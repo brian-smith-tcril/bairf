@@ -3,6 +3,7 @@
 // actions, run in order after the page settles:
 //   hover:<selector>   move the pointer to the element's centre
 //   click:<selector>   click the element's centre
+//   resize:<width>    change the viewport width after load, as a window resize would
 //   tab:<n>            press Tab n times
 //   focus:<selector>   give the element keyboard focus
 //   clip:<selector>    screenshot only this element (plus padding) instead of the viewport
@@ -54,7 +55,12 @@ const sleep = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
   for (const action of actions) {
     const [kind, ...rest] = action.split(':');
     const arg = rest.join(':');
-    if (kind === 'tab') {
+    if (kind === 'resize') {
+      await send('Emulation.setDeviceMetricsOverride', {
+        width: Number(arg), height: Number(height), deviceScaleFactor: Number(scale), mobile: false,
+      });
+      await sleep(600);
+    } else if (kind === 'tab') {
       for (let i = 0; i < Number(arg); i += 1) {
         await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
         await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });

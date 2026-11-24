@@ -14,6 +14,8 @@ import {
   StripBreakpoint, StripChips, StripRow, StripSentence, counts, type StripProps,
 } from './options';
 
+import { Ladder, steps } from './ladder';
+
 const all = [dataEngineering, machineLearning, loremIpsum, sedUt, nemoEnim];
 const sets = { five: all, two: all.slice(0, 2), one: all.slice(0, 1) };
 const longFirst = [loremIpsum, sedUt, dataEngineering, machineLearning, nemoEnim];
@@ -82,9 +84,62 @@ const sections: Record<string, ReactNode> = {
     </Section>
   ),
   dropin: (
-    <Section title="The file placed in the code worktree, as TabPage would render it">
+    <Section title="The file in the code worktree, as TabPage renders it">
       <CoursePathwaysStrip courseId="five" />
       <CoursePathwaysStripOptions courseId="five" />
+      <div style={{ height: 24 }} />
+      <CoursePathwaysStrip courseId="two" />
+      <CoursePathwaysStripOptions courseId="two" />
+      <div style={{ height: 24 }} />
+      <CoursePathwaysStrip courseId="one" />
+      <CoursePathwaysStripOptions courseId="one" />
+    </Section>
+  ),
+  ladder: (
+    <Section title="From zero classes, one addition at a time">
+      <Row caption="the PR, for reference"><CoursePathwaysStrip courseId="five" /></Row>
+      {[...Array(12).keys()].map((level) => (
+        <Row key={level} caption={level === 0 ? '0. Paragon components only, no className anywhere' : `${level}. + ${steps[level - 1].adds}`}>
+          <Ladder id={`ladder-${level}`} pathways={all} level={level} />
+        </Row>
+      ))}
+    </Section>
+  ),
+  box: (
+    <Section title="The opened box, one addition at a time">
+      {[11, 13, 14, 15, 16].map((level) => (
+        <Row key={level} caption={level === 11 ? 'ModalPopup with a bare div and list' : `+ ${steps[level - 1].adds}`}>
+          <Ladder id={`box-${level}`} pathways={all} level={level} open />
+          <div style={{ height: 130 }} />
+        </Row>
+      ))}
+    </Section>
+  ),
+  final: (
+    <Section title="All additions on">
+      <Row caption="the PR"><CoursePathwaysStrip courseId="five" /></Row>
+      <Row caption="5 pathways"><Ladder id="final-5" pathways={all} /></Row>
+      <Row caption="2 pathways"><Ladder id="final-2" pathways={sets.two} /></Row>
+      <Row caption="1 pathway"><Ladder id="final-1" pathways={sets.one} /></Row>
+      <Row caption="5 pathways, long titles first"><Ladder id="final-l" pathways={longFirst} /></Row>
+      <Row caption="5 pathways, opened">
+        <Ladder id="final-o" pathways={all} open />
+        <div style={{ height: 140 }} />
+      </Row>
+    </Section>
+  ),
+  states: (
+    <Section title="Complete build, for hover and focus">
+      <Row caption="the PR"><CoursePathwaysStrip courseId="five" /></Row>
+      <Row caption="complete build"><Ladder id="s" pathways={all} /></Row>
+    </Section>
+  ),
+  without: (
+    <Section title="A complete build with one addition left out">
+      <Row caption="complete"><Ladder id="w-none" pathways={all} /></Row>
+      <Row caption="without py-0 on the Button"><Ladder id="w-compact" pathways={all} without={['compact']} /></Row>
+      <Row caption="without py-2 on the Stack"><Ladder id="w-height" pathways={all} without={['height']} /></Row>
+      <Row caption="without flex-shrink-0 on each Hyperlink"><Ladder id="w-shrink" pathways={all} without={['noShrink']} /></Row>
     </Section>
   ),
   breakpoint: <Section title="Set aside: count by breakpoint">{rows(StripBreakpoint, 'bp', false)}</Section>,
