@@ -20,6 +20,7 @@ One row per pass. `bin/review sync` appends the row with the new head; scope (wh
 |------|------|------|-------|---------|
 | 2026-11-09 | 230799eb25 | 696901a030 | whole diff (`git diff origin/master...HEAD`), dealbreakers and bigger conversations; slot gating against learning#1713 and #1943; FPF 1.8.0 `PluginSlot`; `TabPage` consumers; sibling slots, hooks and message ids; rpenido's reviews and open thread; screenshots; suite not run | none yet: entries 2, 3, 4 wait for Brian |
 | 2026-11-23 | 230799eb25 | 3201351b93 | no sync (row added by hand; the code worktree stays at 696901a030): 696901a030..3201351b93 from a fetch of the PR head; `TabPage.tsx`, `LoadedTabPage.tsx`, the slot, the strip, its hook, stylesheet and query hook at the head; the frontend-base port's frame, `slots.tsx`, manifest and decisions; frontend-base main's `Header`, `DefaultLayout` and course bar operations; openedx/frontend-base#351; suite not run | none yet: entry 14 waits for Brian |
+| 2026-11-24 | 230799eb25 | 3201351b93 | | |
 
 ## Ledger
 
