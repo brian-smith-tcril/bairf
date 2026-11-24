@@ -1,7 +1,7 @@
-// Review prototype, not part of the PR: three ways to build the strip from Paragon components and
-// utilities with no stylesheet of its own. Rendered under the PR's strip from TabPage for comparison.
+// Review prototype, not part of the PR: the strip's design built from Paragon components and utilities
+// with no stylesheet of its own. Rendered under the PR's strip from TabPage for comparison.
 import { useState, type ReactNode } from 'react';
-import { defineMessages, useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 import {
   Badge, Dropdown, Hyperlink, Nav, useIndexOfLastVisibleChild,
@@ -10,19 +10,6 @@ import {
 import { useCoursePathways } from '../data/apiHooks';
 import type { PathwayData } from '../data/types';
 import messages from './messages';
-
-const optionMessages = defineMessages({
-  sentence: {
-    id: 'learning.coursePathways.sentence',
-    defaultMessage: '<lead>Course included in</lead> {pathways}',
-    description: 'Sentence naming the pathways, in which the learner is enrolled, that include this course',
-  },
-  more: {
-    id: 'learning.coursePathways.more',
-    defaultMessage: '{count} more',
-    description: 'Button that follows a list of pathway names and opens a menu with the ones not named',
-  },
-});
 
 const nameOf = (pathway: PathwayData) => pathway.pathway.content.displayName;
 // Stand-in for the pathway outline URL that #2231 adds
@@ -72,7 +59,7 @@ const MoreMenu = ({
   );
 };
 
-// 1. One line. Everything that fits shows, the rest goes in a menu; Paragon's own overflow hook measures.
+// One line. Everything that fits shows, the rest goes in a menu; Paragon's own overflow hook measures.
 const StripRow = ({ id, pathways }: StripProps) => {
   const { formatMessage } = useIntl();
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>(null);
@@ -119,37 +106,6 @@ const StripRow = ({ id, pathways }: StripProps) => {
   );
 };
 
-// 2. A sentence. Every pathway is an inline link in a localized list ("A, B, and C") that wraps like text.
-// 3. The same sentence with a cap: the first `cap` pathways are named, the rest are behind "N more".
-const StripSentence = ({ id, pathways, cap }: StripProps & { cap?: number }) => {
-  const { formatList, formatMessage } = useIntl();
-  // A menu holding a single pathway would hide a name to save nothing, so the cap needs two or more left over
-  const named = cap && pathways.length > cap + 1 ? pathways.slice(0, cap) : pathways;
-  const rest = pathways.slice(named.length);
-  const parts: ReactNode[] = named.map((pathway) => (
-    <Hyperlink key={pathway.pathway.id} destination={hrefOf(pathway)} className="d-inline text-white">
-      {nameOf(pathway)}
-    </Hyperlink>
-  ));
-  if (rest.length > 0) {
-    parts.push(
-      <MoreMenu key="more" id={id} pathways={rest} className="d-inline-block">
-        {formatMessage(optionMessages.more, { count: rest.length })}
-      </MoreMenu>,
-    );
-  }
-  return (
-    <Band>
-      <nav aria-labelledby={`${id}-label`} className="container-xl py-2">
-        {formatMessage(optionMessages.sentence, {
-          lead: (chunks: ReactNode) => <span key="lead" id={`${id}-label`} className="text-gray-200">{chunks}</span>,
-          pathways: formatList(parts, { type: 'conjunction' }),
-        })}
-      </nav>
-    </Band>
-  );
-};
-
 const Caption = ({ children }: { children: ReactNode }) => (
   <div className="container-xl x-small text-muted pt-2">{children}</div>
 );
@@ -161,12 +117,8 @@ export const CoursePathwaysStripOptions = ({ courseId }: { courseId?: string }) 
   }
   return (
     <>
-      <Caption>Option 1: one line, what fits; the rest in a menu</Caption>
-      <StripRow id="pathways-option-row" pathways={pathways} />
-      <Caption>Option 2: a sentence, every pathway named</Caption>
-      <StripSentence id="pathways-option-sentence" pathways={pathways} />
-      <Caption>Option 3: a sentence, two named, the rest in a menu</Caption>
-      <StripSentence id="pathways-option-capped" pathways={pathways} cap={2} />
+      <Caption>Rebuild with Paragon components and utilities, no stylesheet</Caption>
+      <StripRow id="pathways-rebuild" pathways={pathways} />
     </>
   );
 };
