@@ -29,36 +29,43 @@ const Strip = ({ pathways }: { pathways: PathwayData[] }) => {
 
   return (
     <nav aria-labelledby="course-pathways-strip-label" className="bg-primary small">
-      <Stack ref={setRow} direction="horizontal" className="container-xl py-2">
-        <span id="course-pathways-strip-label" className="text-gray-200">{formatMessage(messages.includedIn)}</span>
-        {pathways.map((pathway, index) => (
-          <Hyperlink
-            key={pathway.pathway.id}
-            destination={hrefOf(pathway)}
-            className={classNames('text-white px-2.5 flex-shrink-0', {
-              'border-left border-light-700': index > 0,
-              'position-absolute invisible': index >= visibleCount,
-            })}
-          >
-            {nameOf(pathway)}
-          </Hyperlink>
-        ))}
-        {hiddenPathways.length > 0 && (
-          <div ref={setTriggerBox} className={classNames({ 'border-left border-light-700 pl-2': visibleCount > 0 })}>
-            <Button
-              ref={setTrigger}
-              variant="inverse-tertiary"
-              size="sm"
-              iconAfter={ArrowDropDown}
-              className="py-0"
-              aria-label={formatMessage(messages.morePathways, { count: hiddenPathways.length })}
-              onClick={open}
+      {/* The hook compares the names against the row's full width, so the row itself cannot be the padded container */}
+      <div className="container-xl">
+        <Stack ref={setRow} direction="horizontal" className="py-2">
+          <span id="course-pathways-strip-label" className="text-gray-200 flex-shrink-0">
+            {formatMessage(messages.includedIn)}
+          </span>
+          {pathways.map((pathway, index) => (
+            <Hyperlink
+              key={pathway.pathway.id}
+              destination={hrefOf(pathway)}
+              className={classNames('text-white px-2.5 flex-shrink-0', {
+                // A trailing separator on every name but the last: the same classes whether or not the name
+                // is showing, so what the hook measures is what gets drawn
+                'border-right border-light-700': index < pathways.length - 1,
+                'position-absolute invisible': index >= visibleCount,
+              })}
             >
-              <Badge pill variant="light">{hiddenPathways.length}</Badge>
-            </Button>
-          </div>
-        )}
-      </Stack>
+              {nameOf(pathway)}
+            </Hyperlink>
+          ))}
+          {hiddenPathways.length > 0 && (
+            <div ref={setTriggerBox} className="pl-2">
+              <Button
+                ref={setTrigger}
+                variant="inverse-tertiary"
+                size="sm"
+                iconAfter={ArrowDropDown}
+                className="py-0"
+                aria-label={formatMessage(messages.morePathways, { count: hiddenPathways.length })}
+                onClick={open}
+              >
+                <Badge pill variant="light">{hiddenPathways.length}</Badge>
+              </Button>
+            </div>
+          )}
+        </Stack>
+      </div>
       <ModalPopup positionRef={trigger} isOpen={isOpen} onClose={close} placement="bottom" hasArrow withPortal>
         <div className="bg-white p-3 rounded shadow border small">
           <ul className="mb-0 pl-3">
